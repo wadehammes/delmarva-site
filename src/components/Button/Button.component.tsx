@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import type { AriaButtonProps } from "react-aria";
 import styles from "src/components/Button/Button.module.css";
-import Arrow from "src/icons/Arrow.svg";
 import { Button as UIButton } from "src/ui/Button/Button.component";
 
 interface ButtonProps extends AriaButtonProps {
@@ -31,7 +30,6 @@ export const Button = (props: ButtonProps) => {
       {...rest}
     >
       {label}
-      <Arrow />
     </UIButton>
   );
 };

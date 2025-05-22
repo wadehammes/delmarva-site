@@ -60,7 +60,9 @@ export async function generateStaticParams(): Promise<PageParams[]> {
       })
       .filter((item: SitemapItem) => item.route.length);
 
-    outputSitemap(routes, "pages");
+    if (routes.length > 0) {
+      outputSitemap(routes, "pages");
+    }
   }
 
   return flatten(
