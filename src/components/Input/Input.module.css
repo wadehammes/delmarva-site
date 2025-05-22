@@ -1,0 +1,15 @@
+.input {
+  border: 1px solid var(--colors-gray);
+  padding: 1rem;
+  font-size: 16px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.19), 0 -1px 1px #fff, 0 1px 0 #fff;
+
+  &:focus {
+    outline: none;
+    border-color: var(--colors-black);
+  }
+
+  &.error {
+    border-color: var(--colors-red);
+  }
+}

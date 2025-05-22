@@ -1,0 +1,8 @@
+.page {
+  display: flex;
+  align-items: flex-start;
+  flex-flow: column nowrap;
+  gap: var(--default-padding);
+  padding: var(--default-padding);
+  position: relative;
+}

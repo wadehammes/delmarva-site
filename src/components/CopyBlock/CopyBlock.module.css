@@ -1,0 +1,41 @@
+.copyBlock {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 90ch;
+  margin: 0 auto;
+
+  svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    transform: translateY(0.25rem);
+  }
+}
+
+.copyWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  text-align: center;
+
+  &.copyWrapperLeft {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  &.copyWrapperRight {
+    justify-content: flex-end;
+    text-align: right;
+  }
+}
+
+.imageOrIcon {
+  width: 100%;
+  height: auto;
+  max-width: 50px;
+}

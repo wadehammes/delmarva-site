@@ -1,0 +1,48 @@
+.button {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 16px;
+  background-color: var(--colors-black);
+  color: var(--colors-white);
+  padding: 1rem 1.75rem;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+  border: 2px solid transparent;
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &:hover {
+    background-color: var(--colors-black);
+    color: var(--colors-black);
+    cursor: pointer;
+  }
+
+  &.outline {
+    background-color: transparent;
+    border-color: var(--colors-black);
+    color: var(--colors-black);
+
+    &:hover {
+      background-color: var(--colors-black);
+      color: var(--colors-white);
+    }
+  }
+
+  &.secondary {
+    background-color: var(--colors-red);
+    color: var(--colors-white);
+
+    &:hover {
+      background-color: var(--colors-black);
+      color: var(--colors-white);
+    }
+  }
+}

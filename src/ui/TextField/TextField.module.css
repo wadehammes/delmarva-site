@@ -1,0 +1,22 @@
+.input {
+  background: transparent;
+  appearance: none;
+  border: 0;
+  width: 100%;
+  color: var(--colors-black);
+  font-size: 16px;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.fieldset {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-flow: column nowrap;
+  gap: 1rem;
+  position: relative;
+  width: 100%;
+}
