@@ -11,7 +11,10 @@
   text-decoration: none;
   transition: all 0.2s ease-in-out;
   text-align: center;
-  border: 2px solid transparent;
+  box-shadow:
+    0 0 0 2px transparent,
+    0 0 0 3px var(--colors-black);
+  border-radius: 1000px;
 
   &[disabled] {
     opacity: 0.5;
@@ -21,7 +24,6 @@
 
   &:hover {
     background-color: var(--colors-black);
-    color: var(--colors-black);
     cursor: pointer;
   }
 

@@ -11,12 +11,12 @@
   text-decoration: none;
   transition: all 0.2s ease-in-out;
   text-align: center;
-  border: 2px solid transparent;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  border-radius: 1000px;
 
   &:hover {
-    background-color: transparent;
-    border-color: var(--colors-black);
-    color: var(--colors-black);
+    color: var(--colors-white);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 1);
     cursor: pointer;
   }
 
