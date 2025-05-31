@@ -1,4 +1,4 @@
-import type { Page } from "src/contentful/getPages";
+import type { Page, PageForNavigation } from "src/contentful/getPages";
 
 export const isUrl = (url: string) => {
   try {
@@ -10,6 +10,11 @@ export const isUrl = (url: string) => {
   }
 };
 
-export const createInternalLink = (page: Page) => {
-  return `/${page.slug}`;
+export const createInternalLink = (page: Page | PageForNavigation) => {
+  if ("slug" in page) {
+    // This is a Page type
+    return `/${page.slug}`;
+  }
+  // This is a PageForNavigation type
+  return page.url;
 };

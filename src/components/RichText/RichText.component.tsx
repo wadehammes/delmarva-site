@@ -8,18 +8,19 @@ import {
   type Document as RichTextDocument,
 } from "@contentful/rich-text-types";
 import Image from "next/image";
-import type { HTMLAttributes } from "react";
+import type { ElementType, HTMLAttributes } from "react";
 import { Link } from "src/components/Link/Link.component";
 import styles from "src/components/RichText/RichText.module.css";
 import { parseContentfulAsset } from "src/contentful/parseContentfulAsset";
 import { createImageUrl, replaceNbsp } from "src/utils/helpers";
 
 interface RichTextProps extends HTMLAttributes<HTMLDivElement> {
+  as?: ElementType;
   document: RichTextDocument | undefined;
 }
 
 export const RichText = (props: RichTextProps) => {
-  const { document, ...rest } = props;
+  const { document, as: Component = "div", ...rest } = props;
 
   if (!document) {
     return null;
@@ -61,8 +62,8 @@ export const RichText = (props: RichTextProps) => {
   };
 
   return (
-    <div className={styles.richText} {...rest}>
+    <Component className={styles.richText} {...rest}>
       {documentToReactComponents(document, documentParsing)}
-    </div>
+    </Component>
   );
 };
