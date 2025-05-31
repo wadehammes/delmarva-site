@@ -1,4 +1,14 @@
 export type {
+  TypeContentHero,
+  TypeContentHeroFields,
+  TypeContentHeroSkeleton,
+} from "./TypeContentHero";
+export type {
+  TypeContentStatBlock,
+  TypeContentStatBlockFields,
+  TypeContentStatBlockSkeleton,
+} from "./TypeContentStatBlock";
+export type {
   TypeCopyBlock,
   TypeCopyBlockFields,
   TypeCopyBlockSkeleton,
