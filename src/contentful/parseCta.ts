@@ -1,11 +1,14 @@
 import type { Entry } from "contentful";
-import { type Page, parseContentfulPage } from "src/contentful/getPages";
+import {
+  type PageForNavigation,
+  parseContentfulPageForNavigation,
+} from "src/contentful/getPages";
 import type { TypeCtaSkeleton } from "src/contentful/types";
 
 export interface Cta {
   id: string;
   text: string;
-  pageLink?: Page | null;
+  pageLink?: PageForNavigation | null;
   externalLink?: string;
 }
 
@@ -21,7 +24,9 @@ export function parseContentfulCta(cta: CtaEntry): Cta | null {
   return {
     id: cta.sys.id,
     text: cta.fields.text ?? "",
-    pageLink: parseContentfulPage(cta.fields.pageLink),
+    pageLink: cta.fields.pageLink
+      ? parseContentfulPageForNavigation(cta.fields.pageLink)
+      : null,
     externalLink: cta.fields.externalLink ?? "",
   };
 }

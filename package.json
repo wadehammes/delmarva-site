@@ -13,7 +13,9 @@
     "lint:ci": "biome ci --reporter=github",
     "lint:fix": "biome check --fix",
     "test:ci": "jest --passWithNoTests",
-    "types:contentful": "export $(cat .env.local | sed '/^#/d; s/[$\"]//g'); cf-content-types-generator -s $CONTENTFUL_SPACE_ID -t $CONTENTFUL_CMA_TOKEN -o src/contentful/types -X && biome format --write src/contentful/types"
+    "types:contentful": "export $(cat .env.local | sed '/^#/d; s/[$\"]//g'); cf-content-types-generator -s $CONTENTFUL_SPACE_ID -t $CONTENTFUL_CMA_TOKEN -o src/contentful/types -X && biome format --write src/contentful/types",
+    "update-readme": "node scripts/update_main_readme.js",
+    "setup-hooks": "bash scripts/setup-git-hooks.sh"
   },
   "dependencies": {
     "@contentful/rich-text-plain-text-renderer": "^17.0.1",
@@ -26,6 +28,7 @@
     "@tanstack/react-query": "^5.80.7",
     "classnames": "^2.5.1",
     "contentful": "^11.7.2",
+    "gsap": "^3.13.0",
     "html-react-parser": "^5.2.5",
     "jest-mock": "^30.0.0",
     "lodash.flatten": "^4.4.0",
@@ -38,6 +41,7 @@
     "react-aria": "^3.41.1",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.58.1",
+    "react-intersection-observer": "^9.16.0",
     "schema-dts": "^1.1.5",
     "tslib": "^2.8.1",
     "usehooks-ts": "^3.1.1"
