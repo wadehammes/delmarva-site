@@ -23,7 +23,11 @@ export const createImageUrl = (src: string) => {
     return src;
   }
 
-  return `https:${src}`;
+  if (src.startsWith("//")) {
+    return `https:${src}`;
+  }
+
+  return `https://${src}`;
 };
 
 export const kebabCase = (string: string) =>

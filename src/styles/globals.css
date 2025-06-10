@@ -256,7 +256,7 @@ h6,
 
 h1,
 .h1 {
-  font-size: clamp(2.25rem, 5vw, 3rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   font-weight: 800;
 }
 
@@ -374,4 +374,14 @@ input[type="checkbox"] {
   --default-padding: 2rem;
   --gap: 2rem;
   --container-width: 1440px;
+
+  --padding-less: 1rem;
+  --padding-more: 2rem;
+  --padding-no: 0;
+  --padding-regular: 1rem;
+
+  @media (min-width: 600px) {
+    --padding-more: 6rem;
+    --padding-regular: 2.5rem;
+  }
 }
