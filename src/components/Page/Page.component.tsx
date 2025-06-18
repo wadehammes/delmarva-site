@@ -1,8 +1,8 @@
 import type { HTMLAttributes } from "react";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { SectionRenderer } from "src/components/SectionRenderer/SectionRenderer.component";
+import { StatExample } from "src/components/Stat/Stat.example";
 import type { Page } from "src/contentful/getPages";
-import DelmarvaLogo from "src/icons/delmarva-white.svg";
 
 interface PageComponentProps extends HTMLAttributes<HTMLDivElement> {
   fields: Page;
@@ -14,11 +14,9 @@ export const PageComponent = async (props: PageComponentProps) => {
 
   return (
     <PageLayout page={fields}>
-      <div className="logo-container">
-        <DelmarvaLogo className="logo" />
-      </div>
       <SectionRenderer sections={sections} />
       {children}
+      <StatExample />
     </PageLayout>
   );
 };

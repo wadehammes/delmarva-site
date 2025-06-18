@@ -1,0 +1,69 @@
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  min-height: 600px;
+}
+
+.heroContentLeft {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.heroContentRight {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.heroFullScreen {
+  height: 100vh;
+}
+
+.heroEightyPercent {
+  height: 80vh;
+}
+
+.heroMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.heroOverlayStyleMicrodot {
+  --dot-color: color-mix(in srgb, var(--dot-bg) 40%, var(--colors-white));
+  --dot-size: 1px;
+  --dot-space: 5px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+      transparent 1%
+    )
+    center / var(--dot-space) var(--dot-space),
+    linear-gradient(
+      var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+      transparent 1%
+    )
+    center / var(--dot-space) var(--dot-space),
+    var(--dot-color);
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  position: relative;
+  z-index: 2;
+}

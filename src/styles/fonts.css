@@ -1,0 +1,21 @@
+/* N27 Font Family */
+@font-face {
+  font-family: "N27";
+  src:
+    url("/fonts/n27-regular-webfont.woff2") format("woff2"),
+    url("/fonts/n27-regular-webfont.woff") format("woff"),
+    url("/fonts/n27-regular-webfont.ttf") format("truetype"),
+    url("/fonts/n27-regular-webfont.eot") format("embedded-opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font fallbacks for better performance */
+@font-face {
+  font-family: "N27";
+  src: url("/fonts/n27-regular-webfont.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
