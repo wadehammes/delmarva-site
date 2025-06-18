@@ -1,12 +1,12 @@
 import type { MockedFunction } from "jest-mock";
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: Mock function type requires any for flexibility
 export function mockApiResponse<T extends (...args: any[]) => any>(
   responseResult: boolean | boolean[],
   mockApiEndpoint: MockedFunction<T>,
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: Mock response can be any type
   resolvedResponse: Awaited<any>,
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: Mock error can be any type
   rejectedResponse: Awaited<any>,
 ) {
   const responseResults =

@@ -1,6 +1,6 @@
 import {
-  type Options,
   documentToReactComponents,
+  type Options,
 } from "@contentful/rich-text-react-renderer";
 import {
   BLOCKS,

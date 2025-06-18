@@ -119,9 +119,7 @@ html {
 
 body {
   line-height: 1;
-  min-height: 100vh;
   min-height: 100svh;
-  min-height: stretch;
   overflow-x: hidden;
   padding: 0;
   position: relative;

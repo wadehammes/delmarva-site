@@ -1,15 +1,15 @@
 import flatten from "lodash.flatten";
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 import PageComponent from "src/components/Page/Page.component";
 import type { Page as PageType } from "src/contentful/getPages";
 import { fetchPage, fetchPages } from "src/contentful/getPages";
 import type { Locales } from "src/contentful/interfaces";
 import { routing } from "src/i18n/routing";
-import { outputSitemap } from "src/lib/generateSitemap";
 import type { SitemapItem } from "src/lib/generateSitemap";
+import { outputSitemap } from "src/lib/generateSitemap";
 import {
   EXCLUDED_PAGE_SLUGS_FROM_BUILD,
   HOME_PAGE_SLUG,

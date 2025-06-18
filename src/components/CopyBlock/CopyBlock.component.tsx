@@ -1,5 +1,5 @@
-import { CTA } from "src/components/CTA/CTA.component";
 import styles from "src/components/CopyBlock/CopyBlock.module.css";
+import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { CopyBlock as CopyBlockType } from "src/contentful/parseCopyBlock";
 
