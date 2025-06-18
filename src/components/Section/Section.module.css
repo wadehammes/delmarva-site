@@ -36,11 +36,6 @@
   @media screen and (min-width: 800px) {
     padding-top: 6rem;
     padding-bottom: 6rem;
-
-    &.noPadding {
-      padding-top: 0;
-      padding-bottom: 0;
-    }
   }
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 import type { WebPage } from "schema-dts";
 import PageComponent from "src/components/Page/Page.component";
 import { fetchPage } from "src/contentful/getPages";
@@ -90,7 +90,6 @@ const Home = async (props: HomeProps) => {
   return (
     <>
       <script
-        id="homeSchema"
         type="application/ld+json"
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

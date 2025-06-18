@@ -4,9 +4,9 @@ import { ExitDraftModeLink } from "src/components/ExitDraftModeLink/ExitDraftMod
 import "src/styles/globals.css";
 import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
 import type { Locales } from "src/contentful/interfaces";
 import { routing } from "src/i18n/routing";
 import { envUrl } from "src/utils/helpers";

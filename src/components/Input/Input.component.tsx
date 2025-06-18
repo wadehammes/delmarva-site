@@ -7,12 +7,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = (props: InputProps) => {
-  const { type, className, error, ...rest } = props;
+  const { error, ...rest } = props;
 
   return (
     <input
       className={classNames(styles.input, { [styles.error]: error })}
-      type={type}
       {...rest}
     />
   );

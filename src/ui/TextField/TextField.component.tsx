@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import { type Ref, forwardRef } from "react";
+import { forwardRef, type Ref } from "react";
 import {
   type AriaTextFieldProps,
   useObjectRef,

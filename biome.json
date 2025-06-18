@@ -1,17 +1,27 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
   "formatter": {
-    "include": ["*.ts", "*.tsx", "*.mts", "*.cts", "*.css", "*.module.css"],
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.mts",
+      "**/*.cts",
+      "**/*.css",
+      "**/*.module.css",
+      "!**/*.json",
+      "!**/*.md",
+      "!**/.eslintrc",
+      "!**/.vscode"
+    ],
     "enabled": true,
     "formatWithErrors": true,
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
     "lineWidth": 80,
-    "attributePosition": "auto",
-    "ignore": ["**/*.json", "**/*.md", "**/.eslintrc", ".vscode"]
+    "attributePosition": "auto"
   },
-  "organizeImports": { "enabled": true },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -33,8 +43,14 @@
     }
   },
   "files": {
-    "ignore": ["**/node_modules/**", "**/dist/**"],
-    "include": ["**/*.ts", "**/*.tsx", "**/*.css", "**/*.module.css"]
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.css",
+      "**/*.module.css",
+      "!**/node_modules/**",
+      "!**/dist/**"
+    ]
   },
   "linter": {
     "enabled": true,
@@ -56,14 +72,32 @@
         "noDangerouslySetInnerHtml": "warn"
       },
       "style": {
-        "useLiteralEnumMembers": "off"
+        "useLiteralEnumMembers": "off",
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error"
       },
       "suspicious": {
         "noArrayIndexKey": "off"
       }
     },
-    "ignore": ["**/next.config.js", ".vscode"],
-    "include": ["*.ts", "*.tsx", "*.mts", "*.cts", "*.css", "*.module.css"]
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.mts",
+      "**/*.cts",
+      "**/*.css",
+      "**/*.module.css",
+      "!**/next.config.js",
+      "!**/.vscode"
+    ]
   },
   "javascript": {
     "formatter": {

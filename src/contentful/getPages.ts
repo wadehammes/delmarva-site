@@ -2,8 +2,8 @@ import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import type { Locales } from "src/contentful/interfaces";
 import {
-  type SectionType,
   parseContentfulSection,
+  type SectionType,
 } from "src/contentful/parseSections";
 import type { TypePageSkeleton } from "src/contentful/types/TypePage";
 import { createInternalLink } from "src/utils/urlHelpers";
