@@ -13,10 +13,13 @@ export const DeployButton = (props: DeployButtonProps) => {
   const [clicked, setClicked] = useState(false);
 
   const handleDeploy = async () => {
-    const response = await fetch(deployHook);
-
-    if (response.ok) {
-      setClicked(true);
+    try {
+      const response = await fetch(deployHook);
+      if (response.ok) {
+        setClicked(true);
+      }
+    } catch {
+      // Optionally handle error (e.g., set error state)
     }
   };
 

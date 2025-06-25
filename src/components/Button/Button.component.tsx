@@ -10,6 +10,10 @@ interface ButtonProps extends AriaButtonProps {
   variant?: "primary" | "secondary" | "outline";
 }
 
+/**
+ * Button component with multiple variants and tracking support
+ * Supports primary, secondary, and outline styles
+ */
 export const Button = (props: ButtonProps) => {
   const {
     label,
