@@ -7,6 +7,9 @@ jest.mock("next/router", () => ({
   useRouter: () => mockedUseRouterReturnValue,
 }));
 
+// Mock fetch globally
+global.fetch = jest.fn();
+
 global.beforeAll(() => {
   setupIntersectionObserverMock();
   setupMockMatchMedia();

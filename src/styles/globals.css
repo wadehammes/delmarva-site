@@ -1,3 +1,5 @@
+@import "./fonts.css";
+
 *,
 *::before,
 *::after {
@@ -99,7 +101,7 @@ html,
 body {
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: sans-serif;
+  font-family: var(--font-family-body);
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
@@ -254,7 +256,7 @@ h6,
 
 h1,
 .h1 {
-  font-size: clamp(2.25rem, 5vw, 3rem);
+  font-size: clamp(2.25rem, 5vw, 6rem);
   font-weight: 800;
 }
 
@@ -372,4 +374,25 @@ input[type="checkbox"] {
   --default-padding: 2rem;
   --gap: 2rem;
   --container-width: 1440px;
+
+  --padding-less: 1rem;
+  --padding-more: 2rem;
+  --padding-no: 0;
+  --padding-regular: 1rem;
+
+  /* Font Variables */
+  --font-family-n27:
+    "N27", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
+  --font-family-heading:
+    stolzl, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  --font-family-body:
+    europa, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+
+  @media (min-width: 600px) {
+    --padding-more: 6rem;
+    --padding-regular: 2.5rem;
+  }
 }
