@@ -7,11 +7,16 @@ import type {
   Placement,
 } from "src/contentful/interfaces";
 import type { ContentHeroEntry } from "src/contentful/parseContentHero";
+import type { ContentModuleEntry } from "src/contentful/parseContentModules";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { type Cta, parseContentfulCta } from "src/contentful/parseCta";
 import type { TypeSectionSkeleton } from "src/contentful/types";
 
-export type ContentEntries = CopyBlockEntry | ContentHeroEntry | undefined;
+export type ContentEntries =
+  | CopyBlockEntry
+  | ContentHeroEntry
+  | ContentModuleEntry
+  | undefined;
 
 export interface SectionType {
   content: ContentEntries[] | undefined;
