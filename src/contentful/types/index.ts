@@ -1,4 +1,19 @@
 export type {
+  TypeContentCarousel,
+  TypeContentCarouselFields,
+  TypeContentCarouselSkeleton,
+} from "./TypeContentCarousel";
+export type {
+  TypeContentCopyMediaBlock,
+  TypeContentCopyMediaBlockFields,
+  TypeContentCopyMediaBlockSkeleton,
+} from "./TypeContentCopyMediaBlock";
+export type {
+  TypeContentGrid,
+  TypeContentGridFields,
+  TypeContentGridSkeleton,
+} from "./TypeContentGrid";
+export type {
   TypeContentHero,
   TypeContentHeroFields,
   TypeContentHeroSkeleton,
@@ -19,6 +34,11 @@ export type {
   TypeContentStatBlockSkeleton,
 } from "./TypeContentStatBlock";
 export type {
+  TypeContentTestimonial,
+  TypeContentTestimonialFields,
+  TypeContentTestimonialSkeleton,
+} from "./TypeContentTestimonial";
+export type {
   TypeContentVideoBlock,
   TypeContentVideoBlockFields,
   TypeContentVideoBlockSkeleton,
@@ -29,6 +49,11 @@ export type {
   TypeCopyBlockSkeleton,
 } from "./TypeCopyBlock";
 export type { TypeCta, TypeCtaFields, TypeCtaSkeleton } from "./TypeCta";
+export type {
+  TypeFooter,
+  TypeFooterFields,
+  TypeFooterSkeleton,
+} from "./TypeFooter";
 export type {
   TypeNavigation,
   TypeNavigationFields,

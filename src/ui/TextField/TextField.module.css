@@ -1,10 +1,10 @@
 .input {
-  background: transparent;
-  appearance: none;
-  border: 0;
   width: 100%;
-  color: var(--colors-black);
   font-size: 16px;
+  color: var(--colors-black);
+  appearance: none;
+  background: transparent;
+  border: 0;
 
   &:focus {
     outline: 0;
@@ -12,11 +12,11 @@
 }
 
 .fieldset {
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
   flex-flow: column nowrap;
   gap: 1rem;
-  position: relative;
+  align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
 }

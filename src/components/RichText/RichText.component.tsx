@@ -41,18 +41,18 @@ export const RichText = (props: RichTextProps) => {
         return (
           <div className={styles.imageBlock}>
             <Image
-              src={createImageUrl(image.src)}
-              width={image.width}
+              alt={image.alt}
               height={image.height}
               loading="lazy"
-              alt={image.alt}
               quality={100}
+              src={createImageUrl(image.src)}
               style={{
+                height: "auto",
+                maxWidth: `${image.width}px`,
                 objectFit: "cover",
                 objectPosition: "center",
-                maxWidth: `${image.width}px`,
-                height: "auto",
               }}
+              width={image.width}
             />
           </div>
         );

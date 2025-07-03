@@ -1,16 +1,16 @@
 .navigation {
-  align-items: center;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent);
-  display: flex;
-  justify-content: space-between;
-  left: 0;
   position: fixed;
-  padding: 1rem 2rem 2rem;
   top: 0;
+  left: 0;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 2rem 2rem;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent);
   transform: translateY(0);
   transition: transform 0.3s ease-in-out;
-  width: 100%;
 
   &.hidden {
     transform: translateY(-200px);
@@ -19,13 +19,13 @@
 
 .navList {
   display: flex;
+  flex: 1;
+  gap: 1rem;
   align-items: center;
   justify-content: flex-start;
-  gap: 1rem;
-  list-style: none;
-  margin: 0;
   padding: 1.5rem 1rem;
-  flex: 1;
+  margin: 0;
+  list-style: none;
 }
 
 .navItem {
@@ -39,11 +39,11 @@
 
 .logo {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  flex: 1;
 
   svg {
     width: 150px;
@@ -53,7 +53,7 @@
 
 .ctaButton {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: flex-end;
-  flex: 1;
 }

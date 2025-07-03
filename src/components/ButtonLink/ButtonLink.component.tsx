@@ -24,7 +24,6 @@ export const ButtonLink = (props: ButtonLinkProps) => {
 
   return (
     <Link
-      href={href}
       className={classNames(styles.buttonLink, {
         [styles.secondary]: variant === "secondary",
         [styles.small]: size === "small",
@@ -33,9 +32,10 @@ export const ButtonLink = (props: ButtonLinkProps) => {
       })}
       data-tracking-click={JSON.stringify({
         event: event ?? "Clicked Button Link",
-        label,
         href,
+        label,
       })}
+      href={href}
     >
       {label}
     </Link>

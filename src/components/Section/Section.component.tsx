@@ -25,6 +25,7 @@ export const Section = async (props: SectionProps) => {
     cta,
     sectionContentPlacement,
     contentLayout,
+    contentStyle,
     backgroundColor,
     sectionPadding,
     sectionHeader,
@@ -32,15 +33,17 @@ export const Section = async (props: SectionProps) => {
 
   return (
     <section
-      id={id}
       className={classNames(styles.section, {
+        [styles.center]: sectionContentPlacement === Placement.Center,
         [styles.left]: sectionContentPlacement === Placement.LeftAligned,
         [styles.right]: sectionContentPlacement === Placement.RightAligned,
+        [styles.overlap]: contentStyle === "Overlap Section Above",
       })}
+      id={id}
       style={{
         backgroundColor: createBackgroundColor(backgroundColor),
-        paddingTop: createPadding(sectionPadding),
         paddingBottom: createPadding(sectionPadding),
+        paddingTop: createPadding(sectionPadding),
       }}
     >
       {sectionHeader ? <RichText as="header" document={sectionHeader} /> : null}
@@ -50,12 +53,15 @@ export const Section = async (props: SectionProps) => {
             [styles.twoColumn]: contentLayout === ContentLayout.TwoColumn,
             [styles.threeColumn]: contentLayout === ContentLayout.ThreeColumn,
             [styles.fourColumn]: contentLayout === ContentLayout.FourColumn,
+            [styles.contained]: contentLayout !== ContentLayout.FullWidth,
           })}
         >
           {children}
         </div>
       ) : null}
-      {cta ? <CTA cta={cta} /> : null}
+      <div className={styles.sectionEndCta}>
+        {cta ? <CTA cta={cta} /> : null}
+      </div>
     </section>
   );
 };

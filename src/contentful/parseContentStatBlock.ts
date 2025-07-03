@@ -2,19 +2,19 @@ import type { Entry } from "contentful";
 import type { NumberFormatType } from "src/utils/numberHelpers";
 import type { TypeContentStatBlockSkeleton } from "./types/TypeContentStatBlock";
 
-export interface ParsedStat {
+export interface ContentStatBlock {
   value: number;
   description: string;
   type: NumberFormatType;
 }
 
-export type StatBlockEntry =
+export type ContentStatBlockEntry =
   | Entry<TypeContentStatBlockSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
   | undefined;
 
-export const parseContentfulStat = (
-  statBlock: StatBlockEntry,
-): ParsedStat | null => {
+export const parseContentStatBlock = (
+  statBlock: ContentStatBlockEntry,
+): ContentStatBlock | null => {
   if (!statBlock) {
     return null;
   }
@@ -26,8 +26,8 @@ export const parseContentfulStat = (
   const { stat, statDescription, statType } = statBlock.fields;
 
   return {
-    value: stat || 0,
     description: statDescription || "",
     type: (statType as NumberFormatType) || "Numerical",
+    value: stat || 0,
   };
 };

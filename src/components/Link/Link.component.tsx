@@ -26,9 +26,9 @@ export const Link = ({ children, ...props }: LinkProps) => {
 
   return (
     <RouterLink
-      onClick={fireHashChange}
-      href={href}
       className={className}
+      href={href}
+      onClick={fireHashChange}
       {...rest}
     >
       {children}

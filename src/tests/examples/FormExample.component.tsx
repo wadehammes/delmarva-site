@@ -22,7 +22,7 @@ export const FormExample = ({ onSubmit }: FormExampleProps) => {
     setError("");
 
     try {
-      await onSubmit?.({ name, email });
+      await onSubmit?.({ email, name });
       // Clear form after successful submission
       setName("");
       setEmail("");
@@ -38,38 +38,38 @@ export const FormExample = ({ onSubmit }: FormExampleProps) => {
       <div>
         <label htmlFor={nameId}>Name</label>
         <Input
+          error={false}
           id={nameId}
+          onChange={(e) => setName(e.target.value)}
+          required
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
-          error={false}
-          required
         />
       </div>
 
       <div>
         <label htmlFor={emailId}>Email</label>
         <Input
+          error={false}
           id={emailId}
+          onChange={(e) => setEmail(e.target.value)}
+          required
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          error={false}
-          required
         />
       </div>
 
       {error && <div role="alert">{error}</div>}
 
       <Button
-        label={isSubmitting ? "Submitting..." : "Submit"}
-        onPress={() => {}}
-        isDisabled={isSubmitting}
-        type="submit"
         data-tracking-click={JSON.stringify({
           event: "Form Submit",
           label: "Submit",
         })}
+        isDisabled={isSubmitting}
+        label={isSubmitting ? "Submitting..." : "Submit"}
+        onPress={() => {}}
+        type="submit"
       />
     </form>
   );

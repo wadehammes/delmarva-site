@@ -24,10 +24,10 @@ export function parseNavigation(entry: NavigationEntry): Navigation | null {
   }
 
   return {
-    id: entry.sys.id,
-    slug: entry.fields.slug ?? "",
-    links: entry.fields.links?.map((link) => parseContentfulCta(link)) ?? [],
     ctaButton: parseContentfulCta(entry.fields.ctaButton) ?? null,
+    id: entry.sys.id,
+    links: entry.fields.links?.map((link) => parseContentfulCta(link)) ?? [],
+    slug: entry.fields.slug ?? "",
   };
 }
 

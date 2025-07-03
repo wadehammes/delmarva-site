@@ -35,8 +35,8 @@ describe("FormExample", () => {
 
     await waitFor(() => {
       expect(po.mockSubmit).toHaveBeenCalledWith({
-        name: "John Doe",
         email: "john@example.com",
+        name: "John Doe",
       });
     });
   });

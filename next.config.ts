@@ -4,8 +4,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = withNextIntl({
-  reactStrictMode: true,
-  productionBrowserSourceMaps: false,
   env: {
     CONTENTFUL_CMA_TOKEN: process.env.CONTENTFUL_CMA_TOKEN,
     CONTENTFUL_CONTENT_DELIVERY_API_KEY:
@@ -17,45 +15,78 @@ const nextConfig: NextConfig = withNextIntl({
     GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
     GOOGLE_TAG_MANAGER_ID: process.env.GOOGLE_TAG_MANAGER_ID,
   },
-  trailingSlash: false,
+  async headers() {
+    return [
+      {
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "s-maxage=1, stale-while-revalidate",
+          },
+          ...securityHeaders,
+        ],
+        source: "/",
+      },
+      {
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "s-maxage=1, stale-while-revalidate",
+          },
+          ...securityHeaders,
+        ],
+        source: "/:path*",
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
-        protocol: "https",
         hostname: "images.ctfassets.net",
-        port: "",
         pathname: "/**",
+        port: "",
+        protocol: "https",
       },
       {
-        protocol: "https",
         hostname: "downloads.ctfassets.net",
-        port: "",
         pathname: "/**",
+        port: "",
+        protocol: "https",
       },
       {
-        protocol: "https",
         hostname: "videos.ctfassets.net",
-        port: "",
         pathname: "/**",
+        port: "",
+        protocol: "https",
       },
     ],
   },
+  productionBrowserSourceMaps: false,
+  reactStrictMode: true,
+  async redirects() {
+    if (process.env.ENVIRONMENT === "production") {
+      return [...productionRedirects, ...sharedRedirects];
+    }
+
+    return sharedRedirects;
+  },
+  trailingSlash: false,
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.(".svg"),
     );
 
     config.module.rules.push({
-      test: /\.svg$/i,
       issuer: fileLoaderRule.issuer,
+      test: /\.svg$/i,
       use: {
         loader: "@svgr/webpack",
         options: {
           svgoConfig: {
             plugins: [
               {
-                name: "removeViewBox",
                 active: false,
+                name: "removeViewBox",
               },
             ],
           },
@@ -68,46 +99,15 @@ const nextConfig: NextConfig = withNextIntl({
 
     return config;
   },
-  async redirects() {
-    if (process.env.ENVIRONMENT === "production") {
-      return [...productionRedirects, ...sharedRedirects];
-    }
-
-    return sharedRedirects;
-  },
-  async headers() {
-    return [
-      {
-        source: "/",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "s-maxage=1, stale-while-revalidate",
-          },
-          ...securityHeaders,
-        ],
-      },
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "s-maxage=1, stale-while-revalidate",
-          },
-          ...securityHeaders,
-        ],
-      },
-    ];
-  },
 });
 
 // Redirect test and home slug pages on Production
 const sources = ["/:slug(test-page.*)", "/deployments"];
 
 const productionRedirects = sources.map((source) => ({
-  source,
   destination: "/",
   permanent: true,
+  source,
 }));
 
 const sharedRedirects = [];

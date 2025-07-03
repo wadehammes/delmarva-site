@@ -1,16 +1,15 @@
 # VideoPlayer Component
 
-A React component that renders videos using the `react-player` library. Supports YouTube, Vimeo, and local video files with extensive customization options.
+A React component that renders videos using the `react-player` library. Supports YouTube, Vimeo, and local video files with a simplified, focused API.
 
 ## Features
 
 - **Multiple video sources**: YouTube, Vimeo, and local video files
 - **Responsive design**: Always responsive with 16:9 aspect ratio
-- **Extensive controls**: Play, pause, volume, progress, and more
-- **Customizable**: Many props for different use cases
-- **Accessible**: Proper ARIA attributes and keyboard navigation support
-- **Fallback support**: Optional fallback image when video fails to load
-- **Event callbacks**: Comprehensive event handling
+- **Autoplay support**: Optional autoplay with viewport detection
+- **Rounded corners**: Optional rounded styling
+- **SSR safe**: Uses `useIsBrowser` hook for client-side rendering
+- **Debounced play**: Prevents rapid play/pause toggles
 
 ## Usage
 
@@ -18,22 +17,20 @@ A React component that renders videos using the `react-player` library. Supports
 import { VideoPlayer } from '@/components/VideoPlayer/VideoPlayer.component';
 
 // Basic usage with YouTube video
-<VideoPlayer url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+<VideoPlayer src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
 
-// Vimeo video with custom controls
+// Autoplay video with controls
 <VideoPlayer 
-  url="https://vimeo.com/123456789"
+  src="https://vimeo.com/123456789"
+  autoPlay={true}
   controls={true}
-  volume={0.8}
-  width="100%"
 />
 
-// Local video file
+// Rounded video player
 <VideoPlayer 
-  url="/videos/presentation.mp4"
-  poster="/images/poster.jpg"
-  loop={false}
-  muted={false}
+  src="/videos/presentation.mp4"
+  rounded={true}
+  controls={true}
 />
 ```
 
@@ -41,99 +38,62 @@ import { VideoPlayer } from '@/components/VideoPlayer/VideoPlayer.component';
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `url` | `string` | **required** | URL of the video (YouTube, Vimeo, or local file) |
-| `className` | `string` | - | Optional className for additional styling |
-| `loop` | `boolean` | `false` | Whether the video should loop |
-| `muted` | `boolean` | `false` | Whether the video should be muted |
-| `playing` | `boolean` | `false` | Whether the video should play automatically |
-| `volume` | `number` | `1` | Volume level (0-1) |
-| `controls` | `boolean` | `true` | Whether to show player controls |
-| `light` | `boolean` | `false` | Whether to show play/pause button |
-| `width` | `string \| number` | `'100%'` | Width of the video container |
-| `height` | `string \| number` | `'auto'` | Height of the video container |
-| `objectFit` | `'cover' \| 'contain' \| 'fill' \| 'none' \| 'scale-down'` | `'contain'` | Object fit style for the video |
-| `fallbackImage` | `string` | - | Fallback image when video fails to load |
-| `progressInterval` | `number` | `1000` | Progress update interval in milliseconds |
-| `showTitle` | `boolean` | `false` | Whether to show video title |
-| `poster` | `string` | - | Custom poster image |
-| `onReady` | `() => void` | - | Callback when video is ready to play |
-| `onPlay` | `() => void` | - | Callback when video starts playing |
-| `onPause` | `() => void` | - | Callback when video is paused |
-| `onEnded` | `() => void` | - | Callback when video ends |
-| `onError` | `(error: Error \| string) => void` | - | Callback when video encounters an error |
-| `onProgress` | `(state) => void` | - | Callback when video progress changes |
-| `onDuration` | `(duration: number) => void` | - | Callback when video duration is loaded |
+| `src` | `string` | **required** | URL of the video (YouTube, Vimeo, or local file) |
+| `autoPlay` | `boolean` | `false` | Whether the video should play automatically |
+| `controls` | `boolean` | `false` | Whether to show player controls |
+| `playInView` | `boolean` | `false` | Whether to play when in view (with 200ms debounce) |
+| `rounded` | `boolean` | `false` | Whether to apply rounded corners |
 
 ## Examples
 
-### Basic YouTube Video
+### Basic Video Player
 ```tsx
-<VideoPlayer 
-  url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-  width="100%"
-/>
+<VideoPlayer src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
 ```
 
-### Vimeo Video with Custom Settings
+### Video with Controls
 ```tsx
 <VideoPlayer 
-  url="https://vimeo.com/123456789"
+  src="https://vimeo.com/123456789"
   controls={true}
-  muted={false}
-  volume={0.7}
-  loop={false}
-  showTitle={true}
-  onReady={() => console.log('Video ready')}
-  onPlay={() => console.log('Video playing')}
 />
 ```
 
-### Local Video File with Poster
+### Autoplay Video
 ```tsx
 <VideoPlayer 
-  url="/videos/presentation.mp4"
-  poster="/images/presentation-poster.jpg"
-  objectFit="cover"
+  src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  autoPlay={true}
+/>
+```
+
+### Rounded Video Player
+```tsx
+<VideoPlayer 
+  src="/videos/presentation.mp4"
+  rounded={true}
   controls={true}
-  fallbackImage="/images/video-error.jpg"
 />
 ```
 
-### Responsive Video Container
+### Autoplay with Play in View
 ```tsx
 <VideoPlayer 
-  url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-  className="custom-video-player"
-  onProgress={(state) => console.log('Progress:', state.played)}
-  onDuration={(duration) => console.log('Duration:', duration)}
-/>
-```
-
-### Autoplay Video (Muted)
-```tsx
-<VideoPlayer 
-  url="https://vimeo.com/123456789"
-  playing={true}
-  muted={true}
-  loop={true}
-  controls={false}
-  objectFit="cover"
+  src="https://vimeo.com/123456789"
+  autoPlay={true}
+  playInView={true}
+  controls={true}
 />
 ```
 
 ## Styling
 
-The component uses CSS modules and follows mobile-first responsive design principles. The video player is always responsive with a 16:9 aspect ratio. You can customize the appearance by:
-
-1. **Using the `className` prop** to add custom styles
-2. **Modifying the CSS module** (`VideoPlayer.module.css`)
-3. **Using the `objectFit` prop** to control how the video fills the container
-4. **Setting custom `width` and `height`** for specific dimensions
+The component uses CSS modules and follows mobile-first responsive design principles. The video player is always responsive with a 16:9 aspect ratio.
 
 ### CSS Classes
 
-- `.container`: Main container wrapper with 16:9 aspect ratio
-- `.player`: ReactPlayer component positioned absolutely within container
+- `.videoPlayer`: Main container wrapper with 16:9 aspect ratio
+- `.rounded`: Applies border-radius and overflow hidden for rounded corners
 
 ## Browser Support
 
@@ -144,8 +104,8 @@ The component relies on `react-player` which supports:
 
 ## Performance Considerations
 
-- Videos are not muted by default for better user experience
-- Use appropriate video formats and compression for local files
-- Consider using `poster` for better loading experience
+- Videos are muted by default for better autoplay compatibility
+- Uses debounced play detection to prevent rapid toggles
+- SSR-safe with client-side only rendering
 - YouTube and Vimeo videos are loaded asynchronously
 - The 16:9 aspect ratio is maintained across all screen sizes 

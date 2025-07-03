@@ -7,11 +7,11 @@ import { Accordion } from "./Accordion.component";
 export const AccordionExample = () => {
   return (
     <div>
-      <Accordion title="H1 Header" headerElement="h1">
+      <Accordion headerElement="h1" title="H1 Header">
         <p>This accordion uses an h1 element for the header.</p>
       </Accordion>
 
-      <Accordion title="H2 Header" headerElement="h2">
+      <Accordion headerElement="h2" title="H2 Header">
         <p>This accordion uses an h2 element for the header.</p>
       </Accordion>
     </div>

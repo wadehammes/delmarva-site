@@ -11,7 +11,7 @@ export const createBackgroundColor = (color: DelmarvaColors) => {
     case DelmarvaColors.White:
       return "var(--colors-white)";
     default:
-      return "var(--colors-white)";
+      return "var(--color-bg)";
   }
 };
 

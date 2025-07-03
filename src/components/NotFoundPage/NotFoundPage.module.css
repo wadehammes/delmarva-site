@@ -1,14 +1,14 @@
 .notFoundPage {
-  background-color: var(--colors-dark-blue);
   display: flex;
+  flex: 1;
   flex-direction: column;
+  gap: 2rem;
   align-items: center;
   justify-content: center;
-  padding: var(--default-padding);
-  text-align: center;
-  gap: 2rem;
   height: 100%;
+  padding: var(--default-padding);
   color: var(--colors-white);
-  flex: 1;
+  text-align: center;
+  background-color: var(--colors-dark-blue);
   border-bottom: 1px solid var(--colors-black);
 }

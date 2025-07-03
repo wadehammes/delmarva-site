@@ -1,59 +1,96 @@
-.section {
-  background-color: var(--colors-white);
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  width: 100%;
-  z-index: 1;
-}
-
 .sectionContent {
-  width: 100%;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 4rem;
+  grid-template-columns: repeat(var(--columns, 1), 1fr);
+  grid-column: 1 / -1;
+  gap: var(--gap, 4rem);
+  align-items: center;
+  width: 100%;
 
+  @media screen and (min-width: 800px) {
+    grid-template-columns: repeat(var(--columns-md, var(--columns, 1)), 1fr);
+    gap: var(--gap-md, var(--gap, 4rem));
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: repeat(
+        var(--columns-lg, var(--columns-md, var(--columns, 1))),
+        1fr
+      );
+    gap: var(--gap-lg, var(--gap-md, var(--gap, 4rem)));
+  }
+
+  &.contained {
+    max-width: 1440px;
+  }
+
+  /* Legacy class support - can be removed once components are updated */
   &.twoColumn {
-    @media screen and (min-width: 800px) {
-      grid-template-columns: 1fr 1fr;
-    }
+    --columns: 1;
+    --columns-md: 2;
   }
 
   &.threeColumn {
-    @media screen and (min-width: 800px) {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    @media screen and (min-width: 1200px) {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
+    --columns: 1;
+    --columns-md: 2;
+    --columns-lg: 3;
   }
 
   &.fourColumn {
-    @media screen and (min-width: 800px) {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
+    --columns: 1;
+    --columns-md: 4;
+  }
+}
+
+.section {
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
+  width: 100%;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  background-color: var(--colors-white);
+
+  &.overlap > .sectionContent {
+    padding: 2rem;
+    margin-top: -8rem;
+    color: var(--color-text);
+    background-color: color-mix(in srgb, var(--color-bg) 80%, #000);
+    border-radius: 10px;
+  }
+
+  &.start > .sectionContent {
+    justify-self: start;
+  }
+
+  &.center > .sectionContent {
+    justify-self: center;
+  }
+
+  &.end > .sectionContent {
+    justify-self: end;
   }
 }
 
 .sectionHeader {
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   gap: 1rem;
-  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
   max-width: 80ch;
   padding: 0 var(--default-padding);
+  margin: 0 auto;
+  text-align: center;
 
   &.left {
-    text-align: left;
     justify-content: flex-start;
+    text-align: left;
   }
 
   &.right {
-    text-align: right;
     justify-content: flex-end;
+    text-align: right;
   }
 }
 
