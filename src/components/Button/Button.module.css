@@ -1,50 +1,59 @@
 .button {
   display: flex;
   flex-flow: row nowrap;
+  gap: 1rem;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  font-size: 16px;
-  background-color: var(--colors-black);
-  color: var(--colors-white);
   padding: 1rem 1.75rem;
-  text-decoration: none;
-  transition: all 0.2s ease-in-out;
+  font-size: 0.8rem;
+  color: var(--colors-white);
   text-align: center;
-  box-shadow:
-    0 0 0 2px transparent,
-    0 0 0 3px var(--colors-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background-color: var(--colors-red);
   border-radius: 1000px;
+  transition: all 0.2s ease-in-out;
 
   &[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
     pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   &:hover {
-    background-color: var(--colors-black);
+    color: var(--colors-white);
     cursor: pointer;
+    background-color: color-mix(
+      in srgb,
+      var(--colors-red) 80%,
+      var(--colors-black)
+    );
+  }
+
+  &:focus {
+    outline: none;
+    border: 1px solid var(--colors-text);
   }
 
   &.outline {
+    color: var(--colors-white);
     background-color: transparent;
-    border-color: var(--colors-black);
-    color: var(--colors-black);
+    border-color: var(--colors-white);
 
     &:hover {
-      background-color: var(--colors-black);
       color: var(--colors-white);
+      background-color: var(--colors-black);
     }
   }
 
   &.secondary {
-    background-color: var(--colors-red);
     color: var(--colors-white);
+    background-color: var(--colors-red);
 
     &:hover {
-      background-color: var(--colors-black);
       color: var(--colors-white);
+      background-color: var(--colors-black);
     }
   }
 }

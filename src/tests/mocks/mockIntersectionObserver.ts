@@ -25,14 +25,14 @@ export function setupIntersectionObserverMock({
   }
 
   Object.defineProperty(window, "IntersectionObserver", {
-    writable: true,
     configurable: true,
     value: MockIntersectionObserver,
+    writable: true,
   });
 
   Object.defineProperty(global, "IntersectionObserver", {
-    writable: true,
     configurable: true,
     value: MockIntersectionObserver,
+    writable: true,
   });
 }

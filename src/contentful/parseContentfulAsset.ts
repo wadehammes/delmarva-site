@@ -1,5 +1,5 @@
 import type { Asset, AssetLink } from "contentful";
-import { createImageUrl } from "src/utils/helpers";
+import { createMediaUrl } from "src/utils/helpers";
 
 // Our simplified version of an image asset.
 // We don't need all the data that Contentful gives us.
@@ -25,10 +25,10 @@ export function parseContentfulAsset(
   }
 
   return {
-    id: asset.sys.id,
-    src: asset.fields.file?.url ? createImageUrl(asset.fields.file.url) : "",
     alt: asset.fields?.description || "",
-    width: asset.fields.file?.details?.image?.width || 0,
     height: asset.fields.file?.details?.image?.height || 0,
+    id: asset.sys.id,
+    src: asset.fields.file?.url ? createMediaUrl(asset.fields.file.url) : "",
+    width: asset.fields.file?.details?.image?.width || 0,
   };
 }

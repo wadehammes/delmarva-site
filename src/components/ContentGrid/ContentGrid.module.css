@@ -1,0 +1,17 @@
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--default-padding);
+
+  &.two-column {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &.three-column {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &.four-column {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

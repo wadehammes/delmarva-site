@@ -1,0 +1,32 @@
+.contentRecentNewsList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: stretch;
+  justify-content: stretch;
+  list-style: none;
+
+  @media (min-width: 800px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.newsItem {
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--divider);
+
+  @media (min-width: 900px) {
+    padding-right: 2rem;
+    border-right: 1px dashed var(--divider);
+    border-bottom: none;
+  }
+
+  &:last-child {
+    border-right: none;
+    border-bottom: none;
+  }
+}

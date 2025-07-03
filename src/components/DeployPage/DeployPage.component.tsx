@@ -13,12 +13,12 @@ export const DeployPage = async () => {
         </p>
         <div className={styles.buttonGroup}>
           <DeployButton
-            label="Redeploy Staging"
             deployHook="https://api.vercel.com/v1/integrations/deploy/prj_ytRiAeutl2oPJ6wTfhUQe8OVckOI/NYAW8D2ZH7"
+            label="Redeploy Staging"
           />
           <DeployButton
-            label="Redeploy Production"
             deployHook="https://api.vercel.com/v1/integrations/deploy/prj_ytRiAeutl2oPJ6wTfhUQe8OVckOI/wRWGDd87np"
+            label="Redeploy Production"
           />
         </div>
       </div>

@@ -24,9 +24,9 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
   const draft = await draftMode();
 
   const page = await fetchPage({
-    slug: "home",
-    preview: draft.isEnabled,
     locale,
+    preview: draft.isEnabled,
+    slug: "home",
   });
 
   if (!page) {
@@ -37,13 +37,13 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
     alternates: {
       canonical: new URL(`${envUrl()}`),
     },
-    title: `${page.metaTitle}`,
     description: page.metaDescription,
     keywords: page?.metaKeywords?.join(",") ?? "",
     robots:
       page.enableIndexing && process.env.ENVIRONMENT === "production"
         ? "index, follow"
         : "noindex, nofollow",
+    title: `${page.metaTitle}`,
   };
 }
 
@@ -55,8 +55,8 @@ const Home = async (props: HomeProps) => {
   const draft = await draftMode();
 
   const page = await fetchPage({
-    slug: "home",
     preview: draft.isEnabled,
+    slug: "home",
   });
 
   if (!page) {
@@ -72,15 +72,15 @@ const Home = async (props: HomeProps) => {
       itemListElement: [
         {
           "@type": "ListItem",
-          position: 0,
           name: "Home",
+          position: 0,
         },
       ],
     },
-    name: "Delmarva Site Development",
-    description: metaDescription,
-    datePublished: publishDate,
     dateModified: updatedAt,
+    datePublished: publishDate,
+    description: metaDescription,
+    name: "Delmarva Site Development",
     publisher: {
       "@type": "Organization",
       name: "Delmarva Site Development",
@@ -90,9 +90,9 @@ const Home = async (props: HomeProps) => {
   return (
     <>
       <script
-        type="application/ld+json"
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type="application/ld+json"
       />
       <PageComponent fields={page} />
     </>

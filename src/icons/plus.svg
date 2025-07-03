@@ -1,0 +1,15 @@
+        <svg
+
+          fill="none"
+          height="64"
+          viewBox="0 0 15 15"
+          width="64"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.5 2.5V12.5M2.5 7.5H12.5"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeWidth="0.5"
+          />
+        </svg>

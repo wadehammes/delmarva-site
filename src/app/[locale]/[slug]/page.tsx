@@ -41,21 +41,21 @@ export async function generateStaticParams(): Promise<PageParams[]> {
           EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(page.slug ?? "")
         ) {
           return {
-            route: "",
             modTime: "",
+            route: "",
           };
         }
 
         if (page.slug === HOME_PAGE_SLUG) {
           return {
-            route: "/",
             modTime: page.updatedAt,
+            route: "/",
           };
         }
 
         return {
-          route: `/${page.slug}`,
           modTime: page.updatedAt,
+          route: `/${page.slug}`,
         };
       })
       .filter((item: SitemapItem) => item.route.length);
@@ -72,8 +72,8 @@ export async function generateStaticParams(): Promise<PageParams[]> {
           (page) => !EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(page?.slug ?? ""),
         )
         .map((page: PageType) => ({
-          slug: page?.slug ?? "",
           locale,
+          slug: page?.slug ?? "",
         })),
     ),
   );
@@ -88,9 +88,9 @@ export async function generateMetadata({
   const draft = await draftMode();
 
   const page = await fetchPage({
-    slug,
-    preview: draft.isEnabled,
     locale,
+    preview: draft.isEnabled,
+    slug,
   });
 
   if (!page) {
@@ -101,13 +101,13 @@ export async function generateMetadata({
     alternates: {
       canonical: new URL(`${envUrl()}/${page.slug}`),
     },
-    title: page.metaTitle,
+    description: page.metaDescription,
+    keywords: page?.metaKeywords?.join(",") ?? "",
     robots:
       page.enableIndexing && process.env.ENVIRONMENT === "production"
         ? "index, follow"
         : "noindex, nofollow",
-    description: page.metaDescription,
-    keywords: page?.metaKeywords?.join(",") ?? "",
+    title: page.metaTitle,
   };
 }
 
@@ -122,9 +122,9 @@ async function Page({ params }: PageProps) {
   // Fetch a single page by slug,
   // using the content preview if draft mode is enabled:
   const page = await fetchPage({
-    slug,
-    preview: draft.isEnabled,
     locale,
+    preview: draft.isEnabled,
+    slug,
   });
 
   if (!page) {

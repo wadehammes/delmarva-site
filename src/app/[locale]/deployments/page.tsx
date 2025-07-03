@@ -9,8 +9,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: new URL(`${envUrl()}/deployments`),
     },
-    title: "Deployments | Delmarva Site Development",
     robots: "noindex, nofollow",
+    title: "Deployments | Delmarva Site Development",
   };
 }
 

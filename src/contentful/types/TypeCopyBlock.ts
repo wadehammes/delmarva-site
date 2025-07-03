@@ -12,6 +12,8 @@ export interface TypeCopyBlockFields {
   copy?: EntryFieldTypes.RichText;
   slug: EntryFieldTypes.Symbol;
   cta?: EntryFieldTypes.EntryLink<TypeCtaSkeleton>;
+  alignment?: EntryFieldTypes.Symbol<"Center" | "Left" | "Right">;
+  mobileAlignment?: EntryFieldTypes.Symbol<"Center" | "Left" | "Right">;
 }
 
 export type TypeCopyBlockSkeleton = EntrySkeletonType<

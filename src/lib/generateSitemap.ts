@@ -23,8 +23,8 @@ export const generateSitemap = (
     ${routes
       .map((route) =>
         generateSitemapItem({
-          route: route.route,
           modTime: route.modTime,
+          route: route.route,
         }),
       )
       .join("")}

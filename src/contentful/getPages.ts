@@ -1,5 +1,10 @@
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
+import { type FooterType, parseFooter } from "src/contentful/getFooter";
+import {
+  type NavigationType,
+  parseNavigation,
+} from "src/contentful/getNavigation";
 import type { Locales } from "src/contentful/interfaces";
 import {
   parseContentfulSection,
@@ -27,6 +32,8 @@ export interface Page {
   slug: string;
   title: string | undefined;
   updatedAt: string;
+  navigationOverride?: NavigationType | null;
+  footerOverride?: FooterType | null;
 }
 
 // A function to transform a Contentful page
@@ -38,10 +45,16 @@ export function parseContentfulPage(pageEntry?: PageEntry): Page | null {
 
   return {
     enableIndexing: pageEntry.fields.enableIndexing,
+    footerOverride: pageEntry.fields.footerOverride
+      ? parseFooter(pageEntry.fields.footerOverride)
+      : undefined,
     id: pageEntry.sys.id,
     metaDescription: pageEntry.fields.metaDescription,
     metaKeywords: pageEntry.fields.metaKeywords,
     metaTitle: pageEntry.fields.metaTitle,
+    navigationOverride: pageEntry.fields.navigationOverride
+      ? parseNavigation(pageEntry.fields.navigationOverride)
+      : undefined,
     publishDate: pageEntry.sys.createdAt,
     sections:
       pageEntry?.fields?.sections?.map((section) =>
@@ -77,8 +90,8 @@ export function parseContentfulPageForNavigation(
 
   return {
     id: pageEntry.sys.id,
-    url,
     text: pageEntry.fields.title ?? "",
+    url,
   };
 }
 
@@ -106,8 +119,8 @@ export async function fetchPages({
         content_type: "page",
         include: 10,
         limit,
-        skip,
         locale,
+        skip,
       });
 
     const currentPageEntries = pages.items.map(

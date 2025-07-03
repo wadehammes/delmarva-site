@@ -1,31 +1,47 @@
 .navigation {
-  align-items: center;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent);
-  display: flex;
-  justify-content: space-between;
-  left: 0;
   position: fixed;
-  padding: 1rem 2rem 2rem;
   top: 0;
+  left: 0;
   z-index: 100;
-  transform: translateY(0);
-  transition: transform 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid transparent;
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
 
   &.hidden {
     transform: translateY(-200px);
   }
+
+  &.transparent {
+    background-color: rgba(0, 0, 0, 0.075);
+    border: none;
+    backdrop-filter: blur(10px);
+  }
+
+  &.withBackground {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-bottom-color: black;
+    backdrop-filter: blur(10px);
+  }
 }
 
 .navList {
-  display: flex;
+  display: none;
+  flex: 1;
+  gap: 1rem;
   align-items: center;
   justify-content: flex-start;
-  gap: 1rem;
-  list-style: none;
-  margin: 0;
   padding: 1.5rem 1rem;
-  flex: 1;
+  margin: 0;
+  list-style: none;
+
+  @media screen and (min-width: 800px) {
+    display: flex;
+  }
 }
 
 .navItem {
@@ -33,27 +49,217 @@
   align-items: center;
 
   > a {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--colors-white);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+
+    &:hover,
+    &.active {
+      color: var(--colors-white);
+      border-bottom-color: var(--colors-red);
+    }
   }
 }
 
 .logo {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   height: 100%;
-  flex: 1;
 
   svg {
-    width: 150px;
+    width: 10rem;
     height: auto;
+  }
+
+  @media screen and (min-width: 800px) {
+    flex: 1;
+    justify-content: center;
   }
 }
 
 .ctaButton {
-  display: flex;
+  display: none;
+  flex: 1;
   align-items: center;
   justify-content: flex-end;
+
+  @media screen and (min-width: 800px) {
+    display: flex;
+  }
+}
+
+.mobileNavList {
+  display: flex;
   flex: 1;
+  flex-flow: column nowrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: var(--default-padding);
+  text-align: center;
+
+  > a {
+    line-height: 1.25;
+    text-decoration: none;
+  }
+}
+
+.desktopNavigation {
+  display: none;
+
+  @media screen and (min-width: 800px) {
+    display: flex;
+    flex: 1;
+  }
+}
+
+.mobileNav {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  padding: 2rem;
+  font-size: 3rem;
+  color: var(--colors-text);
+  background-color: var(--color-bg);
+
+  @media (min-width: 800px) {
+    display: none;
+  }
+
+  > a {
+    text-decoration: none;
+  }
+}
+
+.navigationList {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  font-size: 1.1em;
+  list-style: none;
+
+  a {
+    padding-bottom: 0.1rem;
+    text-decoration: none;
+  }
+
+  li.active a {
+    color: var(--colors-main-blue);
+    border-bottom: 2px solid var(--colors-main-blue);
+  }
+}
+
+.mobileNavToggleContainer {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+
+  @media screen and (min-width: 800px) {
+    display: none;
+  }
+}
+
+.mobileNavToggle {
+  display: block;
+  padding: 0;
+  margin: 0;
+  color: var(--colors-white);
+  appearance: none;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  transform: translateX(0.5rem);
+
+  &:focus {
+    outline: 0;
+  }
+
+  & > .menu {
+    width: 3.5rem;
+    height: 3.5rem;
+    fill: currentColor;
+  }
+
+  &:hover > .menu {
+    color: var(--colors-main-blue);
+  }
+}
+
+.withBackground .mobileNavToggle {
+  color: var(--colors-text);
+
+  &:hover > .menu {
+    color: var(--colors-main-blue);
+  }
+}
+
+.navItem {
+  text-decoration: none;
+
+  &.active {
+    color: var(--colors-main-blue);
+  }
+}
+
+.mobileNavLogo {
+  position: absolute;
+  top: 1.45rem;
+  left: 2.45rem;
+  display: block;
+  color: var(--colors-text);
+
+  > svg {
+    width: 10rem;
+    height: auto;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 2rem;
+  padding: 0;
+  margin: 0;
+  font-size: 4rem;
+  color: inherit;
+  appearance: none;
+  cursor: pointer;
+  background: none;
+  border: 0;
+
+  &:focus {
+    outline: 0;
+  }
+
+  .close {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: currentColor;
+  }
+
+  &:hover .close {
+    color: var(--colors-main-blue);
+  }
+}
+
+.navLink {
+  font-size: 1rem;
 }

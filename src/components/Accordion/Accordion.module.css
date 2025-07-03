@@ -1,98 +1,97 @@
-.accordion {
-  border-top: 1px solid var(--colors-silver);
-  overflow: hidden;
+.accordionInner {
+  padding: 0 0 2rem 0;
+
+  @media (min-width: 600px) {
+    padding: 0 0 4rem 0;
+  }
+}
+
+.plusIcon {
+  color: currentColor;
+  transition: transform 0.2s ease-in-out;
+}
+
+.accordionButton {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
+  padding: 1rem 0;
+  font-family: var(--font-family-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.2s ease-in-out;
 
-  .accordionHeader {
-    margin: 0;
+  &:focus {
+    outline: none;
   }
 
-  .accordionButton {
-    align-items: center;
-    background: none;
-    border: none;
-    color: var(--color-text);
-    cursor: pointer;
-    display: flex;
-    font-family: var(--font-family-heading);
-    font-size: 1.1rem;
-    font-weight: 600;
-    gap: 1rem;
-    justify-content: space-between;
-    padding: 1rem;
-    text-align: left;
-    transition: all 0.2s ease-in-out;
-    width: 100%;
-
-    &:hover {
-      background-color: var(--colors-lightgray);
-      color: var(--colors-black);
-    }
-
-    &:focus {
-      background-color: var(--colors-lightgray);
-      color: var(--colors-black);
-      outline: none;
-      outline-offset: 0;
-    }
-
-    &.isOpen {
-      .accordionIcon {
-        transform: rotate(180deg);
-      }
-
-      .plusIcon {
-        transform: rotate(45deg);
-      }
-    }
-
-    @media (min-width: 600px) {
-      font-size: 1.25rem;
-      padding: 1.25rem;
-    }
+  &:hover {
+    color: var(--colors-red);
   }
 
-  .accordionTitle {
-    flex: 1;
+  &.isOpen .plusIcon {
+    transform: rotate(45deg);
   }
 
-  .accordionIcon {
-    align-items: center;
-    display: flex;
-    flex-shrink: 0;
-    height: 32px;
-    justify-content: center;
-    transition: transform 0.2s ease-in-out;
-    width: 32px;
+  @media (min-width: 600px) {
+    font-size: 2rem;
+  }
+}
 
-    @media (min-width: 600px) {
-      height: 64px;
-      width: 64px;
-    }
+.accordion {
+  width: 100%;
+  overflow: hidden;
+  border-top: 1px solid transparent;
+
+  &:not(:first-child) {
+    border-top-color: var(--divider);
   }
 
-  .plusIcon {
-    color: currentColor;
-    transition: transform 0.2s ease-in-out;
+  &.active .accordionButton {
+    color: var(--colors-red);
+  }
+}
+
+.accordionHeader {
+  margin: 0;
+}
+
+.accordionTitle {
+  flex: 1;
+}
+
+.accordionIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: rotate(360deg);
   }
 
-  .accordionContent {
-    background-color: var(--color-bg);
-    overflow: hidden;
+  @media (min-width: 600px) {
+    width: 64px;
+    height: 64px;
+  }
+}
 
-    .accordionInner {
-      padding: 1rem;
+.accordionContent {
+  overflow: hidden;
+  background-color: var(--color-bg);
 
-      @media (min-width: 600px) {
-        padding: 2rem;
-      }
-    }
-
-    &:not(.isOpen) {
-      .accordionInner {
-        transform: scaleY(0);
-        opacity: 0;
-      }
-    }
+  &:not(.isOpen) .accordionInner {
+    opacity: 0;
+    transform: scaleY(0);
   }
 }

@@ -7,20 +7,22 @@ import {
   INLINES,
   type Document as RichTextDocument,
 } from "@contentful/rich-text-types";
+import classNames from "classnames";
 import Image from "next/image";
 import type { ElementType, HTMLAttributes } from "react";
 import { Link } from "src/components/Link/Link.component";
 import styles from "src/components/RichText/RichText.module.css";
 import { parseContentfulAsset } from "src/contentful/parseContentfulAsset";
-import { createImageUrl, replaceNbsp } from "src/utils/helpers";
+import { createMediaUrl, replaceNbsp } from "src/utils/helpers";
 
 interface RichTextProps extends HTMLAttributes<HTMLDivElement> {
   as?: ElementType;
+  className?: string;
   document: RichTextDocument | undefined;
 }
 
 export const RichText = (props: RichTextProps) => {
-  const { document, as: Component = "div", ...rest } = props;
+  const { document, as: Component = "div", className, ...rest } = props;
 
   if (!document) {
     return null;
@@ -41,18 +43,18 @@ export const RichText = (props: RichTextProps) => {
         return (
           <div className={styles.imageBlock}>
             <Image
-              src={createImageUrl(image.src)}
-              width={image.width}
+              alt={image.alt}
               height={image.height}
               loading="lazy"
-              alt={image.alt}
               quality={100}
+              src={createMediaUrl(image.src)}
               style={{
+                height: "auto",
+                maxWidth: `${image.width}px`,
                 objectFit: "cover",
                 objectPosition: "center",
-                maxWidth: `${image.width}px`,
-                height: "auto",
               }}
+              width={image.width}
             />
           </div>
         );
@@ -62,7 +64,7 @@ export const RichText = (props: RichTextProps) => {
   };
 
   return (
-    <Component className={styles.richText} {...rest}>
+    <Component className={classNames(styles.richText, className)} {...rest}>
       {documentToReactComponents(document, documentParsing)}
     </Component>
   );

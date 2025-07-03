@@ -22,11 +22,11 @@ export function parseContentfulCta(cta: CtaEntry): Cta | null {
   }
 
   return {
+    externalLink: cta.fields.externalLink ?? "",
     id: cta.sys.id,
-    text: cta.fields.text ?? "",
     pageLink: cta.fields.pageLink
       ? parseContentfulPageForNavigation(cta.fields.pageLink)
       : null,
-    externalLink: cta.fields.externalLink ?? "",
+    text: cta.fields.text ?? "",
   };
 }

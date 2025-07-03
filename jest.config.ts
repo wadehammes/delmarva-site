@@ -4,14 +4,14 @@ import nextJest from "next/jest";
 
 // Sync object
 const customJestConfig: Config.InitialOptions = {
-  verbose: true,
-  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+  moduleDirectories: ["node_modules", "<rootDir>"],
+  preset: "ts-jest",
   setupFiles: ["<rootDir>/.jest/setEnvVars.ts"],
   setupFilesAfterEnv: ["<rootDir>/.jest/setupTests.ts"],
-  moduleDirectories: ["node_modules", "<rootDir>"],
   testEnvironment: "jest-environment-jsdom",
+  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!isbot|jest-dom)"],
-  preset: "ts-jest",
+  verbose: true,
 };
 
 // Providing the path to your Next.js app which will enable loading next.config.js and .env files

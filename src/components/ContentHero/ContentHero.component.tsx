@@ -2,6 +2,7 @@ import classNames from "classnames";
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import styles from "src/components/ContentHero/ContentHero.module.css";
+import { HeroVideo } from "src/components/ContentHero/HeroVideo.component";
 import CTA from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import {
@@ -14,13 +15,13 @@ import {
   HeroHeight,
 } from "src/contentful/parseContentHero";
 import { createBackgroundColor } from "src/styles/utils";
-import { createImageUrl } from "src/utils/helpers";
+import { createMediaUrl, isVideoUrl } from "src/utils/helpers";
 
 interface ContentHeroComponentProps {
   fields: ContentHeroType | null;
 }
 
-export default function ContentHeroComponent(props: ContentHeroComponentProps) {
+export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
   const { fields } = props;
 
   if (!fields) {
@@ -59,21 +60,30 @@ export default function ContentHeroComponent(props: ContentHeroComponentProps) {
         className={classNames(styles.heroMedia)}
         style={{ filter: `grayscale(${backgroundMediaSaturation})` }}
       >
-        {backgroundMedia.map((media) => (
-          <Image
-            key={media.id}
-            src={createImageUrl(media.src)}
-            alt={media.alt}
-            width={media.width}
-            height={media.height}
-            style={{
-              objectFit: "cover",
-              objectPosition: "center",
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        ))}
+        {backgroundMedia.map((media) => {
+          const mediaUrl = createMediaUrl(media.src);
+          const isVideo = isVideoUrl(mediaUrl);
+
+          if (isVideo) {
+            return <HeroVideo key={media.id} src={mediaUrl} />;
+          }
+
+          return (
+            <Image
+              alt={media.alt}
+              height={media.height}
+              key={media.id}
+              src={mediaUrl}
+              style={{
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center",
+                width: "100%",
+              }}
+              width={media.width}
+            />
+          );
+        })}
       </div>
       <div
         className={classNames(styles.heroOverlay, {
@@ -94,4 +104,6 @@ export default function ContentHeroComponent(props: ContentHeroComponentProps) {
       </div>
     </div>
   );
-}
+};
+
+export default ContentHeroComponent;

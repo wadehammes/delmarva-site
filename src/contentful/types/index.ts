@@ -1,4 +1,24 @@
 export type {
+  TypeContentCard,
+  TypeContentCardFields,
+  TypeContentCardSkeleton,
+} from "./TypeContentCard";
+export type {
+  TypeContentCarousel,
+  TypeContentCarouselFields,
+  TypeContentCarouselSkeleton,
+} from "./TypeContentCarousel";
+export type {
+  TypeContentCopyMediaBlock,
+  TypeContentCopyMediaBlockFields,
+  TypeContentCopyMediaBlockSkeleton,
+} from "./TypeContentCopyMediaBlock";
+export type {
+  TypeContentGrid,
+  TypeContentGridFields,
+  TypeContentGridSkeleton,
+} from "./TypeContentGrid";
+export type {
   TypeContentHero,
   TypeContentHeroFields,
   TypeContentHeroSkeleton,
@@ -14,10 +34,20 @@ export type {
   TypeContentModulesSkeleton,
 } from "./TypeContentModules";
 export type {
+  TypeContentRecentNews,
+  TypeContentRecentNewsFields,
+  TypeContentRecentNewsSkeleton,
+} from "./TypeContentRecentNews";
+export type {
   TypeContentStatBlock,
   TypeContentStatBlockFields,
   TypeContentStatBlockSkeleton,
 } from "./TypeContentStatBlock";
+export type {
+  TypeContentTestimonial,
+  TypeContentTestimonialFields,
+  TypeContentTestimonialSkeleton,
+} from "./TypeContentTestimonial";
 export type {
   TypeContentVideoBlock,
   TypeContentVideoBlockFields,
@@ -29,6 +59,16 @@ export type {
   TypeCopyBlockSkeleton,
 } from "./TypeCopyBlock";
 export type { TypeCta, TypeCtaFields, TypeCtaSkeleton } from "./TypeCta";
+export type {
+  TypeFooter,
+  TypeFooterFields,
+  TypeFooterSkeleton,
+} from "./TypeFooter";
+export type {
+  TypeMarket,
+  TypeMarketFields,
+  TypeMarketSkeleton,
+} from "./TypeMarket";
 export type {
   TypeNavigation,
   TypeNavigationFields,

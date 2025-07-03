@@ -1,0 +1,14 @@
+.recentNews {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.learnMoreLink {
+  color: var(--colors-red);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
