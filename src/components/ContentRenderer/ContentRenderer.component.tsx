@@ -1,7 +1,12 @@
 import ContentHeroComponent from "src/components/ContentHero/ContentHero.component";
+import { ContentModules } from "src/components/ContentModules/ContentModules.component";
 import CopyBlock from "src/components/CopyBlock/CopyBlock.component";
 import type { ContentHeroEntry } from "src/contentful/parseContentHero";
 import { parseContentHero } from "src/contentful/parseContentHero";
+import {
+  type ContentModuleEntry,
+  parseContentModule,
+} from "src/contentful/parseContentModules";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { parseCopyBlock } from "src/contentful/parseCopyBlock";
 import type { ContentEntries } from "src/contentful/parseSections";
@@ -28,8 +33,16 @@ export const ContentRenderer = (props: ContentRendererProps) => {
           fields={parseContentHero(content as ContentHeroEntry)}
         />
       );
+    case "contentModules": {
+      const parsedModule = parseContentModule(content as ContentModuleEntry);
+
+      if (!parsedModule) {
+        return null;
+      }
+
+      return <ContentModules fields={parsedModule} />;
+    }
     default:
-      console.warn(`Unknown content type: ${contentType}`);
       return null;
   }
 };

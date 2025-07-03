@@ -1,0 +1,30 @@
+import type { Entry } from "contentful";
+import {
+  type ContentfulAsset,
+  parseContentfulAsset,
+} from "src/contentful/parseContentfulAsset";
+import type { TypeContentVideoBlockSkeleton } from "src/contentful/types/TypeContentVideoBlock";
+
+export interface ContentfulVideoBlock {
+  id: string;
+  videoUrl: string;
+  videoUpload?: ContentfulAsset | null;
+}
+
+export type ContentVideoBlockEntry =
+  | Entry<TypeContentVideoBlockSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | undefined;
+
+export function parseContentfulVideoBlock(
+  videoBlock?: ContentVideoBlockEntry,
+): ContentfulVideoBlock | null {
+  if (!videoBlock) {
+    return null;
+  }
+
+  return {
+    id: videoBlock.sys.id,
+    videoUrl: videoBlock.fields.videoUrl,
+    videoUpload: parseContentfulAsset(videoBlock.fields.videoUpload),
+  };
+}
