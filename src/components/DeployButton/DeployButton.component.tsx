@@ -25,14 +25,14 @@ export const DeployButton = (props: DeployButtonProps) => {
 
   return (
     <Button
-      label={clicked ? "Deploying (wait ~2min)" : label}
-      onPress={handleDeploy}
-      isDisabled={clicked}
-      variant={clicked ? "primary" : "outline"}
       data-tracking-click={JSON.stringify({
         event: "Clicked Deploy Button",
         label: "Deploy",
       })}
+      isDisabled={clicked}
+      label={clicked ? "Deploying (wait ~2min)" : label}
+      onPress={handleDeploy}
+      variant={clicked ? "primary" : "outline"}
     />
   );
 };

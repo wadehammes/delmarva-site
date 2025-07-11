@@ -46,9 +46,9 @@ export const Accordion = (props: AccordionProps) => {
   useEffect(() => {
     if (contentRef.current) {
       gsap.to(contentRef.current, {
-        height: isOpen ? "auto" : 0,
         duration: 0.3,
         ease: "power2.out",
+        height: isOpen ? "auto" : 0,
       });
     }
   }, [isOpen]);
@@ -58,34 +58,34 @@ export const Accordion = (props: AccordionProps) => {
 
   const button = (
     <button
-      ref={buttonRef}
+      aria-controls={contentId}
+      aria-expanded={isOpen}
       className={classNames(styles.accordionButton, {
         [styles.isOpen]: isOpen,
       })}
+      id={accordionId}
       onClick={toggleAccordion}
       onKeyDown={handleKeyDown}
-      aria-expanded={isOpen}
-      aria-controls={contentId}
-      id={accordionId}
+      ref={buttonRef}
       type="button"
     >
       <span className={styles.accordionTitle}>{title}</span>
-      <span className={styles.accordionIcon} aria-hidden="true">
+      <span aria-hidden="true" className={styles.accordionIcon}>
         <svg
-          width="64"
-          height="64"
-          viewBox="0 0 15 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
           className={classNames(styles.plusIcon, {
             [styles.isOpen]: isOpen,
           })}
+          fill="none"
+          height="64"
+          viewBox="0 0 15 15"
+          width="64"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M7.5 2.5V12.5M2.5 7.5H12.5"
             stroke="currentColor"
-            strokeWidth="0.5"
             strokeLinecap="round"
+            strokeWidth="0.5"
           />
         </svg>
       </span>
@@ -103,12 +103,12 @@ export const Accordion = (props: AccordionProps) => {
         button,
       )}
       <section
-        ref={contentRef}
+        aria-labelledby={accordionId}
         className={classNames(styles.accordionContent, {
           [styles.isOpen]: isOpen,
         })}
         id={contentId}
-        aria-labelledby={accordionId}
+        ref={contentRef}
         style={{ height: defaultOpen ? "auto" : 0, overflow: "hidden" }}
       >
         <div className={styles.accordionInner}>{children}</div>

@@ -22,11 +22,11 @@ export const CTA = (props: CTAProps) => {
 
   return (
     <ButtonLink
+      buttonStyle={buttonStyle}
+      event={`Clicked ${cta.text} CTA Button`}
       href={url}
       label={cta.text}
       size={size}
-      buttonStyle={buttonStyle}
-      event={`Clicked ${cta.text} CTA Button`}
     />
   );
 };

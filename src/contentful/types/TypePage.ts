@@ -5,6 +5,7 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
+import type { TypeNavigationSkeleton } from "./TypeNavigation";
 import type { TypeSectionSkeleton } from "./TypeSection";
 
 export interface TypePageFields {
@@ -18,6 +19,7 @@ export interface TypePageFields {
   metaDescription: EntryFieldTypes.Symbol;
   metaKeywords?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
   enableIndexing: EntryFieldTypes.Boolean;
+  navigationOverride?: EntryFieldTypes.EntryLink<TypeNavigationSkeleton>;
 }
 
 export type TypePageSkeleton = EntrySkeletonType<TypePageFields, "page">;

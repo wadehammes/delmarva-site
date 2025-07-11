@@ -25,8 +25,8 @@ export const TextField = forwardRef(
         <input
           {...inputProps}
           className={classnames(className, styles.input)}
-          ref={inputRef}
           data-1p-ignore
+          ref={inputRef}
         />
       </fieldset>
     );

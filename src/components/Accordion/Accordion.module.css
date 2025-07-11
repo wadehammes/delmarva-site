@@ -1,39 +1,39 @@
 .accordion {
-  border-top: 1px solid var(--colors-silver);
-  overflow: hidden;
   width: 100%;
+  overflow: hidden;
+  border-top: 1px solid var(--colors-silver);
 
   .accordionHeader {
     margin: 0;
   }
 
   .accordionButton {
-    align-items: center;
-    background: none;
-    border: none;
-    color: var(--color-text);
-    cursor: pointer;
     display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem;
     font-family: var(--font-family-heading);
     font-size: 1.1rem;
     font-weight: 600;
-    gap: 1rem;
-    justify-content: space-between;
-    padding: 1rem;
+    color: var(--color-text);
     text-align: left;
+    cursor: pointer;
+    background: none;
+    border: none;
     transition: all 0.2s ease-in-out;
-    width: 100%;
 
     &:hover {
-      background-color: var(--colors-lightgray);
       color: var(--colors-black);
+      background-color: var(--colors-lightgray);
     }
 
     &:focus {
-      background-color: var(--colors-lightgray);
       color: var(--colors-black);
       outline: none;
       outline-offset: 0;
+      background-color: var(--colors-lightgray);
     }
 
     &.isOpen {
@@ -47,8 +47,8 @@
     }
 
     @media (min-width: 600px) {
-      font-size: 1.25rem;
       padding: 1.25rem;
+      font-size: 1.25rem;
     }
   }
 
@@ -57,17 +57,17 @@
   }
 
   .accordionIcon {
-    align-items: center;
     display: flex;
     flex-shrink: 0;
-    height: 32px;
+    align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease-in-out;
     width: 32px;
+    height: 32px;
+    transition: transform 0.2s ease-in-out;
 
     @media (min-width: 600px) {
-      height: 64px;
       width: 64px;
+      height: 64px;
     }
   }
 
@@ -77,8 +77,8 @@
   }
 
   .accordionContent {
-    background-color: var(--color-bg);
     overflow: hidden;
+    background-color: var(--color-bg);
 
     .accordionInner {
       padding: 1rem;
@@ -90,8 +90,8 @@
 
     &:not(.isOpen) {
       .accordionInner {
-        transform: scaleY(0);
         opacity: 0;
+        transform: scaleY(0);
       }
     }
   }

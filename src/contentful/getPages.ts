@@ -77,8 +77,8 @@ export function parseContentfulPageForNavigation(
 
   return {
     id: pageEntry.sys.id,
-    url,
     text: pageEntry.fields.title ?? "",
+    url,
   };
 }
 
@@ -106,8 +106,8 @@ export async function fetchPages({
         content_type: "page",
         include: 10,
         limit,
-        skip,
         locale,
+        skip,
       });
 
     const currentPageEntries = pages.items.map(

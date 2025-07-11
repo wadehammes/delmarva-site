@@ -25,10 +25,10 @@ export function parseContentfulAsset(
   }
 
   return {
+    alt: asset.fields?.description || "",
+    height: asset.fields.file?.details?.image?.height || 0,
     id: asset.sys.id,
     src: asset.fields.file?.url ? createImageUrl(asset.fields.file.url) : "",
-    alt: asset.fields?.description || "",
     width: asset.fields.file?.details?.image?.width || 0,
-    height: asset.fields.file?.details?.image?.height || 0,
   };
 }

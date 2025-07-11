@@ -4,8 +4,8 @@ import { Stat, type StatProps } from "./Stat.component";
 
 export class StatPO extends BasePageObject {
   private defaultProps: StatProps = {
-    value: 1000,
     description: "Test description",
+    value: 1000,
   };
 
   render(props?: Partial<StatProps>) {

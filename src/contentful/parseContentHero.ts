@@ -47,18 +47,18 @@ export function parseContentHero(entry: ContentHeroEntry): ContentHero | null {
   }
 
   return {
-    entryTitle: entry.fields.entryTitle ?? "",
-    copy: entry.fields.copy,
-    cta: entry.fields.cta ? parseContentfulCta(entry.fields.cta) : null,
-    heroHeight: entry.fields.heroHeight as HeroHeight,
-    id: entry.sys.id,
-    copyPlacement: entry.fields.copyPlacement as Placement,
     backgroundMedia:
       entry.fields.backgroundMedia
         ?.map((asset) => parseContentfulAsset(asset))
         .filter((asset): asset is ContentfulAsset => asset !== null) ?? [],
     backgroundMediaSaturation: entry.fields
       .backgroundMediaSaturation as CSSColorAdjustScale,
+    copy: entry.fields.copy,
+    copyPlacement: entry.fields.copyPlacement as Placement,
+    cta: entry.fields.cta ? parseContentfulCta(entry.fields.cta) : null,
+    entryTitle: entry.fields.entryTitle ?? "",
+    heroHeight: entry.fields.heroHeight as HeroHeight,
+    id: entry.sys.id,
     overlayColor: entry.fields.overlayColor as DelmarvaColors,
     overlayOpacity: entry.fields.overlayOpacity as CSSColorAdjustScale,
     overlayStyle: entry.fields.overlayStyle as OverlayStyle,

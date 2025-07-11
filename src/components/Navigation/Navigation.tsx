@@ -52,13 +52,13 @@ export const Navigation = (props: NavigationProps) => {
           }
 
           return (
-            <li key={link.id} className={styles.navItem}>
+            <li className={styles.navItem} key={link.id}>
               <Link href={link.pageLink?.url ?? ""}>{link.text}</Link>
             </li>
           );
         })}
       </ul>
-      <Link href="/" className={styles.logo}>
+      <Link className={styles.logo} href="/">
         <DelmarvaLogo />
       </Link>
       {navigation.ctaButton ? (

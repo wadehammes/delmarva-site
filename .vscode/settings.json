@@ -2,14 +2,20 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "cSpell.words": [
+    "autopause",
     "ctas",
+    "disablekb",
     "googletagmanager",
     "gsap",
     "maxage",
+    "modestbranding",
     "nosniff",
+    "showinfo",
     "svgr",
     "texas",
-    "webp"
+    "vimeo",
+    "webp",
+    "youtube"
   ],
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,

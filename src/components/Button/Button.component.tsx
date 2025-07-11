@@ -25,12 +25,12 @@ export const Button = (props: ButtonProps) => {
 
   return (
     <UIButton
-      type={type}
       className={classNames(styles.button, {
         [styles.secondary]: variant === "secondary",
         [styles.outline]: variant === "outline",
       })}
       data-tracking-click={dataTrackingClick}
+      type={type}
       {...rest}
     >
       {label}

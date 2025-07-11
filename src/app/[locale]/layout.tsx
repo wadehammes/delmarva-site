@@ -18,8 +18,8 @@ interface RootLayoutProps {
 
 export function generateMetadata(): Metadata {
   return {
-    metadataBase: new URL(`${envUrl()}/`),
     creator: "Delmarva Site Development",
+    metadataBase: new URL(`${envUrl()}/`),
     publisher: "Delmarva Site Development",
   };
 }
@@ -45,12 +45,12 @@ export default async function RootLayout({
       <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID as string} />
       <head>
         <link
-          rel="sitemap"
-          type="application/xml"
-          title="Sitemap"
           href="/sitemap-index.xml"
+          rel="sitemap"
+          title="Sitemap"
+          type="application/xml"
         />
-        <link rel="stylesheet" href="https://use.typekit.net/qbb6tfy.css" />
+        <link href="https://use.typekit.net/qbb6tfy.css" rel="stylesheet" />
       </head>
       <body>
         {draft.isEnabled ? (

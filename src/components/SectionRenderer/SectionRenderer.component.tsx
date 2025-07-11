@@ -22,13 +22,13 @@ export const SectionRenderer = (props: SectionRendererProps) => {
     const sectionId = `${section.slug}-${section.id}`;
 
     return (
-      <Section key={section.id} id={sectionId} section={section}>
+      <Section id={sectionId} key={section.id} section={section}>
         {section?.content?.map((content) => {
           if (!content) {
             return null;
           }
 
-          return <ContentRenderer key={content.sys.id} content={content} />;
+          return <ContentRenderer content={content} key={content.sys.id} />;
         })}
       </Section>
     );

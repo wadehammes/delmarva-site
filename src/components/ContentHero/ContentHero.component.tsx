@@ -61,17 +61,17 @@ export default function ContentHeroComponent(props: ContentHeroComponentProps) {
       >
         {backgroundMedia.map((media) => (
           <Image
+            alt={media.alt}
+            height={media.height}
             key={media.id}
             src={createImageUrl(media.src)}
-            alt={media.alt}
-            width={media.width}
-            height={media.height}
             style={{
+              height: "100%",
               objectFit: "cover",
               objectPosition: "center",
               width: "100%",
-              height: "100%",
             }}
+            width={media.width}
           />
         ))}
       </div>

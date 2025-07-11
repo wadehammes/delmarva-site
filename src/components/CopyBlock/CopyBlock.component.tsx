@@ -21,7 +21,7 @@ export const CopyBlock = (props: CopyBlockProps) => {
   }
 
   return (
-    <div id={slug || id} className={styles.copyBlock}>
+    <div className={styles.copyBlock} id={slug || id}>
       <RichText document={copy} />
       {cta ? <CTA cta={cta} /> : null}
     </div>

@@ -17,8 +17,8 @@ export const PageLayout = async (props: PageLayoutProps) => {
   const locale = await getLocale();
 
   const navigation = await fetchNavigation({
-    slug: NAVIGATION_ID,
     locale,
+    slug: NAVIGATION_ID,
   });
 
   return (
