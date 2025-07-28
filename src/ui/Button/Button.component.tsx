@@ -21,8 +21,8 @@ export const Button = forwardRef(
       <button
         {...buttonProps}
         className={className}
-        style={style}
         data-tracking-click={dataTrackingClick}
+        style={style}
       >
         {props.children}
       </button>

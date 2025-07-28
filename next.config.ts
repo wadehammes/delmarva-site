@@ -4,8 +4,10 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = withNextIntl({
-  reactStrictMode: true,
-  productionBrowserSourceMaps: false,
+  // Performance optimizations
+  compress: true,
+
+  // Environment variables
   env: {
     CONTENTFUL_CMA_TOKEN: process.env.CONTENTFUL_CMA_TOKEN,
     CONTENTFUL_CONTENT_DELIVERY_API_KEY:
@@ -17,87 +19,160 @@ const nextConfig: NextConfig = withNextIntl({
     GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
     GOOGLE_TAG_MANAGER_ID: process.env.GOOGLE_TAG_MANAGER_ID,
   },
-  trailingSlash: false,
+
+  experimental: {
+    optimizePackageImports: [
+      "@contentful/rich-text-react-renderer",
+      "swiper",
+      "gsap",
+    ],
+  },
+
+  // Optimized headers with better caching
+  async headers() {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+
+      return [
+        {
+          headers: [
+            {
+              key: "Cache-Control",
+              value: isProduction
+                ? "public, max-age=3600, stale-while-revalidate=86400"
+                : "public, max-age=0, must-revalidate",
+            },
+            ...securityHeaders,
+          ],
+          source: "/",
+        },
+        {
+          headers: [
+            {
+              key: "Cache-Control",
+              value: isProduction
+                ? "public, max-age=3600, stale-while-revalidate=86400"
+                : "public, max-age=0, must-revalidate",
+            },
+            ...securityHeaders,
+          ],
+          source: "/:path*",
+        },
+        // Static assets caching
+        {
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "public, max-age=31536000, immutable",
+            },
+          ],
+          source: "/_next/static/(.*)",
+        },
+        {
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "public, max-age=3600, stale-while-revalidate=86400",
+            },
+          ],
+          source: "/api/(.*)",
+        },
+      ];
+    } catch (error) {
+      console.error("Error in headers:", error);
+      return [];
+    }
+  },
+
+  // Optimized image configuration
   images: {
+    formats: ["image/webp", "image/avif"],
+    minimumCacheTTL: 31536000, // 1 year
     remotePatterns: [
       {
-        protocol: "https",
         hostname: "images.ctfassets.net",
-        port: "",
         pathname: "/**",
+        port: "",
+        protocol: "https",
       },
       {
-        protocol: "https",
         hostname: "downloads.ctfassets.net",
-        port: "",
         pathname: "/**",
+        port: "",
+        protocol: "https",
       },
       {
-        protocol: "https",
         hostname: "videos.ctfassets.net",
-        port: "",
         pathname: "/**",
+        port: "",
+        protocol: "https",
+      },
+      {
+        hostname: "via.placeholder.com",
+        pathname: "/**",
+        port: "",
+        protocol: "https",
       },
     ],
   },
-  webpack(config) {
-    const fileLoaderRule = config.module.rules.find((rule) =>
-      rule.test?.test?.(".svg"),
-    );
+  poweredByHeader: false,
 
-    config.module.rules.push({
-      test: /\.svg$/i,
-      issuer: fileLoaderRule.issuer,
-      use: {
-        loader: "@svgr/webpack",
-        options: {
-          svgoConfig: {
-            plugins: [
-              {
-                name: "removeViewBox",
-                active: false,
-              },
-            ],
-          },
-        },
-      },
-    });
+  // Build optimizations
+  productionBrowserSourceMaps: process.env.NODE_ENV === "development",
+  reactStrictMode: true,
 
-    // Modify the file loader rule to ignore *.svg, since we have it handled now.
-    fileLoaderRule.exclude = /\.svg$/i;
-
-    return config;
-  },
+  // Optimized redirects
   async redirects() {
-    if (process.env.ENVIRONMENT === "production") {
-      return [...productionRedirects, ...sharedRedirects];
-    }
+    try {
+      if (process.env.ENVIRONMENT === "production") {
+        return [...productionRedirects, ...sharedRedirects];
+      }
 
-    return sharedRedirects;
+      return sharedRedirects;
+    } catch (error) {
+      console.error("Error in redirects:", error);
+      return [];
+    }
   },
-  async headers() {
-    return [
-      {
-        source: "/",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "s-maxage=1, stale-while-revalidate",
+
+  trailingSlash: false,
+
+  // Optimized webpack configuration
+  webpack(config) {
+    try {
+      const fileLoaderRule = config.module.rules.find((rule) =>
+        rule.test?.test?.(".svg"),
+      );
+
+      if (fileLoaderRule) {
+        // SVG optimization - simplified
+        config.module.rules.push({
+          issuer: fileLoaderRule.issuer,
+          test: /\.svg$/i,
+          use: {
+            loader: "@svgr/webpack",
+            options: {
+              svgoConfig: {
+                plugins: [
+                  {
+                    active: false,
+                    name: "removeViewBox",
+                  },
+                ],
+              },
+            },
           },
-          ...securityHeaders,
-        ],
-      },
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "s-maxage=1, stale-while-revalidate",
-          },
-          ...securityHeaders,
-        ],
-      },
-    ];
+        });
+
+        // Modify the file loader rule to ignore *.svg
+        fileLoaderRule.exclude = /\.svg$/i;
+      }
+
+      return config;
+    } catch (error) {
+      console.error("Error in webpack configuration:", error);
+      return config;
+    }
   },
 });
 
@@ -105,14 +180,14 @@ const nextConfig: NextConfig = withNextIntl({
 const sources = ["/:slug(test-page.*)", "/deployments"];
 
 const productionRedirects = sources.map((source) => ({
-  source,
   destination: "/",
   permanent: true,
+  source,
 }));
 
 const sharedRedirects = [];
 
-// https://securityheaders.com
+// Enhanced security headers
 const scriptSrc = [
   "'self'",
   "'unsafe-eval'",
@@ -130,6 +205,7 @@ const scriptSrc = [
   "*.facebook.net",
   "*.facebook.com",
 ];
+
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src ${scriptSrc.join(" ")};
@@ -141,42 +217,52 @@ const ContentSecurityPolicy = `
   font-src data: 'self' *.typekit.net vercel.live;
   worker-src 'self' blob: *.vercel.app;
   manifest-src 'self' *.vercel.app;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'none';
 `;
+
 const securityHeaders = [
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+  // Content Security Policy
   {
     key: "Content-Security-Policy",
     value: ContentSecurityPolicy.replace(/\n/g, ""),
   },
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+  // Referrer Policy
   {
     key: "Referrer-Policy",
     value: "strict-origin-when-cross-origin",
   },
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+  // Frame Options
   {
     key: "X-Frame-Options",
     value: "DENY",
   },
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+  // Content Type Options
   {
     key: "X-Content-Type-Options",
     value: "nosniff",
   },
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control
+  // DNS Prefetch Control
   {
     key: "X-DNS-Prefetch-Control",
     value: "on",
   },
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+  // Strict Transport Security
   {
     key: "Strict-Transport-Security",
     value: "max-age=31536000; includeSubDomains; preload",
   },
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Feature-Policy
+  // Permissions Policy
   {
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  },
+  // XSS Protection
+  {
+    key: "X-XSS-Protection",
+    value: "1; mode=block",
   },
 ];
 

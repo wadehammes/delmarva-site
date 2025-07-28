@@ -1,4 +1,5 @@
 import type { Page, PageForNavigation } from "src/contentful/getPages";
+import type { Cta } from "src/contentful/parseCta";
 
 export const isUrl = (url: string) => {
   try {
@@ -17,4 +18,14 @@ export const createInternalLink = (page: Page | PageForNavigation) => {
   }
   // This is a PageForNavigation type
   return page.url;
+};
+
+export const parseCtaUrl = (cta: Cta) => {
+  let url = cta?.externalLink;
+
+  if (!url && cta.pageLink) {
+    url = createInternalLink(cta.pageLink);
+  }
+
+  return url;
 };

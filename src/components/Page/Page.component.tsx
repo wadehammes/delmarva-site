@@ -13,8 +13,8 @@ export const PageComponent = async (props: PageComponentProps) => {
 
   return (
     <PageLayout page={fields}>
-      <SectionRenderer sections={sections} />
       {children}
+      <SectionRenderer sections={sections} />
     </PageLayout>
   );
 };

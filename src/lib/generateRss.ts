@@ -63,9 +63,9 @@ export const outputRss = ({
 
   const rss = generateRss({
     posts,
-    rssTitle,
     rssDescription,
     rssPath,
+    rssTitle,
   });
 
   return fs.writeFileSync(`./public/rss-${type}.xml`, rss);

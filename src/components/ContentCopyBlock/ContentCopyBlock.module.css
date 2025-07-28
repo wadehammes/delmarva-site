@@ -1,0 +1,32 @@
+.copyBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 90ch;
+  text-align: center;
+
+  &.mobileAlignLeft {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  &.mobileAlignRight {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  @media (min-width: 1200px) {
+    &.desktopAlignLeft {
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    &.desktopAlignRight {
+      justify-content: flex-end;
+      text-align: right;
+    }
+  }
+}

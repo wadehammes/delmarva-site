@@ -1,0 +1,98 @@
+.projectTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--colors-black);
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.servicesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.servicesLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--colors-black);
+}
+
+.serviceTag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--colors-white);
+  background-color: var(--colors-red);
+  border-radius: 1rem;
+}
+
+.mediaSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.contentSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.descriptionSection {
+  h3 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--colors-black);
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--colors-black);
+  }
+}
+
+.statsSection {
+  h3 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--colors-black);
+  }
+}
+
+.statsList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--colors-silver);
+}
+
+.statDescription {
+  font-size: 0.875rem;
+  color: var(--colors-black);
+}
+
+.statValue {
+  font-family: var(--font-family-n27);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--colors-black);
+}

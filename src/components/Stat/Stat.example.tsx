@@ -4,27 +4,43 @@ export const StatExample = () => {
   return (
     <div
       style={{
-        padding: "2rem",
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
         gap: "2rem",
+        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+        padding: "2rem",
       }}
     >
       <Stat
-        value={1500}
-        description="Happy customers served"
-        type="Numerical"
+        stat={{
+          description: "Happy customers served",
+          type: "Numerical",
+          value: 1500,
+        }}
       />
 
       <Stat
-        value={95}
-        description="Customer satisfaction rate"
-        type="Percentage"
+        stat={{
+          description: "Customer satisfaction rate",
+          type: "Percentage",
+          value: 95,
+        }}
       />
 
-      <Stat value={50000} description="Revenue generated" type="Currency" />
+      <Stat
+        stat={{
+          description: "Revenue generated",
+          type: "Currency",
+          value: 50000,
+        }}
+      />
 
-      <Stat value={25} description="Years of experience" type="Numerical" />
+      <Stat
+        stat={{
+          description: "Years of experience",
+          type: "Numerical",
+          value: 25,
+        }}
+      />
     </div>
   );
 };

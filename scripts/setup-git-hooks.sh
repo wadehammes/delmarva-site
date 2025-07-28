@@ -9,6 +9,19 @@ mkdir -p .git/hooks
 cat > .git/hooks/pre-commit << 'EOF'
 #!/bin/bash
 
+# Run biome check --write to format code before commit
+echo "🔧 Running biome check --write..."
+if ! pnpm biome check --write; then
+    echo "❌ Biome check failed. Please fix the issues and try again."
+    exit 1
+fi
+
+# Add any files that were modified by biome back to the staging area
+if git diff --name-only | grep -q "\.(ts|tsx|js|jsx|json|css|md)$"; then
+    echo "📝 Adding biome-formatted files to commit..."
+    git add -A
+fi
+
 # Function to check if any committed files are in directories with README.md files
 check_readme_directories() {
     local should_update=false
@@ -64,9 +77,10 @@ EOF
 chmod +x .git/hooks/pre-commit
 
 echo "✅ Git hooks setup complete!"
-echo "📝 The pre-commit hook will now automatically update the main README.md when:"
-echo "   - README.md files are committed"
-echo "   - Any files in directories containing README.md files are committed"
+echo "🔧 The pre-commit hook will now:"
+echo "   - Run biome check --write to format code"
+echo "   - Automatically update the main README.md when needed"
+echo "   - Add any formatted files back to the commit"
 echo ""
 echo "To manually run the script: pnpm update-readme"
 echo "To disable the hook temporarily: chmod -x .git/hooks/pre-commit" 

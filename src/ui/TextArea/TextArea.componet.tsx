@@ -31,8 +31,8 @@ export const TextField = forwardRef(
         <textarea
           {...inputProps}
           className={classnames(className, styles.input)}
-          ref={inputRef}
           data-1p-ignore
+          ref={inputRef}
         />
       </fieldset>
     );

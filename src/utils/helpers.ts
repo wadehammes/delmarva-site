@@ -14,7 +14,7 @@ export const envUrl = () => {
   return "https://www.delmarvasite.com";
 };
 
-export const createImageUrl = (src: string) => {
+export const createMediaUrl = (src: string) => {
   if (!src) {
     return "";
   }
@@ -46,4 +46,39 @@ export const replaceNbsp = (text: string): string => {
 
 export const isReactNodeEmptyArray = (node: React.ReactNode) => {
   return Array.isArray(node) && node.length === 0;
+};
+
+export const isVideoUrl = (url: string): boolean => {
+  if (!url) return false;
+
+  const videoExtensions = [
+    ".mp4",
+    ".webm",
+    ".ogg",
+    ".mov",
+    ".avi",
+    ".wmv",
+    ".flv",
+    ".mkv",
+  ];
+  const videoDomains = [
+    "youtube.com",
+    "youtu.be",
+    "vimeo.com",
+    "dailymotion.com",
+  ];
+
+  const lowerUrl = url.toLowerCase();
+
+  // Check for video file extensions
+  if (videoExtensions.some((ext) => lowerUrl.includes(ext))) {
+    return true;
+  }
+
+  // Check for video hosting domains
+  if (videoDomains.some((domain) => lowerUrl.includes(domain))) {
+    return true;
+  }
+
+  return false;
 };

@@ -1,41 +1,31 @@
 import classNames from "classnames";
 import type { HTMLAttributes } from "react";
-import styles from "src/components/ButtonLink/ButtonLink.module.css";
+import styles from "src/components/Button/Button.module.css";
 import { Link } from "src/components/Link/Link.component";
 
 interface ButtonLinkProps extends HTMLAttributes<HTMLAnchorElement> {
-  href: string;
+  "data-tracking-click": string;
   label: string;
-  variant?: "primary" | "secondary";
-  buttonStyle?: "solid" | "outline";
-  size?: "small" | "medium" | "large";
-  event?: string;
+  variant?: "primary" | "secondary" | "outline";
+  href: string;
 }
 
 export const ButtonLink = (props: ButtonLinkProps) => {
   const {
-    href,
     label,
     variant = "primary",
-    buttonStyle = "solid",
-    size = "medium",
-    event,
+    "data-tracking-click": dataTrackingClick,
+    href,
   } = props;
 
   return (
     <Link
-      href={href}
-      className={classNames(styles.buttonLink, {
+      className={classNames(styles.button, {
         [styles.secondary]: variant === "secondary",
-        [styles.small]: size === "small",
-        [styles.large]: size === "large",
-        [styles.outline]: buttonStyle === "outline",
+        [styles.outline]: variant === "outline",
       })}
-      data-tracking-click={JSON.stringify({
-        event: event ?? "Clicked Button Link",
-        label,
-        href,
-      })}
+      data-tracking-click={dataTrackingClick}
+      href={href}
     >
       {label}
     </Link>

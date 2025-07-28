@@ -12,6 +12,7 @@ export interface TypeCtaFields {
   text: EntryFieldTypes.Symbol;
   pageLink?: EntryFieldTypes.EntryLink<TypePageSkeleton>;
   externalLink?: EntryFieldTypes.Symbol;
+  buttonVariant?: EntryFieldTypes.Symbol<"Primary" | "Secondary">;
 }
 
 export type TypeCtaSkeleton = EntrySkeletonType<TypeCtaFields, "cta">;

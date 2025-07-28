@@ -12,16 +12,16 @@ const contentfulPreviewToken = process.env.CONTENTFUL_PREVIEW_API_KEY as string;
 // This is the standard Contentful client. It fetches
 // content that has been published.
 const client = createClient({
-  space: contentfulSpaceId,
   accessToken: contentfulContentDeliveryToken,
+  space: contentfulSpaceId,
 });
 
 // This is a Contentful client that's been configured
 // to fetch drafts and unpublished content.
 const previewClient = createClient({
-  space: contentfulSpaceId,
   accessToken: contentfulPreviewToken,
   host: "preview.contentful.com",
+  space: contentfulSpaceId,
 });
 
 export const contentfulClient = ({ preview = false }: InitOptions) => {

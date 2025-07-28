@@ -20,6 +20,7 @@ export interface TypeServiceFields {
     EntryFieldTypes.EntryLink<TypeSectionSkeleton>
   >;
   featuredService?: EntryFieldTypes.Boolean;
+  featuredServicePosition?: EntryFieldTypes.Integer;
   metaTitle: EntryFieldTypes.Symbol;
   metaDescription: EntryFieldTypes.Symbol;
   metaImage: EntryFieldTypes.AssetLink;

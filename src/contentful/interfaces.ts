@@ -25,8 +25,11 @@ export enum OverlayStyle {
 export enum ContentLayout {
   FourColumn = "4-column",
   FullWidth = "Full Width",
+  SingleColumn = "Single Column",
   ThreeColumn = "3-column",
   TwoColumn = "2-column",
+  FiveColumn = "5-column",
+  SixColumn = "6-column",
 }
 
 export enum Padding {
@@ -48,3 +51,9 @@ export type CSSColorAdjustScale =
   | 0.8
   | 0.9
   | 1;
+
+export enum Alignment {
+  Left = "Left",
+  Center = "Center",
+  Right = "Right",
+}

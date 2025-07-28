@@ -39,6 +39,7 @@
   "include": [
     "cssprops.d.ts",
     "next-env.d.ts",
+    "src/@types/**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".jest/setupTests.ts",

@@ -1,9 +1,9 @@
 .button {
-  appearance: none;
-  color: var(--colors-black);
-  border: 0;
-  padding: 0;
   width: 100%;
+  padding: 0;
+  color: var(--colors-black);
+  appearance: none;
+  border: 0;
 
   &:focus {
     outline-color: 0;

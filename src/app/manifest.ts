@@ -2,19 +2,19 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Delmarva Site Development Development",
-    short_name: "Delmarva Site Development Development",
-    description: "",
-    start_url: "/",
-    display: "standalone",
     background_color: "#e01e2d",
-    theme_color: "#e01e2d",
+    description: "",
+    display: "standalone",
     icons: [
       {
-        src: "/favicon.ico",
         sizes: "any",
+        src: "/favicon.ico",
         type: "image/x-icon",
       },
     ],
+    name: "Delmarva Site Development Development",
+    short_name: "Delmarva Site Development Development",
+    start_url: "/",
+    theme_color: "#e01e2d",
   };
 }

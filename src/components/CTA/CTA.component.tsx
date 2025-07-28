@@ -1,20 +1,15 @@
 import { ButtonLink } from "src/components/ButtonLink/ButtonLink.component";
 import type { Cta } from "src/contentful/parseCta";
-import { createInternalLink } from "src/utils/urlHelpers";
+import { parseCtaUrl } from "src/utils/urlHelpers";
 
 interface CTAProps {
   cta: Cta;
-  size?: "small" | "medium" | "large";
-  buttonStyle?: "solid" | "outline";
+  buttonVariant?: "primary" | "secondary";
 }
 
 export const CTA = (props: CTAProps) => {
-  const { cta, size = "medium", buttonStyle = "solid" } = props;
-  let url = cta?.externalLink;
-
-  if (!url && cta.pageLink) {
-    url = createInternalLink(cta.pageLink);
-  }
+  const { cta, buttonVariant = "primary" } = props;
+  const url = parseCtaUrl(cta);
 
   if (!url) {
     return null;
@@ -22,11 +17,10 @@ export const CTA = (props: CTAProps) => {
 
   return (
     <ButtonLink
+      data-tracking-click={`Clicked ${cta.text} CTA Button`}
       href={url}
       label={cta.text}
-      size={size}
-      buttonStyle={buttonStyle}
-      event={`Clicked ${cta.text} CTA Button`}
+      variant={buttonVariant}
     />
   );
 };
