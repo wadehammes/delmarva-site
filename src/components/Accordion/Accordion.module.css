@@ -9,6 +9,7 @@
 .plusIcon {
   color: currentColor;
   transition: transform 0.2s ease-in-out;
+  will-change: transform;
 }
 
 .accordionButton {
@@ -47,8 +48,13 @@
 
 .accordion {
   width: 100%;
-  overflow: hidden;
   border-top: 1px solid transparent;
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+  will-change: transform, opacity;
 
   &:not(:first-child) {
     border-top-color: var(--divider);
@@ -56,6 +62,11 @@
 
   &.active .accordionButton {
     color: var(--colors-red);
+  }
+
+  &.fadeIn {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -75,10 +86,7 @@
   width: 32px;
   height: 32px;
   transition: transform 0.3s ease-in-out;
-
-  &:hover {
-    transform: rotate(360deg);
-  }
+  will-change: transform;
 
   @media (min-width: 600px) {
     width: 64px;
@@ -87,7 +95,7 @@
 }
 
 .accordionContent {
-  overflow: hidden;
+  overflow: visible !important;
   background-color: var(--color-bg);
 
   &:not(.isOpen) .accordionInner {

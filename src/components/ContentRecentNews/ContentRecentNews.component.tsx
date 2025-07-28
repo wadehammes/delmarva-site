@@ -23,7 +23,9 @@ export const ContentRecentNews = async (props: ContentRecentNewsProps) => {
       <p>{recentNews.linkDescription}</p>
       {recentNews.linkUrl ? (
         <Link className={styles.learnMoreLink} href={recentNews.linkUrl}>
-          <span>{learnMoreText[locale]}</span>
+          <span>
+            {learnMoreText[locale]} <span className={styles.arrow}>→</span>
+          </span>
         </Link>
       ) : null}
     </div>

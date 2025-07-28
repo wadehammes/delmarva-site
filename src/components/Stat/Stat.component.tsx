@@ -3,9 +3,9 @@
 import classNames from "classnames";
 import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
-import { useInView } from "react-intersection-observer";
 import styles from "src/components/Stat/Stat.module.css";
 import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
+import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import {
   formatAnimatedValue,
   getInitialValue,
@@ -15,6 +15,7 @@ import {
 
 // Interface for the minimum required properties for the Stat component
 export interface StatData {
+  decorator?: "None" | "Plus Sign";
   value: number;
   description: string;
   type?: NumberFormatType;
@@ -32,14 +33,11 @@ export interface StatProps {
  */
 export const Stat = (props: StatProps) => {
   const { stat, className } = props;
-  const { value, description, type = "Numerical" } = stat;
+  const { value, description, type = "Numerical", decorator = "None" } = stat;
 
   const numberRef = useRef<HTMLSpanElement>(null);
 
-  const { ref: statRef, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
+  const { ref: statRef, inView } = useOptimizedInView();
 
   useEffect(() => {
     const numberElement = numberRef.current;
@@ -50,18 +48,22 @@ export const Stat = (props: StatProps) => {
 
     const { numericValue, suffix, numDigits } = parsed;
 
-    // Create the animation
-    const tl = gsap.timeline();
+    // Create the animation with optimized settings
+    const tl = gsap.timeline({
+      defaults: {
+        duration: 1,
+        ease: "none",
+      },
+    });
 
     tl.to(
       {},
       {
-        duration: 1,
-        ease: "none",
         onUpdate: function () {
           const progress = this.progress();
           const currentValue = Math.round(numericValue * progress);
           numberElement.innerText = formatAnimatedValue(
+            decorator,
             currentValue,
             suffix,
             numDigits,
@@ -74,7 +76,7 @@ export const Stat = (props: StatProps) => {
     return () => {
       tl.kill();
     };
-  }, [inView, value, type]);
+  }, [inView, value, type, decorator]);
 
   return (
     <div className={classNames(styles.stat, className)} ref={statRef}>

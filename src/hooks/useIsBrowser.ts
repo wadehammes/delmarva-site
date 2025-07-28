@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Hook to determine if the component is running in the browser
@@ -26,4 +26,44 @@ export const useIsBrowser = (): boolean => {
   }, []);
 
   return isBrowser;
+};
+
+/**
+ * Hook to manage DOM cleanup during navigation and locale switching
+ * Prevents DOM manipulation errors during React reconciliation
+ */
+export const useDOMCleanup = () => {
+  const isMountedRef = useRef(false);
+  const cleanupRefs = useRef<Set<() => void>>(new Set());
+
+  useEffect(() => {
+    isMountedRef.current = true;
+
+    return () => {
+      isMountedRef.current = false;
+      // Run all cleanup functions
+      cleanupRefs.current.forEach((cleanup) => {
+        try {
+          cleanup();
+        } catch (error) {
+          console.warn("Error during DOM cleanup:", error);
+        }
+      });
+      cleanupRefs.current.clear();
+    };
+  }, []);
+
+  const addCleanup = (cleanup: () => void) => {
+    cleanupRefs.current.add(cleanup);
+  };
+
+  const removeCleanup = (cleanup: () => void) => {
+    cleanupRefs.current.delete(cleanup);
+  };
+
+  return {
+    addCleanup,
+    isMounted: () => isMountedRef.current,
+    removeCleanup,
+  };
 };

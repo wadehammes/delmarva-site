@@ -14,6 +14,10 @@ export interface TypeFooterFields {
   addresscompanyInfo?: EntryFieldTypes.RichText;
   links?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeCtaSkeleton>>;
   linksTitle?: EntryFieldTypes.Symbol;
+  otherLinks?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeCtaSkeleton>
+  >;
+  otherLinksTitle?: EntryFieldTypes.Symbol;
   linkedInUrl?: EntryFieldTypes.Symbol;
 }
 

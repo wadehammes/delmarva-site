@@ -15,7 +15,7 @@ export const parseFormattedValue = (
   value: number,
   type: NumberFormatType,
 ): ParsedValue | null => {
-  const formattedValue = formatNumber(value, type);
+  const formattedValue = formatNumber({ decorator: "None", num: value, type });
 
   if (type === "Currency") {
     const match = formattedValue.match(/^\$([\d,]+)(.*)$/);
@@ -52,7 +52,7 @@ export const getInitialValue = (
   value: number,
   type: NumberFormatType,
 ): string => {
-  const formattedValue = formatNumber(value, type);
+  const formattedValue = formatNumber({ decorator: "None", num: value, type });
 
   if (type === "Currency") {
     const match = formattedValue.match(/^\$([\d,]+)(.*)$/);
@@ -77,16 +77,23 @@ export const getInitialValue = (
  * Format animated value with proper padding and suffix
  */
 export const formatAnimatedValue = (
+  decorator: "None" | "Plus Sign",
   currentValue: number,
   suffix: string,
   numDigits: number,
   type: NumberFormatType,
 ): string => {
-  const paddedValue = currentValue.toString().padStart(numDigits, "0");
+  let paddedValue = currentValue.toString().padStart(numDigits, "0");
 
   if (type === "Currency") {
-    return `$${paddedValue}${suffix}`;
+    paddedValue = `$${paddedValue}${suffix}`;
+  } else {
+    paddedValue = `${paddedValue}${suffix}`;
   }
 
-  return `${paddedValue}${suffix}`;
+  if (decorator === "Plus Sign") {
+    paddedValue = `${paddedValue}+`;
+  }
+
+  return paddedValue;
 };

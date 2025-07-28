@@ -141,7 +141,7 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   padding: var(--default-padding);
-  color: var(--colors-white);
+  color: var(--colors-text);
   text-align: left;
   background-color: var(--colors-red);
   border-radius: 20px;
@@ -178,6 +178,18 @@ video {
   display: none;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
 strong,
 b {
   font-weight: 700;
@@ -191,7 +203,6 @@ b {
   background: none;
 
   &:hover {
-    color: var(--colors-black);
     cursor: pointer;
   }
 }
@@ -237,7 +248,7 @@ h6,
   font-family: var(--font-family-heading);
   font-weight: 700;
   line-height: 1.2;
-  color: currentColor;
+  color: var(--colors-text);
   text-wrap: balance;
 }
 
@@ -263,7 +274,7 @@ h3,
 p {
   font-size: clamp(1em, 5vw, 1.25em);
   line-height: 1.5;
-  color: currentColor;
+  color: var(--colors-text);
 }
 
 i {
@@ -313,8 +324,9 @@ i {
 
 .page-scroll {
   position: absolute;
-  top: -1.35em;
+  top: -2.25em;
   left: 50%;
+  z-index: 3;
   width: 2em;
   margin: -1em 0 0 -1em;
   text-align: center;
@@ -323,9 +335,12 @@ i {
   animation-duration: 2s;
   animation-iteration-count: infinite;
 
-  a {
+  button {
     display: block;
+    text-indent: -9999px;
     text-decoration: none;
+    appearance: none;
+    background: none;
     border: 1em solid transparent;
     border-top-width: 1.5em;
     border-bottom-color: var(--colors-red);
@@ -336,10 +351,14 @@ i {
     top: auto;
     bottom: -2.25em;
 
-    a {
+    button {
       border-top-color: var(--colors-red);
       border-bottom-color: transparent;
     }
+  }
+
+  button:hover {
+    cursor: pointer;
   }
 }
 
@@ -379,13 +398,13 @@ input[type="checkbox"] {
 }
 
 .light {
-  color: var(--colors-black);
-  background-color: var(--colors-white);
+  color: var(--colors-text);
+  background-color: var(--colors-black);
 }
 
 ::selection {
-  color: var(--colors-white);
-  background-color: var(--colors-black);
+  color: var(--colors-black);
+  background-color: var(--colors-white);
 }
 
 /* Grid System Utilities */

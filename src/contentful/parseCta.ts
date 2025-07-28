@@ -10,6 +10,8 @@ export interface Cta {
   text: string;
   pageLink?: PageForNavigation | null;
   externalLink?: string;
+  variant?: "Primary" | "Secondary";
+  arrow?: "No Arrow" | "Right Arrow" | "Right-Up Arrow";
 }
 
 export type CtaEntry =
@@ -22,11 +24,13 @@ export function parseContentfulCta(cta: CtaEntry): Cta | null {
   }
 
   return {
+    arrow: cta.fields.arrow ?? "No Arrow",
     externalLink: cta.fields.externalLink ?? "",
     id: cta.sys.id,
     pageLink: cta.fields.pageLink
       ? parseContentfulPageForNavigation(cta.fields.pageLink)
       : null,
     text: cta.fields.text ?? "",
+    variant: cta.fields.buttonVariant ?? "Primary",
   };
 }

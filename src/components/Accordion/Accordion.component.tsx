@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { gsap } from "gsap";
 import { useEffect, useId, useRef, useState } from "react";
 import styles from "src/components/Accordion/Accordion.module.css";
+import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import PlusIcon from "src/icons/plus.svg";
 
 interface AccordionProps {
@@ -34,6 +35,9 @@ export const Accordion = ({
   const accordionId = useId();
   const contentId = useId();
 
+  // Intersection observer for fade-in animation
+  const { ref: inViewRef, inView } = useOptimizedInView();
+
   const toggleAccordion = () => {
     const newIsOpen = !isOpen;
     setIsOpen(newIsOpen);
@@ -52,6 +56,7 @@ export const Accordion = ({
       gsap.to(contentRef.current, {
         duration: 0.3,
         ease: "power2.out",
+        force3D: true, // Force hardware acceleration
         height: isOpen ? "auto" : 0,
       });
     }
@@ -63,8 +68,10 @@ export const Accordion = ({
     <div
       className={classNames(styles.accordion, className, {
         [styles.active]: isOpen,
+        [styles.fadeIn]: inView,
       })}
       data-tracking-click={dataTrackingClick}
+      ref={inViewRef}
     >
       <HeaderComponent className={styles.accordionHeader}>
         <button

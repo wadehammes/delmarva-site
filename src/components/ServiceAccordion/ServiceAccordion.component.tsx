@@ -1,14 +1,16 @@
 "use client";
 
 import { gsap } from "gsap";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Accordion } from "src/components/Accordion/Accordion.component";
-import { ButtonLink } from "src/components/ButtonLink/ButtonLink.component";
+import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { ProjectCarousel } from "src/components/ProjectCarousel/ProjectCarousel.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ServiceType } from "src/contentful/getServices";
 import type { Locales } from "src/contentful/interfaces";
+import { useDOMCleanup } from "src/hooks/useIsBrowser";
+import { SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { formatNumber } from "src/utils/numberHelpers";
 import styles from "./ServiceAccordion.module.css";
 
@@ -33,22 +35,35 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
   const ctaRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const { isMounted, addCleanup, removeCleanup } = useDOMCleanup();
 
-  // Animation setup
-  useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    // Kill any existing timeline
+  // GSAP cleanup function
+  const cleanupGSAP = useCallback(() => {
     if (timelineRef.current) {
       timelineRef.current.kill();
+      timelineRef.current = null;
     }
+  }, []);
 
-    // Create a new timeline
-    const tl = gsap.timeline({ paused: true });
+  // Memoized animation setup
+  const setupAnimation = useCallback(() => {
+    const content = contentRef.current;
+    if (!content || !isMounted()) return;
+
+    // Kill any existing timeline
+    cleanupGSAP();
+
+    // Create a new timeline with optimized settings
+    const tl = gsap.timeline({
+      defaults: {
+        duration: 0.3,
+        ease: "power1.out",
+      },
+      paused: true,
+    });
     timelineRef.current = tl;
 
-    // Initial state - hide all elements
+    // Initial state - hide all elements with optimized properties
     gsap.set(
       [
         richTextRef.current,
@@ -57,90 +72,138 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
         carouselRef.current,
       ],
       {
+        force3D: true, // Force hardware acceleration
         opacity: 0,
-        y: 8,
+        y: 20, // More pronounced initial offset
       },
     );
 
     // Hide individual stat items initially
     if (statsRef.current) {
       gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
+        force3D: true,
         opacity: 0,
-        y: 6,
+        y: 15, // More pronounced initial offset
       });
     }
 
-    // Animate elements in sequence with better timing
+    // Animate elements in sequence with optimized properties
     tl.to(richTextRef.current, {
-      duration: 0.35,
-      ease: "power1.out",
+      duration: 0.2,
+      ease: "power2.out",
+      force3D: true,
       opacity: 1,
       y: 0,
     })
       .to(
         statsRef.current,
         {
-          duration: 0.3,
-          ease: "power1.out",
+          duration: 0.35,
+          ease: "power2.out",
+          force3D: true,
           opacity: 1,
+          y: 0,
+        },
+        "-=0.2",
+      )
+      .to(
+        statsRef.current?.querySelectorAll(`.${styles.statItem}`) || [],
+        {
+          duration: 0.3,
+          ease: "power2.out",
+          force3D: true,
+          opacity: 1,
+          stagger: 0.08,
           y: 0,
         },
         "-=0.15",
       )
       .to(
-        statsRef.current?.querySelectorAll(`.${styles.statItem}`) || [],
+        ctaRef.current,
         {
-          duration: 0.25,
-          ease: "power1.out",
+          duration: 0.35,
+          ease: "power2.out",
+          force3D: true,
           opacity: 1,
-          stagger: 0.06,
           y: 0,
         },
         "-=0.1",
       )
       .to(
-        ctaRef.current,
-        {
-          duration: 0.3,
-          ease: "power1.out",
-          opacity: 1,
-          y: 0,
-        },
-        "-=0.08",
-      )
-      .to(
         carouselRef.current,
         {
-          duration: 0.35,
-          ease: "power1.out",
+          duration: 0.4,
+          ease: "power2.out",
+          force3D: true,
           opacity: 1,
           y: 0,
         },
-        "-=0.12",
+        "-=0.1",
       );
+  }, [isMounted, cleanupGSAP]);
 
-    // Cleanup
+  // Setup animation on mount
+  useEffect(() => {
+    setupAnimation();
+    addCleanup(cleanupGSAP);
+
     return () => {
-      if (timelineRef.current) {
-        timelineRef.current.kill();
-        timelineRef.current = null;
-      }
+      removeCleanup(cleanupGSAP);
+      cleanupGSAP();
     };
-  }, []);
+  }, [setupAnimation, addCleanup, removeCleanup, cleanupGSAP]);
 
-  const handleAccordionToggle = (isOpen: boolean) => {
-    if (!timelineRef.current) return;
+  // Cleanup on locale change
+  useEffect(() => {
+    return () => {
+      cleanupGSAP();
+    };
+  }, [cleanupGSAP]);
 
-    if (isOpen) {
-      // Add a small delay to let the accordion height animation start first
-      gsap.delayedCall(0.1, () => {
-        timelineRef.current?.play();
-      });
-    } else {
-      // Reverse immediately when closing
-      timelineRef.current.reverse();
-    }
-  };
+  // Memoized accordion toggle handler
+  const handleAccordionToggle = useCallback(
+    (isOpen: boolean) => {
+      if (!timelineRef.current || !isMounted()) return;
+
+      if (isOpen) {
+        // Add a small delay to let the accordion height animation start first
+        gsap.delayedCall(0.1, () => {
+          if (timelineRef.current && isMounted()) {
+            timelineRef.current.play();
+          }
+        });
+      } else {
+        // Reverse immediately when closing
+        if (timelineRef.current) {
+          timelineRef.current.reverse();
+        }
+      }
+    },
+    [isMounted],
+  );
+
+  // Memoized stats rendering
+  const renderStats = useCallback(() => {
+    if (!stats?.length) return null;
+
+    return stats.map((stat) => {
+      if (!stat) return null;
+
+      return (
+        <div className={styles.statItem} key={stat.id}>
+          <dt className={styles.statDescription}>{stat.description}</dt>
+          <dd className={styles.statValue}>
+            {formatNumber({
+              decorator: stat.decorator,
+              keepInitialValue: true,
+              num: stat.value ?? 0,
+              type: stat.type,
+            })}
+          </dd>
+        </div>
+      );
+    });
+  }, [stats]);
 
   return (
     <Accordion
@@ -154,33 +217,25 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
             <RichText document={description} />
           </div>
           <dl className={styles.statsList} ref={statsRef}>
-            {stats?.map((stat) => {
-              if (!stat) {
-                return null;
-              }
-
-              return (
-                <div className={styles.statItem} key={stat.id}>
-                  <dt className={styles.statDescription}>{stat.description}</dt>
-                  <dd className={styles.statValue}>
-                    {formatNumber(stat.value ?? 0, stat.type)}
-                  </dd>
-                </div>
-              );
-            })}
+            {renderStats()}
           </dl>
           <div className={styles.serviceAccordionCta} ref={ctaRef}>
             <ButtonLink
+              arrow="Right-Up Arrow"
               data-tracking-click="service-accordion-cta"
-              href={`/services/${slug}`}
+              href={`/${SERVICES_PAGE_SLUG}/${slug}`}
               label={buttonText[locale]}
             >
               {buttonText[locale]}
             </ButtonLink>
           </div>
         </div>
-        <div ref={carouselRef} style={{ width: "100%" }}>
-          <ProjectCarousel projects={projects} selectedServiceSlug={slug} />
+        <div className={styles.serviceAccordionCarousel} ref={carouselRef}>
+          <ProjectCarousel
+            carouselId={`service-${slug}`}
+            projects={projects}
+            selectedServiceSlug={slug}
+          />
         </div>
       </div>
     </Accordion>

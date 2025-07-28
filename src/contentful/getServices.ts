@@ -37,6 +37,7 @@ export interface ServiceType {
   metaDescription: string;
   metaImage: ContentfulAsset;
   enableIndexing: boolean;
+  updatedAt: string;
 }
 
 // A function to transform a Contentful page
@@ -63,8 +64,17 @@ export function parseContentfulService(
     serviceName: serviceEntry.fields.serviceName,
     slug: serviceEntry.fields.slug,
     stats: serviceEntry.fields.stats?.map(parseContentStatBlock),
+    updatedAt: serviceEntry.sys.updatedAt,
   };
 }
+
+export const parseServiceSlug = (serviceEntry?: ServiceEntry) => {
+  if (!serviceEntry) {
+    return null;
+  }
+
+  return serviceEntry.fields.slug;
+};
 
 // A function to fetch all pages.
 // Optionally uses the Contentful content preview.

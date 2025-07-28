@@ -14,6 +14,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  max-width: 650px;
   overflow: hidden;
 
   @media (min-width: 768px) {
@@ -22,6 +23,14 @@
     --project-carousel-gap: 1.5rem;
   }
 }
+
+/* ProjectCarousel container query disabled - causing display issues */
+/* @container (min-width: 1000px) {
+  .projectCarousel {
+    --project-carousel-slide-width: 400px;
+    --project-carousel-gap: 2rem;
+  }
+} */
 
 .singleProject {
   display: flex;
@@ -32,6 +41,7 @@
 
 .swiper {
   width: 100%;
+  padding: 0.5rem 0;
 }
 
 .slide {
@@ -45,8 +55,13 @@
   /* Coverflow effect styling */
   &:global(.swiper-slide-visible) {
     z-index: 1;
-    opacity: 0.5;
     filter: grayscale(100%);
+    transition: all 0.3s ease;
+  }
+
+  &:global(.swiper-slide-visible):hover {
+    opacity: 1;
+    filter: grayscale(0);
   }
 
   &:global(.swiper-slide-fully-visible) {
@@ -56,11 +71,15 @@
     transform: scale(1);
   }
 
-  :global(.swiper-slide-prev) {
+  &:global(.swiper-slide-prev) {
+    pointer-events: none;
+    opacity: 0.25;
     transform: translateX(15%);
   }
 
-  :global(.swiper-slide-next) {
+  &:global(.swiper-slide-next) {
+    pointer-events: none;
+    opacity: 0.25;
     transform: translateX(-15%);
   }
 }
@@ -88,15 +107,15 @@
   background: none;
   border: none;
   transition: all 0.2s ease;
+}
 
-  &:hover {
-    color: var(--project-carousel-navigation-hover-bg);
-    transform: scale(1.1);
-  }
+.navigationButton:hover {
+  color: var(--project-carousel-navigation-hover-bg);
+  transform: scale(1.1);
+}
 
-  &:focus {
-    outline: none;
-  }
+.navigationButton:focus {
+  outline: none;
 }
 
 .navigationIconLeft {
@@ -124,11 +143,11 @@
     border-radius: 50%;
     opacity: 1;
     transition: all 0.2s ease;
+  }
 
-    &:hover {
-      background-color: var(--project-carousel-pagination-bullet-active-color);
-      transform: scale(1.2);
-    }
+  :global(.swiper-pagination-bullet):hover {
+    background-color: var(--project-carousel-pagination-bullet-active-color);
+    transform: scale(1.2);
   }
 
   :global(.swiper-pagination-bullet-active) {

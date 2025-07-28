@@ -1,5 +1,4 @@
 import type { HTMLAttributes } from "react";
-import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { SectionRenderer } from "src/components/SectionRenderer/SectionRenderer.component";
 import type { Page } from "src/contentful/getPages";
 
@@ -12,10 +11,10 @@ export const PageComponent = async (props: PageComponentProps) => {
   const { sections } = fields;
 
   return (
-    <PageLayout page={fields}>
+    <>
       {children}
       <SectionRenderer sections={sections} />
-    </PageLayout>
+    </>
   );
 };
 

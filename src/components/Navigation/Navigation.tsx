@@ -2,61 +2,73 @@
 
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { ButtonLink } from "src/components/ButtonLink/ButtonLink.component";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { MobileNavigationDrawer } from "src/components/Navigation/MobileNavigation.component";
 import styles from "src/components/Navigation/Navigation.module.css";
 import { usePage } from "src/components/PageLayout/PageProvider";
 import type { NavigationType } from "src/contentful/getNavigation";
-import { useIsBrowser } from "src/hooks/useIsBrowser";
+import type { Page } from "src/contentful/getPages";
+import { useDOMCleanup, useIsBrowser } from "src/hooks/useIsBrowser";
 import { Link } from "src/i18n/routing";
-import DelmarvaLogo from "src/icons/delmarva-white.svg";
+import DelmarvaLogo from "src/icons/delmarva-white-full-full-color-rgb.svg";
 import Menu from "src/icons/Menu.svg";
+import { throttle } from "src/utils/throttle";
 
 interface NavigationProps {
   navigation: NavigationType | null;
+  page?: Page;
 }
 
 export const Navigation = (props: NavigationProps) => {
-  const { navigation } = props;
+  const { navigation, page: pageProp } = props;
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const isBrowser = useIsBrowser();
   const pathname = usePathname();
-  const { fields: page } = usePage();
+  const { fields: pageContext } = usePage();
 
-  useEffect(() => {
-    if (!isBrowser) return;
+  // Use page prop if available, otherwise fall back to context
+  const page = pageProp || pageContext;
 
-    const handleScroll = () => {
+  // Cache DOM elements to avoid repeated queries
+  const sectionElementsRef = useRef<Map<string, HTMLElement>>(new Map());
+  const { isMounted, addCleanup, removeCleanup } = useDOMCleanup();
+
+  // DOM cleanup function
+  const cleanupDOM = useCallback(() => {
+    sectionElementsRef.current.clear();
+  }, []);
+
+  // Memoized scroll handler for navigation visibility
+  const handleScroll = useCallback(
+    throttle(() => {
+      if (!isMounted()) return;
+
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY) {
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
       }
 
       setLastScrollY(currentScrollY);
-    };
+    }, 16), // ~60fps
+    [],
+  );
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY, isBrowser]);
-
-  useEffect(() => {
-    if (!isBrowser) return;
-
-    const handleSectionScroll = () => {
-      if (!page?.sections) return;
+  // Memoized section scroll handler
+  const handleSectionScroll = useCallback(
+    throttle(() => {
+      if (!page?.sections || !isMounted()) return;
 
       const sections = page.sections;
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
-      const threshold = windowHeight * 0.3; // 30% of viewport height
+      const threshold = windowHeight * 0.3;
 
       let currentIndex = 0;
 
@@ -64,16 +76,23 @@ export const Navigation = (props: NavigationProps) => {
         const section = sections[i];
         if (!section) continue;
 
-        const sectionElement = document.getElementById(
-          `${section.slug}-${section.id}`,
-        );
+        const sectionId = `${section.slug}-${section.id}`;
+        let sectionElement = sectionElementsRef.current.get(sectionId);
+
+        if (!sectionElement) {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            sectionElement = element;
+            sectionElementsRef.current.set(sectionId, element);
+          }
+        }
+
         if (!sectionElement) continue;
 
         const rect = sectionElement.getBoundingClientRect();
         const sectionTop = rect.top + scrollY;
         const sectionBottom = sectionTop + rect.height;
 
-        // Check if we're in this section
         if (
           scrollY + threshold >= sectionTop &&
           scrollY + threshold < sectionBottom
@@ -84,15 +103,47 @@ export const Navigation = (props: NavigationProps) => {
       }
 
       setCurrentSectionIndex(currentIndex);
-    };
+    }, 32), // ~30fps for section detection
+    [],
+  );
 
-    // Initial check
-    handleSectionScroll();
+  useEffect(() => {
+    if (!isBrowser) return;
 
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("scroll", handleSectionScroll, { passive: true });
+    addCleanup(cleanupDOM);
 
-    return () => window.removeEventListener("scroll", handleSectionScroll);
-  }, [page?.sections, isBrowser]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleSectionScroll);
+      removeCleanup(cleanupDOM);
+      cleanupDOM();
+    };
+  }, [
+    isBrowser,
+    handleScroll,
+    handleSectionScroll,
+    addCleanup,
+    removeCleanup,
+    cleanupDOM,
+  ]);
+
+  // Clear cached elements when sections change
+  useEffect(() => {
+    cleanupDOM();
+
+    return () => {
+      cleanupDOM();
+    };
+  }, [cleanupDOM]);
+
+  // Cleanup on pathname change (locale switching)
+  useEffect(() => {
+    return () => {
+      cleanupDOM();
+    };
+  }, [cleanupDOM]);
 
   const isCurrentSectionHero = () => {
     if (!page?.sections || page.sections.length === 0) return false;
@@ -107,7 +158,26 @@ export const Navigation = (props: NavigationProps) => {
     return firstContent?.sys?.contentType?.sys?.id === "contentHero";
   };
 
-  const shouldShowBackground = !isCurrentSectionHero();
+  const isFirstSectionHero = () => {
+    if (!page?.sections || page.sections.length === 0) return false;
+
+    const firstSection = page.sections[0];
+
+    if (!firstSection?.content || firstSection.content.length === 0)
+      return false;
+
+    const firstContent = firstSection.content[0];
+
+    const isHero = firstContent?.sys?.contentType?.sys?.id === "contentHero";
+
+    return isHero;
+  };
+
+  // If the first section is a hero, start with transparent navigation
+  // Otherwise, use the current section detection
+  const shouldShowBackground = isFirstSectionHero()
+    ? false
+    : !isCurrentSectionHero();
 
   if (!navigation) {
     return null;

@@ -1,7 +1,10 @@
+"use client";
+
+import LocaleSwitcherSelect from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { FooterType } from "src/contentful/getFooter";
 import { Link } from "src/i18n/routing";
-import DelmarvaLogo from "src/icons/delmarva-white.svg";
+import DelmarvaBadge from "src/icons/delmarva-red-badge-full-color-rgb.svg";
 import LinkedInIcon from "src/icons/linkedin.svg";
 import { parseCtaUrl } from "src/utils/urlHelpers";
 import styles from "./Footer.module.css";
@@ -15,56 +18,110 @@ export const Footer = (props: FooterProps) => {
 
   if (!footer) return null;
 
-  const { addresscompanyInfo, links, copyright, linkedInUrl, linksTitle } =
-    footer;
+  const {
+    addresscompanyInfo,
+    links,
+    copyright,
+    linkedInUrl,
+    linksTitle,
+    otherLinks,
+    otherLinksTitle,
+  } = footer;
 
   return (
     <footer className={styles.footer}>
+      <div className="page-scroll">
+        <button
+          onClick={() => {
+            window.scrollTo({ behavior: "smooth", top: 0 });
+          }}
+          type="button"
+        >
+          <span>Scroll</span>
+        </button>
+      </div>
       <div className={styles.footerContent}>
         <div className={styles.footerSection}>
-          <DelmarvaLogo className={styles.footerLogo} />
+          <DelmarvaBadge className={styles.footerLogo} />
         </div>
-        <div className={styles.footerSection}>
-          {linksTitle && <h3>{linksTitle}</h3>}
-          {links && links.length > 0 && (
-            <ul className={styles.footerLinks}>
-              {links.map((link) => {
-                if (!link) {
-                  return null;
-                }
+        {links && links.length > 0 ? (
+          <div className={styles.footerSection}>
+            {linksTitle && (
+              <span className={styles.footerLinksTitle}>{linksTitle}</span>
+            )}
+            {links && links.length > 0 && (
+              <ul className={styles.footerLinks}>
+                {links.map((link) => {
+                  if (!link) {
+                    return null;
+                  }
 
-                const url = parseCtaUrl(link);
+                  const url = parseCtaUrl(link);
 
-                if (!url) {
-                  return null;
-                }
+                  if (!url) {
+                    return null;
+                  }
 
-                return (
-                  <li key={link.id}>
-                    <Link className={styles.footerLink} href={url}>
-                      {link.text}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
+                  return (
+                    <li key={link.id}>
+                      <Link className={styles.footerLink} href={url}>
+                        {link.text}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        ) : null}
+        {otherLinks && otherLinks.length > 0 ? (
+          <div className={styles.footerSection}>
+            {otherLinksTitle && (
+              <span className={styles.footerLinksTitle}>{otherLinksTitle}</span>
+            )}
+            {otherLinks && otherLinks.length > 0 && (
+              <ul className={styles.footerLinks}>
+                {otherLinks.map((link) => {
+                  if (!link) {
+                    return null;
+                  }
+
+                  const url = parseCtaUrl(link);
+
+                  if (!url) {
+                    return null;
+                  }
+
+                  return (
+                    <li key={link.id}>
+                      <Link className={styles.footerLink} href={url}>
+                        {link.text}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        ) : null}
         <div className={styles.footerSection}>
           <RichText document={addresscompanyInfo} />
+          <div className={styles.footerSocials}>
+            {linkedInUrl && (
+              <Link href={linkedInUrl}>
+                <LinkedInIcon />
+              </Link>
+            )}
+          </div>
         </div>
       </div>
       <div className={styles.footerCopyright}>
         <span>
           &copy; {new Date().getFullYear()} {copyright}
         </span>
-        {linkedInUrl && (
-          <p>
-            <Link href={linkedInUrl}>
-              <LinkedInIcon />
-            </Link>
-          </p>
-        )}
+        <div className={styles.footerActions}>
+          <LocaleSwitcherSelect />
+        </div>
       </div>
     </footer>
   );

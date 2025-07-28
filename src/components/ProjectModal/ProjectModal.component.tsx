@@ -4,8 +4,8 @@ import { Carousel } from "src/components/Carousel/Carousel.component";
 import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.component";
 import { Modal } from "src/components/Modal/Modal.component";
 import type { ProjectType } from "src/contentful/getProjects";
-import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { Link } from "src/i18n/routing";
+import { SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { formatNumber } from "src/utils/numberHelpers";
 import styles from "./ProjectModal.module.css";
 
@@ -13,14 +13,12 @@ interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   project: ProjectType | null;
-  selectedServiceSlug?: string;
 }
 
 export const ProjectModal = ({
   isOpen,
   onClose,
   project,
-  selectedServiceSlug,
 }: ProjectModalProps) => {
   if (!project) {
     return null;
@@ -33,13 +31,6 @@ export const ProjectModal = ({
     projectStats,
     services,
   } = project;
-
-  const projectStatsByService: (ContentStatBlock | null)[] | null =
-    selectedServiceSlug
-      ? projectStats?.filter(
-          (stat) => stat?.statServiceReference?.slug === selectedServiceSlug,
-        ) || null
-      : projectStats || null;
 
   return (
     <Modal
@@ -60,7 +51,10 @@ export const ProjectModal = ({
               }
 
               return (
-                <Link href={`/services/${service.slug}`} key={service.id}>
+                <Link
+                  href={`/${SERVICES_PAGE_SLUG}/${service.slug}`}
+                  key={service.id}
+                >
                   <span className={styles.serviceTag} key={service.id}>
                     {service.serviceName}
                   </span>
@@ -92,10 +86,10 @@ export const ProjectModal = ({
             <p>{projectDescription}</p>
           </div>
 
-          {projectStatsByService && projectStatsByService.length > 0 && (
+          {projectStats && projectStats.length > 0 && (
             <div className={styles.statsSection}>
               <dl className={styles.statsList}>
-                {projectStatsByService.map((stat) => {
+                {projectStats.map((stat) => {
                   if (!stat) {
                     return null;
                   }
@@ -106,7 +100,12 @@ export const ProjectModal = ({
                         {stat.description}
                       </dt>
                       <dd className={styles.statValue}>
-                        {formatNumber(stat?.value ?? 0, stat?.type)}
+                        {formatNumber({
+                          decorator: stat.decorator,
+                          keepInitialValue: true,
+                          num: stat?.value ?? 0,
+                          type: stat?.type,
+                        })}
                       </dd>
                     </div>
                   );

@@ -1,16 +1,14 @@
 import type { Entry } from "contentful";
-import {
-  parseContentfulService,
-  type ServiceType,
-} from "src/contentful/getServices";
+import { parseServiceSlug } from "src/contentful/getServices";
 import type { NumberFormatType } from "src/utils/numberHelpers";
 import type { TypeContentStatBlockSkeleton } from "./types/TypeContentStatBlock";
 
 export interface ContentStatBlock {
   id: string;
   value: number;
+  decorator?: "None" | "Plus Sign";
   description: string;
-  statServiceReference: ServiceType | null;
+  statServiceReference: string | null;
   type: NumberFormatType;
 }
 
@@ -32,10 +30,12 @@ export const parseContentStatBlock = (
   const { stat, statDescription, statType } = statBlock.fields;
 
   return {
+    decorator: statBlock.fields.decorator || "None",
     description: statDescription || "",
     id: statBlock.sys.id,
-    statServiceReference:
-      parseContentfulService(statBlock.fields?.statServiceReference) ?? null,
+    statServiceReference: parseServiceSlug(
+      statBlock.fields?.statServiceReference,
+    ),
     type: (statType as NumberFormatType) || "Numerical",
     value: stat || 0,
   };

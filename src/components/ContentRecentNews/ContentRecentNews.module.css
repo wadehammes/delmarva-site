@@ -5,10 +5,20 @@
 }
 
 .learnMoreLink {
+  padding-top: 1rem;
   color: var(--colors-red);
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
   }
+}
+
+.arrow {
+  font-size: inherit;
+  transition: transform 0.2s ease-in-out;
+}
+
+.learnMoreLink:hover .arrow {
+  transform: translateX(4px);
 }

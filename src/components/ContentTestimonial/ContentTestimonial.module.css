@@ -7,12 +7,13 @@
 }
 
 .testimonialQuoteMark {
-  margin-bottom: -80px;
+  margin-bottom: -100px;
   font-family: var(--font-family-n27);
   font-size: 10em;
   line-height: 1;
   color: var(--color-text);
   text-align: center;
+  transform: translateY(-20px);
 }
 
 .testimonialQuote {
@@ -33,5 +34,6 @@
 
 .testimonialAuthorTitle {
   font-size: 0.875rem;
-  color: var(--colors-gray-500);
+  color: var(--color-text);
+  opacity: 0.75;
 }

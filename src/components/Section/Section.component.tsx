@@ -3,7 +3,11 @@ import type { HTMLAttributes } from "react";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import styles from "src/components/Section/Section.module.css";
-import { ContentLayout, Placement } from "src/contentful/interfaces";
+import {
+  ContentLayout,
+  DelmarvaColors,
+  Placement,
+} from "src/contentful/interfaces";
 import type { SectionType } from "src/contentful/parseSections";
 import { createBackgroundColor, createPadding } from "src/styles/utils";
 import { isReactNodeEmptyArray } from "src/utils/helpers";
@@ -51,12 +55,18 @@ export const Section = async (props: SectionProps) => {
       className={classNames(styles.section, {
         [styles.overlap]: contentStyle === "Overlap Section Above",
         [styles.fullWidth]: contentLayout === ContentLayout.FullWidth,
+        [styles.whiteBg]: backgroundColor === "White",
+        [styles.blackBg]: backgroundColor === "Black",
+        [styles.redBg]: backgroundColor === "Red",
+        [styles.silverBg]: backgroundColor === "Silver",
       })}
       id={id}
       style={{
-        backgroundColor: createBackgroundColor(backgroundColor),
         paddingBottom: createPadding(sectionPadding),
         paddingTop: createPadding(sectionPadding),
+        ...(backgroundColor === "Black" && {
+          "--dot-bg": createBackgroundColor(DelmarvaColors.Black),
+        }),
       }}
     >
       {sectionEyebrow || sectionHeader ? (

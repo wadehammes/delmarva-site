@@ -13,5 +13,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
+    messages: {}, // Empty messages object since we're using Contentful for content
   };
 });

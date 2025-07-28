@@ -12,6 +12,7 @@ export interface TypeContentStatBlockFields {
   statType: EntryFieldTypes.Symbol<"Currency" | "Numerical" | "Percentage">;
   stat: EntryFieldTypes.Number;
   statDescription: EntryFieldTypes.Symbol;
+  decorator?: EntryFieldTypes.Symbol<"None" | "Plus Sign">;
   statServiceReference?: EntryFieldTypes.EntryLink<TypeServiceSkeleton>;
 }
 

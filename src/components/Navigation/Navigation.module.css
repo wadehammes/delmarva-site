@@ -10,7 +10,11 @@
   padding: 1rem 2rem;
   border-bottom: 1px solid transparent;
   transform: translateY(0);
-  transition: all 0.3s ease-in-out;
+  transition:
+    transform 0.3s ease-in-out,
+    background-color 0.3s ease-in-out,
+    border-bottom-color 0.3s ease-in-out;
+  will-change: transform;
 
   &.hidden {
     transform: translateY(-200px);
@@ -32,14 +36,14 @@
 .navList {
   display: none;
   flex: 1;
-  gap: 1rem;
+  gap: 2rem;
   align-items: center;
   justify-content: flex-start;
   padding: 1.5rem 1rem;
   margin: 0;
   list-style: none;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 1100px) {
     display: flex;
   }
 }
@@ -49,18 +53,19 @@
   align-items: center;
 
   > a {
-    padding: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--colors-white);
+    padding: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--colors-text);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     text-decoration: none;
     border-bottom: 1px solid transparent;
+    transform: translateY(5px);
     transition: all 0.2s ease-in-out;
 
     &:hover,
     &.active {
-      color: var(--colors-white);
+      color: var(--colors-text);
       border-bottom-color: var(--colors-red);
     }
   }
@@ -78,7 +83,7 @@
     height: auto;
   }
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 1100px) {
     flex: 1;
     justify-content: center;
   }
@@ -90,7 +95,7 @@
   align-items: center;
   justify-content: flex-end;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 1100px) {
     display: flex;
   }
 }
@@ -107,14 +112,19 @@
 
   > a {
     line-height: 1.25;
+    color: var(--colors-text);
     text-decoration: none;
+
+    &:hover {
+      color: var(--colors-red);
+    }
   }
 }
 
 .desktopNavigation {
   display: none;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 1100px) {
     display: flex;
     flex: 1;
   }
@@ -136,7 +146,7 @@
   color: var(--colors-text);
   background-color: var(--color-bg);
 
-  @media (min-width: 800px) {
+  @media (min-width: 1100px) {
     display: none;
   }
 
@@ -162,8 +172,8 @@
   }
 
   li.active a {
-    color: var(--colors-main-blue);
-    border-bottom: 2px solid var(--colors-main-blue);
+    color: var(--colors-red);
+    border-bottom: 2px solid var(--colors-red);
   }
 }
 
@@ -172,7 +182,7 @@
   flex: 1;
   justify-content: flex-end;
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 1100px) {
     display: none;
   }
 }
@@ -181,7 +191,7 @@
   display: block;
   padding: 0;
   margin: 0;
-  color: var(--colors-white);
+  color: var(--colors-text);
   appearance: none;
   cursor: pointer;
   background: none;
@@ -199,7 +209,7 @@
   }
 
   &:hover > .menu {
-    color: var(--colors-main-blue);
+    color: var(--colors-red);
   }
 }
 
@@ -207,7 +217,7 @@
   color: var(--colors-text);
 
   &:hover > .menu {
-    color: var(--colors-main-blue);
+    color: var(--colors-red);
   }
 }
 
@@ -215,7 +225,7 @@
   text-decoration: none;
 
   &.active {
-    color: var(--colors-main-blue);
+    color: var(--colors-red);
   }
 }
 
@@ -256,7 +266,7 @@
   }
 
   &:hover .close {
-    color: var(--colors-main-blue);
+    color: var(--colors-red);
   }
 }
 

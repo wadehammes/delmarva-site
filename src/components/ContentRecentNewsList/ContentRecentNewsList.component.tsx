@@ -1,9 +1,12 @@
 import { ContentRecentNews } from "src/components/ContentRecentNews/ContentRecentNews.component";
 import { fetchRecentNews } from "src/contentful/getContentRecentNews";
+import { getLocale } from "src/i18n/getLocale";
 import styles from "./ContentRecentNewsList.module.css";
 
 export const ContentRecentNewsList = async () => {
-  const recentNews = await fetchRecentNews({ preview: false });
+  const locale = await getLocale();
+
+  const recentNews = await fetchRecentNews({ locale, preview: false });
 
   if (recentNews.length === 0) {
     return null;
