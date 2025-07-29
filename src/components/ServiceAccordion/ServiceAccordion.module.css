@@ -1,11 +1,21 @@
 .serviceAccordion {
-  display: flex;
-  flex-direction: column;
+  container-type: inline-size;
+  display: grid;
   gap: 2rem;
+  grid-template-columns: 1fr;
+}
 
-  @media (min-width: 1100px) {
-    flex-direction: row;
-    gap: 4rem;
+@container (min-width: 1200px) {
+  .serviceAccordion {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .serviceAccordionContent {
+    grid-column: 1;
+  }
+
+  .serviceAccordionCarousel {
+    grid-column: 2;
   }
 }
 
@@ -43,6 +53,10 @@
   display: flex;
   justify-content: flex-start;
   margin-top: 1rem;
+}
+
+.serviceAccordionCarousel {
+  width: 100%;
 }
 
 .statValue {

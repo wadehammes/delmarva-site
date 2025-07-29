@@ -1,16 +1,18 @@
 .button {
   display: flex;
   flex-flow: row nowrap;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: center;
   justify-content: center;
   padding: 1rem 1.75rem;
-  font-size: 0.8rem;
-  color: var(--colors-white);
+  font-size: 0.875rem;
+  color: var(--colors-text);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   text-decoration: none;
+  outline: 1px solid transparent;
+  outline-offset: 1px;
   background-color: var(--colors-red);
   border-radius: 1000px;
   transition: all 0.2s ease-in-out;
@@ -22,13 +24,9 @@
   }
 
   &:hover {
-    color: var(--colors-white);
     cursor: pointer;
-    background-color: color-mix(
-      in srgb,
-      var(--colors-red) 80%,
-      var(--colors-black)
-    );
+    outline: 1px solid var(--colors-red);
+    outline-offset: 2px;
   }
 
   &:focus {
@@ -37,23 +35,32 @@
   }
 
   &.outline {
-    color: var(--colors-white);
+    color: var(--colors-text);
     background-color: transparent;
-    border-color: var(--colors-white);
+    border-color: var(--colors-text);
 
     &:hover {
-      color: var(--colors-white);
+      color: var(--colors-text);
       background-color: var(--colors-black);
     }
   }
 
   &.secondary {
-    color: var(--colors-white);
+    color: var(--colors-text);
     background-color: var(--colors-red);
 
     &:hover {
-      color: var(--colors-white);
+      color: var(--colors-text);
       background-color: var(--colors-black);
     }
   }
+}
+
+.arrow {
+  font-size: inherit;
+  transition: transform 0.2s ease-in-out;
+}
+
+.button:hover .arrow {
+  transform: translateX(4px);
 }

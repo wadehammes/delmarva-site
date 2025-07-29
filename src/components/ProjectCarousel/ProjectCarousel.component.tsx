@@ -3,8 +3,10 @@
 import { useId } from "react";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import type { ProjectType } from "src/contentful/getProjects";
+import Chevron from "src/icons/Chevron.svg";
 import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper/types";
 import styles from "./ProjectCarousel.module.css";
 
 // Import Swiper styles
@@ -13,20 +15,25 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-// Import SVG icon
-import Chevron from "src/icons/Chevron.svg";
-
 interface ProjectCarouselProps {
   projects: ProjectType[];
   selectedServiceSlug?: string;
+  carouselId?: string;
+  onSwiper?: (swiper: SwiperType) => void;
 }
 
 export const ProjectCarousel = (props: ProjectCarouselProps) => {
-  const { projects, selectedServiceSlug } = props;
-  const carouselId = useId();
-  const navigationPrevId = `${carouselId}-nav-prev`;
-  const navigationNextId = `${carouselId}-nav-next`;
-  const paginationId = `${carouselId}-pagination`;
+  const {
+    projects,
+    selectedServiceSlug,
+    carouselId: propCarouselId,
+    onSwiper,
+  } = props;
+  const generatedCarouselId = useId();
+  const carouselId = propCarouselId || generatedCarouselId;
+  const navigationPrevId = `project-carousel-${carouselId}-nav-prev`;
+  const navigationNextId = `project-carousel-${carouselId}-nav-next`;
+  const paginationId = `project-carousel-${carouselId}-pagination`;
 
   // If there's only one project, just render it normally
   if (projects.length <= 1) {
@@ -62,6 +69,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
           nextEl: `#${navigationNextId}`,
           prevEl: `#${navigationPrevId}`,
         }}
+        onSwiper={onSwiper}
         pagination={{
           clickable: true,
           el: `#${paginationId}`,

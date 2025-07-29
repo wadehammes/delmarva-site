@@ -26,6 +26,7 @@
   display: inline-block;
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
+  line-height: 1;
   color: var(--colors-white);
   background-color: var(--colors-red);
   border-radius: 1rem;

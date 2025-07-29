@@ -4,6 +4,9 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import PageComponent from "src/components/Page/Page.component";
+import { PageLayout } from "src/components/PageLayout/PageLayout.component";
+import { fetchFooter } from "src/contentful/getFooter";
+import { fetchNavigation } from "src/contentful/getNavigation";
 import type { Page as PageType } from "src/contentful/getPages";
 import { fetchPage, fetchPages } from "src/contentful/getPages";
 import type { Locales } from "src/contentful/interfaces";
@@ -12,7 +15,10 @@ import type { SitemapItem } from "src/lib/generateSitemap";
 import { outputSitemap } from "src/lib/generateSitemap";
 import {
   EXCLUDED_PAGE_SLUGS_FROM_BUILD,
+  FOOTER_ID,
   HOME_PAGE_SLUG,
+  NAVIGATION_ID,
+  SERVICES_PAGE_SLUG,
   TEST_PAGE_SLUG,
 } from "src/utils/constants";
 import { envUrl } from "src/utils/helpers";
@@ -53,6 +59,13 @@ export async function generateStaticParams(): Promise<PageParams[]> {
           };
         }
 
+        if (page.slug === SERVICES_PAGE_SLUG) {
+          return {
+            modTime: page.updatedAt,
+            route: `/${SERVICES_PAGE_SLUG}`,
+          };
+        }
+
         return {
           modTime: page.updatedAt,
           route: `/${page.slug}`,
@@ -85,6 +98,9 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
+
+  setRequestLocale(locale);
+
   const draft = await draftMode();
 
   const page = await fetchPage({
@@ -127,13 +143,29 @@ async function Page({ params }: PageProps) {
     slug,
   });
 
-  if (!page) {
+  const navigation = await fetchNavigation({
+    locale,
+    preview: draft.isEnabled,
+    slug: NAVIGATION_ID,
+  });
+
+  const footer = await fetchFooter({
+    locale,
+    preview: draft.isEnabled,
+    slug: FOOTER_ID,
+  });
+
+  if (!page || !navigation || !footer) {
     // If a page can't be found,
     // tell Next.js to render a 404 page.
     return notFound();
   }
 
-  return <PageComponent fields={page} />;
+  return (
+    <PageLayout footer={footer} navigation={navigation} page={page}>
+      <PageComponent fields={page} />
+    </PageLayout>
+  );
 }
 
 export default Page;

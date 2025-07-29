@@ -8,6 +8,7 @@ interface ButtonLinkProps extends HTMLAttributes<HTMLAnchorElement> {
   label: string;
   variant?: "primary" | "secondary" | "outline";
   href: string;
+  arrow?: "No Arrow" | "Right Arrow" | "Right-Up Arrow";
 }
 
 export const ButtonLink = (props: ButtonLinkProps) => {
@@ -16,18 +17,38 @@ export const ButtonLink = (props: ButtonLinkProps) => {
     variant = "primary",
     "data-tracking-click": dataTrackingClick,
     href,
+    arrow = "No Arrow",
+    className,
+    ...rest
   } = props;
+
+  const renderArrow = () => {
+    if (arrow === "Right Arrow") {
+      return <span className={styles.arrow}>→</span>;
+    }
+
+    if (arrow === "Right-Up Arrow") {
+      return <span className={styles.arrow}>↗</span>;
+    }
+
+    return null;
+  };
 
   return (
     <Link
-      className={classNames(styles.button, {
-        [styles.secondary]: variant === "secondary",
-        [styles.outline]: variant === "outline",
-      })}
+      className={classNames(
+        styles.button,
+        {
+          [styles.secondary]: variant === "secondary",
+          [styles.outline]: variant === "outline",
+        },
+        className,
+      )}
       data-tracking-click={dataTrackingClick}
       href={href}
+      {...rest}
     >
-      {label}
+      {label} {renderArrow()}
     </Link>
   );
 };

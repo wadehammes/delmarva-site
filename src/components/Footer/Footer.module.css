@@ -1,18 +1,19 @@
 .footer {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
   gap: var(--grid-gap);
   width: 100%;
   padding: 4rem 2rem;
-  color: var(--colors-white);
-  background-color: var(--colors-black);
+  color: var(--colors-text);
+  background-color: var(--colors-bg);
   border-top: 1px dashed var(--divider);
 }
 
 .footerContent {
   --columns: 1;
   --columns-md: 2;
-  --columns-lg: 3;
+  --columns-lg: auto-fit;
   display: grid;
   grid-template-columns: repeat(var(--columns, 1), 1fr);
   grid-column: 1 / -1;
@@ -24,10 +25,18 @@
   border-bottom: 1px solid var(--divider);
 
   @media screen and (min-width: 1000px) {
-    grid-template-columns: repeat(var(--columns-lg, var(--columns, 1)), 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-column: 2 / -2;
     gap: var(--gap-md, var(--gap, 4rem));
   }
+}
+
+.footerActions {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .footerSection {
@@ -37,6 +46,25 @@
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
+
+  &:last-child {
+    grid-column: span 2;
+  }
+}
+
+.footerSocials {
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding-top: 2rem;
+
+  a {
+    color: var(--colors-text);
+    transition: color 0.2s ease-in-out;
+
+    &:hover {
+      color: var(--colors-red);
+    }
+  }
 }
 
 .footerLogo {
@@ -54,7 +82,7 @@
 }
 
 .footerLink {
-  color: var(--colors-white);
+  color: var(--colors-text);
   text-decoration: none;
   transition: color 0.2s ease-in-out;
 
@@ -78,4 +106,13 @@
   @media screen and (min-width: 1000px) {
     grid-column: 2 / -2;
   }
+}
+
+.footerLinksTitle {
+  font-family: var(--font-family-heading);
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

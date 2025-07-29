@@ -8,7 +8,7 @@
   height: 10vh;
   min-height: 300px;
   padding: var(--default-padding) var(--default-padding) 5rem;
-  color: var(--colors-white);
+  color: var(--colors-text);
   text-align: center;
   background-color: var(--colors-black);
   border-bottom: 1px solid var(--colors-black);

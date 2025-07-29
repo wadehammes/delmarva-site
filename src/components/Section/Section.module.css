@@ -93,7 +93,7 @@
   gap: var(--grid-gap);
   width: 100%;
   padding: 4rem 2rem;
-  background-color: var(--colors-white);
+  background-color: var(--color-bg);
 
   &.overlap > .sectionContent {
     padding: 2rem;
@@ -124,6 +124,35 @@
     padding-left: 0;
   }
 
+  &.whiteBg {
+    --color-text: var(--colors-black);
+    background-color: var(--colors-white);
+  }
+
+  &.blackBg {
+    --color-text: var(--colors-white);
+    --dot-size: 1px;
+    --dot-space: 6px;
+    background-color: var(--colors-black);
+    background-image: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.055) var(--dot-size),
+      transparent var(--dot-size)
+    );
+    background-position: center;
+    background-size: var(--dot-space) var(--dot-space);
+  }
+
+  &.silverBg {
+    --color-text: var(--colors-black);
+    background-color: var(--colors-silver);
+  }
+
+  &.redBg {
+    --color-text: var(--colors-white);
+    background-color: var(--colors-red);
+  }
+
   @media screen and (min-width: 900px) {
     padding-right: 0;
     padding-left: 0;
@@ -142,7 +171,7 @@
 
   &::after {
     position: absolute;
-    bottom: 0.35rem;
+    bottom: 0.4rem;
     left: 0;
     z-index: 0;
     width: 100%;

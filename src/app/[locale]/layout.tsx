@@ -42,7 +42,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID as string} />
+      {process.env.GOOGLE_TAG_MANAGER_ID && (
+        <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID} />
+      )}
       <head>
         <link
           href="/sitemap-index.xml"

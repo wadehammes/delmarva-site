@@ -1,7 +1,6 @@
 "use client";
 
 import classNames from "classnames";
-import { useInView } from "react-intersection-observer";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import CopyBlock from "src/components/ContentCopyBlock/ContentCopyBlock.component";
 import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
@@ -10,6 +9,7 @@ import {
   type ContentImageBlockEntry,
   parseContentImageBlock,
 } from "src/contentful/parseContentImageBlock";
+import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import styles from "./ContentCopyMediaBlock.module.css";
 
 interface ContentCopyMediaBlockProps {
@@ -20,10 +20,7 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   const { fields } = props;
   const { copy, media, mediaPlacement } = fields;
 
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
+  const { ref, inView } = useOptimizedInView();
 
   return (
     <div

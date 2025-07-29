@@ -8,18 +8,19 @@
   background-color: var(--colors-white);
   border: none;
   border-radius: 10px;
-  transition: all 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+  will-change: transform;
 
-  &:hover {
-    box-shadow:
-      0 8px 25px -5px rgba(0, 0, 0, 0.1),
-      0 4px 10px -5px rgba(0, 0, 0, 0.04);
-    transform: translateY(-2px);
-  }
-
+  &:hover,
   &:focus {
     outline: 2px solid var(--colors-red);
     outline-offset: 2px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
   }
 }
 
@@ -65,10 +66,6 @@
   justify-content: space-between;
   padding: 0.5rem 0;
   border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
-
-  &:last-child {
-    border-bottom: none;
-  }
 }
 
 .statDescription {

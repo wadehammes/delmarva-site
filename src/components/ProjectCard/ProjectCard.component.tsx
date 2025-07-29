@@ -30,7 +30,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
       }
 
       return projectStats?.filter(
-        (stat) => stat?.statServiceReference?.slug === selectedServiceSlug,
+        (stat) => stat?.statServiceReference === selectedServiceSlug,
       );
     }, [projectStats, selectedServiceSlug]);
 
@@ -77,7 +77,12 @@ export const ProjectCard = (props: ProjectCardProps) => {
                       {stat.description}
                     </dt>
                     <dd className={styles.statValue}>
-                      {formatNumber(stat?.value ?? 0, stat?.type)}
+                      {formatNumber({
+                        decorator: stat.decorator,
+                        keepInitialValue: true,
+                        num: stat?.value ?? 0,
+                        type: stat?.type,
+                      })}
                     </dd>
                   </div>
                 );
@@ -86,12 +91,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
           </div>
         </div>
       </button>
-      <ProjectModal
-        isOpen={isOpen}
-        onClose={close}
-        project={project}
-        selectedServiceSlug={selectedServiceSlug}
-      />
+      <ProjectModal isOpen={isOpen} onClose={close} project={project} />
     </>
   );
 };

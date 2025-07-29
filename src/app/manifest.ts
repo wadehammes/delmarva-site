@@ -12,8 +12,8 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/x-icon",
       },
     ],
-    name: "Delmarva Site Development Development",
-    short_name: "Delmarva Site Development Development",
+    name: "Delmarva Site Development",
+    short_name: "Delmarva Site Development",
     start_url: "/",
     theme_color: "#e01e2d",
   };

@@ -1,0 +1,40 @@
+/* Performance optimizations for animations */
+
+/* Hardware acceleration for animated elements */
+.animate-transform {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.animate-opacity {
+  will-change: opacity;
+}
+
+.animate-all {
+  will-change: transform, opacity;
+}
+
+/* Optimize for animations */
+.performance-optimized {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+}
+
+/* Optimized transitions */
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+}
+
+.transition-opacity {
+  transition: opacity 0.3s ease-in-out;
+  will-change: opacity;
+}
+
+.transition-transform-opacity {
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+  will-change: transform, opacity;
+}

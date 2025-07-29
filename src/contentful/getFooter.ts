@@ -12,6 +12,8 @@ export interface FooterType {
   links?: (Cta | null)[];
   linksTitle?: string;
   linkedInUrl?: string;
+  otherLinks?: (Cta | null)[];
+  otherLinksTitle?: string;
 }
 
 export type FooterEntry =
@@ -34,6 +36,9 @@ export function parseFooter(entry: FooterEntry): FooterType | null {
     linkedInUrl: entry.fields.linkedInUrl ?? "",
     links: entry.fields.links?.map((link) => parseContentfulCta(link)) ?? [],
     linksTitle: entry.fields.linksTitle ?? "",
+    otherLinks:
+      entry.fields.otherLinks?.map((link) => parseContentfulCta(link)) ?? [],
+    otherLinksTitle: entry.fields.otherLinksTitle ?? "",
     slug: entry.fields.slug ?? "",
   };
 }

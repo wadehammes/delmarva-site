@@ -8,14 +8,20 @@ const intlMiddleware = createMiddleware(routing);
 
 // Create our cookie middleware
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
   // Skip middleware for static files and public assets
   if (
-    request.nextUrl.pathname.startsWith("/_next") ||
-    request.nextUrl.pathname.startsWith("/api") ||
-    request.nextUrl.pathname.startsWith("/public") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/public") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname.startsWith("/sitemap-") ||
     // Only skip if it's a file with an extension (not a route)
     /\.(?:jpg|jpeg|gif|png|svg|ico|webp|avif|woff|woff2|ttf|eot|css|js|json|xml|txt|pdf|doc|docx|xls|xlsx|zip|rar|7z|mp4|webm|mp3|wav|ogg)$/i.test(
-      request.nextUrl.pathname,
+      pathname,
     )
   ) {
     return NextResponse.next();
@@ -32,7 +38,8 @@ export const config = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
+     * - favicon.ico, robots.txt, sitemap files
      */
-    "/((?!api|_next|_vercel).*)",
+    "/((?!api|_next|_vercel|favicon.ico|robots.txt|sitemap).*)",
   ],
 };
