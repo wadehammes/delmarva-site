@@ -60,6 +60,10 @@
     border-top-color: var(--divider);
   }
 
+  &:last-child {
+    border-bottom: 1px solid var(--divider);
+  }
+
   &.active .accordionButton {
     color: var(--colors-red);
   }

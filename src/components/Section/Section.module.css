@@ -141,6 +141,10 @@
     );
     background-position: center;
     background-size: var(--dot-space) var(--dot-space);
+
+    &.fullWidth {
+      padding-bottom: 2rem !important;
+    }
   }
 
   &.silverBg {
@@ -221,8 +225,13 @@
 
 .sectionEndCta {
   display: flex;
+  grid-column: 1 / -1;
   justify-content: center;
   margin-top: 2rem;
+
+  @media (min-width: 900px) {
+    margin-top: 4rem;
+  }
 }
 
 .sectionSeparator {

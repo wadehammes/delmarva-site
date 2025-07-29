@@ -3,7 +3,7 @@ import { Link } from "src/components/Link/Link.component";
 import styles from "src/components/Navigation/Navigation.module.css";
 import type { NavigationType } from "src/contentful/getNavigation";
 import Close from "src/icons/Close.svg";
-import DelmarvaLogo from "src/icons/delmarva-white-full-full-color-rgb.svg";
+import DelmarvaLogo from "src/logos/delmarva-white-full-cutout-full-color-rgb.svg";
 
 interface MobileNavigationDrawerProps {
   navigation: NavigationType;

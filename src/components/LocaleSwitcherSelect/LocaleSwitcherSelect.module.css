@@ -12,23 +12,15 @@
   border-radius: 1000px;
   transition: all 0.2s ease-in-out;
 
-  /* Ensure sufficient color contrast */
-  @media (prefers-contrast: high) {
-    &:focus {
-      outline: 3px solid var(--color-text);
-      outline-offset: 1px;
-    }
-  }
-
   &:focus {
     color: var(--color-bg);
-    outline: 2px solid var(--color-text);
+    outline: 1px solid var(--color-text);
     outline-offset: 2px;
     background-color: var(--color-text);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-text);
+    outline: 1px solid var(--color-text);
     outline-offset: 2px;
   }
 
@@ -43,11 +35,12 @@
   display: flex;
   gap: 0.75rem;
   align-items: center;
-  border: 1px solid var(--color-text);
+  border: 1px solid var(--divider);
   border-radius: 1000px;
   transition: all 0.2s ease-in-out;
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     color: var(--color-bg);
     background-color: var(--color-text);
 
@@ -56,18 +49,11 @@
     }
   }
 
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    border-width: 2px;
-  }
-
   &:focus-within {
     border-color: var(--color-text);
-    box-shadow: 0 0 0 2px var(--color-text);
 
     @media (prefers-contrast: high) {
       border-width: 3px;
-      box-shadow: 0 0 0 1px var(--color-text);
     }
   }
 }

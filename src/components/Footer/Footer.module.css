@@ -11,11 +11,8 @@
 }
 
 .footerContent {
-  --columns: 1;
-  --columns-md: 2;
-  --columns-lg: auto-fit;
   display: grid;
-  grid-template-columns: repeat(var(--columns, 1), 1fr);
+  grid-template-columns: 1fr;
   grid-column: 1 / -1;
   gap: var(--gap, 4rem);
   align-items: stretch;
@@ -47,8 +44,22 @@
   justify-content: flex-start;
   width: 100%;
 
-  &:last-child {
-    grid-column: span 2;
+  @media (min-width: 1000px) {
+    &:last-child {
+      grid-column: span 2;
+    }
+  }
+
+  &:first-of-type {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    svg {
+      max-width: 150px;
+    }
   }
 }
 
@@ -68,7 +79,7 @@
 }
 
 .footerLogo {
-  width: 200px;
+  width: 150px;
 }
 
 .footerLinks {

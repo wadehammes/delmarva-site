@@ -91,9 +91,11 @@ export const Section = async (props: SectionProps) => {
           {children}
         </div>
       ) : null}
-      <div className={styles.sectionEndCta}>
-        {cta ? <CTA cta={cta} /> : null}
-      </div>
+      {cta ? (
+        <div className={styles.sectionEndCta}>
+          <CTA cta={cta} />
+        </div>
+      ) : null}
       {showSectionSeparator ? (
         <div className={styles.sectionSeparator} />
       ) : null}

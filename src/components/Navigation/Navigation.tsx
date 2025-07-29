@@ -11,8 +11,8 @@ import type { NavigationType } from "src/contentful/getNavigation";
 import type { Page } from "src/contentful/getPages";
 import { useDOMCleanup, useIsBrowser } from "src/hooks/useIsBrowser";
 import { Link } from "src/i18n/routing";
-import DelmarvaLogo from "src/icons/delmarva-white-full-full-color-rgb.svg";
 import Menu from "src/icons/Menu.svg";
+import DelmarvaLogo from "src/logos/delmarva-white-full-cutout-full-color-rgb.svg";
 import { throttle } from "src/utils/throttle";
 
 interface NavigationProps {
@@ -224,7 +224,7 @@ export const Navigation = (props: NavigationProps) => {
               })}
               href={navigation.ctaButton.pageLink?.url ?? ""}
               label={navigation.ctaButton.text ?? ""}
-              variant="secondary"
+              variant="primary"
             />
           </div>
         ) : null}
