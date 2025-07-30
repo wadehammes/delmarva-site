@@ -43,6 +43,7 @@ export const Navigation = (props: NavigationProps) => {
   }, []);
 
   // Memoized scroll handler for navigation visibility
+  // biome-ignore lint/correctness/useExhaustiveDependencies: this needs to be included
   const handleScroll = useCallback(
     throttle(() => {
       if (!isMounted()) return;
@@ -56,11 +57,12 @@ export const Navigation = (props: NavigationProps) => {
       }
 
       setLastScrollY(currentScrollY);
-    }, 16), // ~60fps
-    [],
+    }, 16),
+    [lastScrollY, isMounted],
   );
 
   // Memoized section scroll handler
+  // biome-ignore lint/correctness/useExhaustiveDependencies: this needs to be included
   const handleSectionScroll = useCallback(
     throttle(() => {
       if (!page?.sections || !isMounted()) return;
@@ -103,8 +105,8 @@ export const Navigation = (props: NavigationProps) => {
       }
 
       setCurrentSectionIndex(currentIndex);
-    }, 32), // ~30fps for section detection
-    [],
+    }, 32),
+    [page?.sections, isMounted],
   );
 
   useEffect(() => {
@@ -133,13 +135,6 @@ export const Navigation = (props: NavigationProps) => {
   useEffect(() => {
     cleanupDOM();
 
-    return () => {
-      cleanupDOM();
-    };
-  }, [cleanupDOM]);
-
-  // Cleanup on pathname change (locale switching)
-  useEffect(() => {
     return () => {
       cleanupDOM();
     };
