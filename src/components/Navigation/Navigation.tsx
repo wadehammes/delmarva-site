@@ -153,26 +153,8 @@ export const Navigation = (props: NavigationProps) => {
     return firstContent?.sys?.contentType?.sys?.id === "contentHero";
   };
 
-  const isFirstSectionHero = () => {
-    if (!page?.sections || page.sections.length === 0) return false;
-
-    const firstSection = page.sections[0];
-
-    if (!firstSection?.content || firstSection.content.length === 0)
-      return false;
-
-    const firstContent = firstSection.content[0];
-
-    const isHero = firstContent?.sys?.contentType?.sys?.id === "contentHero";
-
-    return isHero;
-  };
-
-  // If the first section is a hero, start with transparent navigation
-  // Otherwise, use the current section detection
-  const shouldShowBackground = isFirstSectionHero()
-    ? false
-    : !isCurrentSectionHero();
+  // Show background if we're not currently on a hero section
+  const shouldShowBackground = !isCurrentSectionHero();
 
   if (!navigation) {
     return null;
