@@ -7,6 +7,10 @@ import {
 } from "src/contentful/getNavigation";
 import type { Locales } from "src/contentful/interfaces";
 import {
+  type ContentfulAsset,
+  parseContentfulAsset,
+} from "src/contentful/parseContentfulAsset";
+import {
   parseContentfulSection,
   type SectionType,
 } from "src/contentful/parseSections";
@@ -27,6 +31,7 @@ export interface Page {
   metaDescription: string;
   metaKeywords?: string[];
   metaTitle: string;
+  metaImage?: ContentfulAsset | null;
   publishDate: string;
   sections: (SectionType | null)[];
   slug: string;
@@ -50,6 +55,9 @@ export function parseContentfulPage(pageEntry?: PageEntry): Page | null {
       : undefined,
     id: pageEntry.sys.id,
     metaDescription: pageEntry.fields.metaDescription,
+    metaImage: pageEntry.fields.metaImage
+      ? parseContentfulAsset(pageEntry.fields.metaImage)
+      : undefined,
     metaKeywords: pageEntry.fields.metaKeywords,
     metaTitle: pageEntry.fields.metaTitle,
     navigationOverride: pageEntry.fields.navigationOverride

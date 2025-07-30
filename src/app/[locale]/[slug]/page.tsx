@@ -21,7 +21,7 @@ import {
   SERVICES_PAGE_SLUG,
   TEST_PAGE_SLUG,
 } from "src/utils/constants";
-import { envUrl } from "src/utils/helpers";
+import { createMediaUrl, envUrl } from "src/utils/helpers";
 
 interface PageParams {
   slug: string;
@@ -119,11 +119,41 @@ export async function generateMetadata({
     },
     description: page.metaDescription,
     keywords: page?.metaKeywords?.join(",") ?? "",
+    openGraph: {
+      images: page.metaImage
+        ? [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: createMediaUrl(page.metaImage.src),
+            },
+          ]
+        : [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: `${envUrl()}/opengraph-image.png`,
+            },
+          ],
+    },
     robots:
       page.enableIndexing && process.env.ENVIRONMENT === "production"
         ? "index, follow"
         : "noindex, nofollow",
     title: page.metaTitle,
+    twitter: {
+      images: page.metaImage
+        ? [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: createMediaUrl(page.metaImage.src),
+            },
+          ]
+        : [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: `${envUrl()}/twitter-image.png`,
+            },
+          ],
+    },
   };
 }
 
