@@ -25,7 +25,7 @@
 }
 
 .heroEightyPercent {
-  height: 100vw;
+  height: 85vw;
 
   @media (min-width: 768px) {
     height: 80vh;
