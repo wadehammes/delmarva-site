@@ -1,13 +1,14 @@
 .contentRecentNewsList {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 2rem;
   align-items: stretch;
   justify-content: stretch;
   list-style: none;
 
   @media (min-width: 800px) {
     grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
   }
 
   @media (min-width: 1200px) {

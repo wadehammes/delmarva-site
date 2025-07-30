@@ -221,7 +221,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           </dl>
           <div className={styles.serviceAccordionCta} ref={ctaRef}>
             <ButtonLink
-              arrow="Right-Up Arrow"
+              arrow="Right Arrow"
               data-tracking-click="service-accordion-cta"
               href={`/${SERVICES_PAGE_SLUG}/${slug}`}
               label={buttonText[locale]}

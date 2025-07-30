@@ -1,3 +1,4 @@
+import styles from "src/components/Service/Service.module.css";
 import { ServiceProvider } from "src/components/Service/ServiceProvider";
 import type { ServiceType } from "src/contentful/getServices";
 
@@ -15,7 +16,9 @@ export const ServiceComponent = (props: ServiceComponentProps) => {
 
   return (
     <ServiceProvider service={service}>
-      <div>{service.serviceName}</div>
+      <section className={styles.serviceHero}>
+        <h1>{service.serviceName}</h1>
+      </section>
     </ServiceProvider>
   );
 };

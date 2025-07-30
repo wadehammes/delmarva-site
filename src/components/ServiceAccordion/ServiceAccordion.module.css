@@ -3,19 +3,21 @@
   display: grid;
   gap: 2rem;
   grid-template-columns: 1fr;
-}
 
-@container (min-width: 1200px) {
-  .serviceAccordion {
+  @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
-  }
 
-  .serviceAccordionContent {
-    grid-column: 1;
-  }
+    .serviceAccordionContent {
+      grid-column: 1;
+      max-width: none;
+    }
 
-  .serviceAccordionCarousel {
-    grid-column: 2;
+    .serviceAccordionCarousel {
+      display: flex;
+      grid-column: 2;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 
@@ -57,6 +59,24 @@
 
 .serviceAccordionCarousel {
   width: 100%;
+  min-width: 0;
+}
+
+.serviceAccordionCarousel :global(.projectCarousel) {
+  width: 100%;
+  max-width: none;
+}
+
+.serviceAccordionCarousel :global(.singleProject) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.serviceAccordionCarousel :global(.projectCard) {
+  width: 100%;
+  max-width: none;
 }
 
 .statValue {

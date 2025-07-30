@@ -4,8 +4,8 @@ import LocaleSwitcherSelect from "src/components/LocaleSwitcherSelect/LocaleSwit
 import { RichText } from "src/components/RichText/RichText.component";
 import type { FooterType } from "src/contentful/getFooter";
 import { Link } from "src/i18n/routing";
-import DelmarvaBadge from "src/icons/delmarva-red-badge-full-color-rgb.svg";
 import LinkedInIcon from "src/icons/linkedin.svg";
+import DelmarvaBadge from "src/logos/delmarva-white-outlined-badge-full-color-rgb.svg";
 import { parseCtaUrl } from "src/utils/urlHelpers";
 import styles from "./Footer.module.css";
 
