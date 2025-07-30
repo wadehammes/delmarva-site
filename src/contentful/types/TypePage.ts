@@ -19,6 +19,7 @@ export interface TypePageFields {
   metaTitle: EntryFieldTypes.Symbol;
   metaDescription: EntryFieldTypes.Symbol;
   metaKeywords?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+  metaImage?: EntryFieldTypes.AssetLink;
   enableIndexing: EntryFieldTypes.Boolean;
   navigationOverride?: EntryFieldTypes.EntryLink<TypeNavigationSkeleton>;
   footerOverride?: EntryFieldTypes.EntryLink<TypeFooterSkeleton>;

@@ -10,7 +10,7 @@ import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
 import type { Locales } from "src/contentful/interfaces";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
-import { envUrl } from "src/utils/helpers";
+import { createMediaUrl, envUrl } from "src/utils/helpers";
 
 // This tells Next.js to generate this page as a static page
 export const dynamic = "force-static";
@@ -46,11 +46,41 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
     },
     description: page.metaDescription,
     keywords: page?.metaKeywords?.join(",") ?? "",
+    openGraph: {
+      images: page.metaImage
+        ? [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: createMediaUrl(page.metaImage.src),
+            },
+          ]
+        : [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: `${envUrl()}/opengraph-image.png`,
+            },
+          ],
+    },
     robots:
       page.enableIndexing && process.env.ENVIRONMENT === "production"
         ? "index, follow"
         : "noindex, nofollow",
     title: `${page.metaTitle}`,
+    twitter: {
+      images: page.metaImage
+        ? [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: createMediaUrl(page.metaImage.src),
+            },
+          ]
+        : [
+            {
+              alt: "Delmarva Site Development, Inc.",
+              url: `${envUrl()}/twitter-image.png`,
+            },
+          ],
+    },
   };
 }
 
@@ -83,7 +113,7 @@ const Home = async (props: HomeProps) => {
     return notFound();
   }
 
-  const { metaDescription, publishDate, updatedAt } = page;
+  const { metaDescription, metaImage, publishDate, updatedAt } = page;
 
   const jsonLd: WebPage = {
     "@type": "WebPage",
@@ -100,6 +130,7 @@ const Home = async (props: HomeProps) => {
     dateModified: updatedAt,
     datePublished: publishDate,
     description: metaDescription,
+    image: metaImage ? createMediaUrl(metaImage.src) : undefined,
     name: "Delmarva Site Development",
     publisher: {
       "@type": "Organization",

@@ -225,6 +225,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
               data-tracking-click="service-accordion-cta"
               href={`/${SERVICES_PAGE_SLUG}/${slug}`}
               label={buttonText[locale]}
+              variant="secondary"
             >
               {buttonText[locale]}
             </ButtonLink>
