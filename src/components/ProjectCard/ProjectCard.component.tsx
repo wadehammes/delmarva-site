@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.component";
 import { ProjectModal } from "src/components/ProjectModal/ProjectModal.component";
+import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { useModal } from "src/hooks/useModal";
@@ -16,8 +17,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
   const { project, selectedServiceSlug } = props;
   const { isOpen, open, close } = useModal();
 
-  const { projectName, projectDescription, projectMedia, projectStats } =
-    project;
+  const { projectName, description, projectMedia, projectStats } = project;
 
   const projectStatsByService: (ContentStatBlock | null)[] | null =
     useMemo(() => {
@@ -62,7 +62,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
         <div className={styles.projectCardContent}>
           <header className={styles.projectCardHeader}>
             <h3>{projectName}</h3>
-            <p>{projectDescription}</p>
+            <RichText document={description} />
           </header>
           <div className={styles.statsList}>
             <dl>

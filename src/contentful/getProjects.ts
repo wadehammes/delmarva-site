@@ -1,3 +1,4 @@
+import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import {
@@ -25,6 +26,7 @@ export interface ProjectType {
   id: string;
   projectName: string;
   slug: string;
+  description: Document;
   projectDescription: string;
   projectMedia: (ContentImageBlockEntry | ContentVideoBlockEntry | null)[];
   projectStats?: (ContentStatBlock | null)[];
@@ -41,6 +43,7 @@ export function parseContentfulProject(
   }
 
   return {
+    description: projectEntry.fields.description,
     id: projectEntry.sys.id,
     projectDescription: projectEntry.fields.projectDescription,
     projectMedia: projectEntry.fields.projectMedia as (

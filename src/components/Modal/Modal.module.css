@@ -19,6 +19,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 90vw;
   max-height: 90vh;
   overflow: hidden;
@@ -44,10 +45,10 @@
 }
 
 .modalSmall {
-  max-width: 400px;
+  max-width: 90vw;
 
   @media (min-width: 768px) {
-    max-width: 500px;
+    max-width: 40vw;
   }
 }
 
@@ -68,11 +69,7 @@
 }
 
 .modalLarge {
-  max-width: 95vw;
-
-  @media (min-width: 768px) {
-    max-width: 90vw;
-  }
+  max-width: 90vw;
 
   @media (min-width: 1024px) {
     max-width: 85vw;
@@ -86,10 +83,6 @@
 .modalFull {
   max-width: 95vw;
   max-height: 95vh;
-
-  @media (min-width: 768px) {
-    max-width: 95vw;
-  }
 }
 
 .closeButton {
@@ -139,7 +132,8 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 0.75rem 2rem;
+  padding: 1rem;
+  padding-right: 3rem;
   background-color: var(--colors-white);
 
   @media (min-width: 768px) {
@@ -157,7 +151,7 @@
   gap: 1rem;
   align-items: center;
   justify-content: flex-end;
-  padding: 1.5rem;
+  padding: 1rem;
   border-top: 1px solid var(--divider);
 
   @media (min-width: 768px) {

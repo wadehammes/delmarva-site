@@ -63,29 +63,8 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     });
     timelineRef.current = tl;
 
-    // Initial state - hide all elements with optimized properties
-    gsap.set(
-      [
-        richTextRef.current,
-        statsRef.current,
-        ctaRef.current,
-        carouselRef.current,
-      ],
-      {
-        force3D: true, // Force hardware acceleration
-        opacity: 0,
-        y: 20, // More pronounced initial offset
-      },
-    );
-
-    // Hide individual stat items initially
-    if (statsRef.current) {
-      gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
-        force3D: true,
-        opacity: 0,
-        y: 15, // More pronounced initial offset
-      });
-    }
+    // Don't set initial hidden state - let CSS handle initial visibility
+    // This prevents issues during hot reload when accordion is open
 
     // Animate elements in sequence with optimized properties
     tl.to(richTextRef.current, {
@@ -166,6 +145,30 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       if (!timelineRef.current || !isMounted()) return;
 
       if (isOpen) {
+        // Set initial hidden state when opening
+        gsap.set(
+          [
+            richTextRef.current,
+            statsRef.current,
+            ctaRef.current,
+            carouselRef.current,
+          ],
+          {
+            force3D: true,
+            opacity: 0,
+            y: 20,
+          },
+        );
+
+        // Hide individual stat items initially
+        if (statsRef.current) {
+          gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
+            force3D: true,
+            opacity: 0,
+            y: 15,
+          });
+        }
+
         // Add a small delay to let the accordion height animation start first
         gsap.delayedCall(0.1, () => {
           if (timelineRef.current && isMounted()) {

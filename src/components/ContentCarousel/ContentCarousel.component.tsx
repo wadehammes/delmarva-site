@@ -21,10 +21,6 @@ export interface ContentCarouselProps {
   spaceBetween?: number;
 }
 
-/**
- * Contentful Carousel component that renders carousel items using ContentRenderer
- * Integrates with the existing Contentful content structure
- */
 export const ContentCarouselComponent = (props: ContentCarouselProps) => {
   const {
     carousel,

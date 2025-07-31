@@ -3,6 +3,7 @@
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.component";
 import { Modal } from "src/components/Modal/Modal.component";
+import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import { Link } from "src/i18n/routing";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";
@@ -24,13 +25,8 @@ export const ProjectModal = ({
     return null;
   }
 
-  const {
-    projectName,
-    projectDescription,
-    projectMedia,
-    projectStats,
-    services,
-  } = project;
+  const { projectName, description, projectMedia, projectStats, services } =
+    project;
 
   return (
     <Modal
@@ -82,8 +78,7 @@ export const ProjectModal = ({
 
         <div className={styles.contentSection}>
           <div className={styles.descriptionSection}>
-            <h3>Project Description</h3>
-            <p>{projectDescription}</p>
+            <RichText document={description} />
           </div>
 
           {projectStats && projectStats.length > 0 && (

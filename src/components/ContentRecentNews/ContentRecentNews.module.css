@@ -4,6 +4,11 @@
   gap: 1rem;
 }
 
+.arrow {
+  font-size: inherit;
+  transition: transform 0.2s ease-in-out;
+}
+
 .learnMoreLink {
   padding-top: 1rem;
   color: var(--colors-red);
@@ -11,14 +16,15 @@
 
   &:hover {
     text-decoration: underline;
+
+    .arrow {
+      transform: translateX(4px);
+    }
   }
 }
 
-.arrow {
-  font-size: inherit;
-  transition: transform 0.2s ease-in-out;
-}
-
-.learnMoreLink:hover .arrow {
-  transform: translateX(4px);
+.date {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--colors-gray);
 }

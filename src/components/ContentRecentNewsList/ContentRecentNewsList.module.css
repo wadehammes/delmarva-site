@@ -2,18 +2,26 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-  align-items: stretch;
   justify-content: stretch;
   list-style: none;
 
   @media (min-width: 800px) {
     grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
+    gap: 3rem;
   }
 
   @media (min-width: 1200px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  font-size: 1.125rem;
+  opacity: 0.7;
 }
 
 .newsItem {
