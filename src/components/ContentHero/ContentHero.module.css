@@ -71,5 +71,7 @@
   gap: var(--gap);
   align-items: center;
   justify-content: center;
+  max-width: 76ch;
   padding: 0 2rem;
+  text-wrap: balance;
 }

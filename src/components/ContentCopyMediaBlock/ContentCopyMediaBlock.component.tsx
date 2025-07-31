@@ -57,3 +57,5 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
     </div>
   );
 };
+
+export default ContentCopyMediaBlock;

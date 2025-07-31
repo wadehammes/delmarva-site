@@ -32,13 +32,13 @@ export const ContentModules = (props: ContentModulesProps) => {
     case "Featured Services List": {
       return <FeaturedServices />;
     }
-
     case "Recent News List": {
       return <ContentRecentNewsList />;
     }
-
     default: {
       return null;
     }
   }
 };
+
+export default ContentModules;

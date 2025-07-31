@@ -104,13 +104,17 @@ body {
   font-family: var(--font-family-body);
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   color: var(--color-text);
   background: var(--color-bg);
   transition: background 0.2s ease-in-out;
 
   @media (min-width: 600px) {
     font-size: 16px;
+  }
+
+  @media (prefers-contrast: more) {
+    font-weight: 400;
   }
 }
 
@@ -260,7 +264,7 @@ h1,
 
 h2,
 .h2 {
-  font-size: clamp(2.25em, 5vw, 2.5em);
+  font-size: clamp(1.875em, 5vw, 2.5em);
   font-weight: 700;
 }
 
@@ -272,13 +276,19 @@ h3,
 }
 
 p {
-  font-size: clamp(1em, 5vw, 1.25em);
+  font-family: var(--font-family-body);
+  font-size: clamp(1.15em, 3vw, 1.35em);
   line-height: 1.5;
   color: var(--colors-text);
 }
 
 i {
   font-style: italic;
+}
+
+strong,
+b {
+  font-weight: 700;
 }
 
 .logo-container {

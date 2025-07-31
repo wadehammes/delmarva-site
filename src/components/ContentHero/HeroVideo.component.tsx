@@ -64,7 +64,7 @@ export const HeroVideo = ({ src }: HeroVideoProps) => {
           top: 0,
           width: "100%",
         }}
-        webkit-playsinline={true}
+        webkit-playsinline="true"
         width="100%"
       >
         <source src={src} type="video/mp4" />

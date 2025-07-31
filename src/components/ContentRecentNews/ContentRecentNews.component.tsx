@@ -15,10 +15,15 @@ interface ContentRecentNewsProps {
 
 export const ContentRecentNews = async (props: ContentRecentNewsProps) => {
   const { recentNews } = props;
+  const date = new Date(recentNews.date);
+
   const locale = await getLocale();
 
   return (
     <div className={styles.recentNews}>
+      <time className={styles.date} dateTime={date.toISOString()}>
+        {date.toLocaleDateString(locale)}
+      </time>
       <h3>{recentNews.linkTitle}</h3>
       <p>{recentNews.linkDescription}</p>
       {recentNews.linkUrl ? (

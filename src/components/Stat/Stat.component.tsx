@@ -26,11 +26,6 @@ export interface StatProps {
   className?: string;
 }
 
-/**
- * Stat component that displays animated numbers with GSAP
- * Animates from 0 to target value when component comes into view
- * Uses padded values to prevent layout thrashing
- */
 export const Stat = (props: StatProps) => {
   const { stat, className } = props;
   const { value, description, type = "Numerical", decorator = "None" } = stat;

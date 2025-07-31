@@ -116,7 +116,7 @@ export const Footer = (props: FooterProps) => {
         </div>
       </div>
       <div className={styles.footerCopyright}>
-        <span>
+        <span className={styles.footerCopyrightText}>
           &copy; {new Date().getFullYear()} {copyright}
         </span>
         <div className={styles.footerActions}>
