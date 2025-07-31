@@ -1,14 +1,16 @@
 .projectCarousel {
+  /* CSS Custom Properties with fallbacks */
   --project-carousel-navigation-bg: rgba(255, 255, 255, 0.9);
-  --project-carousel-navigation-color: var(--color-text);
+  --project-carousel-navigation-color: var(--color-text, #1f1d1d);
   --project-carousel-navigation-hover-bg: rgba(255, 255, 255, 1);
   --project-carousel-navigation-size: 2rem;
-  --project-carousel-pagination-bullet-active-color: var(--colors-red);
-  --project-carousel-pagination-bullet-color: var(--colors-white);
+  --project-carousel-pagination-bullet-active-color: var(--colors-red, #e01e2d);
+  --project-carousel-pagination-bullet-color: var(--colors-white, #ffffff);
   --project-carousel-pagination-bullet-size: 0.25rem;
-  --project-carousel-slide-height: 400px;
-  --project-carousel-slide-width: 280px;
+  --project-carousel-slide-height: 350px;
   --project-carousel-gap: 1rem;
+
+  /* Layout */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -19,9 +21,13 @@
 
   @media (min-width: 768px) {
     --project-carousel-navigation-size: 2.5rem;
-    --project-carousel-slide-width: 350px;
+    --project-carousel-slide-height: 400px;
     --project-carousel-gap: 1.5rem;
     max-width: 600px;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 800px;
   }
 }
 
@@ -32,24 +38,45 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-height: 200px;
+
+  p {
+    font-size: 1rem;
+    color: var(--color-text);
+    text-align: center;
+  }
 }
 
 .swiper {
   width: 100%;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 !important;
+
+  /* Ensure proper Swiper container styling */
+  :global(.swiper-wrapper) {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Fallback styles for better cross-browser compatibility */
+  :global(.swiper-slide) {
+    flex-shrink: 0;
+  }
 }
 
 .slide {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--project-carousel-slide-width);
+  /* Dynamic slide width calculation - will be set by JavaScript */
+  width: calc(100vw - 2rem) !important;
+  max-width: 280px !important;
   height: var(--project-carousel-slide-height);
   transition: all 0.3s ease;
 
-  /* Coverflow effect styling */
+  /* Coverflow effect styling - more robust */
   &:global(.swiper-slide-visible) {
     z-index: 1;
+    opacity: 0.7;
     filter: grayscale(100%);
     transition: all 0.3s ease;
   }
@@ -62,20 +89,36 @@
   &:global(.swiper-slide-fully-visible) {
     z-index: 2;
     opacity: 1;
-    filter: blur(0);
+    filter: blur(0) grayscale(0);
     transform: scale(1);
   }
 
   &:global(.swiper-slide-prev) {
     pointer-events: none;
     opacity: 0.25;
-    transform: translateX(10%);
+    transform: translateX(10%) scale(0.9);
   }
 
   &:global(.swiper-slide-next) {
     pointer-events: none;
     opacity: 0.25;
-    transform: translateX(-10%);
+    transform: translateX(-10%) scale(0.9);
+  }
+
+  /* Responsive slide width adjustments */
+  @media (min-width: 768px) {
+    width: calc(100vw - 4rem) !important;
+    max-width: 350px !important;
+  }
+
+  @media (min-width: 1024px) {
+    width: calc(100vw - 6rem) !important;
+    max-width: 390px !important;
+  }
+
+  /* Ensure slides don't exceed container width */
+  @media (min-width: 1200px) {
+    width: 390px !important;
   }
 }
 
@@ -86,9 +129,18 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: var(--project-carousel-slide-width);
-  margin-top: 1rem;
+  max-width: 280px;
+  padding-bottom: 1rem;
+  margin: 1rem auto 0;
   pointer-events: auto;
+
+  @media (min-width: 768px) {
+    max-width: 350px;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 390px;
+  }
 }
 
 .navigationButton {
@@ -101,16 +153,18 @@
   cursor: pointer;
   background: none;
   border: none;
+  border-radius: 50%;
   transition: all 0.2s ease;
-}
 
-.navigationButton:hover {
-  color: var(--project-carousel-navigation-hover-bg);
-  transform: scale(1.1);
-}
+  &:hover {
+    color: var(--project-carousel-navigation-hover-bg);
+    transform: scale(1.1);
+  }
 
-.navigationButton:focus {
-  outline: none;
+  &:focus {
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+  }
 }
 
 .navigationIconLeft {

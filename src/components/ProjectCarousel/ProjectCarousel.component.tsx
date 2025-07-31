@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useMemo, useRef } from "react";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import Chevron from "src/icons/Chevron.svg";
@@ -29,23 +29,98 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
     carouselId: propCarouselId,
     onSwiper,
   } = props;
+
+  const swiperRef = useRef<SwiperType | null>(null);
   const generatedCarouselId = useId();
   const carouselId = propCarouselId || generatedCarouselId;
-  const navigationPrevId = `project-carousel-${carouselId}-nav-prev`;
-  const navigationNextId = `project-carousel-${carouselId}-nav-next`;
-  const paginationId = `project-carousel-${carouselId}-pagination`;
 
-  // If there's only one project, just render it normally
-  if (projects.length <= 1) {
+  // Handle Swiper resize and recalculation
+  useEffect(() => {
+    const handleResize = () => {
+      if (swiperRef.current) {
+        // Force Swiper to recalculate its layout
+        swiperRef.current.update();
+        swiperRef.current.updateSize();
+        swiperRef.current.updateSlides();
+        swiperRef.current.updateProgress();
+        swiperRef.current.updateSlidesClasses();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Memoize IDs to prevent unnecessary re-renders
+  const elementIds = useMemo(
+    () => ({
+      navigationNext: `project-carousel-${carouselId}-nav-next`,
+      navigationPrev: `project-carousel-${carouselId}-nav-prev`,
+      pagination: `project-carousel-${carouselId}-pagination`,
+    }),
+    [carouselId],
+  );
+
+  // Memoize Swiper configuration for better performance
+  const swiperConfig = useMemo(
+    () => ({
+      centeredSlides: true,
+      coverflowEffect: {
+        depth: 100,
+        modifier: 1,
+        rotate: 0,
+        slideShadows: false,
+        stretch: 0,
+      },
+      effect: "coverflow" as const,
+      grabCursor: true,
+      modules: [EffectCoverflow, Navigation, Pagination],
+      navigation: {
+        nextEl: `#${elementIds.navigationNext}`,
+        prevEl: `#${elementIds.navigationPrev}`,
+      },
+      observeParents: true,
+      // Additional performance and reliability options
+      observer: true,
+      pagination: {
+        clickable: true,
+        el: `#${elementIds.pagination}`,
+        type: "bullets" as const,
+      },
+      preventInteractionOnTransition: true,
+      resizeObserver: true,
+      slidesPerView: "auto" as const,
+      spaceBetween: 16,
+      watchOverflow: true,
+    }),
+    [elementIds],
+  );
+
+  // Handle Swiper initialization
+  const handleSwiperInit = (swiper: SwiperType) => {
+    swiperRef.current = swiper;
+    if (onSwiper) {
+      onSwiper(swiper);
+    }
+  };
+
+  // Handle empty or invalid projects array
+  if (!projects || projects.length === 0) {
     return (
       <div className={styles.singleProject}>
-        {projects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            selectedServiceSlug={selectedServiceSlug}
-          />
-        ))}
+        <p>No projects available</p>
+      </div>
+    );
+  }
+
+  // If there's only one project, just render it normally
+  if (projects.length === 1) {
+    return (
+      <div className={styles.singleProject}>
+        <ProjectCard
+          project={projects[0]}
+          selectedServiceSlug={selectedServiceSlug}
+        />
       </div>
     );
   }
@@ -53,29 +128,9 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
   return (
     <div className={styles.projectCarousel}>
       <Swiper
-        centeredSlides={true}
+        {...swiperConfig}
         className={styles.swiper}
-        coverflowEffect={{
-          depth: 100,
-          modifier: 1,
-          rotate: 0,
-          slideShadows: false,
-          stretch: 0,
-        }}
-        effect="coverflow"
-        grabCursor={true}
-        modules={[EffectCoverflow, Navigation, Pagination]}
-        navigation={{
-          nextEl: `#${navigationNextId}`,
-          prevEl: `#${navigationPrevId}`,
-        }}
-        onSwiper={onSwiper}
-        pagination={{
-          clickable: true,
-          el: `#${paginationId}`,
-          type: "bullets",
-        }}
-        slidesPerView="auto"
+        onSwiper={handleSwiperInit}
       >
         {projects.map((project) => (
           <SwiperSlide className={styles.slide} key={project.id}>
@@ -89,16 +144,18 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
 
       <div className={styles.navigationControls}>
         <button
+          aria-label="Previous project"
           className={styles.navigationButton}
-          id={navigationPrevId}
+          id={elementIds.navigationPrev}
           type="button"
         >
           <Chevron className={styles.navigationIconLeft} />
         </button>
-        <div className={styles.pagination} id={paginationId} />
+        <div className={styles.pagination} id={elementIds.pagination} />
         <button
+          aria-label="Next project"
           className={styles.navigationButton}
-          id={navigationNextId}
+          id={elementIds.navigationNext}
           type="button"
         >
           <Chevron className={styles.navigationIconRight} />
