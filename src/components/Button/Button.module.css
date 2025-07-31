@@ -6,6 +6,7 @@
   justify-content: center;
   padding: 1rem 1.75rem;
   font-size: 0.875rem;
+  font-weight: 500;
   color: var(--colors-text);
   text-align: center;
   text-transform: uppercase;
