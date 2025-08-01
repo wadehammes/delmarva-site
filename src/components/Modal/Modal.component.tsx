@@ -87,16 +87,29 @@ export const Modal = ({
       }
     };
 
+    // Calculate actual viewport height for iOS browser chrome handling
+    const updateViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       document.addEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "hidden";
+
+      // Set initial viewport height and update on resize/orientation change
+      updateViewportHeight();
+      window.addEventListener("resize", updateViewportHeight);
+      window.addEventListener("orientationchange", updateViewportHeight);
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "unset";
+      window.removeEventListener("resize", updateViewportHeight);
+      window.removeEventListener("orientationchange", updateViewportHeight);
     };
   }, [isOpen, onClose, closeOnClickOutside, closeOnEscape, isBrowser]);
 

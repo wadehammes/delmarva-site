@@ -1,7 +1,6 @@
 .projectCard {
   display: flex;
   flex-direction: column;
-  max-width: 300px;
   overflow: hidden;
   appearance: none;
   cursor: pointer;

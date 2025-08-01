@@ -542,6 +542,9 @@ input[type="checkbox"] {
     europa, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
 
+  /* Viewport height for iOS browser chrome handling */
+  --vh: 1vh;
+
   @media (min-width: 600px) {
     --padding-more: 6rem;
     --padding-regular: 2.5rem;
