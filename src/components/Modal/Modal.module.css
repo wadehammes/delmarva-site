@@ -21,7 +21,7 @@
   flex-direction: column;
   width: 100%;
   max-width: 90vw;
-  max-height: 90vh;
+  max-height: calc(var(--vh, 1vh) * 90);
   overflow: hidden;
   background-color: var(--colors-white);
   border-radius: 12px;
@@ -41,6 +41,12 @@
 
   @media (min-width: 1280px) {
     max-width: 60vw;
+  }
+}
+
+@supports (max-height: 90dvh) {
+  .modal {
+    max-height: 90dvh;
   }
 }
 
@@ -82,7 +88,13 @@
 
 .modalFull {
   max-width: 95vw;
-  max-height: 95vh;
+  max-height: calc(var(--vh, 1vh) * 95);
+}
+
+@supports (max-height: 95dvh) {
+  .modalFull {
+    max-height: 95dvh;
+  }
 }
 
 .closeButton {

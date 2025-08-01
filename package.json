@@ -27,7 +27,7 @@
     "@jest/types": "^30.0.5",
     "@next/third-parties": "^15.4.5",
     "@svgr/webpack": "^8.1.0",
-    "@tanstack/react-query": "^5.83.1",
+    "@tanstack/react-query": "^5.84.1",
     "classnames": "^2.5.1",
     "contentful": "^11.7.15",
     "gsap": "^3.13.0",
@@ -68,7 +68,7 @@
     "react-is": "^19.1.1",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "typescript-plugin-css-modules": "^5.2.0",
     "webpack-bundle-analyzer": "^4.10.1"
   }
