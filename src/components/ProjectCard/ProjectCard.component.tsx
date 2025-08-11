@@ -29,9 +29,13 @@ export const ProjectCard = (props: ProjectCardProps) => {
         return projectStats;
       }
 
-      return projectStats?.filter(
-        (stat) => stat?.statServiceReference === selectedServiceSlug,
-      );
+      return projectStats?.filter((stat) => {
+        if (!stat?.statServiceReference) {
+          return true;
+        }
+
+        return stat?.statServiceReference === selectedServiceSlug;
+      });
     }, [projectStats, selectedServiceSlug]);
 
   const handleCardClick = () => {
