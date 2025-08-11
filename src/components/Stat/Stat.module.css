@@ -23,6 +23,7 @@
     }
 
     @media (min-width: 1024px) {
+      min-width: 10rem;
       font-size: 5rem;
     }
   }

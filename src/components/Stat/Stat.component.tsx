@@ -46,8 +46,8 @@ export const Stat = (props: StatProps) => {
     // Create the animation with optimized settings
     const tl = gsap.timeline({
       defaults: {
-        duration: 1,
-        ease: "none",
+        duration: 2.5,
+        ease: "power2.out",
       },
     });
 
