@@ -25,7 +25,7 @@ import { createMediaUrl, envUrl } from "src/utils/helpers";
 
 interface PageParams {
   slug: string;
-  locale: Locales;
+  locale: string;
 }
 
 interface PageProps {
@@ -99,6 +99,11 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
 
+  // Validate locale before using it
+  if (!routing.locales.includes(locale as Locales)) {
+    return notFound();
+  }
+
   setRequestLocale(locale);
 
   const draft = await draftMode();
@@ -160,6 +165,11 @@ export async function generateMetadata({
 // The actual Page component.
 async function Page({ params }: PageProps) {
   const { slug, locale } = await params;
+
+  // Validate locale before using it
+  if (!routing.locales.includes(locale as Locales)) {
+    return notFound();
+  }
 
   setRequestLocale(locale);
 

@@ -9,6 +9,7 @@ import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
 import type { Locales } from "src/contentful/interfaces";
+import { routing } from "src/i18n/routing";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 import { createMediaUrl, envUrl } from "src/utils/helpers";
 
@@ -16,7 +17,7 @@ import { createMediaUrl, envUrl } from "src/utils/helpers";
 export const dynamic = "force-static";
 
 interface HomeParams {
-  locale: Locales;
+  locale: string;
 }
 
 interface HomeProps {
@@ -25,6 +26,11 @@ interface HomeProps {
 
 export async function generateMetadata(props: HomeProps): Promise<Metadata> {
   const { locale } = await props.params;
+
+  // Validate locale before using it
+  if (!routing.locales.includes(locale as Locales)) {
+    return notFound();
+  }
 
   setRequestLocale(locale);
 
@@ -86,6 +92,11 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
 
 const Home = async (props: HomeProps) => {
   const { locale } = await props.params;
+
+  // Validate locale before using it
+  if (!routing.locales.includes(locale as Locales)) {
+    return notFound();
+  }
 
   setRequestLocale(locale);
 

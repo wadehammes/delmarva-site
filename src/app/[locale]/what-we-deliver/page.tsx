@@ -9,6 +9,7 @@ import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
 import type { Locales } from "src/contentful/interfaces";
+import { routing } from "src/i18n/routing";
 import {
   FOOTER_ID,
   NAVIGATION_ID,
@@ -17,7 +18,7 @@ import {
 import { envUrl } from "src/utils/helpers";
 
 interface WhatWeDeliverParams {
-  locale: Locales;
+  locale: string;
 }
 
 interface WhatWeDeliverProps {
@@ -35,8 +36,13 @@ export async function generateMetadata(
 
   const draft = await draftMode();
 
+  // Validate locale before using it
+  if (!routing.locales.includes(locale as Locales)) {
+    return notFound();
+  }
+
   const page = await fetchPage({
-    locale,
+    locale: locale as Locales,
     preview: draft.isEnabled,
     slug: SERVICES_PAGE_SLUG,
   });
@@ -67,7 +73,7 @@ const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
   const draft = await draftMode();
 
   const page = await fetchPage({
-    locale,
+    locale: locale as Locales,
     preview: draft.isEnabled,
     slug: "what-we-deliver",
   });

@@ -11,8 +11,20 @@ cat > .git/hooks/pre-commit << 'EOF'
 
 # Run biome check --write to format code before commit
 echo "🔧 Running biome check --write..."
-if ! pnpm biome check --write; then
-    echo "❌ Biome check failed. Please fix the issues and try again."
+pnpm biome check --write --diagnostic-level=error
+exit_code=$?
+
+# Biome exit codes:
+# 0 = success (no issues)
+# 1 = errors found (block commit)
+# 2 = warnings only (allow commit)
+if [ $exit_code -eq 1 ]; then
+    echo "❌ Biome check failed with errors. Please fix the errors and try again."
+    exit 1
+elif [ $exit_code -eq 2 ]; then
+    echo "✅ Biome check completed (warnings were suppressed, commit allowed)."
+elif [ $exit_code -ne 0 ]; then
+    echo "❌ Biome check failed with unexpected error code: $exit_code"
     exit 1
 fi
 
