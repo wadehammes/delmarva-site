@@ -153,7 +153,7 @@ export async function fetchPages({
 interface FetchPageOptions {
   slug: string;
   preview: boolean;
-  locale?: Locales;
+  locale?: string;
 }
 
 export async function fetchPage({

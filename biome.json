@@ -30,8 +30,8 @@
       "**/*.tsx",
       "**/*.css",
       "**/*.module.css",
-      "!**/node_modules/**",
-      "!**/dist/**"
+      "!**/node_modules",
+      "!**/dist"
     ]
   },
   "formatter": {
@@ -86,7 +86,8 @@
         "noSvgWithoutTitle": "off"
       },
       "complexity": {
-        "noForEach": "off"
+        "noForEach": "off",
+        "noImportantStyles": "warn"
       },
       "correctness": {
         "noUnknownProperty": "error",

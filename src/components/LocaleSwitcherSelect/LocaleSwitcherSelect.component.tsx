@@ -5,6 +5,7 @@ import {
   type ChangeEvent,
   useCallback,
   useEffect,
+  useId,
   useState,
   useTransition,
 } from "react";
@@ -92,6 +93,9 @@ export default function LocaleSwitcherSelect() {
     [],
   );
 
+  const selectId = useId();
+  const srId = useId();
+
   return (
     <div className={styles.localeSwitcherSelectWrapper}>
       {/* Screen reader announcement region */}
@@ -105,12 +109,12 @@ export default function LocaleSwitcherSelect() {
 
       <select
         aria-busy={isPending}
-        aria-describedby="locale-description"
+        aria-describedby={srId}
         aria-label={ariaLabel[currentLocale]}
         className={styles.localeSwitcherSelect}
         defaultValue={currentLocale}
         disabled={isPending}
-        id="locale-select"
+        id={selectId}
         onChange={onSelectChange}
         onKeyDown={handleKeyDown}
       >
@@ -125,7 +129,7 @@ export default function LocaleSwitcherSelect() {
         ))}
       </select>
 
-      <div className="sr-only" id="locale-description">
+      <div className="sr-only" id={srId}>
         {ariaDescription[currentLocale]}
       </div>
 
@@ -138,11 +142,11 @@ export default function LocaleSwitcherSelect() {
       </span>
 
       {/* Loading indicator for screen readers */}
-      {isPending && (
+      {isPending ? (
         <span aria-live="polite" className="sr-only">
           Loading new language...
         </span>
-      )}
+      ) : null}
     </div>
   );
 }

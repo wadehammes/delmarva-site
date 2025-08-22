@@ -13,10 +13,14 @@ import { envUrl } from "src/utils/helpers";
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  params: Promise<{ locale: Locales }>;
+  params: Promise<{ locale: string }>;
 }
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   return {
     creator: "Delmarva Site Development",
     metadataBase: new URL(`${envUrl()}/`),
@@ -32,6 +36,7 @@ export default async function RootLayout({
 }: RootLayoutProps) {
   const { locale } = await params;
 
+  // Validate that the locale is one of our supported locales
   if (!routing.locales.includes(locale as Locales)) {
     return notFound();
   }
