@@ -1,13 +1,12 @@
 import type { Entry } from "contentful";
 import type { TypeContentModulesSkeleton } from "src/contentful/types";
 
-// Our simplified version of an copy block entry.
+// Our simplified version of an content module entry.
 // We don't need all the data that Contentful gives us.
 export interface ContentModule {
   id: string;
   module:
     | "Featured Services List"
-    | "Join Our Team Form"
     | "Request a Quote Form"
     | "Recent News List";
 }
@@ -16,7 +15,7 @@ export type ContentModuleEntry =
   | Entry<TypeContentModulesSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
   | undefined;
 
-// A function to transform a Contentful copy block entry
+// A function to transform a Contentful content module entry
 export function parseContentModule(
   entry: ContentModuleEntry,
 ): ContentModule | null {

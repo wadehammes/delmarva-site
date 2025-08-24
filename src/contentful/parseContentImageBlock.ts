@@ -1,6 +1,14 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import {
+  type ProjectType,
+  parseProjectForNavigation,
+} from "src/contentful/getProjects";
+import {
+  parseServiceForNavigation,
+  type ServiceType,
+} from "src/contentful/getServices";
+import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
@@ -12,6 +20,8 @@ export interface ContentImageBlockType {
   caption?: Document;
   captionPlacement: "Above" | "Below";
   imageStyle: "Black Background" | "Bordered" | "None" | "White Background";
+  projects?: (Partial<ProjectType> | null)[];
+  services?: (Partial<ServiceType> | null)[];
 }
 
 export type ContentImageBlockEntry =
@@ -31,5 +41,7 @@ export function parseContentImageBlock(
     id: imageBlock.sys.id,
     image: parseContentfulAsset(imageBlock.fields.image),
     imageStyle: imageBlock.fields.imageStyle,
+    projects: imageBlock.fields.projects?.map(parseProjectForNavigation),
+    services: imageBlock.fields.services?.map(parseServiceForNavigation),
   };
 }

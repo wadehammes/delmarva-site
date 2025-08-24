@@ -5,11 +5,19 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
+import type { TypeProjectSkeleton } from "./TypeProject";
+import type { TypeServiceSkeleton } from "./TypeService";
 
 export interface TypeContentVideoBlockFields {
   entryTitle?: EntryFieldTypes.Symbol;
   videoUrl: EntryFieldTypes.Symbol;
   videoUpload?: EntryFieldTypes.AssetLink;
+  services?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeServiceSkeleton>
+  >;
+  projects?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeProjectSkeleton>
+  >;
 }
 
 export type TypeContentVideoBlockSkeleton = EntrySkeletonType<
