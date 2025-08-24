@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import type { AriaButtonProps } from "react-aria";
 import styles from "src/components/Button/Button.module.css";
 import { Button as UIButton } from "src/ui/Button/Button.component";
@@ -25,7 +25,7 @@ export const Button = (props: ButtonProps) => {
 
   return (
     <UIButton
-      className={classNames(styles.button, {
+      className={clsx(styles.button, {
         [styles.secondary]: variant === "secondary",
         [styles.outline]: variant === "outline",
       })}

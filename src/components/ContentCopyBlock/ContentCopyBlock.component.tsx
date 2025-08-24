@@ -1,16 +1,16 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { forwardRef, type Ref } from "react";
 import { useObjectRef } from "react-aria";
 import styles from "src/components/ContentCopyBlock/ContentCopyBlock.module.css";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
-import { Alignment } from "src/contentful/interfaces";
-import type { CopyBlock as CopyBlockType } from "src/contentful/parseCopyBlock";
+import type { CopyBlock } from "src/contentful/parseCopyBlock";
+import { Alignment } from "src/interfaces/common.interfaces";
 
 interface ContentCopyBlockProps {
-  fields: CopyBlockType | null;
+  fields: CopyBlock | null;
 }
 
 export const ContentCopyBlock = forwardRef<
@@ -32,7 +32,7 @@ export const ContentCopyBlock = forwardRef<
 
   return (
     <div
-      className={classNames(styles.copyBlock, {
+      className={clsx(styles.copyBlock, {
         [styles.mobileAlignLeft]: fields.mobileAlignment === Alignment.Left,
         [styles.mobileAlignRight]: fields.mobileAlignment === Alignment.Right,
         [styles.desktopAlignLeft]: fields.alignment === Alignment.Left,

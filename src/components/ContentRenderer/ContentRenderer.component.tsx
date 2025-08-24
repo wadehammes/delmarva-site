@@ -33,6 +33,10 @@ import {
 } from "src/contentful/parseContentTestimonial";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { parseCopyBlock } from "src/contentful/parseCopyBlock";
+import {
+  type FormJoinOurTeamEntry,
+  parseFormJoinOurTeam,
+} from "src/contentful/parseFormJoinOurTeam";
 import type { ContentEntries } from "src/contentful/parseSections";
 
 const ContentCarouselComponent = dynamic(
@@ -128,6 +132,16 @@ const ContentRecentNews = dynamic(
     import("src/components/ContentRecentNews/ContentRecentNews.component").then(
       (module) => ({
         default: module.ContentRecentNews,
+      }),
+    ),
+  { ssr: true },
+);
+
+const JoinOurTeamForm = dynamic(
+  () =>
+    import("src/components/JoinOurTeamForm/JoinOurTeamForm.component").then(
+      (module) => ({
+        default: module.JoinOurTeam,
       }),
     ),
   { ssr: true },
@@ -248,6 +262,15 @@ export const ContentRenderer = (props: ContentRendererProps) => {
       }
 
       return <ContentRecentNews recentNews={parsedRecentNews} />;
+    }
+    case "formJoinOurTeam": {
+      const parsedForm = parseFormJoinOurTeam(content as FormJoinOurTeamEntry);
+
+      if (!parsedForm) {
+        return null;
+      }
+
+      return <JoinOurTeamForm fields={parsedForm} />;
     }
     default: {
       return null;

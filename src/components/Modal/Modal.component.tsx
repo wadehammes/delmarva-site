@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -35,7 +35,7 @@ interface ModalFooterProps {
 }
 
 const ModalHeader = ({ children, className, onClose }: ModalHeaderProps) => (
-  <div className={classNames(styles.modalHeader, className)}>
+  <div className={clsx(styles.modalHeader, className)}>
     <button
       aria-label="Close modal"
       className={styles.closeButton}
@@ -49,11 +49,11 @@ const ModalHeader = ({ children, className, onClose }: ModalHeaderProps) => (
 );
 
 const ModalBody = ({ children, className }: ModalBodyProps) => (
-  <div className={classNames(styles.modalBody, className)}>{children}</div>
+  <div className={clsx(styles.modalBody, className)}>{children}</div>
 );
 
 const ModalFooter = ({ children, className }: ModalFooterProps) => (
-  <div className={classNames(styles.modalFooter, className)}>{children}</div>
+  <div className={clsx(styles.modalFooter, className)}>{children}</div>
 );
 
 export const Modal = ({
@@ -211,7 +211,7 @@ export const Modal = ({
       style={{ display: "none" }}
     >
       <div
-        className={classNames(styles.modal, getModalSizeClass())}
+        className={clsx(styles.modal, getModalSizeClass())}
         ref={contentRef}
         style={{ display: "none" }}
       >

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import type { HTMLAttributes } from "react";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
@@ -50,9 +50,11 @@ export const Section = async (props: SectionProps) => {
     );
   };
 
+  const EyebrowHeaderElement = sectionHeader ? "div" : "header";
+
   return (
     <section
-      className={classNames(styles.section, {
+      className={clsx(styles.section, {
         [styles.overlap]: contentStyle === "Overlap Section Above",
         [styles.fullWidth]: contentLayout === ContentLayout.FullWidth,
         [styles.whiteBg]: backgroundColor === "White",
@@ -69,15 +71,21 @@ export const Section = async (props: SectionProps) => {
         }),
       }}
     >
-      {sectionEyebrow || sectionHeader ? (
-        <header className={styles.sectionHeader}>
+      {sectionEyebrow ? (
+        <EyebrowHeaderElement className={styles.sectionHeaderEyebrow}>
           {renderEyebrow()}
-          {sectionHeader && <RichText document={sectionHeader} />}
+        </EyebrowHeaderElement>
+      ) : null}
+
+      {sectionHeader ? (
+        <header className={styles.sectionHeader}>
+          <RichText document={sectionHeader} />
         </header>
       ) : null}
+
       {!isReactNodeEmptyArray(children) ? (
         <div
-          className={classNames(styles.sectionContent, {
+          className={clsx(styles.sectionContent, {
             [styles.twoColumn]: contentLayout === ContentLayout.TwoColumn,
             [styles.threeColumn]: contentLayout === ContentLayout.ThreeColumn,
             [styles.fourColumn]: contentLayout === ContentLayout.FourColumn,

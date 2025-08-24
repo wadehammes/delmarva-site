@@ -16,3 +16,7 @@
   overflow-x: hidden;
   color: inherit;
 }
+
+.page-layout-content--no-hero {
+  padding-top: 6rem;
+}

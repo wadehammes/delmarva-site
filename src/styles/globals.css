@@ -517,6 +517,7 @@ input[type="checkbox"] {
   --color-text: var(--colors-white);
   --color-bg: var(--colors-black);
   --color-white-bg: var(--colors-white);
+  --colors-orange: #ff6600;
   --default-padding: 2rem;
   --gap: 2rem;
   --container-width: 1440px;

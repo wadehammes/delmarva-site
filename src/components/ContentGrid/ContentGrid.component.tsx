@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import styles from "src/components/ContentGrid/ContentGrid.module.css";
 import { ContentRenderer } from "src/components/ContentRenderer/ContentRenderer.component";
 import type { ContentGrid as ContentGridType } from "src/contentful/parseContentGrid";
@@ -12,7 +12,7 @@ export const ContentGrid = (props: ContentGridProps) => {
 
   return (
     <div
-      className={classNames(styles["content-grid"], {
+      className={clsx(styles["content-grid"], {
         [styles["two-column"]]: fields.gridLayout === "Two Column",
         [styles["three-column"]]: fields.gridLayout === "Three Column",
         [styles["four-column"]]: fields.gridLayout === "Four Column",

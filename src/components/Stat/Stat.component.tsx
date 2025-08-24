@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import styles from "src/components/Stat/Stat.module.css";
@@ -74,7 +74,7 @@ export const Stat = (props: StatProps) => {
   }, [inView, value, type, decorator]);
 
   return (
-    <div className={classNames(styles.stat, className)} ref={statRef}>
+    <div className={clsx(styles.stat, className)} ref={statRef}>
       <span className={styles.number} ref={numberRef}>
         {getInitialValue(value, type)}
       </span>

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import styles from "src/components/ContentHero/ContentHero.module.css";
@@ -42,7 +42,7 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
 
   return (
     <div
-      className={classNames(styles.hero, {
+      className={clsx(styles.hero, {
         [styles.heroFullScreen]: heroHeight === HeroHeight.FullScreen,
         [styles.heroEightyPercent]: heroHeight === HeroHeight.EightyPercent,
         [styles.heroContentLeft]: copyPlacement === Placement.LeftAligned,
@@ -57,7 +57,7 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
       }
     >
       <div
-        className={classNames(styles.heroMedia)}
+        className={clsx(styles.heroMedia)}
         style={{ filter: `grayscale(${backgroundMediaSaturation})` }}
       >
         {backgroundMedia.map((media) => {
@@ -86,7 +86,7 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
         })}
       </div>
       <div
-        className={classNames(styles.heroOverlay, {
+        className={clsx(styles.heroOverlay, {
           [styles.heroOverlayStyleMicrodot]:
             overlayStyle === OverlayStyle.Microdot,
         })}
@@ -98,7 +98,7 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
           opacity: overlayOpacity ?? 0.15,
         }}
       />
-      <div className={classNames(styles.heroContent)}>
+      <div className={clsx(styles.heroContent)}>
         {copy ? <RichText as="header" document={copy} /> : null}
         {cta ? <CTA cta={cta} /> : null}
       </div>
