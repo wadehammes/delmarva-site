@@ -5,6 +5,8 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
+import type { TypeProjectSkeleton } from "./TypeProject";
+import type { TypeServiceSkeleton } from "./TypeService";
 
 export interface TypeContentImageBlockFields {
   entryTitle?: EntryFieldTypes.Symbol;
@@ -13,6 +15,12 @@ export interface TypeContentImageBlockFields {
   captionPlacement: EntryFieldTypes.Symbol<"Above" | "Below">;
   imageStyle: EntryFieldTypes.Symbol<
     "Black Background" | "Bordered" | "None" | "White Background"
+  >;
+  services?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeServiceSkeleton>
+  >;
+  projects?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeProjectSkeleton>
   >;
 }
 

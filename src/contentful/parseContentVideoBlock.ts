@@ -1,5 +1,13 @@
 import type { Entry } from "contentful";
 import {
+  type ProjectType,
+  parseProjectForNavigation,
+} from "src/contentful/getProjects";
+import {
+  parseServiceForNavigation,
+  type ServiceType,
+} from "src/contentful/getServices";
+import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
@@ -9,6 +17,8 @@ export interface ContentVideoBlockType {
   id: string;
   videoUrl: string;
   videoUpload?: ContentfulAsset | null;
+  services?: (Partial<ServiceType> | null)[];
+  projects?: (Partial<ProjectType> | null)[];
 }
 
 export type ContentVideoBlockEntry =
@@ -24,6 +34,8 @@ export function parseContentfulVideoBlock(
 
   return {
     id: videoBlock.sys.id,
+    projects: videoBlock.fields.projects?.map(parseProjectForNavigation),
+    services: videoBlock.fields.services?.map(parseServiceForNavigation),
     videoUpload: parseContentfulAsset(videoBlock.fields.videoUpload),
     videoUrl: videoBlock.fields.videoUrl,
   };

@@ -58,6 +58,18 @@ export function parseContentfulProject(
   };
 }
 
+export const parseProjectForNavigation = (projectEntry?: ProjectEntry) => {
+  if (!projectEntry) {
+    return null;
+  }
+
+  return {
+    id: projectEntry.sys.id,
+    projectName: projectEntry.fields.projectName,
+    slug: projectEntry.fields.slug,
+  };
+};
+
 // A function to fetch all pages.
 // Optionally uses the Contentful content preview.
 interface FetchProjectsOptions {

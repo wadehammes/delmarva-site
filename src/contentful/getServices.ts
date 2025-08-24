@@ -40,8 +40,8 @@ export interface ServiceType {
   updatedAt: string;
 }
 
-// A function to transform a Contentful page
-// into our own Page object.
+// A function to transform a Contentful service
+// into our own Service object.
 export function parseContentfulService(
   serviceEntry?: ServiceEntry,
 ): ServiceType | null {
@@ -76,7 +76,19 @@ export const parseServiceSlug = (serviceEntry?: ServiceEntry) => {
   return serviceEntry.fields.slug;
 };
 
-// A function to fetch all pages.
+export const parseServiceForNavigation = (serviceEntry?: ServiceEntry) => {
+  if (!serviceEntry) {
+    return null;
+  }
+
+  return {
+    id: serviceEntry.sys.id,
+    serviceName: serviceEntry.fields.serviceName,
+    slug: serviceEntry.fields.slug,
+  };
+};
+
+// A function to fetch all services.
 // Optionally uses the Contentful content preview.
 interface FetchServicesOptions {
   preview: boolean;
@@ -123,7 +135,7 @@ export async function fetchServices({
   return allServices;
 }
 
-// A function to fetch a single service by its slug.
+// A function to fetch a single service.
 // Optionally uses the Contentful content preview.
 interface FetchServiceOptions {
   slug: string;

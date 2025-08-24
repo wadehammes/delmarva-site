@@ -65,6 +65,11 @@ export type {
   TypeFooterSkeleton,
 } from "./TypeFooter";
 export type {
+  TypeFormJoinOurTeam,
+  TypeFormJoinOurTeamFields,
+  TypeFormJoinOurTeamSkeleton,
+} from "./TypeFormJoinOurTeam";
+export type {
   TypeMarket,
   TypeMarketFields,
   TypeMarketSkeleton,
