@@ -1,0 +1,76 @@
+.input {
+  width: 100%;
+  padding: 1.25rem 0 1.25rem 1.25rem;
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--color-bg);
+  appearance: none;
+  background: transparent;
+  border: 0;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 25ch;
+  min-height: auto;
+  padding-right: 2.25rem;
+  color: var(--colors-black);
+  background-color: white;
+  border: 1px solid var(--colors-white);
+  border-radius: 10px;
+
+  &:focus-within:not(.inputHasError) {
+    color: var(--colors-black);
+    outline: 0;
+    background-color: color-mix(in srgb, var(--colors-orange) 25%, white);
+    border-color: var(--colors-orange);
+  }
+}
+
+.fieldsetWrapper {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.hasError {
+  border-color: var(--colors-red);
+}
+
+.inputHasError {
+  background-color: color-mix(in srgb, var(--colors-red) 20%, white);
+  border-color: var(--colors-red);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.25),
+    0 -1px 1px var(--colors-red),
+    0 1px 0 var(--colors-red);
+}
+
+.errorMessage {
+  position: absolute;
+  bottom: -1.75rem;
+  font-size: 0.9rem;
+  color: var(--colors-red);
+}
+
+.label {
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.textarea {
+  field-sizing: content;
+  min-height: 6lh;
+}

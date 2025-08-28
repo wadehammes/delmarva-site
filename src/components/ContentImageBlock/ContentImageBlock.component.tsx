@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import clsx from "clsx";
 import Image from "next/image";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentImageBlockType } from "src/contentful/parseContentImageBlock";
@@ -21,7 +21,7 @@ export const ContentImageBlock = (props: ContentImageBlockProps) => {
     <figure className={styles.imageWrapper}>
       <Image
         alt={image?.alt ?? ""}
-        className={classnames(
+        className={clsx(
           imageStyle === "Black Background" && "bg-black",
           imageStyle === "Bordered" && "border",
           imageStyle === "White Background" && "bg-white",

@@ -18,6 +18,7 @@ import type { ContentTestimonialEntry } from "src/contentful/parseContentTestimo
 import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { type Cta, parseContentfulCta } from "src/contentful/parseCta";
+import type { FormJoinOurTeamEntry } from "src/contentful/parseFormJoinOurTeam";
 import type { TypeSectionSkeleton } from "src/contentful/types";
 
 type ContentStyle = "Overlap Section Above" | "Regular";
@@ -34,6 +35,7 @@ export type ContentEntries =
   | ContentCopyMediaBlockEntry
   | ContentTestimonialEntry
   | ContentRecentNewsEntry
+  | FormJoinOurTeamEntry
   | undefined;
 
 export interface SectionType {

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import type { InputHTMLAttributes } from "react";
 import styles from "src/components/Input/Input.module.css";
 
@@ -11,7 +11,9 @@ export const Input = (props: InputProps) => {
 
   return (
     <input
-      className={classNames(styles.input, { [styles.error]: error })}
+      className={clsx(styles.input, {
+        [styles.error]: error,
+      })}
       {...rest}
     />
   );

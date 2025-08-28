@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import clsx from "clsx";
 import { forwardRef, type Ref } from "react";
 import {
   type AriaTextFieldProps,
@@ -24,7 +24,7 @@ export const TextField = forwardRef(
         </label>
         <input
           {...inputProps}
-          className={classnames(className, styles.input)}
+          className={clsx(className, styles.input)}
           data-1p-ignore
           ref={inputRef}
         />

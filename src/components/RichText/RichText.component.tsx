@@ -7,7 +7,7 @@ import {
   INLINES,
   type Document as RichTextDocument,
 } from "@contentful/rich-text-types";
-import classNames from "classnames";
+import clsx from "clsx";
 import Image from "next/image";
 import type { ElementType, HTMLAttributes } from "react";
 import { Link } from "src/components/Link/Link.component";
@@ -64,7 +64,7 @@ export const RichText = (props: RichTextProps) => {
   };
 
   return (
-    <Component className={classNames(styles.richText, className)} {...rest}>
+    <Component className={clsx(styles.richText, className)} {...rest}>
       {documentToReactComponents(document, documentParsing)}
     </Component>
   );

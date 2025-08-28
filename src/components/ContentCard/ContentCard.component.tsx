@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import Image from "next/image";
 import ContentCopyBlock from "src/components/ContentCopyBlock/ContentCopyBlock.component";
 import type { ContentCardType } from "src/contentful/parseContentCard";
@@ -18,16 +18,17 @@ export const ContentCard = (props: ContentCardProps) => {
   }
 
   const { media, mediaType, cardStyle, copy, entryTitle } = card;
+  const hasMedia = !!media;
 
   return (
     <div
-      className={classNames(styles.contentCard, {
+      className={clsx(styles.contentCard, {
         [styles.headshot]: cardStyle === "Headshot",
       })}
     >
-      {media ? (
+      {hasMedia ? (
         <div
-          className={classNames(styles.media, {
+          className={clsx(styles.media, {
             [styles.icon]: mediaType === "Icon",
           })}
         >

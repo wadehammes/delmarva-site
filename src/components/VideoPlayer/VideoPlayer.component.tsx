@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import styles from "src/components/VideoPlayer/VideoPlayer.module.css";
@@ -50,7 +50,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
 
   return (
     <div
-      className={classNames(styles.videoPlayer, {
+      className={clsx(styles.videoPlayer, {
         [styles.rounded]: rounded,
       })}
     >

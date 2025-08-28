@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import type { HTMLAttributes } from "react";
 import styles from "src/components/Button/Button.module.css";
 import { Link } from "src/components/Link/Link.component";
@@ -36,7 +36,7 @@ export const ButtonLink = (props: ButtonLinkProps) => {
 
   return (
     <Link
-      className={classNames(
+      className={clsx(
         styles.button,
         {
           [styles.secondary]: variant === "secondary",

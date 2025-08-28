@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { gsap } from "gsap";
 import { useEffect, useId, useRef, useState } from "react";
 import styles from "src/components/Accordion/Accordion.module.css";
@@ -36,7 +36,7 @@ export const Accordion = ({
   const contentId = useId();
 
   // Intersection observer for fade-in animation
-  const { ref: inViewRef, inView } = useOptimizedInView();
+  const { ref: inViewRef } = useOptimizedInView();
 
   const toggleAccordion = () => {
     const newIsOpen = !isOpen;
@@ -66,9 +66,9 @@ export const Accordion = ({
 
   return (
     <div
-      className={classNames(styles.accordion, className, {
+      className={clsx(styles.accordion, className, {
         [styles.active]: isOpen,
-        [styles.fadeIn]: inView,
+        [styles.fadeIn]: true,
       })}
       data-tracking-click={dataTrackingClick}
       ref={inViewRef}
@@ -77,7 +77,7 @@ export const Accordion = ({
         <button
           aria-controls={contentId}
           aria-expanded={isOpen}
-          className={classNames(styles.accordionButton, {
+          className={clsx(styles.accordionButton, {
             [styles.isOpen]: isOpen,
           })}
           id={accordionId}
@@ -94,7 +94,7 @@ export const Accordion = ({
 
       <section
         aria-labelledby={accordionId}
-        className={classNames(styles.accordionContent, {
+        className={clsx(styles.accordionContent, {
           [styles.isOpen]: isOpen,
         })}
         id={contentId}

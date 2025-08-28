@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
@@ -163,7 +163,7 @@ export const Navigation = (props: NavigationProps) => {
   return (
     <>
       <nav
-        className={classNames(styles.navigation, {
+        className={clsx(styles.navigation, {
           [styles.hidden]: !isVisible,
           [styles.transparent]: !shouldShowBackground,
           [styles.withBackground]: shouldShowBackground,
@@ -178,7 +178,7 @@ export const Navigation = (props: NavigationProps) => {
             return (
               <li className={styles.navItem} key={link.id}>
                 <Link
-                  className={classNames({
+                  className={clsx({
                     [styles.active]: link.pageLink?.url === pathname,
                   })}
                   href={link.pageLink?.url ?? ""}

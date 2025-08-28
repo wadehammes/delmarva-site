@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import CopyBlock from "src/components/ContentCopyBlock/ContentCopyBlock.component";
 import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
@@ -20,12 +20,12 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   const { fields } = props;
   const { copy, media, mediaPlacement } = fields;
 
-  const { ref, inView } = useOptimizedInView();
+  const { ref } = useOptimizedInView();
 
   return (
     <div
-      className={classNames(styles.contentCopyMediaBlock, {
-        [styles.inView]: inView,
+      className={clsx(styles.contentCopyMediaBlock, {
+        [styles.inView]: true,
       })}
       ref={ref}
     >

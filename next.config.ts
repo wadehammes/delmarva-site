@@ -18,6 +18,8 @@ const nextConfig: NextConfig = withNextIntl({
     ENVIRONMENT: process.env.ENVIRONMENT,
     GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
     GOOGLE_TAG_MANAGER_ID: process.env.GOOGLE_TAG_MANAGER_ID,
+    RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
 
   experimental: {

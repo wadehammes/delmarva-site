@@ -6,6 +6,7 @@ import type {
   LocaleCode,
 } from "contentful";
 import type { TypeContentCardSkeleton } from "./TypeContentCard";
+import type { TypeContentCarouselSkeleton } from "./TypeContentCarousel";
 import type { TypeContentCopyMediaBlockSkeleton } from "./TypeContentCopyMediaBlock";
 import type { TypeContentGridSkeleton } from "./TypeContentGrid";
 import type { TypeContentHeroSkeleton } from "./TypeContentHero";
@@ -17,6 +18,7 @@ import type { TypeContentTestimonialSkeleton } from "./TypeContentTestimonial";
 import type { TypeContentVideoBlockSkeleton } from "./TypeContentVideoBlock";
 import type { TypeCopyBlockSkeleton } from "./TypeCopyBlock";
 import type { TypeCtaSkeleton } from "./TypeCta";
+import type { TypeFormJoinOurTeamSkeleton } from "./TypeFormJoinOurTeam";
 
 export interface TypeSectionFields {
   entryTitle?: EntryFieldTypes.Symbol;
@@ -26,6 +28,7 @@ export interface TypeSectionFields {
   content?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<
       | TypeContentCardSkeleton
+      | TypeContentCarouselSkeleton
       | TypeContentCopyMediaBlockSkeleton
       | TypeContentGridSkeleton
       | TypeContentHeroSkeleton
@@ -37,6 +40,7 @@ export interface TypeSectionFields {
       | TypeContentVideoBlockSkeleton
       | TypeCopyBlockSkeleton
       | TypeCtaSkeleton
+      | TypeFormJoinOurTeamSkeleton
     >
   >;
   cta?: EntryFieldTypes.EntryLink<TypeCtaSkeleton>;

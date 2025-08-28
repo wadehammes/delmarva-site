@@ -4,10 +4,11 @@ import type { TypeFormJoinOurTeamSkeleton } from "src/contentful/types";
 
 // Our simplified version of an form join our team entry.
 // We don't need all the data that Contentful gives us.
-export interface FormJoinOurTeam {
+export interface FormJoinOurTeamType {
   id: string;
-  openJobs: string[] | undefined;
+  openJobs: string[];
   description: Document | undefined;
+  formSubmitSuccessMessage: Document;
 }
 
 export type FormJoinOurTeamEntry =
@@ -17,7 +18,7 @@ export type FormJoinOurTeamEntry =
 // A function to transform a Contentful form join our team entry
 export function parseFormJoinOurTeam(
   entry: FormJoinOurTeamEntry,
-): FormJoinOurTeam | null {
+): FormJoinOurTeamType | null {
   if (!entry) {
     return null;
   }
@@ -28,7 +29,8 @@ export function parseFormJoinOurTeam(
 
   return {
     description: entry.fields.description,
+    formSubmitSuccessMessage: entry.fields.formSubmitSuccessMessage,
     id: entry.sys.id,
-    openJobs: entry.fields.openJobs,
+    openJobs: entry.fields.openJobs || [],
   };
 }

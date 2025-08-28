@@ -1,6 +1,6 @@
 "use client";
 
-import classNames from "classnames";
+import clsx from "clsx";
 import { useId } from "react";
 import styles from "src/components/Carousel/Carousel.module.css";
 import type { Swiper as SwiperType } from "swiper";
@@ -74,7 +74,7 @@ export const Carousel = (props: CarouselProps) => {
     : undefined;
 
   return (
-    <div className={classNames(styles.carousel, className)}>
+    <div className={clsx(styles.carousel, className)}>
       <Swiper
         autoplay={
           autoplay
@@ -97,7 +97,7 @@ export const Carousel = (props: CarouselProps) => {
       >
         {children.map((child, index) => (
           <SwiperSlide
-            className={classNames(styles.slide, slideClassName)}
+            className={clsx(styles.slide, slideClassName)}
             key={index}
           >
             {child}
