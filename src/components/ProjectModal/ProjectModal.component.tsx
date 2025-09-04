@@ -1,7 +1,7 @@
 "use client";
 
 import { Carousel } from "src/components/Carousel/Carousel.component";
-import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.component";
+import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { Modal } from "src/components/Modal/Modal.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
@@ -25,8 +25,7 @@ export const ProjectModal = ({
     return null;
   }
 
-  const { projectName, description, projectMedia, projectStats, services } =
-    project;
+  const { projectName, description, media, projectStats, services } = project;
 
   return (
     <Modal
@@ -63,14 +62,14 @@ export const ProjectModal = ({
 
       <Modal.Body>
         <div className={styles.mediaSection}>
-          {projectMedia && projectMedia.length > 0 && (
-            <Carousel>
-              {projectMedia.map((media) => {
+          {media && media.length > 0 && (
+            <Carousel animation="fade" controlsSize="Small" spaceBetween={0}>
+              {media.map((media) => {
                 if (!media) {
                   return null;
                 }
 
-                return <MediaRenderer key={media.sys.id} media={media} />;
+                return <ContentfulAssetRenderer asset={media} key={media.id} />;
               })}
             </Carousel>
           )}

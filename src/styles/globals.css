@@ -1,5 +1,3 @@
-@import "./fonts.css";
-
 *,
 *::before,
 *::after {
@@ -180,6 +178,10 @@ video {
 [hidden],
 .hidden {
   display: none;
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
 }
 
 .sr-only {
@@ -497,14 +499,14 @@ input[type="checkbox"] {
   --divider: rgba(0, 0, 0, 0.15);
   --color-bg: var(--colors-white);
   --color-text: var(--colors-black);
-  --card-bg: rgba(0, 0, 0, 0.05);
+  --card-bg: color-mix(in srgb, var(--colors-white) 80%, var(--colors-black));
 }
 
 [data-theme="dark"] {
   --divider: rgba(255, 255, 255, 0.15);
   --color-bg: var(--colors-black);
   --color-text: var(--colors-white);
-  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-bg: color-mix(in srgb, var(--colors-black) 80%, var(--colors-white));
 }
 
 :root {
@@ -518,14 +520,19 @@ input[type="checkbox"] {
   --color-bg: var(--colors-black);
   --color-white-bg: var(--colors-white);
   --colors-orange: #ff6600;
+  --card-bg: color-mix(in srgb, var(--colors-black) 95%, var(--colors-white));
   --default-padding: 2rem;
   --gap: 2rem;
+  --gap-md: var(--gap, 2rem);
+  --gap-lg: var(--gap-md, var(--gap, 2rem));
   --container-width: 1440px;
 
   --padding-less: 1rem;
-  --padding-more: 2rem;
+  --padding-more: 6rem;
   --padding-no: 0;
-  --padding-regular: 1rem;
+  --padding-regular: 2rem;
+  --padding-no-top: 0;
+  --padding-no-bottom: 0;
 
   /* Grid System Variables */
   --grid-columns: 12;
@@ -533,9 +540,9 @@ input[type="checkbox"] {
   --grid-padding: 2rem;
 
   /* Font Variables */
-  --font-family-n27:
-    "N27", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-    Cantarell, sans-serif;
+  --font-family-numbers:
+    regulator-nova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
   --font-family-heading:
     stolzl, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
@@ -547,8 +554,8 @@ input[type="checkbox"] {
   --vh: 1vh;
 
   @media (min-width: 600px) {
-    --padding-more: 6rem;
-    --padding-regular: 2.5rem;
+    --padding-more: 8rem;
+    --padding-regular: 4rem;
   }
 
   @media (min-width: 900px) {

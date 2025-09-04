@@ -4,13 +4,14 @@ import clsx from "clsx";
 import { useId } from "react";
 import styles from "src/components/Carousel/Carousel.module.css";
 import type { Swiper as SwiperType } from "swiper";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, type SwiperProps, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
 export interface CarouselProps {
   children: React.ReactNode[];
@@ -18,6 +19,8 @@ export interface CarouselProps {
   slideClassName?: string;
   showNavigation?: boolean;
   showPagination?: boolean;
+  controlsPlacement?: "Over Slides" | "Below Slides";
+  controlsSize?: "Small" | "Regular";
   autoplay?: boolean;
   autoplayDelay?: number;
   loop?: boolean;
@@ -26,11 +29,11 @@ export interface CarouselProps {
   breakpoints?: Record<number, Partial<SwiperProps>>;
   onSlideChange?: (swiper: SwiperType) => void;
   onSwiper?: (swiper: SwiperType) => void;
+  animation?: "slide" | "fade";
 }
 
 /**
- * Carousel component using Swiper library
- * Lightweight and flexible with hooks implementation
+ * Simple, clean carousel component using Swiper library
  */
 export const Carousel = (props: CarouselProps) => {
   const {
@@ -39,6 +42,8 @@ export const Carousel = (props: CarouselProps) => {
     slideClassName,
     showNavigation = true,
     showPagination = true,
+    controlsPlacement = "Over Slides",
+    controlsSize = "Regular",
     autoplay = false,
     autoplayDelay = 3000,
     loop = false,
@@ -47,34 +52,49 @@ export const Carousel = (props: CarouselProps) => {
     breakpoints,
     onSlideChange,
     onSwiper,
+    animation = "slide",
   } = props;
+
   const carouselId = useId();
   const navigationPrevId = `${carouselId}-nav-prev`;
   const navigationNextId = `${carouselId}-nav-next`;
   const paginationId = `${carouselId}-pagination`;
 
-  // If children is a single React element, just return it
+  // If children is a single React element, just return it without carousel wrapper
   if (children.length === 1) {
     return <>{children[0]}</>;
   }
 
-  const navigationOptions = showNavigation
-    ? {
-        nextEl: `#${navigationNextId}`,
-        prevEl: `#${navigationPrevId}`,
-      }
-    : undefined;
+  // Only show navigation and pagination if there are multiple slides
+  const hasMultipleSlides = children.length > 1;
 
-  const paginationOptions = showPagination
-    ? {
-        clickable: true,
-        el: `#${paginationId}`,
-        type: "fraction" as const,
-      }
-    : undefined;
+  const navigationOptions =
+    showNavigation && hasMultipleSlides
+      ? {
+          nextEl: `#${navigationNextId}`,
+          prevEl: `#${navigationPrevId}`,
+        }
+      : undefined;
+
+  const paginationOptions =
+    showPagination && hasMultipleSlides
+      ? {
+          clickable: true,
+          el: `#${paginationId}`,
+          type: "fraction" as const,
+        }
+      : undefined;
 
   return (
-    <div className={clsx(styles.carousel, className)}>
+    <div
+      className={clsx(
+        styles.carousel,
+        {
+          [styles.controlsOverSlides]: controlsPlacement === "Over Slides",
+        },
+        className,
+      )}
+    >
       <Swiper
         autoplay={
           autoplay
@@ -86,14 +106,27 @@ export const Carousel = (props: CarouselProps) => {
         }
         breakpoints={breakpoints}
         className={styles.swiper}
+        effect={animation === "fade" ? "fade" : undefined}
         loop={loop}
-        modules={[Autoplay, Navigation, Pagination]}
+        modules={[
+          Autoplay,
+          Navigation,
+          Pagination,
+          ...(animation === "fade" ? [EffectFade] : []),
+        ]}
         navigation={navigationOptions}
+        observeParents
+        observer
+        observeSlideChildren
         onSlideChange={onSlideChange}
-        onSwiper={onSwiper}
+        onSwiper={(swiperInstance) => {
+          onSwiper?.(swiperInstance);
+          // Ensure measurements are correct after layout settles
+          requestAnimationFrame(() => swiperInstance.update());
+        }}
         pagination={paginationOptions}
-        slidesPerView={slidesPerView}
-        spaceBetween={spaceBetween}
+        slidesPerView={animation === "fade" ? 1 : slidesPerView}
+        spaceBetween={animation === "fade" ? 0 : spaceBetween}
       >
         {children.map((child, index) => (
           <SwiperSlide
@@ -104,8 +137,14 @@ export const Carousel = (props: CarouselProps) => {
           </SwiperSlide>
         ))}
 
-        {(showNavigation || showPagination) && (
-          <div className={styles.navigationControls}>
+        {(showNavigation || showPagination) && hasMultipleSlides && (
+          <div
+            className={clsx(styles.navigationControls, {
+              [styles.controlsBelowSlides]:
+                controlsPlacement === "Below Slides",
+              [styles.controlsSmall]: controlsSize === "Small",
+            })}
+          >
             {showNavigation && (
               <>
                 <button
@@ -113,7 +152,7 @@ export const Carousel = (props: CarouselProps) => {
                   id={navigationPrevId}
                   type="button"
                 >
-                  <span className={styles.navigationIcon}>‹</span>
+                  <span className={styles.navigationIcon}>←</span>
                 </button>
                 {showPagination && (
                   <div className={styles.pagination} id={paginationId} />
@@ -123,7 +162,7 @@ export const Carousel = (props: CarouselProps) => {
                   id={navigationNextId}
                   type="button"
                 >
-                  <span className={styles.navigationIcon}>›</span>
+                  <span className={styles.navigationIcon}>→</span>
                 </button>
               </>
             )}

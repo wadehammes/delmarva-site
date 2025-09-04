@@ -5,7 +5,6 @@ import {
   type ChangeEvent,
   useCallback,
   useEffect,
-  useId,
   useState,
   useTransition,
 } from "react";
@@ -93,8 +92,9 @@ export default function LocaleSwitcherSelect() {
     [],
   );
 
-  const selectId = useId();
-  const srId = useId();
+  // Generate stable IDs that work consistently across server and client
+  const selectId = "locale-switcher-select";
+  const srId = "locale-switcher-description";
 
   return (
     <div className={styles.localeSwitcherSelectWrapper}>

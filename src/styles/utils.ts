@@ -25,6 +25,10 @@ export const createPadding = (padding: Padding) => {
       return "var(--padding-no)";
     case Padding.RegularPadding:
       return "var(--padding-regular)";
+    case Padding.NoTopPadding:
+      return "var(--padding-no-top)";
+    case Padding.NoBottomPadding:
+      return "var(--padding-no-bottom)";
     default:
       return "var(--padding-regular)";
   }

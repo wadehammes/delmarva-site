@@ -7,6 +7,7 @@ import {
   parseServiceForNavigation,
   type ServiceType,
 } from "src/contentful/getServices";
+import type { MediaBackgroundStyle } from "src/contentful/interfaces";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
@@ -15,7 +16,8 @@ import type { TypeContentVideoBlockSkeleton } from "src/contentful/types/TypeCon
 
 export interface ContentVideoBlockType {
   id: string;
-  videoUrl: string;
+  videoUrl?: string;
+  videoBackgroundStyle?: MediaBackgroundStyle;
   videoUpload?: ContentfulAsset | null;
   services?: (Partial<ServiceType> | null)[];
   projects?: (Partial<ProjectType> | null)[];
@@ -36,6 +38,8 @@ export function parseContentfulVideoBlock(
     id: videoBlock.sys.id,
     projects: videoBlock.fields.projects?.map(parseProjectForNavigation),
     services: videoBlock.fields.services?.map(parseServiceForNavigation),
+    videoBackgroundStyle: videoBlock.fields
+      .videoBackgroundStyle as MediaBackgroundStyle,
     videoUpload: parseContentfulAsset(videoBlock.fields.videoUpload),
     videoUrl: videoBlock.fields.videoUrl,
   };

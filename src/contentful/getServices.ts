@@ -14,6 +14,7 @@ import {
   parseContentfulSection,
   type SectionType,
 } from "src/contentful/parseSections";
+import type { TypeProjectSkeleton } from "src/contentful/types/TypeProject";
 import type { TypeServiceSkeleton } from "src/contentful/types/TypeService";
 
 export type ServiceEntry = Entry<
@@ -114,6 +115,7 @@ export async function fetchServices({
           include: 10,
           limit,
           locale,
+          order: ["fields.featuredServicePosition"],
           skip,
         },
       );
@@ -184,4 +186,61 @@ export async function fetchFeaturedServices({
   return featuredServices.items
     .map(parseContentfulService)
     .filter((service): service is ServiceType => service !== null);
+}
+
+// A function to fetch all photos from projects tagged with a specific service.
+interface FetchServicePhotosOptions {
+  slug: string;
+  preview: boolean;
+  locale?: Locales;
+}
+
+export async function fetchServicePhotos({
+  slug,
+  preview,
+  locale = "en",
+}: FetchServicePhotosOptions): Promise<ContentfulAsset[]> {
+  const contentful = contentfulClient({ preview });
+
+  const limit = 100;
+  let total = 0;
+  let skip = 0;
+  let allPhotos: ContentfulAsset[] = [];
+
+  do {
+    const projects =
+      await contentful.withoutUnresolvableLinks.getEntries<TypeProjectSkeleton>(
+        {
+          content_type: "project",
+          include: 10,
+          limit,
+          locale,
+          skip,
+        },
+      );
+
+    // Filter projects that have the specified service
+    const relevantProjects = projects.items.filter((project) =>
+      project.fields.services?.some(
+        (service) => service?.fields?.slug === slug,
+      ),
+    );
+
+    // Extract all photos from project media
+    const projectPhotos = relevantProjects
+      .flatMap((project) => project.fields.media || [])
+      .map(parseContentfulAsset)
+      .filter((photo): photo is ContentfulAsset => photo !== null);
+
+    allPhotos = [...allPhotos, ...projectPhotos];
+
+    total = projects.total;
+    skip += limit;
+
+    if (total < limit) {
+      break;
+    }
+  } while (skip < total);
+
+  return allPhotos;
 }

@@ -49,36 +49,38 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
   }
 
   return (
-    <div
-      className={clsx(styles.videoPlayer, {
-        [styles.rounded]: rounded,
-      })}
-    >
-      <ReactPlayer
-        config={{
-          vimeo: {
-            autopause: !autoPlay,
-            background: false,
-            controls: controls,
-            dnt: true,
-            responsive: true,
-            title: false,
-          },
-          youtube: {
-            disablekb: !controls ? 1 : 0,
-            fs: controls ? 1 : 0,
-            iv_load_policy: 3,
-            rel: 0,
-          },
-        }}
-        controls={controls}
-        height="100%"
-        loop
-        muted
-        playing={autoPlay || debouncedPlayInView}
-        src={src}
-        width="100%"
-      />
+    <div className={clsx(styles.container)}>
+      <div
+        className={clsx(styles.player, {
+          [styles.rounded]: rounded,
+        })}
+      >
+        <ReactPlayer
+          config={{
+            vimeo: {
+              autopause: !autoPlay,
+              background: false,
+              controls: controls,
+              dnt: true,
+              responsive: true,
+              title: false,
+            },
+            youtube: {
+              disablekb: !controls ? 1 : 0,
+              fs: controls ? 1 : 0,
+              iv_load_policy: 3,
+              rel: 0,
+            },
+          }}
+          controls={controls}
+          height="100%"
+          loop
+          muted
+          playing={autoPlay || debouncedPlayInView}
+          src={src}
+          width="100%"
+        />
+      </div>
     </div>
   );
 };

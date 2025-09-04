@@ -1,20 +1,43 @@
 .contentCard {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   overflow: hidden;
   color: var(--text-color);
   background-color: var(--card-bg);
+  border: 1px solid transparent;
   border-radius: 20px;
 
   &.headshot {
     background-color: transparent;
     border-radius: 0;
   }
+
+  &.interactive {
+    cursor: pointer;
+
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      border-color: var(--colors-red);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    &:focus {
+      outline: 2px solid var(--colors-red);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
 }
 
 .copy {
-  padding: 1rem;
+  padding: 2rem;
 
   .headshot & {
     padding: 0;
@@ -24,7 +47,22 @@
 .media {
   position: relative;
   width: 100%;
-  height: auto;
+  height: 300px;
+  overflow: hidden;
+
+  > img {
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &.headshot {
+    height: 600px;
+
+    > img {
+      height: 600px;
+    }
+  }
 
   &.icon {
     width: 32px;

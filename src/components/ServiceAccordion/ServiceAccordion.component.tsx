@@ -1,11 +1,12 @@
 "use client";
 
 import { gsap } from "gsap";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Accordion } from "src/components/Accordion/Accordion.component";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { ProjectCarousel } from "src/components/ProjectCarousel/ProjectCarousel.component";
 import { RichText } from "src/components/RichText/RichText.component";
+import { Stat } from "src/components/Stat/Stat.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ServiceType } from "src/contentful/getServices";
 import type { Locales } from "src/contentful/interfaces";
@@ -28,10 +29,12 @@ interface ServiceAccordionProps {
 export const ServiceAccordion = (props: ServiceAccordionProps) => {
   const { service, locale, projects } = props;
   const { serviceName, description, stats, slug } = service;
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const richTextRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDListElement>(null);
+  const statsGridRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -75,7 +78,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       y: 0,
     })
       .to(
-        statsRef.current,
+        [statsRef.current, statsGridRef.current].filter(Boolean),
         {
           duration: 0.35,
           ease: "power2.out",
@@ -87,6 +90,18 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       )
       .to(
         statsRef.current?.querySelectorAll(`.${styles.statItem}`) || [],
+        {
+          duration: 0.3,
+          ease: "power2.out",
+          force3D: true,
+          opacity: 1,
+          stagger: 0.08,
+          y: 0,
+        },
+        "-=0.15",
+      )
+      .to(
+        statsGridRef.current?.querySelectorAll('[class*="stat"]') || [],
         {
           duration: 0.3,
           ease: "power2.out",
@@ -142,6 +157,8 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
   // Memoized accordion toggle handler
   const handleAccordionToggle = useCallback(
     (isOpen: boolean) => {
+      setIsAccordionOpen(isOpen);
+
       if (!timelineRef.current || !isMounted()) return;
 
       if (isOpen) {
@@ -150,6 +167,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           [
             richTextRef.current,
             statsRef.current,
+            statsGridRef.current,
             ctaRef.current,
             carouselRef.current,
           ],
@@ -163,6 +181,15 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
         // Hide individual stat items initially
         if (statsRef.current) {
           gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
+            force3D: true,
+            opacity: 0,
+            y: 15,
+          });
+        }
+
+        // Hide individual stat components in grid initially
+        if (statsGridRef.current) {
+          gsap.set(statsGridRef.current.querySelectorAll('[class*="stat"]'), {
             force3D: true,
             opacity: 0,
             y: 15,
@@ -187,26 +214,52 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
 
   // Memoized stats rendering
   const renderStats = useCallback(() => {
-    if (!stats?.length) return null;
+    const numberOfStats = stats?.length;
 
-    return stats.map((stat) => {
-      if (!stat) return null;
+    if (!numberOfStats) return null;
 
+    if (numberOfStats <= 3) {
       return (
-        <div className={styles.statItem} key={stat.id}>
-          <dt className={styles.statDescription}>{stat.description}</dt>
-          <dd className={styles.statValue}>
-            {formatNumber({
-              decorator: stat.decorator,
-              keepInitialValue: true,
-              num: stat.value ?? 0,
-              type: stat.type,
-            })}
-          </dd>
+        <div className={styles.statsGrid} ref={statsGridRef}>
+          {stats.map((stat) => {
+            if (!stat) return null;
+
+            return (
+              <Stat
+                align="left"
+                key={stat.id}
+                size="small"
+                stat={stat}
+                trigger={isAccordionOpen}
+              />
+            );
+          })}
         </div>
       );
-    });
-  }, [stats]);
+    }
+
+    return (
+      <dl className={styles.statsList} ref={statsRef}>
+        {stats.map((stat) => {
+          if (!stat) return null;
+
+          return (
+            <div className={styles.statItem} key={stat.id}>
+              <dt className={styles.statDescription}>{stat.description}</dt>
+              <dd className={styles.statValue}>
+                {formatNumber({
+                  decorator: stat.decorator,
+                  keepInitialValue: true,
+                  num: stat.value ?? 0,
+                  type: stat.type,
+                })}
+              </dd>
+            </div>
+          );
+        })}
+      </dl>
+    );
+  }, [stats, isAccordionOpen]);
 
   return (
     <Accordion
@@ -219,9 +272,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           <div ref={richTextRef}>
             <RichText document={description} />
           </div>
-          <dl className={styles.statsList} ref={statsRef}>
-            {renderStats()}
-          </dl>
+          {renderStats()}
           <div className={styles.serviceAccordionCta} ref={ctaRef}>
             <ButtonLink
               arrow="Right Arrow"

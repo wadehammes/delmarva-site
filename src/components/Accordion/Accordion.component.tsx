@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { gsap } from "gsap";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "src/components/Accordion/Accordion.module.css";
 import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import PlusIcon from "src/icons/plus.svg";
@@ -32,8 +32,10 @@ export const Accordion = ({
 }: AccordionProps) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const contentRef = useRef<HTMLDivElement>(null);
-  const accordionId = useId();
-  const contentId = useId();
+
+  // Generate stable IDs that work consistently across server and client
+  const accordionId = `accordion-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
+  const contentId = `accordion-content-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
 
   // Intersection observer for fade-in animation
   const { ref: inViewRef } = useOptimizedInView();

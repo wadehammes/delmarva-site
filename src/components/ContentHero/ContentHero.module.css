@@ -5,8 +5,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 600px;
-  max-height: 1000px;
+  padding: 12rem 2rem 8rem;
   text-align: center;
 }
 
@@ -26,10 +25,18 @@
 
 .heroEightyPercent {
   height: 85vw;
+  min-height: 600px;
+  max-height: 1000px;
 
   @media (min-width: 768px) {
     height: 80vh;
   }
+}
+
+.heroSmall {
+  min-height: 200px;
+  max-height: 400px;
+  padding: 9rem 2rem 4rem;
 }
 
 .heroMedia {
@@ -45,7 +52,7 @@
 }
 
 .heroOverlayStyleMicrodot {
-  --dot-color: color-mix(in srgb, var(--dot-bg) 40%, var(--colors-white));
+  --dot-color: color-mix(in srgb, var(--dot-bg) 60%, var(--colors-white));
   --dot-size: 1px;
   --dot-space: 5px;
   background:
@@ -71,7 +78,7 @@
   gap: var(--gap);
   align-items: center;
   justify-content: center;
-  max-width: 76ch;
+  max-width: 100ch;
   padding: 0 2rem;
   text-wrap: balance;
 }

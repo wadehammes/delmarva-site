@@ -29,6 +29,11 @@ export type {
   TypeContentImageBlockSkeleton,
 } from "./TypeContentImageBlock";
 export type {
+  TypeContentMarquee,
+  TypeContentMarqueeFields,
+  TypeContentMarqueeSkeleton,
+} from "./TypeContentMarquee";
+export type {
   TypeContentModules,
   TypeContentModulesFields,
   TypeContentModulesSkeleton,

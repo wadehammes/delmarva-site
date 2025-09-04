@@ -21,7 +21,9 @@ export interface TypeContentHeroFields {
   overlayColor?: EntryFieldTypes.Symbol<"Black" | "Red" | "Silver" | "White">;
   overlayOpacity?: EntryFieldTypes.Number;
   overlayStyle?: EntryFieldTypes.Symbol<"Microdot" | "Solid Color">;
-  heroHeight?: EntryFieldTypes.Symbol<"80% Height" | "Full Screen" | "Regular">;
+  heroHeight?: EntryFieldTypes.Symbol<
+    "80% Height" | "Full Screen" | "Regular" | "Small"
+  >;
 }
 
 export type TypeContentHeroSkeleton = EntrySkeletonType<

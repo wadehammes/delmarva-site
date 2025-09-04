@@ -8,15 +8,36 @@
     box-shadow 0.3s ease,
     transform 0.3s ease;
 
+  &.left {
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  &.right {
+    align-items: flex-end;
+    justify-content: flex-end;
+    text-align: right;
+  }
+
   .number {
+    width: 100%;
     margin: 0;
-    font-family: var(--font-family-n27);
+    font-family: var(--font-family-numbers);
     font-size: 2.25rem;
-    font-weight: 700;
+    font-weight: 600;
     font-variant: tabular-nums;
     line-height: 1;
     color: inherit;
-    text-align: center;
+    text-align: inherit;
+
+    &.small {
+      font-size: 1.5rem;
+    }
+
+    &.large {
+      font-size: 5rem;
+    }
 
     @media (min-width: 600px) {
       font-size: 3rem;
@@ -29,6 +50,7 @@
   }
 
   .description {
+    min-width: 150px;
     max-width: 200px;
     margin: 0;
     font-family: var(--font-family-body);
@@ -36,6 +58,7 @@
     font-weight: 400;
     line-height: 1.4;
     color: inherit;
+    text-align: inherit;
 
     @media (min-width: 768px) {
       font-size: 0.9rem;

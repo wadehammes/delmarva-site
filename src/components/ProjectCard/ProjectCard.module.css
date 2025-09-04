@@ -1,6 +1,7 @@
 .projectCard {
   display: flex;
   flex-direction: column;
+  height: 100%;
   overflow: hidden;
   appearance: none;
   cursor: pointer;
@@ -20,10 +21,6 @@
 
   &:hover {
     transform: translateY(-2px);
-  }
-
-  @media (min-width: 1024px) {
-    max-width: 350px;
   }
 }
 
@@ -47,6 +44,17 @@
     font-size: 0.875rem;
     line-height: 1.4;
     color: var(--colors-black);
+  }
+}
+
+.projectCardMedia {
+  height: 200px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
   }
 }
 
@@ -77,7 +85,7 @@
 }
 
 .statValue {
-  font-family: var(--font-family-n27);
+  font-family: var(--font-family-numbers);
   font-size: 0.875rem;
   color: var(--colors-black);
 }

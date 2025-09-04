@@ -7,20 +7,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
+import type { ReactNode } from "react";
 import type { Locales } from "src/contentful/interfaces";
 import { routing } from "src/i18n/routing";
 import { envUrl } from "src/utils/helpers";
 
 interface RootLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     creator: "Delmarva Site Development",
     metadataBase: new URL(`${envUrl()}/`),
@@ -57,7 +54,7 @@ export default async function RootLayout({
           title="Sitemap"
           type="application/xml"
         />
-        <link href="https://use.typekit.net/qbb6tfy.css" rel="stylesheet" />
+        <link href="https://use.typekit.net/now7rdc.css" rel="stylesheet" />
       </head>
       <body>
         {draft.isEnabled ? (
@@ -66,7 +63,7 @@ export default async function RootLayout({
             <ExitDraftModeLink style={{ textDecoration: "underline" }} />
           </div>
         ) : null}
-        <NextIntlClientProvider locale={locale} messages={{}}>
+        <NextIntlClientProvider locale={locale}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>

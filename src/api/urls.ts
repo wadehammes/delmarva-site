@@ -1,5 +1,6 @@
 import { FetchMethods, fetchOptions } from "src/api/helpers";
 import type { JoinOurTeamInputs } from "src/components/JoinOurTeamForm/JoinOurTeamForm.component";
+import type { RequestAQuoteInputs } from "src/components/RequestAQuoteForm/RequestAQuoteForm.component";
 
 export const api = {
   joinOurTeam: ({
@@ -32,6 +33,26 @@ export const api = {
           state,
           workEligibility,
           zipCode,
+        }),
+        method: FetchMethods.Post,
+      }),
+    ),
+  requestAQuote: ({
+    companyName,
+    email,
+    name,
+    phone,
+    projectDetails,
+  }: RequestAQuoteInputs) =>
+    fetch(
+      "/api/resend/request-a-quote",
+      fetchOptions({
+        body: JSON.stringify({
+          companyName,
+          email,
+          name,
+          phone,
+          projectDetails,
         }),
         method: FetchMethods.Post,
       }),

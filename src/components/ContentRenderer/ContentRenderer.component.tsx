@@ -3,6 +3,8 @@ import {
   type ContentRecentNewsEntry,
   parseContentRecentNews,
 } from "src/contentful/getContentRecentNews";
+import type { ContentCardEntry } from "src/contentful/parseContentCard";
+import { parseContentCard } from "src/contentful/parseContentCard";
 import type { ContentCarouselEntry } from "src/contentful/parseContentCarousel";
 import { parseContentCarousel } from "src/contentful/parseContentCarousel";
 import {
@@ -19,6 +21,10 @@ import {
   type ContentImageBlockEntry,
   parseContentImageBlock,
 } from "src/contentful/parseContentImageBlock";
+import {
+  type ContentMarqueeEntry,
+  parseContentMarquee,
+} from "src/contentful/parseContentMarquee";
 import {
   type ContentModuleEntry,
   parseContentModule,
@@ -109,6 +115,16 @@ const ContentModules = dynamic(
   { ssr: true },
 );
 
+const ContentCard = dynamic(
+  () =>
+    import("src/components/ContentCard/ContentCard.component").then(
+      (module) => ({
+        default: module.ContentCard,
+      }),
+    ),
+  { ssr: true },
+);
+
 const ContentTestimonial = dynamic(
   () =>
     import(
@@ -147,6 +163,16 @@ const JoinOurTeamForm = dynamic(
   { ssr: true },
 );
 
+const ContentMarquee = dynamic(
+  () =>
+    import("src/components/ContentMarquee/ContentMarquee.component").then(
+      (module) => ({
+        default: module.ContentMarquee,
+      }),
+    ),
+  { ssr: true },
+);
+
 interface ContentRendererProps {
   content: ContentEntries;
 }
@@ -178,6 +204,15 @@ export const ContentRenderer = (props: ContentRendererProps) => {
       }
 
       return <ContentHeroComponent fields={parsedHero} />;
+    }
+    case "contentMarquee": {
+      const parsedMarquee = parseContentMarquee(content as ContentMarqueeEntry);
+
+      if (!parsedMarquee) {
+        return null;
+      }
+
+      return <ContentMarquee entries={parsedMarquee.items} />;
     }
     case "contentModules": {
       const parsedModule = parseContentModule(content as ContentModuleEntry);
@@ -218,6 +253,15 @@ export const ContentRenderer = (props: ContentRendererProps) => {
       }
 
       return <ContentCarouselComponent carousel={parsedCarousel} />;
+    }
+    case "contentCard": {
+      const parsedCard = parseContentCard(content as ContentCardEntry);
+
+      if (!parsedCard) {
+        return null;
+      }
+
+      return <ContentCard card={parsedCard} />;
     }
     case "contentCopyMediaBlock": {
       const parsedCopyMediaBlock = parseContentCopyMediaBlock(

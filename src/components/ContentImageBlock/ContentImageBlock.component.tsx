@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import Image from "next/image";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentImageBlockType } from "src/contentful/parseContentImageBlock";
@@ -15,20 +14,23 @@ export const ContentImageBlock = (props: ContentImageBlockProps) => {
     return null;
   }
 
-  const { image, caption, captionPlacement, imageStyle } = fields;
+  const { image, caption, captionPlacement } = fields;
 
   return (
     <figure className={styles.imageWrapper}>
       <Image
         alt={image?.alt ?? ""}
-        className={clsx(
-          imageStyle === "Black Background" && "bg-black",
-          imageStyle === "Bordered" && "border",
-          imageStyle === "White Background" && "bg-white",
-        )}
+        className=""
         height={image?.height ?? 0}
         src={image?.src ?? ""}
-        style={{ order: captionPlacement === "Above" ? 2 : 1 }}
+        style={{
+          height: "auto",
+          maxWidth: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          order: captionPlacement === "Above" ? 2 : 1,
+          width: "100%",
+        }}
         width={image?.width ?? 0}
       />
       {caption ? (

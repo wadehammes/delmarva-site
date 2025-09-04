@@ -1,0 +1,18 @@
+.serviceHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.serviceHeaderTitle {
+  font-size: clamp(2.75rem, 5vw, 5em);
+}
+
+.servicePhotos {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}

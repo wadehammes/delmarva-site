@@ -16,8 +16,6 @@ export const ContentVideoBlock = (props: ContentVideoBlockProps) => {
   }
 
   return (
-    <div>
-      <VideoPlayer src={createMediaUrl(video)} />
-    </div>
+    <VideoPlayer controls={true} rounded={true} src={createMediaUrl(video)} />
   );
 };

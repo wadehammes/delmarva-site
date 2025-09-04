@@ -1,8 +1,11 @@
+"use client";
+
 import clsx from "clsx";
 import Image from "next/image";
-import ContentCopyBlock from "src/components/ContentCopyBlock/ContentCopyBlock.component";
+import { ContentCardModal } from "src/components/ContentCardModal/ContentCardModal.component";
+import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentCardType } from "src/contentful/parseContentCard";
-import { parseCopyBlock } from "src/contentful/parseCopyBlock";
+import { useModal } from "src/hooks/useModal";
 import { createMediaUrl } from "src/utils/helpers";
 import styles from "./ContentCard.module.css";
 
@@ -12,24 +15,23 @@ interface ContentCardProps {
 
 export const ContentCard = (props: ContentCardProps) => {
   const { card } = props;
+  const { isOpen, open, close } = useModal();
 
   if (!card) {
     return null;
   }
 
-  const { media, mediaType, cardStyle, copy, entryTitle } = card;
-  const hasMedia = !!media;
+  const { media, mediaType, modalCopy, cardCopy, entryTitle } = card;
 
-  return (
-    <div
-      className={clsx(styles.contentCard, {
-        [styles.headshot]: cardStyle === "Headshot",
-      })}
-    >
+  const hasMedia = !!media;
+  const isInteractive = !!modalCopy;
+
+  const cardContent = (
+    <>
       {hasMedia ? (
         <div
           className={clsx(styles.media, {
-            [styles.icon]: mediaType === "Icon",
+            [styles.headshot]: mediaType === "Headshot",
           })}
         >
           <Image
@@ -41,8 +43,27 @@ export const ContentCard = (props: ContentCardProps) => {
         </div>
       ) : null}
       <div className={styles.copy}>
-        <ContentCopyBlock fields={parseCopyBlock(copy)} />
+        <RichText document={cardCopy} />
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {isInteractive ? (
+        <button
+          className={clsx(styles.contentCard, styles.interactive)}
+          onClick={open}
+          type="button"
+        >
+          {cardContent}
+        </button>
+      ) : (
+        <div className={clsx(styles.contentCard)}>{cardContent}</div>
+      )}
+      {isInteractive ? (
+        <ContentCardModal contentCard={card} isOpen={isOpen} onClose={close} />
+      ) : null}
+    </>
   );
 };

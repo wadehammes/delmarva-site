@@ -9,6 +9,7 @@ export enum DelmarvaColors {
   Red = "Red",
   Silver = "Silver",
   White = "White",
+  SystemDefault = "System Default",
 }
 
 export enum Placement {
@@ -17,8 +18,16 @@ export enum Placement {
   RightAligned = "Right Aligned",
 }
 
+export enum VerticalAlignment {
+  Top = "Top",
+  Center = "Center",
+  Bottom = "Bottom",
+  Stretch = "Stretch",
+}
+
 export enum OverlayStyle {
   Microdot = "Microdot",
+  Blueprint = "Blueprint",
   SolidColor = "Solid Color",
 }
 
@@ -37,6 +46,8 @@ export enum Padding {
   MorePadding = "More Padding",
   NoPadding = "No Padding",
   RegularPadding = "Regular Padding",
+  NoTopPadding = "No Top Padding",
+  NoBottomPadding = "No Bottom Padding",
 }
 
 export type CSSColorAdjustScale =
@@ -56,4 +67,18 @@ export enum Alignment {
   Left = "Left",
   Center = "Center",
   Right = "Right",
+}
+
+export enum MediaBackgroundStyle {
+  BlackBackground = "Black Background",
+  Bordered = "Bordered",
+  MicrodotBackground = "Microdot Background",
+  None = "None",
+  WhiteBackground = "White Background",
+}
+
+export enum ContentGap {
+  Regular = "Regular",
+  NoGap = "No Gap",
+  MoreGap = "More Gap",
 }

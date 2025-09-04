@@ -13,6 +13,7 @@ A lightweight and flexible carousel component built with Swiper library, featuri
 - **Lightweight**: Only imports necessary Swiper modules
 - **Multi-instance Safe**: Uses unique IDs for controls to prevent conflicts when multiple carousels are on the same page
 - **Clean Design**: Navigation arrows positioned over slides with numbered pagination between them
+- **Content Containment**: Automatically constrains content to prevent layout issues with large images or content
 
 ## Props
 
@@ -32,6 +33,17 @@ A lightweight and flexible carousel component built with Swiper library, featuri
 | `onSlideChange` | `(swiper: SwiperType) => void` | Optional | Callback when slide changes |
 | `onSwiper` | `(swiper: SwiperType) => void` | Optional | Callback when Swiper instance is created |
 
+## Content Containment
+
+The Carousel component automatically constrains all content to prevent layout issues. This is particularly important when rendering large images or content that might otherwise break out of the carousel bounds.
+
+### Containment Features
+
+- **Content Containment**: Prevents content from exceeding carousel slide boundaries
+- **Overflow Handling**: Automatically handles overflow with `overflow: hidden`
+- **Layout Containment**: Uses CSS `contain: layout style` for better performance
+- **Responsive**: Automatically adapts to container width
+
 ## Usage
 
 ### Basic Usage
@@ -43,6 +55,17 @@ import { Carousel } from "src/components/Carousel/Carousel.component";
   <div>Slide 1</div>
   <div>Slide 2</div>
   <div>Slide 3</div>
+</Carousel>
+```
+
+### With Large Images
+
+The Carousel automatically handles large images and prevents them from causing layout issues:
+
+```tsx
+<Carousel>
+  <ContentImageBlock fields={imageData} />
+  <ContentImageBlock fields={imageData2} />
 </Carousel>
 ```
 
