@@ -4,6 +4,7 @@ import type { TypeContentCarouselSkeleton } from "src/contentful/types/TypeConte
 
 export interface ContentCarousel {
   carouselItems: (ContentEntries | null)[];
+  controlsPlacement: "Over Slides" | "Below Slides";
   id: string;
 }
 
@@ -26,6 +27,8 @@ export const parseContentCarousel = (
 
   return {
     carouselItems: carouselItems?.map((entry) => entry as ContentEntries) ?? [],
+    controlsPlacement:
+      contentCarousel.fields.controlsPlacement ?? "Over Slides",
     id: contentCarousel.sys.id,
   };
 };

@@ -6,12 +6,14 @@ import {
   type ServiceType,
 } from "src/contentful/getServices";
 import type { Locales } from "src/contentful/interfaces";
-import type { ContentImageBlockEntry } from "src/contentful/parseContentImageBlock";
+import {
+  type ContentfulAsset,
+  parseContentfulAsset,
+} from "src/contentful/parseContentfulAsset";
 import {
   type ContentStatBlock,
   parseContentStatBlock,
 } from "src/contentful/parseContentStatBlock";
-import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
 import type { TypeProjectSkeleton } from "src/contentful/types/TypeProject";
 
 export type ProjectEntry = Entry<
@@ -27,8 +29,7 @@ export interface ProjectType {
   projectName: string;
   slug: string;
   description: Document;
-  projectDescription: string;
-  projectMedia: (ContentImageBlockEntry | ContentVideoBlockEntry | null)[];
+  media: (ContentfulAsset | null)[];
   projectStats?: (ContentStatBlock | null)[];
   services: (ServiceType | null)[];
 }
@@ -45,12 +46,7 @@ export function parseContentfulProject(
   return {
     description: projectEntry.fields.description,
     id: projectEntry.sys.id,
-    projectDescription: projectEntry.fields.projectDescription,
-    projectMedia: projectEntry.fields.projectMedia as (
-      | ContentImageBlockEntry
-      | ContentVideoBlockEntry
-      | null
-    )[],
+    media: projectEntry.fields.media?.map(parseContentfulAsset),
     projectName: projectEntry.fields.projectName,
     projectStats: projectEntry.fields.projectStats?.map(parseContentStatBlock),
     services: projectEntry.fields.services.map(parseContentfulService),

@@ -1,15 +1,19 @@
 "use client";
 
 import clsx from "clsx";
+import type { CSSProperties } from "react";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import CopyBlock from "src/components/ContentCopyBlock/ContentCopyBlock.component";
-import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
-import type { ContentCopyMediaBlock as ContentCopyMediaBlockType } from "src/contentful/parseContentCopyMediaBlock";
+import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.component";
 import {
-  type ContentImageBlockEntry,
-  parseContentImageBlock,
-} from "src/contentful/parseContentImageBlock";
+  DelmarvaColors,
+  MediaBackgroundStyle,
+} from "src/contentful/interfaces";
+import type { ContentCopyMediaBlock as ContentCopyMediaBlockType } from "src/contentful/parseContentCopyMediaBlock";
+import type { ContentImageBlockEntry } from "src/contentful/parseContentImageBlock";
+import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
 import { useOptimizedInView } from "src/hooks/useOptimizedInView";
+import { createBackgroundColor } from "src/styles/utils";
 import styles from "./ContentCopyMediaBlock.module.css";
 
 interface ContentCopyMediaBlockProps {
@@ -18,14 +22,14 @@ interface ContentCopyMediaBlockProps {
 
 export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   const { fields } = props;
-  const { copy, media, mediaPlacement } = fields;
+  const { copy, media, mediaPlacement, mediaBackgroundStyle } = fields;
 
-  const { ref } = useOptimizedInView();
+  const { ref, inView } = useOptimizedInView();
 
   return (
     <div
       className={clsx(styles.contentCopyMediaBlock, {
-        [styles.inView]: true,
+        [styles.inView]: inView,
       })}
       ref={ref}
     >
@@ -36,22 +40,35 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
         <CopyBlock fields={copy} />
       </div>
       <div
-        className={styles.mediaBlock}
-        style={{ order: mediaPlacement === "Left" ? 1 : 2 }}
+        className={clsx(styles.mediaBlock, {
+          [styles.blackBg]:
+            mediaBackgroundStyle === MediaBackgroundStyle.BlackBackground,
+          [styles.microdotBg]:
+            mediaBackgroundStyle === MediaBackgroundStyle.MicrodotBackground,
+        })}
+        style={
+          {
+            "--dot-bg": createBackgroundColor(DelmarvaColors.Black),
+            order: mediaPlacement === "Left" ? 1 : 2,
+          } as CSSProperties & { "--dot-bg": string }
+        }
       >
-        <Carousel>
-          {media.map((item) => {
-            if (!item) {
-              return null;
-            }
-
-            return (
-              <ContentImageBlock
-                fields={parseContentImageBlock(item as ContentImageBlockEntry)}
+        <Carousel animation="fade" spaceBetween={0}>
+          {media
+            .filter((item) => item != null)
+            .filter((item) => {
+              const contentType = item.sys.contentType.sys.id;
+              return (
+                contentType === "contentImageBlock" ||
+                contentType === "contentVideoBlock"
+              );
+            })
+            .map((item) => (
+              <MediaRenderer
                 key={item.sys.id}
+                media={item as ContentImageBlockEntry | ContentVideoBlockEntry}
               />
-            );
-          })}
+            ))}
         </Carousel>
       </div>
     </div>

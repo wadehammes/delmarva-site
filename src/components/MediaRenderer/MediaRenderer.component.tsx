@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import {
   type ContentImageBlockEntry,
@@ -13,7 +15,7 @@ const ContentImageBlock = dynamic(
     import("src/components/ContentImageBlock/ContentImageBlock.component").then(
       (mod) => mod.ContentImageBlock,
     ),
-  { ssr: false },
+  { ssr: true },
 );
 
 const ContentVideoBlock = dynamic(
@@ -21,7 +23,7 @@ const ContentVideoBlock = dynamic(
     import("src/components/ContentVideoBlock/ContentVideoBlock.component").then(
       (mod) => mod.ContentVideoBlock,
     ),
-  { ssr: false },
+  { ssr: true },
 );
 
 interface MediaRendererProps {

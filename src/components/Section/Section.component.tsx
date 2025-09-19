@@ -4,9 +4,13 @@ import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import styles from "src/components/Section/Section.module.css";
 import {
+  ContentGap,
   ContentLayout,
   DelmarvaColors,
+  OverlayStyle,
+  Padding,
   Placement,
+  VerticalAlignment,
 } from "src/contentful/interfaces";
 import type { SectionType } from "src/contentful/parseSections";
 import { createBackgroundColor, createPadding } from "src/styles/utils";
@@ -27,15 +31,17 @@ export const Section = async (props: SectionProps) => {
 
   const {
     cta,
-    sectionContentPlacement,
-    contentLayout,
-    contentStyle,
-    backgroundColor,
-    sectionPadding,
+    sectionContentPlacement = Placement.Center,
+    contentLayout = ContentLayout.SingleColumn,
+    contentStyle = "Regular",
+    backgroundColor = DelmarvaColors.SystemDefault,
+    sectionPadding = Padding.RegularPadding,
     sectionEyebrow,
     sectionHeader,
-    contentGap,
-    showSectionSeparator,
+    contentGap = ContentGap.Regular,
+    showSectionSeparator = false,
+    contentVerticalAlignment = VerticalAlignment.Top,
+    sectionBackgroundStyle = OverlayStyle.SolidColor,
   } = section;
 
   const renderEyebrow = () => {
@@ -61,13 +67,15 @@ export const Section = async (props: SectionProps) => {
         [styles.blackBg]: backgroundColor === "Black",
         [styles.redBg]: backgroundColor === "Red",
         [styles.silverBg]: backgroundColor === "Silver",
+        [styles.blueprintBg]: sectionBackgroundStyle === OverlayStyle.Blueprint,
+        [styles.microdotBg]: sectionBackgroundStyle === OverlayStyle.Microdot,
       })}
       id={id}
       style={{
         paddingBottom: createPadding(sectionPadding),
         paddingTop: createPadding(sectionPadding),
-        ...(backgroundColor === "Black" && {
-          "--dot-bg": createBackgroundColor(DelmarvaColors.Black),
+        ...(backgroundColor && {
+          "--dot-bg": createBackgroundColor(backgroundColor),
         }),
       }}
     >
@@ -94,6 +102,10 @@ export const Section = async (props: SectionProps) => {
             [styles.left]: sectionContentPlacement === Placement.LeftAligned,
             [styles.right]: sectionContentPlacement === Placement.RightAligned,
             [styles.noGap]: contentGap === "No Gap",
+            [styles.moreGap]: contentGap === "More Gap",
+            [styles.topAligned]: contentVerticalAlignment === "Top",
+            [styles.bottomAligned]: contentVerticalAlignment === "Bottom",
+            [styles.stretchAligned]: contentVerticalAlignment === "Stretch",
           })}
         >
           {children}

@@ -2,13 +2,17 @@
   display: grid;
   grid-template-columns: repeat(var(--columns, 1), 1fr);
   grid-column: 1 / -1;
-  gap: var(--gap, 4rem);
+  gap: 2rem;
   align-items: center;
   width: 100%;
 
+  /* Allow grid items to shrink inside columns (prevents overflow for carousels/media) */
+  > * {
+    min-width: 0;
+  }
+
   @media screen and (min-width: 1000px) {
     grid-template-columns: repeat(var(--columns-md, var(--columns, 1)), 1fr);
-    gap: var(--gap-md, var(--gap, 4rem));
   }
 
   @media screen and (min-width: 1440px) {
@@ -16,11 +20,26 @@
         var(--columns-lg, var(--columns-md, var(--columns, 1))),
         1fr
       );
-    gap: var(--gap-lg, var(--gap-md, var(--gap, 4rem)));
+  }
+
+  &.topAligned {
+    align-items: flex-start;
+  }
+
+  &.bottomAligned {
+    align-items: flex-end;
+  }
+
+  &.stretchAligned {
+    align-items: stretch;
   }
 
   &.noGap {
     gap: 0;
+  }
+
+  &.moreGap {
+    gap: 4rem;
   }
 
   &.contained:not(.singleColumn) {
@@ -90,10 +109,48 @@
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
-  gap: var(--grid-gap);
+  gap: 0;
   width: 100%;
   padding: 4rem 2rem;
   background-color: var(--color-bg);
+
+  &.blueprintBg {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 2px, transparent 2px),
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-position:
+      -2px -2px,
+      -2px -2px,
+      -1px -1px,
+      -1px -1px;
+    background-size:
+      100px 100px,
+      100px 100px,
+      20px 20px,
+      20px 20px;
+    border-top: 2px solid rgba(255, 255, 255, 0.01);
+  }
+
+  &.microdotBg {
+    --dot-color: color-mix(in srgb, var(--dot-bg) 80%, var(--colors-white));
+    --dot-size: 1px;
+    --dot-space: 5px;
+    background:
+      linear-gradient(
+        90deg,
+        var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+        transparent 1%
+      )
+      center / var(--dot-space) var(--dot-space),
+      linear-gradient(
+        var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+        transparent 1%
+      )
+      center / var(--dot-space) var(--dot-space),
+      var(--dot-color);
+  }
 
   &.overlap > .sectionContent {
     padding: 2rem;
@@ -104,19 +161,15 @@
   }
 
   &.lessPadding {
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
 
   &.morePadding {
-    padding: 4rem 2rem;
+    padding: 8rem 4rem;
   }
 
   &.noPadding {
     padding: 0;
-  }
-
-  &.regularPadding {
-    padding: 2rem 2rem;
   }
 
   &.fullWidth {
@@ -143,7 +196,7 @@
     background-size: var(--dot-space) var(--dot-space);
 
     &.fullWidth {
-      padding-bottom: 2rem !important;
+      padding-bottom: 2rem;
     }
   }
 
@@ -225,6 +278,9 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 76ch;
+  padding-bottom: 4rem;
+  margin: 0 auto;
   text-align: center;
   text-wrap: balance;
 }

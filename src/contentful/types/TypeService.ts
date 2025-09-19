@@ -16,6 +16,7 @@ export interface TypeServiceFields {
   stats?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeContentStatBlockSkeleton>
   >;
+  featuredStat?: EntryFieldTypes.EntryLink<TypeContentStatBlockSkeleton>;
   sections?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeSectionSkeleton>
   >;

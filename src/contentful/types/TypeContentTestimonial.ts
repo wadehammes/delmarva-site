@@ -12,6 +12,7 @@ export interface TypeContentTestimonialFields {
   quoterName?: EntryFieldTypes.Symbol;
   quoterTitle?: EntryFieldTypes.Symbol;
   companyLogo?: EntryFieldTypes.AssetLink;
+  showQuoteIcon?: EntryFieldTypes.Boolean;
 }
 
 export type TypeContentTestimonialSkeleton = EntrySkeletonType<

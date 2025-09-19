@@ -22,21 +22,34 @@ export interface StatData {
 }
 
 export interface StatProps {
+  align?: "left" | "center" | "right";
   stat: StatData | ContentStatBlock;
+  size?: "small" | "medium" | "large";
   className?: string;
+  trigger?: boolean;
 }
 
 export const Stat = (props: StatProps) => {
-  const { stat, className } = props;
+  const {
+    stat,
+    className,
+    size = "medium",
+    align = "center",
+    trigger = false,
+  } = props;
   const { value, description, type = "Numerical", decorator = "None" } = stat;
 
   const numberRef = useRef<HTMLSpanElement>(null);
-
   const { ref: statRef, inView } = useOptimizedInView();
 
   useEffect(() => {
     const numberElement = numberRef.current;
-    if (!numberElement || !inView) return;
+    if (!numberElement) return;
+
+    // For accordion stats, animate when trigger is true
+    // For regular stats, animate when inView is true
+    const shouldAnimate = trigger ? trigger : inView;
+    if (!shouldAnimate) return;
 
     const parsed = parseFormattedValue(value, type);
     if (!parsed) return;
@@ -71,11 +84,23 @@ export const Stat = (props: StatProps) => {
     return () => {
       tl.kill();
     };
-  }, [inView, value, type, decorator]);
+  }, [trigger, inView, value, type, decorator]);
 
   return (
-    <div className={clsx(styles.stat, className)} ref={statRef}>
-      <span className={styles.number} ref={numberRef}>
+    <div
+      className={clsx(styles.stat, className, {
+        [styles.left]: align === "left",
+        [styles.right]: align === "right",
+      })}
+      ref={statRef}
+    >
+      <span
+        className={clsx(styles.number, {
+          [styles.small]: size === "small",
+          [styles.large]: size === "large",
+        })}
+        ref={numberRef}
+      >
         {getInitialValue(value, type)}
       </span>
       <p className={styles.description}>{description}</p>

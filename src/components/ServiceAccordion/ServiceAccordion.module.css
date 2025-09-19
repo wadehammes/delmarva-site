@@ -7,11 +7,6 @@
   @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
 
-    .serviceAccordionContent {
-      grid-column: 1;
-      max-width: none;
-    }
-
     .serviceAccordionCarousel {
       display: flex;
       grid-column: 2;
@@ -24,8 +19,9 @@
 .serviceAccordionContent {
   display: flex;
   flex-direction: column;
+  grid-column: 1;
   gap: 2rem;
-  max-width: 80ch;
+  max-width: none;
 }
 
 .statsList {
@@ -35,6 +31,21 @@
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+
+  > *:not(:last-child) {
+    padding-right: 1rem;
+    border-right: 1px dashed var(--divider);
+  }
+
+  > *:not(:first-child) {
+    padding-left: 1rem;
+  }
 }
 
 .statItem {
@@ -58,8 +69,12 @@
 }
 
 .serviceAccordionCarousel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   width: 100%;
   min-width: 0;
+  max-width: 80ch;
   padding: 0.5rem 0;
 }
 
@@ -81,7 +96,7 @@
 }
 
 .statValue {
-  font-family: var(--font-family-n27);
+  font-family: var(--font-family-numbers);
   font-size: 1rem;
   font-weight: 700;
 }

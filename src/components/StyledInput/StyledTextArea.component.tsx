@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { forwardRef, type Ref } from "react";
+import { forwardRef, type Ref, useId } from "react";
 import type { AriaTextFieldProps } from "react-aria";
 import { useObjectRef, useTextField } from "react-aria";
 import type { FieldError } from "react-hook-form";
@@ -11,10 +11,16 @@ interface StyledTextAreaProps extends AriaTextFieldProps<HTMLTextAreaElement> {
 
 export const StyledTextArea = forwardRef(
   (props: StyledTextAreaProps, ref: Ref<HTMLTextAreaElement>) => {
-    const { label, hasError } = props;
+    const { label, hasError, name } = props;
     const inputRef = useObjectRef(ref);
+
+    // Generate stable ID based on name prop to avoid hydration issues
+    // Use React's useId for consistent server/client rendering
+    const fallbackId = useId();
+    const stableId = name ? `textarea-${name}` : fallbackId;
+
     const { labelProps, inputProps } = useTextField(
-      { ...props, inputElementType: "textarea" },
+      { ...props, id: stableId, inputElementType: "textarea" },
       inputRef,
     );
     const { id, ...restInputProps } = inputProps;

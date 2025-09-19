@@ -87,13 +87,13 @@
       },
       "complexity": {
         "noForEach": "off",
-        "noImportantStyles": "warn"
+        "noImportantStyles": "off"
       },
       "correctness": {
         "noUnknownProperty": "error",
         "noUnusedImports": "error",
         "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "off"
       },
       "recommended": true,
       "security": {

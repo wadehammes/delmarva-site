@@ -8,6 +8,7 @@ import {
   parseServiceForNavigation,
   type ServiceType,
 } from "src/contentful/getServices";
+import type { MediaBackgroundStyle } from "src/contentful/interfaces";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
@@ -19,7 +20,7 @@ export interface ContentImageBlockType {
   image: ContentfulAsset | null;
   caption?: Document;
   captionPlacement: "Above" | "Below";
-  imageStyle: "Black Background" | "Bordered" | "None" | "White Background";
+  imageStyle?: MediaBackgroundStyle;
   projects?: (Partial<ProjectType> | null)[];
   services?: (Partial<ServiceType> | null)[];
 }
@@ -40,7 +41,7 @@ export function parseContentImageBlock(
     captionPlacement: imageBlock.fields.captionPlacement,
     id: imageBlock.sys.id,
     image: parseContentfulAsset(imageBlock.fields.image),
-    imageStyle: imageBlock.fields.imageStyle,
+    imageStyle: imageBlock.fields.imageStyle as MediaBackgroundStyle,
     projects: imageBlock.fields.projects?.map(parseProjectForNavigation),
     services: imageBlock.fields.services?.map(parseServiceForNavigation),
   };

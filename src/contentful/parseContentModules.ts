@@ -6,6 +6,8 @@ import type { TypeContentModulesSkeleton } from "src/contentful/types";
 export interface ContentModule {
   id: string;
   module:
+    | "All Services List"
+    | "Areas Serviced Map"
     | "Featured Services List"
     | "Request a Quote Form"
     | "Recent News List";

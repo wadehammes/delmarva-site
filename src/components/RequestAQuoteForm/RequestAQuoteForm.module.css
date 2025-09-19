@@ -1,0 +1,20 @@
+.form {
+  display: grid;
+  gap: 1rem;
+  padding-left: 5px;
+}
+
+.formSubmitContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.formSubmitSuccess {
+  padding: 1rem;
+  color: var(--color-success-fg, #085b32);
+  background-color: var(--color-success-bg, #e6fbf0);
+  border: 1px solid var(--color-success-border, #b7efd0);
+  border-radius: 0.5rem;
+}

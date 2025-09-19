@@ -102,7 +102,7 @@
 }
 
 .statValue {
-  font-family: var(--font-family-n27);
+  font-family: var(--font-family-numbers);
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--colors-black);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import type { Locale } from "src/components/JoinOurTeamForm/translations";
+import type { Locale } from "next-intl";
 import { extractAndValidateLocale } from "./localeUtils";
 
 /**

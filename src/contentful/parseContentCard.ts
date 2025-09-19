@@ -1,18 +1,18 @@
+import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import type { TypeContentCardSkeleton } from "src/contentful/types/TypeContentCard";
 
 export interface ContentCardType {
   id: string;
   entryTitle: string;
   media: ContentfulAsset | null;
-  mediaType: "Image" | "Icon";
-  copy: CopyBlockEntry;
-  cardStyle: "Headshot" | "Regular";
+  mediaType: "Regular Image" | "Headshot";
+  cardCopy: Document;
+  modalCopy?: Document;
 }
 
 export type ContentCardEntry =
@@ -30,14 +30,14 @@ export const parseContentCard = (
     return null;
   }
 
-  const { entryTitle, media, copy, cardStyle, mediaType } = card.fields;
+  const { entryTitle, media, cardCopy, modalCopy, mediaType } = card.fields;
 
   return {
-    cardStyle: cardStyle || "Regular",
-    copy,
+    cardCopy,
     entryTitle: entryTitle || "",
     id: card.sys.id,
     media: parseContentfulAsset(media) || null,
-    mediaType: mediaType || "Image",
+    mediaType: mediaType || "Regular Image",
+    modalCopy,
   };
 };

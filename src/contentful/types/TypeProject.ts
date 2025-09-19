@@ -5,9 +5,7 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
-import type { TypeContentImageBlockSkeleton } from "./TypeContentImageBlock";
 import type { TypeContentStatBlockSkeleton } from "./TypeContentStatBlock";
-import type { TypeContentVideoBlockSkeleton } from "./TypeContentVideoBlock";
 import type { TypeServiceSkeleton } from "./TypeService";
 
 export interface TypeProjectFields {
@@ -15,12 +13,7 @@ export interface TypeProjectFields {
   projectName: EntryFieldTypes.Symbol;
   slug: EntryFieldTypes.Symbol;
   description: EntryFieldTypes.RichText;
-  projectDescription: EntryFieldTypes.Text;
-  projectMedia: EntryFieldTypes.Array<
-    EntryFieldTypes.EntryLink<
-      TypeContentImageBlockSkeleton | TypeContentVideoBlockSkeleton
-    >
-  >;
+  media: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>;
   projectStats?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeContentStatBlockSkeleton>
   >;

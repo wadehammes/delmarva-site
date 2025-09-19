@@ -11,10 +11,14 @@ export interface ContentfulAsset {
   height: number;
 }
 
+export type ContentfulAssetEntry =
+  | Asset<"WITHOUT_UNRESOLVABLE_LINKS", string>
+  | { sys: AssetLink };
+
 // A function to transform a Contentful image asset
 // into our own ContentfulAsset object.
 export function parseContentfulAsset(
-  asset?: Asset<"WITHOUT_UNRESOLVABLE_LINKS", string> | { sys: AssetLink },
+  asset?: ContentfulAssetEntry,
 ): ContentfulAsset | null {
   if (!asset) {
     return null;

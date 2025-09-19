@@ -18,6 +18,9 @@ export interface TypeContentCopyMediaBlockFields {
     >
   >;
   mediaPlacement?: EntryFieldTypes.Symbol<"Left" | "Right">;
+  mediaBackgroundStyle?: EntryFieldTypes.Symbol<
+    "Black Background" | "Microdot Background" | "None"
+  >;
 }
 
 export type TypeContentCopyMediaBlockSkeleton = EntrySkeletonType<

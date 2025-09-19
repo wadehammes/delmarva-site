@@ -12,6 +12,7 @@ export interface ContentTestimonialType {
   quoterName: string;
   quoterTitle: string;
   companyLogo: ContentfulAsset | null;
+  showQuoteIcon: boolean;
 }
 
 export type ContentTestimonialEntry =
@@ -29,7 +30,8 @@ export const parseContentTestimonial = (
     return null;
   }
 
-  const { quote, quoterName, quoterTitle, companyLogo } = testimonial.fields;
+  const { quote, quoterName, quoterTitle, companyLogo, showQuoteIcon } =
+    testimonial.fields;
 
   return {
     companyLogo: parseContentfulAsset(companyLogo) || null,
@@ -37,5 +39,6 @@ export const parseContentTestimonial = (
     quote,
     quoterName: quoterName || "",
     quoterTitle: quoterTitle || "",
+    showQuoteIcon: !!showQuoteIcon,
   };
 };

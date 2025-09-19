@@ -66,7 +66,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
     () => ({
       centeredSlides: true,
       coverflowEffect: {
-        depth: 100,
+        depth: 0,
         modifier: 1,
         rotate: 0,
         slideShadows: false,
@@ -90,7 +90,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
       preventInteractionOnTransition: true,
       resizeObserver: true,
       slidesPerView: "auto" as const,
-      spaceBetween: 16,
+      spaceBetween: 48,
       watchOverflow: true,
     }),
     [elementIds],

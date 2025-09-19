@@ -45,6 +45,7 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
       className={clsx(styles.hero, {
         [styles.heroFullScreen]: heroHeight === HeroHeight.FullScreen,
         [styles.heroEightyPercent]: heroHeight === HeroHeight.EightyPercent,
+        [styles.heroSmall]: heroHeight === HeroHeight.Small,
         [styles.heroContentLeft]: copyPlacement === Placement.LeftAligned,
         [styles.heroContentRight]: copyPlacement === Placement.RightAligned,
       })}

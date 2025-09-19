@@ -4,11 +4,13 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
-import { ServiceComponent } from "src/components/Service/Service.component";
+import { ServiceTemplate } from "src/components/ServiceTemplate/ServiceTemplate.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
+import { fetchProjectsByService } from "src/contentful/getProjects";
 import {
   fetchService,
+  fetchServicePhotos,
   fetchServices,
   type ServiceType,
 } from "src/contentful/getServices";
@@ -147,9 +149,24 @@ async function Page({ params }: PageProps) {
     return notFound();
   }
 
+  const servicePhotos = await fetchServicePhotos({
+    locale,
+    preview: draft.isEnabled,
+    slug: service.slug,
+  });
+
+  const projects = await fetchProjectsByService({
+    preview: draft.isEnabled,
+    serviceSlug: service.slug,
+  });
+
   return (
     <PageLayout footer={footer} navigation={navigation}>
-      <ServiceComponent service={service} />
+      <ServiceTemplate
+        projects={projects}
+        service={service}
+        servicePhotos={servicePhotos}
+      />
     </PageLayout>
   );
 }

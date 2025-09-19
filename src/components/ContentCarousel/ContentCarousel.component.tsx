@@ -38,11 +38,14 @@ export const ContentCarouselComponent = (props: ContentCarouselProps) => {
     return null;
   }
 
+  const { controlsPlacement } = carousel;
+
   return (
     <Carousel
       autoplay={autoplay}
       autoplayDelay={autoplayDelay}
       className={className}
+      controlsPlacement={controlsPlacement}
       loop={loop}
       showNavigation={showNavigation}
       showPagination={showPagination}

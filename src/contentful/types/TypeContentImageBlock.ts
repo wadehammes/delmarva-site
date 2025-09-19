@@ -14,7 +14,7 @@ export interface TypeContentImageBlockFields {
   caption?: EntryFieldTypes.RichText;
   captionPlacement: EntryFieldTypes.Symbol<"Above" | "Below">;
   imageStyle: EntryFieldTypes.Symbol<
-    "Black Background" | "Bordered" | "None" | "White Background"
+    "Black Background" | "Microdot Background" | "None"
   >;
   services?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeServiceSkeleton>

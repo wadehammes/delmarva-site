@@ -23,6 +23,7 @@ export interface TypeContentCarouselFields {
       | TypeContentVideoBlockSkeleton
     >
   >;
+  controlsPlacement?: EntryFieldTypes.Symbol<"Below Slides" | "Over Slides">;
 }
 
 export type TypeContentCarouselSkeleton = EntrySkeletonType<

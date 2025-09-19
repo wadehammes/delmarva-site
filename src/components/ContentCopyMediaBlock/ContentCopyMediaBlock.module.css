@@ -4,7 +4,6 @@
   flex-direction: column;
   gap: 2rem;
   padding: 2rem 0;
-  overflow: hidden;
 
   @media (min-width: 900px) {
     flex-direction: row;
@@ -31,13 +30,41 @@
 
 .mediaBlock {
   flex: 2;
+  min-height: 300px;
+  overflow: hidden;
   opacity: 0;
   transform: translateY(1rem);
   transition:
     opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
+  &.blackBg {
+    padding: 1rem;
+    background-color: color-mix(in srgb, var(--colors-black) 80%, black);
+  }
+
+  &.microdotBg {
+    --dot-color: color-mix(in srgb, var(--dot-bg) 80%, var(--colors-white));
+    --dot-size: 1px;
+    --dot-space: 5px;
+    padding: 1rem;
+    background:
+      linear-gradient(
+        90deg,
+        var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+        transparent 1%
+      )
+      center / var(--dot-space) var(--dot-space),
+      linear-gradient(
+        var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+        transparent 1%
+      )
+      center / var(--dot-space) var(--dot-space),
+      var(--dot-color);
+  }
+
   @media (min-width: 900px) {
+    min-height: 500px;
     transform: translateY(1.5rem);
     transition:
       opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),

@@ -5,14 +5,13 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
-import type { TypeCopyBlockSkeleton } from "./TypeCopyBlock";
 
 export interface TypeContentCardFields {
   entryTitle?: EntryFieldTypes.Symbol;
   media?: EntryFieldTypes.AssetLink;
-  mediaType?: EntryFieldTypes.Symbol<"Icon" | "Image">;
-  copy: EntryFieldTypes.EntryLink<TypeCopyBlockSkeleton>;
-  cardStyle?: EntryFieldTypes.Symbol<"Headshot" | "Regular">;
+  mediaType?: EntryFieldTypes.Symbol<"Headshot" | "Regular Image">;
+  cardCopy: EntryFieldTypes.RichText;
+  modalCopy?: EntryFieldTypes.RichText;
 }
 
 export type TypeContentCardSkeleton = EntrySkeletonType<

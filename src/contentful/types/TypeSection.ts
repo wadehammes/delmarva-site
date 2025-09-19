@@ -11,6 +11,7 @@ import type { TypeContentCopyMediaBlockSkeleton } from "./TypeContentCopyMediaBl
 import type { TypeContentGridSkeleton } from "./TypeContentGrid";
 import type { TypeContentHeroSkeleton } from "./TypeContentHero";
 import type { TypeContentImageBlockSkeleton } from "./TypeContentImageBlock";
+import type { TypeContentMarqueeSkeleton } from "./TypeContentMarquee";
 import type { TypeContentModulesSkeleton } from "./TypeContentModules";
 import type { TypeContentRecentNewsSkeleton } from "./TypeContentRecentNews";
 import type { TypeContentStatBlockSkeleton } from "./TypeContentStatBlock";
@@ -33,6 +34,7 @@ export interface TypeSectionFields {
       | TypeContentGridSkeleton
       | TypeContentHeroSkeleton
       | TypeContentImageBlockSkeleton
+      | TypeContentMarqueeSkeleton
       | TypeContentModulesSkeleton
       | TypeContentRecentNewsSkeleton
       | TypeContentStatBlockSkeleton
@@ -48,10 +50,18 @@ export interface TypeSectionFields {
     "Center" | "Left Aligned" | "Right Aligned"
   >;
   sectionPadding: EntryFieldTypes.Symbol<
-    "Less Padding" | "More Padding" | "No Padding" | "Regular Padding"
+    | "Less Padding"
+    | "More Padding"
+    | "No Bottom Padding"
+    | "No Padding"
+    | "No Top Padding"
+    | "Regular Padding"
   >;
   backgroundColor: EntryFieldTypes.Symbol<
     "Black" | "Red" | "Silver" | "System Default" | "White"
+  >;
+  sectionBackgroundStyle?: EntryFieldTypes.Symbol<
+    "Blueprint" | "Microdot" | "Solid Color"
   >;
   contentLayout: EntryFieldTypes.Symbol<
     | "2-column"
@@ -63,7 +73,10 @@ export interface TypeSectionFields {
     | "Single Column"
   >;
   contentStyle?: EntryFieldTypes.Symbol<"Overlap Section Above" | "Regular">;
-  contentGap?: EntryFieldTypes.Symbol<"No Gap" | "Regular">;
+  contentGap?: EntryFieldTypes.Symbol<"More Gap" | "No Gap" | "Regular">;
+  contentVerticalAlignment?: EntryFieldTypes.Symbol<
+    "Bottom" | "Center" | "Stretch" | "Top"
+  >;
   showSectionSeparator?: EntryFieldTypes.Boolean;
 }
 

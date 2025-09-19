@@ -10,8 +10,11 @@ import type { TypeServiceSkeleton } from "./TypeService";
 
 export interface TypeContentVideoBlockFields {
   entryTitle?: EntryFieldTypes.Symbol;
-  videoUrl: EntryFieldTypes.Symbol;
+  videoUrl?: EntryFieldTypes.Symbol;
   videoUpload?: EntryFieldTypes.AssetLink;
+  videoBackgroundStyle?: EntryFieldTypes.Symbol<
+    "Black Background" | "Microdot Background" | "None"
+  >;
   services?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeServiceSkeleton>
   >;

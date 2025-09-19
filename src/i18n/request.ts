@@ -2,6 +2,15 @@ import { getRequestConfig } from "next-intl/server";
 import type { Locales } from "src/contentful/interfaces";
 import { routing } from "src/i18n/routing";
 
+// Import messages statically to avoid dynamic import issues
+import enMessages from "./messages/en.json";
+import esMessages from "./messages/es.json";
+
+const messages = {
+  en: enMessages,
+  es: esMessages,
+};
+
 export default getRequestConfig(async ({ requestLocale }) => {
   // This typically corresponds to the `[locale]` segment
   let locale = await requestLocale;
@@ -13,6 +22,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    messages: {}, // Empty messages object since we're using Contentful for content
+    messages: messages[locale as keyof typeof messages],
   };
 });
