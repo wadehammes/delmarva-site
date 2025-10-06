@@ -18,6 +18,13 @@ export const Link = ({ children, ...props }: LinkProps) => {
 
         const target = href.replace("#", "");
 
+        const element = document.getElementById(target);
+
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+
+        // Update hash for browser history
         window.location.hash = target;
       }
     },

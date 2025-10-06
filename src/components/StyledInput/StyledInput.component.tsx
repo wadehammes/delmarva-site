@@ -11,7 +11,7 @@ interface StyledInputProps extends AriaTextFieldProps {
 
 export const StyledInput = forwardRef(
   (props: StyledInputProps, ref: Ref<HTMLInputElement>) => {
-    const { label, hasError, name } = props;
+    const { label, hasError, name, ...restProps } = props;
     const inputRef = useObjectRef(ref);
 
     // Generate stable ID based on name prop to avoid hydration issues
@@ -19,10 +19,20 @@ export const StyledInput = forwardRef(
     const fallbackId = useId();
     const stableId = name ? `input-${name}` : fallbackId;
 
+    // Use react-aria with stable ID to prevent hydration mismatches
+    // Only disable the specific ARIA attributes that cause random ID generation
     const { labelProps, inputProps } = useTextField(
-      { ...props, id: stableId },
+      {
+        ...restProps,
+        "aria-describedby": undefined,
+        // Only disable the ARIA attributes that generate random IDs
+        // Keep other accessibility features intact
+        "aria-labelledby": undefined,
+        id: stableId,
+      },
       inputRef,
     );
+
     const { id, ...restInputProps } = inputProps;
 
     return (

@@ -50,8 +50,11 @@ export interface TypeSectionFields {
     "Center" | "Left Aligned" | "Right Aligned"
   >;
   sectionPadding: EntryFieldTypes.Symbol<
+    | "Less Bottom Padding"
     | "Less Padding"
+    | "More Bottom Padding"
     | "More Padding"
+    | "More Top Padding"
     | "No Bottom Padding"
     | "No Padding"
     | "No Top Padding"

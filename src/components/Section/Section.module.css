@@ -103,6 +103,10 @@
     --columns-md: 3;
     --columns-lg: 6;
   }
+
+  &[class*="Column"] {
+    align-items: stretch;
+  }
 }
 
 .section {
@@ -168,8 +172,40 @@
     padding: 8rem 4rem;
   }
 
+  &.moreTopPadding {
+    padding-top: 4rem;
+
+    @media screen and (min-width: 1000px) {
+      padding-top: 8rem;
+    }
+  }
+
+  &.lessTopPadding {
+    padding-top: 2rem;
+  }
+
+  &.moreBottomPadding {
+    padding-bottom: 4rem;
+
+    @media screen and (min-width: 1000px) {
+      padding-bottom: 8rem;
+    }
+  }
+
+  &.lessBottomPadding {
+    padding-bottom: 2rem;
+  }
+
   &.noPadding {
     padding: 0;
+  }
+
+  &.noTopPadding {
+    padding-top: 0;
+  }
+
+  &.noBottomPadding {
+    padding-bottom: 0;
   }
 
   &.fullWidth {
