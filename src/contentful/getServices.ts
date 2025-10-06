@@ -37,6 +37,7 @@ export interface ServiceType {
   metaTitle: string;
   metaDescription: string;
   metaImage: ContentfulAsset;
+  publishDate: string;
   enableIndexing: boolean;
   updatedAt: string;
 }
@@ -61,6 +62,7 @@ export function parseContentfulService(
       serviceEntry.fields.metaImage,
     ) as ContentfulAsset,
     metaTitle: serviceEntry.fields.metaTitle,
+    publishDate: serviceEntry.sys.createdAt,
     sections: serviceEntry.fields.sections?.map(parseContentfulSection),
     serviceName: serviceEntry.fields.serviceName,
     slug: serviceEntry.fields.slug,

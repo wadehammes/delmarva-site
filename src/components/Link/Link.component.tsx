@@ -1,9 +1,9 @@
 "use client";
 
-import { type ReactNode, useCallback } from "react";
+import { type ComponentProps, type ReactNode, useCallback } from "react";
 import { Link as RouterLink } from "src/i18n/routing";
 
-interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+interface LinkProps extends Omit<ComponentProps<"a">, "popover"> {
   children: ReactNode;
   href: string;
 }

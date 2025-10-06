@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
+import { useId } from "react";
+import type { WebPage, WithContext } from "schema-dts";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { ServiceTemplate } from "src/components/ServiceTemplate/ServiceTemplate.component";
 import { fetchFooter } from "src/contentful/getFooter";
@@ -25,7 +27,8 @@ import {
   SERVICES_PAGE_SLUG,
   TEST_PAGE_SLUG,
 } from "src/utils/constants";
-import { envUrl } from "src/utils/helpers";
+import { createMediaUrl, envUrl } from "src/utils/helpers";
+import { serializeJsonLd } from "src/utils/jsonLd";
 
 interface PageParams {
   slug: string;
@@ -109,16 +112,47 @@ export async function generateMetadata({
       canonical: new URL(`${envUrl()}/${SERVICES_PAGE_SLUG}/${service.slug}`),
     },
     description: service.metaDescription,
+    openGraph: {
+      images: service.metaImage
+        ? [
+            {
+              alt: service.metaTitle,
+              url: createMediaUrl(service.metaImage.src),
+            },
+          ]
+        : [
+            {
+              alt: service.metaTitle,
+              url: `${envUrl()}/opengraph-image.png`,
+            },
+          ],
+    },
     robots:
       service.enableIndexing && process.env.ENVIRONMENT === "production"
         ? "index, follow"
         : "noindex, nofollow",
     title: service.metaTitle,
+    twitter: {
+      images: service.metaImage
+        ? [
+            {
+              alt: service.metaTitle,
+              url: createMediaUrl(service.metaImage.src),
+            },
+          ]
+        : [
+            {
+              alt: service.metaTitle,
+              url: `${envUrl()}/twitter-image.png`,
+            },
+          ],
+    },
   };
 }
 
 // The actual Page component.
 async function Page({ params }: PageProps) {
+  const jsonLdId = useId();
   const { slug, locale } = await params;
 
   setRequestLocale(locale);
@@ -160,8 +194,51 @@ async function Page({ params }: PageProps) {
     serviceSlug: service.slug,
   });
 
+  const canonicalUrl = `${envUrl()}/${SERVICES_PAGE_SLUG}/${service.slug}`;
+
+  const jsonLd: WithContext<WebPage> = {
+    "@context": "https://schema.org",
+    "@id": `${canonicalUrl}#webpage`,
+    "@type": "WebPage",
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          name: "Home",
+          position: 0,
+        },
+        {
+          "@type": "ListItem",
+          name: "What We Deliver",
+          position: 1,
+        },
+        {
+          "@type": "ListItem",
+          name: service.serviceName,
+          position: 2,
+        },
+      ],
+    },
+    dateModified: service.updatedAt,
+    datePublished: service.publishDate,
+    description: service.metaDescription,
+    name: `${service.serviceName} | Delmarva Site Development`,
+    publisher: {
+      "@type": "Organization",
+      name: "Delmarva Site Development",
+    },
+    url: canonicalUrl,
+  };
+
   return (
     <PageLayout footer={footer} navigation={navigation}>
+      <script
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+        id={jsonLdId}
+        type="application/ld+json"
+      />
       <ServiceTemplate
         projects={projects}
         service={service}
