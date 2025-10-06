@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import type { WebPage } from "schema-dts";
+import { useId } from "react";
+import type { WebPage, WithContext } from "schema-dts";
 import PageComponent from "src/components/Page/Page.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { fetchFooter } from "src/contentful/getFooter";
@@ -16,6 +17,7 @@ import {
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
 import { envUrl } from "src/utils/helpers";
+import { serializeJsonLd } from "src/utils/jsonLd";
 
 interface WhatWeDeliverParams {
   locale: string;
@@ -66,6 +68,7 @@ export async function generateMetadata(
 }
 
 const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
+  const jsonLdId = useId();
   const { locale } = await props.params;
 
   setRequestLocale(locale);
@@ -77,6 +80,7 @@ const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
     preview: draft.isEnabled,
     slug: "what-we-deliver",
   });
+
   const navigation = await fetchNavigation({
     locale,
     preview: draft.isEnabled,
@@ -95,33 +99,44 @@ const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
 
   const { metaDescription, publishDate, updatedAt } = page;
 
-  const jsonLd: WebPage = {
+  const canonicalUrl = `${envUrl()}/${SERVICES_PAGE_SLUG}`;
+
+  const jsonLd: WithContext<WebPage> = {
+    "@context": "https://schema.org",
+    "@id": `${canonicalUrl}#webpage`,
     "@type": "WebPage",
     breadcrumb: {
       "@type": "BreadcrumbList",
       itemListElement: [
         {
           "@type": "ListItem",
-          name: "What We Deliver",
+          name: "Home",
           position: 0,
+        },
+        {
+          "@type": "ListItem",
+          name: "What We Deliver",
+          position: 1,
         },
       ],
     },
     dateModified: updatedAt,
     datePublished: publishDate,
     description: metaDescription,
-    name: "Delmarva Site Development",
+    name: "What We Deliver | Delmarva Site Development",
     publisher: {
       "@type": "Organization",
       name: "Delmarva Site Development",
     },
+    url: canonicalUrl,
   };
 
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
       <script
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+        id={jsonLdId}
         type="application/ld+json"
       />
       <PageComponent fields={page} />

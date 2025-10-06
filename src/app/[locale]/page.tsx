@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import type { WebPage } from "schema-dts";
+import { useId } from "react";
+import type { WebPage, WithContext } from "schema-dts";
 import PageComponent from "src/components/Page/Page.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { fetchFooter } from "src/contentful/getFooter";
@@ -12,6 +13,7 @@ import type { Locales } from "src/contentful/interfaces";
 import { routing } from "src/i18n/routing";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 import { createMediaUrl, envUrl } from "src/utils/helpers";
+import { serializeJsonLd } from "src/utils/jsonLd";
 
 // This tells Next.js to generate this page as a static page
 export const dynamic = "force-static";
@@ -91,6 +93,7 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
 }
 
 const Home = async (props: HomeProps) => {
+  const jsonLdId = useId();
   const { locale } = await props.params;
 
   // Validate locale before using it
@@ -126,7 +129,11 @@ const Home = async (props: HomeProps) => {
 
   const { metaDescription, metaImage, publishDate, updatedAt } = page;
 
-  const jsonLd: WebPage = {
+  const canonicalUrl = `${envUrl()}`;
+
+  const jsonLd: WithContext<WebPage> = {
+    "@context": "https://schema.org",
+    "@id": `${canonicalUrl}#webpage`,
     "@type": "WebPage",
     breadcrumb: {
       "@type": "BreadcrumbList",
@@ -147,13 +154,15 @@ const Home = async (props: HomeProps) => {
       "@type": "Organization",
       name: "Delmarva Site Development",
     },
+    url: canonicalUrl,
   };
 
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
       <script
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+        id={jsonLdId}
         type="application/ld+json"
       />
       <PageComponent fields={page} />
