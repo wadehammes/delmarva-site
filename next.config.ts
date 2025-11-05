@@ -141,18 +141,31 @@ const nextConfig: NextConfig = withNextIntl({
   trailingSlash: false,
 
   // Optimized webpack configuration
-  webpack(config) {
+  webpack(config, { isServer }) {
     try {
-      const fileLoaderRule = config.module.rules.find((rule) =>
-        rule.test?.test?.(".svg"),
-      );
+      // Find all rules that handle SVG files
+      const rules = config.module?.rules || [];
 
-      if (fileLoaderRule) {
-        // SVG optimization - simplified
-        config.module.rules.push({
-          issuer: fileLoaderRule.issuer,
-          test: /\.svg$/i,
-          use: {
+      // Find the default file loader rule (Next.js asset handling)
+      const fileLoaderRule = rules.find((rule: any) => {
+        if (typeof rule === "object" && rule !== null) {
+          // Check if this rule matches SVG files
+          if (rule.test instanceof RegExp) {
+            return rule.test.test(".svg");
+          }
+          if (typeof rule.test === "string") {
+            return rule.test.includes("svg");
+          }
+        }
+        return false;
+      });
+
+      // Always add SVGR loader for SVG files
+      config.module.rules.push({
+        issuer: /\.(js|jsx|ts|tsx)$/,
+        test: /\.svg$/i,
+        use: [
+          {
             loader: "@svgr/webpack",
             options: {
               svgoConfig: {
@@ -165,9 +178,11 @@ const nextConfig: NextConfig = withNextIntl({
               },
             },
           },
-        });
+        ],
+      });
 
-        // Modify the file loader rule to ignore *.svg
+      // Exclude SVG from default file loader if it exists
+      if (fileLoaderRule) {
         fileLoaderRule.exclude = /\.svg$/i;
       }
 

@@ -7,7 +7,7 @@ import { routing } from "src/i18n/routing";
 const intlMiddleware = createMiddleware(routing);
 
 // Create our cookie middleware
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip middleware for static files and public assets
