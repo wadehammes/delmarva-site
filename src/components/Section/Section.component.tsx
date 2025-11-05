@@ -13,7 +13,6 @@ import {
   VerticalAlignment,
 } from "src/contentful/interfaces";
 import type { SectionType } from "src/contentful/parseSections";
-import { createBackgroundColor, createPadding } from "src/styles/utils";
 import { isReactNodeEmptyArray } from "src/utils/helpers";
 
 interface SectionProps extends HTMLAttributes<HTMLDivElement> {
@@ -44,6 +43,28 @@ export const Section = async (props: SectionProps) => {
     sectionBackgroundStyle = OverlayStyle.SolidColor,
   } = section;
 
+  type CSSVariables = React.CSSProperties & { [key: string]: string | number };
+
+  const getDotBackgroundVar = (color: DelmarvaColors): string => {
+    switch (color) {
+      case DelmarvaColors.White:
+        return "var(--colors-white)";
+      case DelmarvaColors.Black:
+        return "var(--colors-black)";
+      case DelmarvaColors.Red:
+        return "var(--colors-red)";
+      case DelmarvaColors.Silver:
+        return "var(--colors-silver)";
+      default:
+        return "var(--color-bg)";
+    }
+  };
+
+  const sectionStyle: CSSVariables | undefined =
+    sectionBackgroundStyle === OverlayStyle.Microdot
+      ? ({ "--dot-bg": getDotBackgroundVar(backgroundColor) } as CSSVariables)
+      : undefined;
+
   const renderEyebrow = () => {
     if (!sectionEyebrow) return null;
 
@@ -69,15 +90,20 @@ export const Section = async (props: SectionProps) => {
         [styles.silverBg]: backgroundColor === "Silver",
         [styles.blueprintBg]: sectionBackgroundStyle === OverlayStyle.Blueprint,
         [styles.microdotBg]: sectionBackgroundStyle === OverlayStyle.Microdot,
+        [styles.lessPadding]: sectionPadding === Padding.LessPadding,
+        [styles.morePadding]: sectionPadding === Padding.MorePadding,
+        [styles.noPadding]: sectionPadding === Padding.NoPadding,
+        [styles.noTopPadding]: sectionPadding === Padding.NoTopPadding,
+        [styles.noBottomPadding]: sectionPadding === Padding.NoBottomPadding,
+        [styles.moreTopPadding]: sectionPadding === Padding.MoreTopPadding,
+        [styles.lessTopPadding]: sectionPadding === Padding.LessTopPadding,
+        [styles.lessBottomPadding]:
+          sectionPadding === Padding.LessBottomPadding,
+        [styles.moreBottomPadding]:
+          sectionPadding === Padding.MoreBottomPadding,
       })}
       id={id}
-      style={{
-        paddingBottom: createPadding(sectionPadding),
-        paddingTop: createPadding(sectionPadding),
-        ...(backgroundColor && {
-          "--dot-bg": createBackgroundColor(backgroundColor),
-        }),
-      }}
+      style={sectionStyle}
     >
       {sectionEyebrow ? (
         <EyebrowHeaderElement className={styles.sectionHeaderEyebrow}>

@@ -60,7 +60,13 @@ export const RichText = (props: RichTextProps) => {
         );
       },
     },
-    renderText: (text) => replaceNbsp(text),
+    renderText: (text) => {
+      const parts = replaceNbsp(text).split("\n");
+
+      return parts.flatMap((part, idx) =>
+        idx === 0 ? [part] : [<br key={`br-${idx}`} />, part],
+      );
+    },
   };
 
   return (

@@ -48,6 +48,10 @@ export enum Padding {
   RegularPadding = "Regular Padding",
   NoTopPadding = "No Top Padding",
   NoBottomPadding = "No Bottom Padding",
+  MoreTopPadding = "More Top Padding",
+  LessTopPadding = "Less Top Padding",
+  LessBottomPadding = "Less Bottom Padding",
+  MoreBottomPadding = "More Bottom Padding",
 }
 
 export type CSSColorAdjustScale =

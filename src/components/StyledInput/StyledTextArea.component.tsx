@@ -11,7 +11,7 @@ interface StyledTextAreaProps extends AriaTextFieldProps<HTMLTextAreaElement> {
 
 export const StyledTextArea = forwardRef(
   (props: StyledTextAreaProps, ref: Ref<HTMLTextAreaElement>) => {
-    const { label, hasError, name } = props;
+    const { label, hasError, name, ...restProps } = props;
     const inputRef = useObjectRef(ref);
 
     // Generate stable ID based on name prop to avoid hydration issues
@@ -19,10 +19,21 @@ export const StyledTextArea = forwardRef(
     const fallbackId = useId();
     const stableId = name ? `textarea-${name}` : fallbackId;
 
+    // Use react-aria with stable ID to prevent hydration mismatches
+    // Only disable the specific ARIA attributes that cause random ID generation
     const { labelProps, inputProps } = useTextField(
-      { ...props, id: stableId, inputElementType: "textarea" },
+      {
+        ...restProps,
+        "aria-describedby": undefined,
+        // Only disable the ARIA attributes that generate random IDs
+        // Keep other accessibility features intact
+        "aria-labelledby": undefined,
+        id: stableId,
+        inputElementType: "textarea",
+      },
       inputRef,
     );
+
     const { id, ...restInputProps } = inputProps;
 
     return (

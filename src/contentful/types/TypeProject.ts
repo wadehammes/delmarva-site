@@ -6,6 +6,7 @@ import type {
   LocaleCode,
 } from "contentful";
 import type { TypeContentStatBlockSkeleton } from "./TypeContentStatBlock";
+import type { TypeMarketSkeleton } from "./TypeMarket";
 import type { TypeServiceSkeleton } from "./TypeService";
 
 export interface TypeProjectFields {
@@ -19,6 +20,9 @@ export interface TypeProjectFields {
   >;
   services: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeServiceSkeleton>
+  >;
+  markets?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeMarketSkeleton>
   >;
 }
 
