@@ -1,6 +1,6 @@
 import type { ContentRecentNewsType } from "src/contentful/getContentRecentNews";
 import type { Locales } from "src/contentful/interfaces";
-import { getLocale } from "src/i18n/getLocale";
+import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import { Link } from "src/i18n/routing";
 import styles from "./ContentRecentNews.module.css";
 
@@ -11,13 +11,14 @@ const learnMoreText: Record<Locales, string> = {
 
 interface ContentRecentNewsProps {
   recentNews: ContentRecentNewsType;
+  locale?: string;
 }
 
 export const ContentRecentNews = async (props: ContentRecentNewsProps) => {
-  const { recentNews } = props;
+  const { recentNews, locale: localeProp } = props;
   const date = new Date(recentNews.date);
 
-  const locale = await getLocale();
+  const locale = await getServerLocaleSafe(localeProp);
 
   return (
     <div className={styles.recentNews}>

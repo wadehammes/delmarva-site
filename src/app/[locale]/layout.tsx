@@ -64,7 +64,7 @@ export default async function RootLayout({
           </div>
         ) : null}
         <NextIntlClientProvider locale={locale}>
-          <Providers>{children}</Providers>
+          <Providers locale={locale as Locales}>{children}</Providers>
         </NextIntlClientProvider>
       </body>
     </html>

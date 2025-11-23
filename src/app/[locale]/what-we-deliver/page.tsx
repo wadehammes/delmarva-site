@@ -27,8 +27,6 @@ interface WhatWeDeliverProps {
   params: Promise<WhatWeDeliverParams>;
 }
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(
   props: WhatWeDeliverProps,
 ): Promise<Metadata> {
@@ -139,7 +137,7 @@ const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
         id={jsonLdId}
         type="application/ld+json"
       />
-      <PageComponent fields={page} />
+      <PageComponent fields={page} locale={locale} />
     </PageLayout>
   );
 };

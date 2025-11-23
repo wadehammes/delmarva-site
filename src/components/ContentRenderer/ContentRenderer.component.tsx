@@ -1,4 +1,22 @@
 import dynamic from "next/dynamic";
+import { ContentCard } from "src/components/ContentCard/ContentCard.component";
+import { ContentCarouselComponent } from "src/components/ContentCarousel/ContentCarousel.component";
+import { ContentCopyBlock } from "src/components/ContentCopyBlock/ContentCopyBlock.component";
+import { ContentCopyMediaBlock } from "src/components/ContentCopyMediaBlock/ContentCopyMediaBlock.component";
+import { ContentGrid } from "src/components/ContentGrid/ContentGrid.component";
+import { ContentHeroComponent } from "src/components/ContentHero/ContentHero.component";
+import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
+import { ContentMarquee } from "src/components/ContentMarquee/ContentMarquee.component";
+import { ContentModules } from "src/components/ContentModules/ContentModules.component";
+import { ContentRecentNews } from "src/components/ContentRecentNews/ContentRecentNews.component";
+import { ContentTestimonial } from "src/components/ContentTestimonial/ContentTestimonial.component";
+import { Stat } from "src/components/Stat/Stat.component";
+
+const JoinOurTeam = dynamic(
+  () => import("src/components/JoinOurTeamForm/JoinOurTeamForm.component"),
+  { ssr: true },
+);
+
 import {
   type ContentRecentNewsEntry,
   parseContentRecentNews,
@@ -45,140 +63,13 @@ import {
 } from "src/contentful/parseFormJoinOurTeam";
 import type { ContentEntries } from "src/contentful/parseSections";
 
-const ContentCarouselComponent = dynamic(
-  () =>
-    import("src/components/ContentCarousel/ContentCarousel.component").then(
-      (module) => ({
-        default: module.ContentCarouselComponent,
-      }),
-    ),
-  { ssr: true },
-);
-
-const CopyBlock = dynamic(
-  () =>
-    import("src/components/ContentCopyBlock/ContentCopyBlock.component").then(
-      (module) => ({
-        default: module.ContentCopyBlock,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentCopyMediaBlock = dynamic(
-  () =>
-    import(
-      "src/components/ContentCopyMediaBlock/ContentCopyMediaBlock.component"
-    ).then((module) => ({
-      default: module.ContentCopyMediaBlock,
-    })),
-  { ssr: true },
-);
-
-const ContentGrid = dynamic(
-  () =>
-    import("src/components/ContentGrid/ContentGrid.component").then(
-      (module) => ({
-        default: module.ContentGrid,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentHeroComponent = dynamic(
-  () =>
-    import("src/components/ContentHero/ContentHero.component").then(
-      (module) => ({
-        default: module.ContentHeroComponent,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentImageBlock = dynamic(
-  () =>
-    import("src/components/ContentImageBlock/ContentImageBlock.component").then(
-      (module) => ({
-        default: module.ContentImageBlock,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentModules = dynamic(
-  () =>
-    import("src/components/ContentModules/ContentModules.component").then(
-      (module) => ({
-        default: module.ContentModules,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentCard = dynamic(
-  () =>
-    import("src/components/ContentCard/ContentCard.component").then(
-      (module) => ({
-        default: module.ContentCard,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentTestimonial = dynamic(
-  () =>
-    import(
-      "src/components/ContentTestimonial/ContentTestimonial.component"
-    ).then((module) => ({
-      default: module.ContentTestimonial,
-    })),
-  { ssr: true },
-);
-
-const Stat = dynamic(
-  () =>
-    import("src/components/Stat/Stat.component").then((module) => ({
-      default: module.Stat,
-    })),
-  { ssr: true },
-);
-
-const ContentRecentNews = dynamic(
-  () =>
-    import("src/components/ContentRecentNews/ContentRecentNews.component").then(
-      (module) => ({
-        default: module.ContentRecentNews,
-      }),
-    ),
-  { ssr: true },
-);
-
-const JoinOurTeamForm = dynamic(
-  () =>
-    import("src/components/JoinOurTeamForm/JoinOurTeamForm.component").then(
-      (module) => ({
-        default: module.JoinOurTeam,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentMarquee = dynamic(
-  () =>
-    import("src/components/ContentMarquee/ContentMarquee.component").then(
-      (module) => ({
-        default: module.ContentMarquee,
-      }),
-    ),
-  { ssr: true },
-);
-
 interface ContentRendererProps {
   content: ContentEntries;
+  locale?: string;
 }
 
 export const ContentRenderer = (props: ContentRendererProps) => {
-  const { content } = props;
+  const { content, locale } = props;
 
   if (!content) {
     return null;
@@ -194,7 +85,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <CopyBlock fields={parsedCopyBlock} />;
+      return <ContentCopyBlock fields={parsedCopyBlock} />;
     }
     case "contentHero": {
       const parsedHero = parseContentHero(content as ContentHeroEntry);
@@ -221,7 +112,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentModules fields={parsedModule} />;
+      return <ContentModules fields={parsedModule} locale={locale} />;
     }
     case "contentGrid": {
       const parsedGrid = parseContentGrid(content as ContentGridEntry);
@@ -230,7 +121,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentGrid fields={parsedGrid} />;
+      return <ContentGrid fields={parsedGrid} locale={locale} />;
     }
     case "contentStatBlock": {
       const parsedStatBlock = parseContentStatBlock(
@@ -305,7 +196,9 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentRecentNews recentNews={parsedRecentNews} />;
+      return (
+        <ContentRecentNews locale={locale} recentNews={parsedRecentNews} />
+      );
     }
     case "formJoinOurTeam": {
       const parsedForm = parseFormJoinOurTeam(content as FormJoinOurTeamEntry);
@@ -314,7 +207,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <JoinOurTeamForm fields={parsedForm} />;
+      return <JoinOurTeam fields={parsedForm} />;
     }
     default: {
       return null;

@@ -7,6 +7,58 @@ jest.mock("next/router", () => ({
   useRouter: () => mockedUseRouterReturnValue,
 }));
 
+// Mock next-intl to avoid ESM module issues
+jest.mock("next-intl", () => ({
+  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
+  useLocale: () => "en",
+  useTranslations: () => (key: string) => key,
+}));
+
+jest.mock("next-intl/navigation", () => {
+  const React = require("react");
+  return {
+    createNavigation: () => ({
+      Link: React.forwardRef(
+        (
+          { children, ...props }: { children: React.ReactNode },
+          _ref: React.Ref<HTMLAnchorElement>,
+        ) => React.createElement("a", props, children),
+      ),
+      redirect: jest.fn(),
+      usePathname: () => "/",
+      useRouter: () => ({
+        back: jest.fn(),
+        forward: jest.fn(),
+        prefetch: jest.fn(),
+        push: jest.fn(),
+        refresh: jest.fn(),
+        replace: jest.fn(),
+      }),
+    }),
+    notFound: jest.fn(),
+    redirect: jest.fn(),
+    usePathname: () => "/",
+    useRouter: () => ({
+      back: jest.fn(),
+      forward: jest.fn(),
+      prefetch: jest.fn(),
+      push: jest.fn(),
+      refresh: jest.fn(),
+      replace: jest.fn(),
+    }),
+    useSearchParams: () => new URLSearchParams(),
+  };
+});
+
+jest.mock("next-intl/routing", () => ({
+  defineRouting: (config: {
+    defaultLocale: string;
+    localePrefix: string;
+    locales: string[];
+  }) => config,
+}));
+
 // Mock fetch globally
 global.fetch = jest.fn();
 
@@ -17,7 +69,6 @@ global.beforeAll(() => {
 
 global.beforeEach(() => {
   jest.clearAllTimers();
-  jest.restoreAllMocks();
   jest.clearAllMocks();
 });
 

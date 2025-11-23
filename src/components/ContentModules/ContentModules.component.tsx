@@ -1,76 +1,38 @@
 import dynamic from "next/dynamic";
+import { AllServicesListServer } from "src/components/AllServicesList/AllServicesListServer.component";
 import { AreasServiced } from "src/components/AreasServiced/AreasServiced.component";
+import { ContentRecentNewsList } from "src/components/ContentRecentNewsList/ContentRecentNewsList.component";
+import { FeaturedServices } from "src/components/FeaturedServices/FeaturedServices.component";
 import type { ContentModule } from "src/contentful/parseContentModules";
-
-const FeaturedServices = dynamic(
-  () =>
-    import("src/components/FeaturedServices/FeaturedServices.component").then(
-      (module) => ({
-        default: module.FeaturedServices,
-      }),
-    ),
-  { ssr: true },
-);
-
-const ContentRecentNewsList = dynamic(
-  () =>
-    import(
-      "src/components/ContentRecentNewsList/ContentRecentNewsList.component"
-    ).then((module) => ({
-      default: module.ContentRecentNewsList,
-    })),
-  { ssr: true },
-);
 
 const RequestAQuoteForm = dynamic(
   () =>
     import("src/components/RequestAQuoteForm/RequestAQuoteForm.component").then(
-      (module) => ({
-        default: module.RequestAQuoteForm,
-      }),
-    ),
-  { ssr: true },
-);
-
-const AllServicesListServer = dynamic(
-  () =>
-    import(
-      "src/components/AllServicesList/AllServicesListServer.component"
-    ).then((module) => ({
-      default: module.AllServicesListServer,
-    })),
-  { ssr: true },
-);
-
-const _AreasServicedMap = dynamic(
-  () =>
-    import("src/components/AreasServiced/AreasServiced.component").then(
-      (module) => ({
-        default: module.AreasServiced,
-      }),
+      (mod) => mod.RequestAQuoteForm,
     ),
   { ssr: true },
 );
 
 interface ContentModulesProps {
   fields: ContentModule;
+  locale?: string;
 }
 
 export const ContentModules = (props: ContentModulesProps) => {
-  const { fields } = props;
+  const { fields, locale } = props;
 
   switch (fields.module) {
     case "Featured Services List": {
-      return <FeaturedServices />;
+      return <FeaturedServices locale={locale} />;
     }
     case "Recent News List": {
-      return <ContentRecentNewsList />;
+      return <ContentRecentNewsList locale={locale} />;
     }
     case "Request a Quote Form": {
       return <RequestAQuoteForm />;
     }
     case "All Services List": {
-      return <AllServicesListServer />;
+      return <AllServicesListServer locale={locale} />;
     }
     case "Areas Serviced Map": {
       return <AreasServiced zipCodes={["20772"]} />;

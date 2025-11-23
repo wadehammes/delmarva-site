@@ -1,4 +1,10 @@
-import dynamic from "next/dynamic";
+import { ContentCopyBlock } from "src/components/ContentCopyBlock/ContentCopyBlock.component";
+import { ContentCopyMediaBlock } from "src/components/ContentCopyMediaBlock/ContentCopyMediaBlock.component";
+import { ContentHeroComponent } from "src/components/ContentHero/ContentHero.component";
+import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
+import { ContentTestimonial } from "src/components/ContentTestimonial/ContentTestimonial.component";
+import { ContentVideoBlock } from "src/components/ContentVideoBlock/ContentVideoBlock.component";
+import { Stat } from "src/components/Stat/Stat.component";
 import {
   type ContentCopyMediaBlockEntry,
   parseContentCopyMediaBlock,
@@ -25,59 +31,6 @@ import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { parseCopyBlock } from "src/contentful/parseCopyBlock";
 import type { ContentEntries } from "src/contentful/parseSections";
 
-const CopyBlock = dynamic(
-  () =>
-    import("src/components/ContentCopyBlock/ContentCopyBlock.component").then(
-      (mod) => mod.ContentCopyBlock,
-    ),
-  { ssr: false },
-);
-
-const ContentHero = dynamic(
-  () =>
-    import("src/components/ContentHero/ContentHero.component").then(
-      (mod) => mod.ContentHeroComponent,
-    ),
-  { ssr: false },
-);
-
-const Stat = dynamic(
-  () => import("src/components/Stat/Stat.component").then((mod) => mod.Stat),
-  { ssr: false },
-);
-
-const ContentCopyMediaBlock = dynamic(
-  () =>
-    import(
-      "src/components/ContentCopyMediaBlock/ContentCopyMediaBlock.component"
-    ).then((mod) => mod.ContentCopyMediaBlock),
-  { ssr: false },
-);
-
-const ContentImageBlock = dynamic(
-  () =>
-    import("src/components/ContentImageBlock/ContentImageBlock.component").then(
-      (mod) => mod.ContentImageBlock,
-    ),
-  { ssr: false },
-);
-
-const ContentTestimonial = dynamic(
-  () =>
-    import(
-      "src/components/ContentTestimonial/ContentTestimonial.component"
-    ).then((mod) => mod.ContentTestimonial),
-  { ssr: false },
-);
-
-const ContentVideoBlock = dynamic(
-  () =>
-    import("src/components/ContentVideoBlock/ContentVideoBlock.component").then(
-      (mod) => mod.ContentVideoBlock,
-    ),
-  { ssr: false },
-);
-
 interface CarouselContentRendererProps {
   content: ContentEntries;
 }
@@ -101,7 +54,7 @@ export const CarouselContentRenderer = (
         return null;
       }
 
-      return <CopyBlock fields={parsedCopyBlock} />;
+      return <ContentCopyBlock fields={parsedCopyBlock} />;
     }
     case "contentHero": {
       const parsedHero = parseContentHero(content as ContentHeroEntry);
@@ -110,7 +63,7 @@ export const CarouselContentRenderer = (
         return null;
       }
 
-      return <ContentHero fields={parsedHero} />;
+      return <ContentHeroComponent fields={parsedHero} />;
     }
     case "contentStatBlock": {
       const parsedStatBlock = parseContentStatBlock(

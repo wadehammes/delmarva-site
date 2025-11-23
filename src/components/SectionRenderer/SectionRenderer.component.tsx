@@ -5,10 +5,11 @@ import type { SectionType } from "src/contentful/parseSections";
 interface SectionRendererProps {
   sections: (SectionType | null)[];
   noPadding?: boolean;
+  locale?: string;
 }
 
 export const SectionRenderer = (props: SectionRendererProps) => {
-  const { sections } = props;
+  const { sections, locale } = props;
 
   if (sections.length === 0) {
     return null;
@@ -28,7 +29,13 @@ export const SectionRenderer = (props: SectionRendererProps) => {
             return null;
           }
 
-          return <ContentRenderer content={content} key={content.sys.id} />;
+          return (
+            <ContentRenderer
+              content={content}
+              key={content.sys.id}
+              locale={locale}
+            />
+          );
         })}
       </Section>
     );

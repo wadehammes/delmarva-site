@@ -1,11 +1,17 @@
 import { draftMode } from "next/headers";
 import { ContentRecentNews } from "src/components/ContentRecentNews/ContentRecentNews.component";
 import { fetchRecentNews } from "src/contentful/getContentRecentNews";
-import { getLocale } from "src/i18n/getLocale";
+import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import styles from "./ContentRecentNewsList.module.css";
 
-export const ContentRecentNewsList = async () => {
-  const locale = await getLocale();
+interface ContentRecentNewsListProps {
+  locale?: string;
+}
+
+export const ContentRecentNewsList = async (
+  props?: ContentRecentNewsListProps,
+) => {
+  const locale = await getServerLocaleSafe(props?.locale);
   const draft = await draftMode();
 
   const recentNews = await fetchRecentNews({
@@ -21,7 +27,7 @@ export const ContentRecentNewsList = async () => {
     <ul className={styles.contentRecentNewsList}>
       {recentNews.map((news) => (
         <li className={styles.newsItem} key={news.id}>
-          <ContentRecentNews recentNews={news} />
+          <ContentRecentNews locale={locale} recentNews={news} />
         </li>
       ))}
     </ul>

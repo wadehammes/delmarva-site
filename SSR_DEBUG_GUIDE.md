@@ -81,14 +81,6 @@ useEffect(() => {
 if (!isMounted) return null;
 ```
 
-#### 2. Use Dynamic Imports for Browser-Only Code
-```typescript
-// For components that only work in browser
-const BrowserOnlyComponent = dynamic(() => import('./Component'), {
-  ssr: false
-});
-```
-
 #### 3. Use useIsBrowser Hook
 ```typescript
 // Create a custom hook

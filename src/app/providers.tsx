@@ -2,6 +2,8 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Component, type ReactNode } from "react";
+import { LocaleProvider } from "src/components/LocaleProvider/LocaleProvider.component";
+import type { Locales } from "src/contentful/interfaces";
 import { usePreferredTheme } from "src/hooks/usePreferredTheme";
 
 interface ErrorBoundaryState {
@@ -85,17 +87,24 @@ const queryClient = new QueryClient({
   },
 });
 
-function ProvidersContent({ children }: { children: ReactNode }) {
+interface ProvidersProps {
+  children: ReactNode;
+  locale: Locales;
+}
+
+function ProvidersContent({ children, locale }: ProvidersProps) {
   // Initialize theme preference
   usePreferredTheme();
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <LocaleProvider locale={locale}>{children}</LocaleProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 }
 
-export default function Providers({ children }: { children: ReactNode }) {
-  return <ProvidersContent>{children}</ProvidersContent>;
+export default function Providers({ children, locale }: ProvidersProps) {
+  return <ProvidersContent locale={locale}>{children}</ProvidersContent>;
 }

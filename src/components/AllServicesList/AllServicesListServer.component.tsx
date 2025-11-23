@@ -2,13 +2,19 @@ import { draftMode } from "next/headers";
 import { fetchProjectsByService } from "src/contentful/getProjects";
 import { fetchServices } from "src/contentful/getServices";
 import type { Locales } from "src/contentful/interfaces";
-import { getLocale } from "src/i18n/getLocale";
+import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import { AllServicesList } from "./AllServicesList.component";
 
+interface AllServicesListServerProps {
+  locale?: string;
+}
+
 // Server component that fetches data and passes it to the client component
-export const AllServicesListServer = async () => {
+export const AllServicesListServer = async (
+  props?: AllServicesListServerProps,
+) => {
   const draft = await draftMode();
-  const locale = await getLocale();
+  const locale = await getServerLocaleSafe(props?.locale);
 
   const services = await fetchServices({
     locale,
@@ -29,7 +35,7 @@ export const AllServicesListServer = async () => {
 
   return (
     <AllServicesList
-      locale={locale as Locales}
+      locale={locale}
       servicesWithProjects={servicesWithProjects}
     />
   );

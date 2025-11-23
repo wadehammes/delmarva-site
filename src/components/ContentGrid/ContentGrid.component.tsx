@@ -5,10 +5,11 @@ import type { ContentGrid as ContentGridType } from "src/contentful/parseContent
 
 interface ContentGridProps {
   fields: ContentGridType;
+  locale?: string;
 }
 
 export const ContentGrid = (props: ContentGridProps) => {
-  const { fields } = props;
+  const { fields, locale } = props;
 
   return (
     <div
@@ -23,7 +24,13 @@ export const ContentGrid = (props: ContentGridProps) => {
           return null;
         }
 
-        return <ContentRenderer content={content} key={content.sys.id} />;
+        return (
+          <ContentRenderer
+            content={content}
+            key={content.sys.id}
+            locale={locale}
+          />
+        );
       })}
     </div>
   );

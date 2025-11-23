@@ -15,9 +15,6 @@ import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 import { createMediaUrl, envUrl } from "src/utils/helpers";
 import { serializeJsonLd } from "src/utils/jsonLd";
 
-// This tells Next.js to generate this page as a static page
-export const dynamic = "force-static";
-
 interface HomeParams {
   locale: string;
 }
@@ -165,7 +162,7 @@ const Home = async (props: HomeProps) => {
         id={jsonLdId}
         type="application/ld+json"
       />
-      <PageComponent fields={page} />
+      <PageComponent fields={page} locale={locale} />
     </PageLayout>
   );
 };

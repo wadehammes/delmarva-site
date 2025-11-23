@@ -483,3 +483,5 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
     </div>
   );
 };
+
+export default JoinOurTeam;
