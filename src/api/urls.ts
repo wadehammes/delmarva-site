@@ -16,6 +16,8 @@ export const api = {
     coverLetter,
     resume,
     position,
+    recaptchaToken,
+    website,
   }: JoinOurTeamInputs) =>
     fetch(
       "/api/resend/join-our-team",
@@ -29,8 +31,10 @@ export const api = {
           name,
           phone,
           position,
+          recaptchaToken,
           resume,
           state,
+          website,
           workEligibility,
           zipCode,
         }),
@@ -43,6 +47,8 @@ export const api = {
     name,
     phone,
     projectDetails,
+    recaptchaToken,
+    website,
   }: RequestAQuoteInputs) =>
     fetch(
       "/api/resend/request-a-quote",
@@ -53,6 +59,8 @@ export const api = {
           name,
           phone,
           projectDetails,
+          recaptchaToken,
+          website,
         }),
         method: FetchMethods.Post,
       }),

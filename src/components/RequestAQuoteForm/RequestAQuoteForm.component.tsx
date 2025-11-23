@@ -20,6 +20,8 @@ export interface RequestAQuoteInputs {
   email: string;
   phone: string;
   projectDetails: string;
+  recaptchaToken: string;
+  website?: string; // Honeypot field
 }
 
 const defaultValues: RequestAQuoteInputs = {
@@ -28,6 +30,8 @@ const defaultValues: RequestAQuoteInputs = {
   name: "",
   phone: "",
   projectDetails: "",
+  recaptchaToken: "",
+  website: "",
 };
 
 export const RequestAQuoteForm = () => {
@@ -55,7 +59,8 @@ export const RequestAQuoteForm = () => {
       const captcha = await reCaptcha.current.executeAsync();
 
       if (captcha) {
-        const { companyName, email, name, phone, projectDetails } = data;
+        const { companyName, email, name, phone, projectDetails, website } =
+          data;
 
         try {
           await sendMutation.mutateAsync({
@@ -64,6 +69,8 @@ export const RequestAQuoteForm = () => {
             name,
             phone,
             projectDetails,
+            recaptchaToken: captcha,
+            website,
           });
         } catch (_e) {
           throw new Error("Failed to submit request. Please try again.");
@@ -179,6 +186,29 @@ export const RequestAQuoteForm = () => {
             {isSubmitting ? t("messages.submitting") : t("messages.submit")}
           </Button>
         </div>
+      </div>
+
+      {/* Honeypot field - hidden from users but visible to bots */}
+      <div className={styles.honeypot}>
+        <label htmlFor="website">
+          Please leave this field empty (anti-spam)
+        </label>
+        <Controller
+          control={control}
+          name="website"
+          render={({ field: { onChange, value, name, ref } }) => (
+            <input
+              autoComplete="off"
+              id="website"
+              name={name}
+              onChange={onChange}
+              ref={ref}
+              tabIndex={-1}
+              type="text"
+              value={value}
+            />
+          )}
+        />
       </div>
 
       <ReCAPTCHA

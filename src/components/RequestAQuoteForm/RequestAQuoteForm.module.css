@@ -18,3 +18,11 @@
   border: 1px solid var(--color-success-border, #b7efd0);
   border-radius: 0.5rem;
 }
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+}

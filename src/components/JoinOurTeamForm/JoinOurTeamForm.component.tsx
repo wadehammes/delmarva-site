@@ -36,6 +36,8 @@ export interface JoinOurTeamInputs {
   coverLetter: File | null;
   resume: File | null;
   position: string;
+  recaptchaToken: string;
+  website?: string; // Honeypot field
 }
 
 const defaultValues: JoinOurTeamInputs = {
@@ -47,8 +49,10 @@ const defaultValues: JoinOurTeamInputs = {
   name: "",
   phone: "",
   position: "",
+  recaptchaToken: "",
   resume: null,
   state: "MD",
+  website: "",
   workEligibility: false,
   zipCode: "",
 };
@@ -99,6 +103,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           coverLetter,
           resume,
           position,
+          website,
         } = data;
 
         try {
@@ -111,8 +116,10 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             name,
             phone,
             position,
+            recaptchaToken: captcha,
             resume,
             state,
+            website,
             workEligibility,
             zipCode,
           });
@@ -471,6 +478,29 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
               {isSubmitting ? t("messages.submitting") : t("messages.submit")}
             </Button>
           </div>
+        </div>
+
+        {/* Honeypot field - hidden from users but visible to bots */}
+        <div className={styles.honeypot}>
+          <label htmlFor="website">
+            Please leave this field empty (anti-spam)
+          </label>
+          <Controller
+            control={control}
+            name="website"
+            render={({ field: { onChange, value, name, ref } }) => (
+              <input
+                autoComplete="off"
+                id="website"
+                name={name}
+                onChange={onChange}
+                ref={ref}
+                tabIndex={-1}
+                type="text"
+                value={value}
+              />
+            )}
+          />
         </div>
 
         <ReCAPTCHA

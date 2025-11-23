@@ -379,3 +379,11 @@
   border: 1px solid var(--colors-red);
   border-radius: 10px;
 }
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
