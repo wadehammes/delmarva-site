@@ -43,7 +43,6 @@ export const Navigation = (props: NavigationProps) => {
   }, []);
 
   // Memoized scroll handler for navigation visibility
-  // biome-ignore lint/correctness/useExhaustiveDependencies: this needs to be included
   const handleScroll = useCallback(
     throttle(() => {
       if (!isMounted()) return;
@@ -62,7 +61,6 @@ export const Navigation = (props: NavigationProps) => {
   );
 
   // Memoized section scroll handler
-  // biome-ignore lint/correctness/useExhaustiveDependencies: this needs to be included
   const handleSectionScroll = useCallback(
     throttle(() => {
       if (!page?.sections || !isMounted()) return;
@@ -190,7 +188,9 @@ export const Navigation = (props: NavigationProps) => {
           })}
         </ul>
         <Link className={styles.logo} href="/">
-          <DelmarvaLogo />
+          <span>
+            <DelmarvaLogo />
+          </span>
         </Link>
         {navigation.ctaButton ? (
           <div className={styles.ctaButton}>

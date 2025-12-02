@@ -1,13 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { Carousel } from "src/components/Carousel/Carousel.component";
 import { CarouselContentRenderer } from "src/components/CarouselContentRenderer/CarouselContentRenderer.component";
 import type { ContentCarousel } from "src/contentful/parseContentCarousel";
-
-const Carousel = dynamic(
-  () => import("../Carousel/Carousel.component").then((mod) => mod.Carousel),
-  { ssr: false },
-);
 
 export interface ContentCarouselProps {
   carousel: ContentCarousel;

@@ -3,12 +3,13 @@ import { RouterContext } from "next/dist/shared/lib/router-context.shared-runtim
 import type { FC, ReactElement } from "react";
 import type { PropsWithChildrenOnly } from "src/@types/react";
 import Providers from "src/app/providers";
+import { routing } from "src/i18n/routing";
 import { mockedUseRouterReturnValue } from "src/tests/mocks/mockNextRouter";
 
 const TestProviders: FC<PropsWithChildrenOnly> = ({ children }) => {
   return (
     <RouterContext.Provider value={mockedUseRouterReturnValue}>
-      <Providers>{children}</Providers>
+      <Providers locale={routing.defaultLocale}>{children}</Providers>
     </RouterContext.Provider>
   );
 };

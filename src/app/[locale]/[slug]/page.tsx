@@ -203,7 +203,7 @@ async function Page({ params }: PageProps) {
 
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
-      <PageComponent fields={page} />
+      <PageComponent fields={page} locale={locale} />
     </PageLayout>
   );
 }

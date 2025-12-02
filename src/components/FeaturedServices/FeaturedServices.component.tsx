@@ -3,11 +3,15 @@ import { ServiceAccordion } from "src/components/ServiceAccordion/ServiceAccordi
 import { fetchProjectsByService } from "src/contentful/getProjects";
 import { fetchFeaturedServices } from "src/contentful/getServices";
 import type { Locales } from "src/contentful/interfaces";
-import { getLocale } from "src/i18n/getLocale";
+import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 
-export const FeaturedServices = async () => {
+interface FeaturedServicesProps {
+  locale?: string;
+}
+
+export const FeaturedServices = async (props?: FeaturedServicesProps) => {
   const draft = await draftMode();
-  const locale = await getLocale();
+  const locale = await getServerLocaleSafe(props?.locale);
 
   const services = await fetchFeaturedServices({
     locale,
@@ -31,7 +35,7 @@ export const FeaturedServices = async () => {
       {servicesWithProjects.map(({ service, projects }) => (
         <ServiceAccordion
           key={service.id}
-          locale={locale as Locales}
+          locale={locale}
           projects={projects}
           service={service}
         />

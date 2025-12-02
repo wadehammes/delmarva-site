@@ -1,7 +1,7 @@
 "use client";
 
 import { type ComponentProps, type ReactNode, useCallback } from "react";
-import { Link as RouterLink } from "src/i18n/routing";
+import * as routing from "src/i18n/routing";
 
 interface LinkProps extends Omit<ComponentProps<"a">, "popover"> {
   children: ReactNode;
@@ -10,6 +10,7 @@ interface LinkProps extends Omit<ComponentProps<"a">, "popover"> {
 
 export const Link = ({ children, ...props }: LinkProps) => {
   const { href, className, ...rest } = props;
+  const RouterLink = routing.Link;
 
   const fireHashChange = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {

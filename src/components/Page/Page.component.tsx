@@ -4,16 +4,17 @@ import type { Page } from "src/contentful/getPages";
 
 interface PageComponentProps extends HTMLAttributes<HTMLDivElement> {
   fields: Page;
+  locale?: string;
 }
 
 export const PageComponent = async (props: PageComponentProps) => {
-  const { fields, children } = props;
+  const { fields, children, locale } = props;
   const { sections } = fields;
 
   return (
     <>
       {children}
-      <SectionRenderer sections={sections} />
+      <SectionRenderer locale={locale} sections={sections} />
     </>
   );
 };

@@ -139,8 +139,14 @@ const nextConfig: NextConfig = withNextIntl({
   },
 
   trailingSlash: false,
-
-  // Optimized webpack configuration
+  turbopack: {
+    rules: {
+      "*.svg": {
+        as: "*.js",
+        loaders: ["@svgr/webpack"],
+      },
+    },
+  },
   webpack(config) {
     try {
       const fileLoaderRule = config.module.rules.find((rule) =>

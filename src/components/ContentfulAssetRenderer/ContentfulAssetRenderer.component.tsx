@@ -1,17 +1,9 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Image from "next/image";
+import { VideoPlayer } from "src/components/VideoPlayer/VideoPlayer.component";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
 import { isVideoUrl } from "src/utils/helpers";
-
-const VideoPlayer = dynamic(
-  () =>
-    import("src/components/VideoPlayer/VideoPlayer.component").then(
-      (mod) => mod.VideoPlayer,
-    ),
-  { ssr: true },
-);
 
 interface ContentfulAssetRendererProps {
   asset: ContentfulAsset | null;
