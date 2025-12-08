@@ -11,11 +11,37 @@ import {
   getMimeType,
 } from "src/utils/emailHelpers";
 import { isNonNullable } from "src/utils/helpers";
+import { verifyRecaptchaToken } from "src/utils/recaptcha";
+import { isSpam } from "src/utils/spamDetection";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   const res: JoinOurTeamInputs = await request.json();
+
+  // Honeypot check - if website field is filled, it's likely a bot
+  if (res.website && res.website.trim() !== "") {
+    console.warn("Spam detected (honeypot): Join Our Team form", {
+      email: res.email,
+      name: res.name,
+      position: res.position,
+    });
+    // Return success response to avoid alerting bots
+    return Response.json({ id: "spam-blocked", message: "success" });
+  }
+
+  // Verify reCAPTCHA token
+  const isRecaptchaValid = await verifyRecaptchaToken(res.recaptchaToken);
+
+  if (!isRecaptchaValid) {
+    console.warn("Spam detected (reCAPTCHA failed): Join Our Team form", {
+      email: res.email,
+      name: res.name,
+      position: res.position,
+    });
+    // Return success response to avoid alerting bots
+    return Response.json({ id: "spam-blocked", message: "success" });
+  }
 
   const email = res.email;
   const name = res.name;
@@ -32,6 +58,39 @@ export async function POST(request: Request) {
   const coverLetter = res.coverLetter;
   const resume = res.resume;
   const position = res.position || "No position provided.";
+
+  // Keyword-based spam detection
+  // Combine all text fields for spam checking
+  const combinedContent = [
+    name,
+    email,
+    phone,
+    address,
+    city,
+    stateName,
+    zipCode,
+    position,
+    briefDescription,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const spamCheck = isSpam({
+    email,
+    message: combinedContent,
+    name,
+  });
+
+  if (spamCheck.isSpam) {
+    console.warn("Spam detected (keywords): Join Our Team form", {
+      email,
+      name,
+      position,
+      reasons: spamCheck.reasons,
+    });
+    // Return success response to avoid alerting bots
+    return Response.json({ id: "spam-blocked", message: "success" });
+  }
 
   if (!email) {
     return new Response("no to: email provided", {
