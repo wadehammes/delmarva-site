@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { AllServicesListServer } from "src/components/AllServicesList/AllServicesListServer.component";
-import { AreasServiced } from "src/components/AreasServiced/AreasServiced.component";
+import { AreasServicedServer } from "src/components/AreasServiced/AreasServicedServer.component";
 import { ContentRecentNewsList } from "src/components/ContentRecentNewsList/ContentRecentNewsList.component";
 import { FeaturedServices } from "src/components/FeaturedServices/FeaturedServices.component";
 import type { ContentModule } from "src/contentful/parseContentModules";
@@ -35,7 +35,7 @@ export const ContentModules = (props: ContentModulesProps) => {
       return <AllServicesListServer locale={locale} />;
     }
     case "Areas Serviced Map": {
-      return <AreasServiced zipCodes={["20772"]} />;
+      return <AreasServicedServer locale={locale} />;
     }
     default: {
       return null;

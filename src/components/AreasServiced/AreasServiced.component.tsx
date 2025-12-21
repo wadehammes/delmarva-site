@@ -4,14 +4,23 @@ import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import clsx from "clsx";
+import type { ServiceType } from "src/contentful/getServices";
+import { countiesToBoundaryLines } from "src/utils/countyUtils";
+import { mergeFeaturesToSingleBoundary } from "src/utils/geometryUtils";
 import {
-  zipCodesToBoundaryLines,
-  zipCodesToGeoJSONFeatures,
-} from "src/utils/zipCodeUtils";
+  areBoundsValid,
+  extendBoundsFromFeature,
+  type GeoJSONFeatureCollection,
+  hexToRgba,
+} from "src/utils/mapUtils";
+import {
+  parseServicesToServiceAreas,
+  type ServiceArea,
+} from "src/utils/serviceAreaUtils";
 import styles from "./AreasServiced.module.css";
 
 interface AreasServicedProps {
-  zipCodes: string[];
+  services: ServiceType[];
   className?: string;
   height?: string;
   center?: [number, number];
@@ -19,27 +28,78 @@ interface AreasServicedProps {
   autoFitBounds?: boolean;
 }
 
+interface ServiceAreaWithGeoJSON extends ServiceArea {
+  geojson: GeoJSONFeatureCollection;
+}
+
 /**
- * AreasServiced component that displays a Mapbox map with service area tiles
- * for the provided zip codes using the Delmarva red brand color
+ * AreasServiced component that displays a Mapbox map with service area boundaries
+ * for counties from CSV files stored in Contentful, with each service having its own color
  */
 export const AreasServiced = (props: AreasServicedProps) => {
   const {
-    zipCodes,
+    services,
     className,
     height = "400px",
-    center = [-75.5, 38.5],
-    zoom = 5,
+    center = [-78, 39.5], // Centered on mid-Atlantic region (PA, MD, VA, WV, DE)
+    zoom = 8.6, // Zoomed in to show mid-Atlantic states clearly
     autoFitBounds = true,
   } = props;
 
   const mapboxAccessToken = process.env.MAPBOX_API_TOKEN;
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [isMapReady, setIsMapReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [serviceAreasWithGeoJSON, setServiceAreasWithGeoJSON] = useState<
+    ServiceAreaWithGeoJSON[]
+  >([]);
 
+  // Parse services and fetch all county boundaries BEFORE initializing map
   useEffect(() => {
-    if (!mapContainer.current || map.current || !mapboxAccessToken) return;
+    const loadAllData = async () => {
+      setIsLoading(true);
+
+      const serviceAreas = await parseServicesToServiceAreas(services);
+
+      if (serviceAreas.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+
+      const serviceAreasWithGeoJSON = await Promise.all(
+        serviceAreas.map(async (serviceArea) => {
+          const geojson = await countiesToBoundaryLines(serviceArea.counties);
+          const mergedGeoJSON = mergeFeaturesToSingleBoundary(geojson.features);
+
+          return {
+            ...serviceArea,
+            geojson: mergedGeoJSON,
+          };
+        }),
+      );
+
+      const validServiceAreas = serviceAreasWithGeoJSON.filter(
+        (sa) => sa.geojson.features.length > 0,
+      );
+
+      setServiceAreasWithGeoJSON(validServiceAreas);
+      setIsLoading(false);
+    };
+
+    loadAllData();
+  }, [services]);
+
+  // Initialize map only after all data is loaded
+  useEffect(() => {
+    if (
+      !mapContainer.current ||
+      map.current ||
+      !mapboxAccessToken ||
+      isLoading ||
+      serviceAreasWithGeoJSON.length === 0
+    ) {
+      return;
+    }
 
     mapboxgl.accessToken = mapboxAccessToken;
 
@@ -50,8 +110,84 @@ export const AreasServiced = (props: AreasServicedProps) => {
       zoom,
     });
 
-    map.current.on("idle", () => {
-      setIsMapReady(true);
+    map.current.on("load", () => {
+      if (!map.current) return;
+
+      try {
+        // Initialize bounds with a reasonable default (Mid-Atlantic region)
+        const allBounds = new mapboxgl.LngLatBounds(
+          [-85, 35], // Southwest (roughly western edge of service area)
+          [-70, 42], // Northeast (roughly eastern edge of service area)
+        );
+        let hasBounds = false;
+
+        // Add layers for each service area
+        for (const serviceArea of serviceAreasWithGeoJSON) {
+          const sourceId = `service-boundaries-${serviceArea.serviceSlug}`;
+          const fillLayerId = `${sourceId}-fill`;
+          const lineLayerId = `${sourceId}-lines`;
+
+          try {
+            // Type assertion: mapbox-gl accepts GeoJSON FeatureCollection
+            // Our GeoJSONFeatureCollection is compatible but TypeScript needs explicit casting
+            map.current.addSource(sourceId, {
+              data: serviceArea.geojson as unknown as Parameters<
+                mapboxgl.Map["addSource"]
+              >[1] extends { data: infer D }
+                ? D
+                : never,
+              type: "geojson",
+            });
+
+            map.current.addLayer({
+              id: fillLayerId,
+              paint: {
+                "fill-color": serviceArea.color,
+                "fill-opacity": 0.4,
+              },
+              source: sourceId,
+              type: "fill",
+            });
+
+            map.current.addLayer({
+              id: lineLayerId,
+              paint: {
+                "line-color": serviceArea.color,
+                "line-opacity": 1,
+                "line-width": 3,
+              },
+              source: sourceId,
+              type: "line",
+            });
+
+            // Calculate bounds for this service area
+            serviceArea.geojson.features.forEach((feature) => {
+              if (extendBoundsFromFeature(feature, allBounds)) {
+                hasBounds = true;
+              }
+            });
+          } catch (layerError) {
+            console.error(
+              `[Map] Error adding layers for ${serviceArea.serviceName}:`,
+              layerError,
+            );
+          }
+        }
+
+        if (autoFitBounds && hasBounds && areBoundsValid(allBounds)) {
+          try {
+            // Fit bounds with padding and max zoom to ensure we stay zoomed in
+            map.current.fitBounds(allBounds, {
+              maxZoom: 9.0, // Prevent zooming out too far
+              padding: 20, // Reduced padding to allow more zoom in
+            });
+          } catch {
+            // Silently ignore bounds fitting errors
+          }
+        }
+      } catch (error) {
+        console.error("[Map] Error adding boundary layers:", error);
+      }
     });
 
     return () => {
@@ -60,86 +196,19 @@ export const AreasServiced = (props: AreasServicedProps) => {
         map.current = null;
       }
     };
-  }, [mapboxAccessToken, center, zoom]);
-
-  useEffect(() => {
-    if (!map.current || !isMapReady || zipCodes.length === 0) return;
-
-    const addBoundaryLines = async () => {
-      try {
-        let geojson = await zipCodesToBoundaryLines(zipCodes);
-
-        if (geojson.features.length === 0) {
-          geojson = await zipCodesToGeoJSONFeatures(zipCodes);
-        }
-
-        if (geojson.features.length === 0) {
-          return;
-        }
-
-        if (map.current?.getSource("service-boundaries")) {
-          map.current.removeLayer("service-boundaries-lines");
-          map.current.removeSource("service-boundaries");
-        }
-
-        map.current?.addSource("service-boundaries", {
-          data: geojson,
-          type: "geojson",
-        });
-
-        map.current?.addLayer({
-          id: "service-boundaries-lines",
-          paint: {
-            "line-color": "#e01e2d",
-            "line-opacity": 0.8,
-            "line-width": 3,
-          },
-          source: "service-boundaries",
-          type: "line",
-        });
-
-        if (autoFitBounds && geojson.features.length > 0) {
-          const bounds = new mapboxgl.LngLatBounds();
-          geojson.features.forEach((feature) => {
-            if (feature.geometry.type === "Polygon") {
-              const coords = feature.geometry.coordinates[0];
-              coords.forEach((coord) => {
-                bounds.extend([coord[0], coord[1]]);
-              });
-            } else if (feature.geometry.type === "MultiPolygon") {
-              feature.geometry.coordinates.forEach((polygon) => {
-                polygon[0].forEach((coord) => {
-                  bounds.extend([coord[0], coord[1]]);
-                });
-              });
-            }
-          });
-          map.current?.fitBounds(bounds, { padding: 50 });
-        }
-      } catch {
-        // Silently handle errors
-      }
-    };
-
-    addBoundaryLines();
-  }, [isMapReady, zipCodes, autoFitBounds]);
+  }, [
+    mapboxAccessToken,
+    center,
+    zoom,
+    isLoading,
+    serviceAreasWithGeoJSON.length,
+    autoFitBounds,
+  ]);
 
   if (!mapboxAccessToken) {
     return (
       <div className={clsx(styles.container, className)}>
-        <div
-          style={{
-            alignItems: "center",
-            backgroundColor: "var(--colors-lightgray)",
-            borderRadius: "8px",
-            color: "var(--colors-gray)",
-            display: "flex",
-            height: height,
-            justifyContent: "center",
-            padding: "2rem",
-            textAlign: "center",
-          }}
-        >
+        <div className={styles.map} style={{ height }}>
           <p>
             Please set MAPBOX_API_TOKEN in your environment variables to use the
             map.
@@ -150,8 +219,34 @@ export const AreasServiced = (props: AreasServicedProps) => {
   }
 
   return (
-    <div className={clsx(styles.container, className)}>
-      <div className={styles.map} ref={mapContainer} style={{ height }} />
+    <div>
+      <div className={clsx(styles.container, className)}>
+        {isLoading && (
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loadingSpinner} />
+            <p>Loading service areas...</p>
+          </div>
+        )}
+        <div className={styles.map} ref={mapContainer} style={{ height }} />
+      </div>
+      {serviceAreasWithGeoJSON.length > 0 && (
+        <div className={styles.mapLegend}>
+          {serviceAreasWithGeoJSON.map((serviceArea) => (
+            <div className={styles.mapLegendItem} key={serviceArea.serviceSlug}>
+              <div
+                className={styles.mapLegendBox}
+                style={{
+                  backgroundColor: hexToRgba(serviceArea.color, 0.4),
+                  borderColor: serviceArea.color,
+                }}
+              />
+              <span className={styles.mapLegendLabel}>
+                {serviceArea.serviceName}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

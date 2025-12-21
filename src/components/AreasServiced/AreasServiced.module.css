@@ -15,54 +15,54 @@
 }
 
 /* Mapbox attribution styling */
-.map :global(.mapboxgl-ctrl-attrib) {
-  font-size: 10px;
-  color: var(--colors-white);
-  background-color: rgba(
-    31,
-    29,
-    29,
-    0.9
-  ); /* Using --colors-black with transparency */
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
+.map {
+  :global(.mapboxgl-ctrl-attrib) {
+    font-size: 10px;
+    color: var(--colors-white);
+    background-color: rgba(
+      31,
+      29,
+      29,
+      0.9
+    ); /* Using --colors-black with transparency */
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Mapbox control styling */
+  :global(.mapboxgl-ctrl-group) {
+    background-color: rgba(
+      31,
+      29,
+      29,
+      0.9
+    ); /* Using --colors-black with transparency */
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+
+    :global(button) {
+      color: var(--colors-white);
+      background-color: transparent;
+      border: none;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
 }
 
-/* Mapbox control styling */
-.map :global(.mapboxgl-ctrl-group) {
-  background-color: rgba(
-    31,
-    29,
-    29,
-    0.9
-  ); /* Using --colors-black with transparency */
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(4px);
-}
-
-.map :global(.mapboxgl-ctrl-group button) {
-  color: var(--colors-white);
-  background-color: transparent;
-  border: none;
-}
-
-.map :global(.mapboxgl-ctrl-group button:hover) {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Loading state */
+/* Loading state and error message */
 .map:not(:global(.mapboxgl-map)) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--colors-lightgray);
-}
-
-.map:not(:global(.mapboxgl-map))::before {
+  padding: 2rem;
   font-size: 1rem;
   color: var(--colors-gray);
-  content: "Loading map...";
+  text-align: center;
+  background-color: var(--colors-lightgray);
 }
 
 /* Loading overlay for zip code data */
@@ -84,16 +84,22 @@
     0.9
   ); /* Using --colors-black with transparency */
   backdrop-filter: blur(2px);
-}
 
-.loadingSpinner {
-  width: 32px;
-  height: 32px;
-  margin-bottom: 1rem;
-  border: 3px solid var(--colors-gray);
-  border-top: 3px solid var(--colors-red);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  .loadingSpinner {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 1rem;
+    border: 3px solid var(--colors-gray);
+    border-top: 3px solid var(--colors-red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--colors-white);
+  }
 }
 
 @keyframes spin {
@@ -105,8 +111,54 @@
   }
 }
 
-.loadingOverlay p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--colors-white);
+/* Legend */
+.mapLegend {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  margin-top: 0.5rem;
+
+  .mapLegendItem {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    .mapLegendBox {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-style: solid;
+      border-width: 3px;
+      border-radius: 4px;
+    }
+
+    .mapLegendLabel {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--colors-white);
+    }
+  }
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+    padding: 1rem;
+
+    .mapLegendItem {
+      gap: 0.5rem;
+
+      .mapLegendBox {
+        width: 20px;
+        height: 20px;
+        border-width: 2px;
+      }
+
+      .mapLegendLabel {
+        font-size: 0.8125rem;
+      }
+    }
+  }
 }
