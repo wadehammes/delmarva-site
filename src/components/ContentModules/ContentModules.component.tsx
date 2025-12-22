@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { AllServicesListServer } from "src/components/AllServicesList/AllServicesListServer.component";
+import { AreasServicedListServer } from "src/components/AreasServiced/AreasServicedListServer.component";
 import { AreasServicedServer } from "src/components/AreasServiced/AreasServicedServer.component";
 import { ContentRecentNewsList } from "src/components/ContentRecentNewsList/ContentRecentNewsList.component";
 import { FeaturedServices } from "src/components/FeaturedServices/FeaturedServices.component";
@@ -14,12 +15,13 @@ const RequestAQuoteForm = dynamic(
 );
 
 interface ContentModulesProps {
+  contentLayout?: string;
   fields: ContentModule;
   locale?: string;
 }
 
 export const ContentModules = (props: ContentModulesProps) => {
-  const { fields, locale } = props;
+  const { contentLayout, fields, locale } = props;
 
   switch (fields.module) {
     case "Featured Services List": {
@@ -35,7 +37,12 @@ export const ContentModules = (props: ContentModulesProps) => {
       return <AllServicesListServer locale={locale} />;
     }
     case "Areas Serviced Map": {
-      return <AreasServicedServer locale={locale} />;
+      return (
+        <AreasServicedServer contentLayout={contentLayout} locale={locale} />
+      );
+    }
+    case "Areas Serviced List": {
+      return <AreasServicedListServer locale={locale} />;
     }
     default: {
       return null;

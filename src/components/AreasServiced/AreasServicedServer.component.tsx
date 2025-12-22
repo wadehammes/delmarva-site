@@ -1,10 +1,12 @@
 import { draftMode } from "next/headers";
 import { fetchServices } from "src/contentful/getServices";
+import { ContentLayout } from "src/contentful/interfaces";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import { AreasServiced } from "./AreasServiced.component";
 
 interface AreasServicedServerProps {
   className?: string;
+  contentLayout?: string;
   height?: string;
   center?: [number, number];
   zoom?: number;
@@ -24,12 +26,16 @@ export const AreasServicedServer = async (props?: AreasServicedServerProps) => {
     preview: draft.isEnabled,
   });
 
+  const height =
+    props?.height ??
+    (props?.contentLayout === ContentLayout.SingleColumn ? "600px" : "425px");
+
   return (
     <AreasServiced
       autoFitBounds={props?.autoFitBounds}
       center={props?.center}
       className={props?.className}
-      height={props?.height}
+      height={height}
       services={services}
       zoom={props?.zoom}
     />

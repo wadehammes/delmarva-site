@@ -112,7 +112,11 @@ export const Section = async (props: SectionProps) => {
       ) : null}
 
       {sectionHeader ? (
-        <header className={styles.sectionHeader}>
+        <header
+          className={clsx(styles.sectionHeader, {
+            [styles.hasSectionContent]: !isReactNodeEmptyArray(children),
+          })}
+        >
           <RichText document={sectionHeader} />
         </header>
       ) : null}

@@ -113,3 +113,20 @@ export function hexToRgba(hex: string, alpha: number): string {
   const b = Number.parseInt(hex.slice(5, 7), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+
+/**
+ * Type assertion helper for GeoJSON data to work with mapbox-gl
+ */
+export function asMapboxGeoJSON(
+  geojson: GeoJSONFeatureCollection,
+): Parameters<mapboxgl.Map["addSource"]>[1] extends { data: infer D }
+  ? D
+  : never {
+  return geojson as unknown as Parameters<
+    mapboxgl.Map["addSource"]
+  >[1] extends {
+    data: infer D;
+  }
+    ? D
+    : never;
+}

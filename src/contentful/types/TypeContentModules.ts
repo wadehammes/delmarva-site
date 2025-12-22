@@ -10,6 +10,7 @@ export interface TypeContentModulesFields {
   entryTitle?: EntryFieldTypes.Symbol;
   module: EntryFieldTypes.Symbol<
     | "All Services List"
+    | "Areas Serviced List"
     | "Areas Serviced Map"
     | "Featured Services List"
     | "Recent News List"

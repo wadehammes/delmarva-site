@@ -8,6 +8,7 @@ export interface ContentModule {
   module:
     | "All Services List"
     | "Areas Serviced Map"
+    | "Areas Serviced List"
     | "Featured Services List"
     | "Request a Quote Form"
     | "Recent News List";
