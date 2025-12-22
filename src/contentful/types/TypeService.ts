@@ -20,6 +20,10 @@ export interface TypeServiceFields {
   sections?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeSectionSkeleton>
   >;
+  serviceCountiesCsv?: EntryFieldTypes.AssetLink;
+  serviceCountiesMapColor?: EntryFieldTypes.Symbol<
+    "Blue" | "Green" | "Orange" | "Pink" | "Purple" | "Red" | "White" | "Yellow"
+  >;
   featuredService?: EntryFieldTypes.Boolean;
   featuredServicePosition?: EntryFieldTypes.Integer;
   metaTitle: EntryFieldTypes.Symbol;

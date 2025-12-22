@@ -1,7 +1,10 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
-import type { Locales } from "src/contentful/interfaces";
+import type {
+  Locales,
+  ServiceCountiesMapColor,
+} from "src/contentful/interfaces";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
@@ -32,6 +35,8 @@ export interface ServiceType {
   description: Document;
   stats?: (ContentStatBlock | null)[];
   sections?: (SectionType | null)[];
+  serviceCountiesCsv?: ContentfulAsset | null;
+  serviceCountiesMapColor?: ServiceCountiesMapColor | null;
   featuredService?: boolean;
   featuredServicePosition?: number;
   metaTitle: string;
@@ -64,6 +69,11 @@ export function parseContentfulService(
     metaTitle: serviceEntry.fields.metaTitle,
     publishDate: serviceEntry.sys.createdAt,
     sections: serviceEntry.fields.sections?.map(parseContentfulSection),
+    serviceCountiesCsv: parseContentfulAsset(
+      serviceEntry.fields.serviceCountiesCsv,
+    ),
+    serviceCountiesMapColor: serviceEntry.fields
+      .serviceCountiesMapColor as ServiceCountiesMapColor,
     serviceName: serviceEntry.fields.serviceName,
     slug: serviceEntry.fields.slug,
     stats: serviceEntry.fields.stats?.map(parseContentStatBlock),

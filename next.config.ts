@@ -24,10 +24,13 @@ const nextConfig: NextConfig = withNextIntl({
   },
 
   experimental: {
+    // Optimize package imports to reduce bundle size
     optimizePackageImports: [
       "@contentful/rich-text-react-renderer",
       "swiper",
       "gsap",
+      "react-intersection-observer",
+      "react-player",
     ],
   },
 
@@ -87,9 +90,14 @@ const nextConfig: NextConfig = withNextIntl({
     }
   },
 
-  // Optimized image configuration
+  // Optimized image configuration for Next.js 16.1
   images: {
+    // Enable dangerous allow SVG for better optimization (if needed)
+    dangerouslyAllowSVG: false,
+    // Optimize device sizes for better performance and reduced bundle size
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     formats: ["image/webp", "image/avif"],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year
     remotePatterns: [
       {
@@ -118,6 +126,17 @@ const nextConfig: NextConfig = withNextIntl({
       },
     ],
   },
+  outputFileTracingExcludes: {
+    "*": [
+      "node_modules/@swc/core-linux-x64-gnu",
+      "node_modules/@swc/core-linux-x64-musl",
+      "node_modules/@esbuild/linux-x64",
+    ],
+  },
+  // Optimize output file tracing to reduce build size and improve cold starts
+  outputFileTracingIncludes: {
+    "/api/**/*": ["./node_modules/**/*.wasm"],
+  },
   poweredByHeader: false,
 
   // Build optimizations
@@ -139,6 +158,7 @@ const nextConfig: NextConfig = withNextIntl({
   },
 
   trailingSlash: false,
+  // Note: Turbopack file system caching is enabled by default in Next.js 16.1
   turbopack: {
     rules: {
       "*.svg": {
@@ -147,8 +167,13 @@ const nextConfig: NextConfig = withNextIntl({
       },
     },
   },
-  webpack(config) {
+  webpack(config, { isServer }) {
     try {
+      // Resolve symlinks properly for pnpm in serverless environments
+      if (isServer) {
+        config.resolve.symlinks = true;
+      }
+
       const fileLoaderRule = config.module.rules.find((rule) =>
         rule.test?.test?.(".svg"),
       );

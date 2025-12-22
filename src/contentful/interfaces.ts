@@ -86,3 +86,14 @@ export enum ContentGap {
   NoGap = "No Gap",
   MoreGap = "More Gap",
 }
+
+export enum ServiceCountiesMapColor {
+  Blue = "Blue",
+  Green = "Green",
+  Orange = "Orange",
+  Pink = "Pink",
+  Purple = "Purple",
+  Red = "Red",
+  White = "White",
+  Yellow = "Yellow",
+}
