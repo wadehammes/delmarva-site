@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import type { ServiceType } from "src/contentful/getServices";
 import { AreasServiced } from "./AreasServiced.component";
 
@@ -101,17 +101,29 @@ describe("AreasServiced", () => {
     jest.clearAllMocks();
   });
 
-  it("renders loading state initially", () => {
+  it("renders loading state initially", async () => {
     render(<AreasServiced services={[mockService]} />);
     expect(screen.getByText("Loading service areas...")).toBeInTheDocument();
+    // Wait for async operations to complete to avoid act warnings
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading service areas..."),
+      ).not.toBeInTheDocument();
+    });
   });
 
-  it("renders error message when MAPBOX_API_TOKEN is missing", () => {
+  it("renders error message when MAPBOX_API_TOKEN is missing", async () => {
     process.env.MAPBOX_API_TOKEN = "";
     render(<AreasServiced services={[mockService]} />);
     expect(
       screen.getByText(/Please set MAPBOX_API_TOKEN/i),
     ).toBeInTheDocument();
+    // Wait for async operations to complete to avoid act warnings
+    await act(async () => {
+      // Wait for all microtasks to complete
+      await Promise.resolve();
+      await Promise.resolve();
+    });
   });
 
   it("renders map container", async () => {
@@ -129,19 +141,31 @@ describe("AreasServiced", () => {
     });
   });
 
-  it("applies custom className", () => {
+  it("applies custom className", async () => {
     const { container } = render(
       <AreasServiced className="custom-class" services={[mockService]} />,
     );
     expect(container.firstChild).toHaveClass("custom-class");
+    // Wait for async operations to complete to avoid act warnings
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading service areas..."),
+      ).not.toBeInTheDocument();
+    });
   });
 
-  it("uses custom height prop", () => {
+  it("uses custom height prop", async () => {
     render(<AreasServiced height="500px" services={[mockService]} />);
     const mapContainer = document.querySelector(
       '[class*="map"]',
     ) as HTMLElement;
     expect(mapContainer).toHaveStyle({ height: "500px" });
+    // Wait for async operations to complete to avoid act warnings
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Loading service areas..."),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it("handles empty services array", async () => {

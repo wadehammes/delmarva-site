@@ -2,10 +2,8 @@ import flatten from "lodash.flatten";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
-import { useId } from "react";
-import type { WebPage, WithContext } from "schema-dts";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
+import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component";
 import { ServiceTemplate } from "src/components/ServiceTemplate/ServiceTemplate.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
@@ -27,8 +25,12 @@ import {
   SERVICES_PAGE_SLUG,
   TEST_PAGE_SLUG,
 } from "src/utils/constants";
-import { createMediaUrl, envUrl } from "src/utils/helpers";
-import { serializeJsonLd } from "src/utils/jsonLd";
+import { envUrl } from "src/utils/helpers";
+import {
+  createServiceMetadata,
+  validateAndSetLocale,
+} from "src/utils/pageHelpers";
+import { generateServicePageSchemaGraph } from "src/utils/schema";
 
 interface PageParams {
   slug: string;
@@ -93,12 +95,15 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
 
-  setRequestLocale(locale);
+  const validLocale = await validateAndSetLocale(locale);
+  if (!validLocale) {
+    return notFound();
+  }
 
   const draft = await draftMode();
 
   const service = await fetchService({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug,
   });
@@ -107,74 +112,38 @@ export async function generateMetadata({
     return notFound();
   }
 
-  return {
-    alternates: {
-      canonical: new URL(`${envUrl()}/${SERVICES_PAGE_SLUG}/${service.slug}`),
-    },
-    description: service.metaDescription,
-    openGraph: {
-      images: service.metaImage
-        ? [
-            {
-              alt: service.metaTitle,
-              url: createMediaUrl(service.metaImage.src),
-            },
-          ]
-        : [
-            {
-              alt: service.metaTitle,
-              url: `${envUrl()}/opengraph-image.png`,
-            },
-          ],
-    },
-    robots:
-      service.enableIndexing && process.env.ENVIRONMENT === "production"
-        ? "index, follow"
-        : "noindex, nofollow",
-    title: service.metaTitle,
-    twitter: {
-      images: service.metaImage
-        ? [
-            {
-              alt: service.metaTitle,
-              url: createMediaUrl(service.metaImage.src),
-            },
-          ]
-        : [
-            {
-              alt: service.metaTitle,
-              url: `${envUrl()}/twitter-image.png`,
-            },
-          ],
-    },
-  };
+  return createServiceMetadata(
+    service,
+    `${envUrl()}/${SERVICES_PAGE_SLUG}/${service.slug}`,
+  );
 }
 
 // The actual Page component.
 async function Page({ params }: PageProps) {
-  const jsonLdId = useId();
   const { slug, locale } = await params;
 
-  setRequestLocale(locale);
+  const validLocale = await validateAndSetLocale(locale);
+
+  if (!validLocale) {
+    return notFound();
+  }
 
   const draft = await draftMode();
 
-  // Fetch a single page by slug,
-  // using the content preview if draft mode is enabled:
   const service = await fetchService({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug,
   });
 
   const navigation = await fetchNavigation({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: NAVIGATION_ID,
   });
 
   const footer = await fetchFooter({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: FOOTER_ID,
   });
@@ -184,7 +153,7 @@ async function Page({ params }: PageProps) {
   }
 
   const servicePhotos = await fetchServicePhotos({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: service.slug,
   });
@@ -194,51 +163,16 @@ async function Page({ params }: PageProps) {
     serviceSlug: service.slug,
   });
 
-  const canonicalUrl = `${envUrl()}/${SERVICES_PAGE_SLUG}/${service.slug}`;
-
-  const jsonLd: WithContext<WebPage> = {
-    "@context": "https://schema.org",
-    "@id": `${canonicalUrl}#webpage`,
-    "@type": "WebPage",
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          name: "Home",
-          position: 0,
-        },
-        {
-          "@type": "ListItem",
-          name: "What We Deliver",
-          position: 1,
-        },
-        {
-          "@type": "ListItem",
-          name: service.serviceName,
-          position: 2,
-        },
-      ],
-    },
-    dateModified: service.updatedAt,
-    datePublished: service.publishDate,
-    description: service.metaDescription,
-    name: `${service.serviceName} | Delmarva Site Development`,
-    publisher: {
-      "@type": "Organization",
-      name: "Delmarva Site Development",
-    },
-    url: canonicalUrl,
-  };
+  const schemaGraph = await generateServicePageSchemaGraph({
+    locale: validLocale,
+    preview: draft.isEnabled,
+    service,
+    slug: `${SERVICES_PAGE_SLUG}/${service.slug}`,
+  });
 
   return (
     <PageLayout footer={footer} navigation={navigation}>
-      <script
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-        id={jsonLdId}
-        type="application/ld+json"
-      />
+      <SchemaScript schema={schemaGraph} />
       <ServiceTemplate
         projects={projects}
         service={service}
