@@ -2,14 +2,13 @@ import flatten from "lodash.flatten";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
 import PageComponent from "src/components/Page/Page.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
+import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import type { Page as PageType } from "src/contentful/getPages";
 import { fetchPage, fetchPages } from "src/contentful/getPages";
-import type { Locales } from "src/contentful/interfaces";
 import { routing } from "src/i18n/routing";
 import type { SitemapItem } from "src/lib/generateSitemap";
 import { outputSitemap } from "src/lib/generateSitemap";
@@ -21,7 +20,12 @@ import {
   SERVICES_PAGE_SLUG,
   TEST_PAGE_SLUG,
 } from "src/utils/constants";
-import { createMediaUrl, envUrl } from "src/utils/helpers";
+import { envUrl } from "src/utils/helpers";
+import {
+  createPageMetadata,
+  generatePageSchemaGraph,
+  validateAndSetLocale,
+} from "src/utils/pageHelpers";
 
 interface PageParams {
   slug: string;
@@ -32,13 +36,10 @@ interface PageProps {
   params: Promise<PageParams>;
 }
 
-// Tell Next.js about all our pages so
-// they can be statically generated at build time.
 export async function generateStaticParams(): Promise<PageParams[]> {
   const pages = await fetchPages({ preview: false });
 
   if (pages) {
-    // Generate Sitemap
     const routes: SitemapItem[] = pages
       .map((page: PageType) => {
         if (
@@ -92,24 +93,20 @@ export async function generateStaticParams(): Promise<PageParams[]> {
   );
 }
 
-// For each page, tell Next.js which metadata
-// (e.g. page title) to display.
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
 
-  // Validate locale before using it
-  if (!routing.locales.includes(locale as Locales)) {
+  const validLocale = await validateAndSetLocale(locale);
+  if (!validLocale) {
     return notFound();
   }
-
-  setRequestLocale(locale);
 
   const draft = await draftMode();
 
   const page = await fetchPage({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug,
   });
@@ -118,92 +115,53 @@ export async function generateMetadata({
     return notFound();
   }
 
-  return {
-    alternates: {
-      canonical: new URL(`${envUrl()}/${page.slug}`),
-    },
-    description: page.metaDescription,
-    keywords: page?.metaKeywords?.join(",") ?? "",
-    openGraph: {
-      images: page.metaImage
-        ? [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: createMediaUrl(page.metaImage.src),
-            },
-          ]
-        : [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: `${envUrl()}/opengraph-image.png`,
-            },
-          ],
-    },
-    robots:
-      page.enableIndexing && process.env.ENVIRONMENT === "production"
-        ? "index, follow"
-        : "noindex, nofollow",
-    title: page.metaTitle,
-    twitter: {
-      images: page.metaImage
-        ? [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: createMediaUrl(page.metaImage.src),
-            },
-          ]
-        : [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: `${envUrl()}/twitter-image.png`,
-            },
-          ],
-    },
-  };
+  return createPageMetadata(page, `${envUrl()}/${page.slug}`);
 }
 
-// The actual Page component.
 async function Page({ params }: PageProps) {
   const { slug, locale } = await params;
 
-  // Validate locale before using it
-  if (!routing.locales.includes(locale as Locales)) {
+  const validLocale = await validateAndSetLocale(locale);
+
+  if (!validLocale) {
     return notFound();
   }
 
-  setRequestLocale(locale);
-
   const draft = await draftMode();
 
-  // Fetch a single page by slug,
-  // using the content preview if draft mode is enabled:
   const page = await fetchPage({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug,
   });
 
   const navigation = await fetchNavigation({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: NAVIGATION_ID,
   });
 
   const footer = await fetchFooter({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: FOOTER_ID,
   });
 
   if (!page || !navigation || !footer) {
-    // If a page can't be found,
-    // tell Next.js to render a 404 page.
     return notFound();
   }
 
+  const schemaGraph = await generatePageSchemaGraph(
+    page,
+    slug,
+    validLocale,
+    draft.isEnabled,
+  );
+
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
-      <PageComponent fields={page} locale={locale} />
+      <SchemaScript schema={schemaGraph} />
+      <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );
 }

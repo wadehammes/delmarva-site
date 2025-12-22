@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
-import { useId } from "react";
-import type { WebPage, WithContext } from "schema-dts";
 import PageComponent from "src/components/Page/Page.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
+import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
-import type { Locales } from "src/contentful/interfaces";
-import { routing } from "src/i18n/routing";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
-import { createMediaUrl, envUrl } from "src/utils/helpers";
-import { serializeJsonLd } from "src/utils/jsonLd";
+import { envUrl } from "src/utils/helpers";
+import {
+  createPageMetadata,
+  generatePageSchemaGraph,
+  validateAndSetLocale,
+} from "src/utils/pageHelpers";
 
 interface HomeParams {
   locale: string;
@@ -26,17 +26,15 @@ interface HomeProps {
 export async function generateMetadata(props: HomeProps): Promise<Metadata> {
   const { locale } = await props.params;
 
-  // Validate locale before using it
-  if (!routing.locales.includes(locale as Locales)) {
+  const validLocale = await validateAndSetLocale(locale);
+  if (!validLocale) {
     return notFound();
   }
-
-  setRequestLocale(locale);
 
   const draft = await draftMode();
 
   const page = await fetchPage({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: "home",
   });
@@ -45,77 +43,34 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
     return notFound();
   }
 
-  return {
-    alternates: {
-      canonical: new URL(`${envUrl()}`),
-    },
-    description: page.metaDescription,
-    keywords: page?.metaKeywords?.join(",") ?? "",
-    openGraph: {
-      images: page.metaImage
-        ? [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: createMediaUrl(page.metaImage.src),
-            },
-          ]
-        : [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: `${envUrl()}/opengraph-image.png`,
-            },
-          ],
-    },
-    robots:
-      page.enableIndexing && process.env.ENVIRONMENT === "production"
-        ? "index, follow"
-        : "noindex, nofollow",
-    title: `${page.metaTitle}`,
-    twitter: {
-      images: page.metaImage
-        ? [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: createMediaUrl(page.metaImage.src),
-            },
-          ]
-        : [
-            {
-              alt: "Delmarva Site Development, Inc.",
-              url: `${envUrl()}/twitter-image.png`,
-            },
-          ],
-    },
-  };
+  return createPageMetadata(page, envUrl());
 }
 
 const Home = async (props: HomeProps) => {
-  const jsonLdId = useId();
   const { locale } = await props.params;
 
-  // Validate locale before using it
-  if (!routing.locales.includes(locale as Locales)) {
+  const validLocale = await validateAndSetLocale(locale);
+
+  if (!validLocale) {
     return notFound();
   }
-
-  setRequestLocale(locale);
 
   const draft = await draftMode();
 
   const page = await fetchPage({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: "home",
   });
 
   const navigation = await fetchNavigation({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: NAVIGATION_ID,
   });
 
   const footer = await fetchFooter({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: FOOTER_ID,
   });
@@ -124,45 +79,17 @@ const Home = async (props: HomeProps) => {
     return notFound();
   }
 
-  const { metaDescription, metaImage, publishDate, updatedAt } = page;
-
-  const canonicalUrl = `${envUrl()}`;
-
-  const jsonLd: WithContext<WebPage> = {
-    "@context": "https://schema.org",
-    "@id": `${canonicalUrl}#webpage`,
-    "@type": "WebPage",
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          name: "Home",
-          position: 0,
-        },
-      ],
-    },
-    dateModified: updatedAt,
-    datePublished: publishDate,
-    description: metaDescription,
-    image: metaImage ? createMediaUrl(metaImage.src) : undefined,
-    name: "Delmarva Site Development",
-    publisher: {
-      "@type": "Organization",
-      name: "Delmarva Site Development",
-    },
-    url: canonicalUrl,
-  };
+  const schemaGraph = await generatePageSchemaGraph(
+    page,
+    "home",
+    validLocale,
+    draft.isEnabled,
+  );
 
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
-      <script
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-        id={jsonLdId}
-        type="application/ld+json"
-      />
-      <PageComponent fields={page} locale={locale} />
+      <SchemaScript schema={schemaGraph} />
+      <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );
 };

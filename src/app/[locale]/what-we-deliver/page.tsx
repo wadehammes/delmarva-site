@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
-import { useId } from "react";
-import type { WebPage, WithContext } from "schema-dts";
 import PageComponent from "src/components/Page/Page.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
+import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
-import type { Locales } from "src/contentful/interfaces";
-import { routing } from "src/i18n/routing";
 import {
   FOOTER_ID,
   NAVIGATION_ID,
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
 import { envUrl } from "src/utils/helpers";
-import { serializeJsonLd } from "src/utils/jsonLd";
+import {
+  createPageMetadata,
+  generatePageSchemaGraph,
+  validateAndSetLocale,
+} from "src/utils/pageHelpers";
 
 interface WhatWeDeliverParams {
   locale: string;
@@ -32,17 +32,15 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { locale } = await props.params;
 
-  setRequestLocale(locale);
-
-  const draft = await draftMode();
-
-  // Validate locale before using it
-  if (!routing.locales.includes(locale as Locales)) {
+  const validLocale = await validateAndSetLocale(locale);
+  if (!validLocale) {
     return notFound();
   }
 
+  const draft = await draftMode();
+
   const page = await fetchPage({
-    locale: locale as Locales,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: SERVICES_PAGE_SLUG,
   });
@@ -51,42 +49,34 @@ export async function generateMetadata(
     return notFound();
   }
 
-  return {
-    alternates: {
-      canonical: new URL(`${envUrl()}/${SERVICES_PAGE_SLUG}`),
-    },
-    description: page.metaDescription,
-    keywords: page?.metaKeywords?.join(",") ?? "",
-    robots:
-      page.enableIndexing && process.env.ENVIRONMENT === "production"
-        ? "index, follow"
-        : "noindex, nofollow",
-    title: `${page.metaTitle}`,
-  };
+  return createPageMetadata(page, `${envUrl()}/${SERVICES_PAGE_SLUG}`);
 }
 
 const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
-  const jsonLdId = useId();
   const { locale } = await props.params;
 
-  setRequestLocale(locale);
+  const validLocale = await validateAndSetLocale(locale);
+
+  if (!validLocale) {
+    return notFound();
+  }
 
   const draft = await draftMode();
 
   const page = await fetchPage({
-    locale: locale as Locales,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: "what-we-deliver",
   });
 
   const navigation = await fetchNavigation({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: NAVIGATION_ID,
   });
 
   const footer = await fetchFooter({
-    locale,
+    locale: validLocale,
     preview: draft.isEnabled,
     slug: FOOTER_ID,
   });
@@ -95,49 +85,17 @@ const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
     return notFound();
   }
 
-  const { metaDescription, publishDate, updatedAt } = page;
-
-  const canonicalUrl = `${envUrl()}/${SERVICES_PAGE_SLUG}`;
-
-  const jsonLd: WithContext<WebPage> = {
-    "@context": "https://schema.org",
-    "@id": `${canonicalUrl}#webpage`,
-    "@type": "WebPage",
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          name: "Home",
-          position: 0,
-        },
-        {
-          "@type": "ListItem",
-          name: "What We Deliver",
-          position: 1,
-        },
-      ],
-    },
-    dateModified: updatedAt,
-    datePublished: publishDate,
-    description: metaDescription,
-    name: "What We Deliver | Delmarva Site Development",
-    publisher: {
-      "@type": "Organization",
-      name: "Delmarva Site Development",
-    },
-    url: canonicalUrl,
-  };
+  const schemaGraph = await generatePageSchemaGraph(
+    page,
+    SERVICES_PAGE_SLUG,
+    validLocale,
+    draft.isEnabled,
+  );
 
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
-      <script
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-        id={jsonLdId}
-        type="application/ld+json"
-      />
-      <PageComponent fields={page} locale={locale} />
+      <SchemaScript schema={schemaGraph} />
+      <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );
 };
