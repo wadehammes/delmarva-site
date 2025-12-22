@@ -1,15 +1,17 @@
 "use client";
 
 import mapboxgl from "mapbox-gl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import clsx from "clsx";
 import type { ServiceType } from "src/contentful/getServices";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
 import { mergeFeaturesToSingleBoundary } from "src/utils/geometryUtils";
 import {
+  addServiceAreaLayers,
+  calculateBoundsFromServiceAreas,
+} from "src/utils/mapLayerUtils";
+import {
   areBoundsValid,
-  extendBoundsFromFeature,
   type GeoJSONFeatureCollection,
   hexToRgba,
 } from "src/utils/mapUtils";
@@ -18,6 +20,14 @@ import {
   type ServiceArea,
 } from "src/utils/serviceAreaUtils";
 import styles from "./AreasServiced.module.css";
+
+const DEFAULT_CENTER: [number, number] = [-78, 39.5];
+const DEFAULT_ZOOM = 9.0;
+const DEFAULT_HEIGHT = "500px";
+const FIT_BOUNDS_OPTIONS = {
+  maxZoom: 10,
+  padding: 5,
+} as const;
 
 interface AreasServicedProps {
   services: ServiceType[];
@@ -32,17 +42,34 @@ interface ServiceAreaWithGeoJSON extends ServiceArea {
   geojson: GeoJSONFeatureCollection;
 }
 
-/**
- * AreasServiced component that displays a Mapbox map with service area boundaries
- * for counties from CSV files stored in Contentful, with each service having its own color
- */
+const LegendItem = ({
+  serviceArea,
+}: {
+  serviceArea: ServiceAreaWithGeoJSON;
+}) => {
+  const boxStyle = useMemo(
+    () => ({
+      backgroundColor: hexToRgba(serviceArea.color, 0.4),
+      borderColor: serviceArea.color,
+    }),
+    [serviceArea.color],
+  );
+
+  return (
+    <div className={styles.mapLegendItem}>
+      <div className={styles.mapLegendBox} style={boxStyle} />
+      <span className={styles.mapLegendLabel}>{serviceArea.serviceName}</span>
+    </div>
+  );
+};
+
 export const AreasServiced = (props: AreasServicedProps) => {
   const {
     services,
     className,
-    height = "400px",
-    center = [-78, 39.5], // Centered on mid-Atlantic region (PA, MD, VA, WV, DE)
-    zoom = 8.6, // Zoomed in to show mid-Atlantic states clearly
+    height = DEFAULT_HEIGHT,
+    center = DEFAULT_CENTER,
+    zoom = DEFAULT_ZOOM,
     autoFitBounds = true,
   } = props;
 
@@ -54,12 +81,15 @@ export const AreasServiced = (props: AreasServicedProps) => {
     ServiceAreaWithGeoJSON[]
   >([]);
 
-  // Parse services and fetch all county boundaries BEFORE initializing map
   useEffect(() => {
+    let isCancelled = false;
+
     const loadAllData = async () => {
       setIsLoading(true);
 
       const serviceAreas = await parseServicesToServiceAreas(services);
+
+      if (isCancelled) return;
 
       if (serviceAreas.length === 0) {
         setIsLoading(false);
@@ -78,6 +108,8 @@ export const AreasServiced = (props: AreasServicedProps) => {
         }),
       );
 
+      if (isCancelled) return;
+
       const validServiceAreas = serviceAreasWithGeoJSON.filter(
         (sa) => sa.geojson.features.length > 0,
       );
@@ -87,9 +119,12 @@ export const AreasServiced = (props: AreasServicedProps) => {
     };
 
     loadAllData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [services]);
 
-  // Initialize map only after all data is loaded
   useEffect(() => {
     if (
       !mapContainer.current ||
@@ -104,8 +139,12 @@ export const AreasServiced = (props: AreasServicedProps) => {
     mapboxgl.accessToken = mapboxAccessToken;
 
     map.current = new mapboxgl.Map({
+      antialias: false,
       center,
       container: mapContainer.current,
+      fadeDuration: 0,
+      preserveDrawingBuffer: false,
+      scrollZoom: false,
       style: "mapbox://styles/mapbox/dark-v11",
       zoom,
     });
@@ -113,59 +152,12 @@ export const AreasServiced = (props: AreasServicedProps) => {
     map.current.on("load", () => {
       if (!map.current) return;
 
+      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+
       try {
-        // Initialize bounds with a reasonable default (Mid-Atlantic region)
-        const allBounds = new mapboxgl.LngLatBounds(
-          [-85, 35], // Southwest (roughly western edge of service area)
-          [-70, 42], // Northeast (roughly eastern edge of service area)
-        );
-        let hasBounds = false;
-
-        // Add layers for each service area
         for (const serviceArea of serviceAreasWithGeoJSON) {
-          const sourceId = `service-boundaries-${serviceArea.serviceSlug}`;
-          const fillLayerId = `${sourceId}-fill`;
-          const lineLayerId = `${sourceId}-lines`;
-
           try {
-            // Type assertion: mapbox-gl accepts GeoJSON FeatureCollection
-            // Our GeoJSONFeatureCollection is compatible but TypeScript needs explicit casting
-            map.current.addSource(sourceId, {
-              data: serviceArea.geojson as unknown as Parameters<
-                mapboxgl.Map["addSource"]
-              >[1] extends { data: infer D }
-                ? D
-                : never,
-              type: "geojson",
-            });
-
-            map.current.addLayer({
-              id: fillLayerId,
-              paint: {
-                "fill-color": serviceArea.color,
-                "fill-opacity": 0.4,
-              },
-              source: sourceId,
-              type: "fill",
-            });
-
-            map.current.addLayer({
-              id: lineLayerId,
-              paint: {
-                "line-color": serviceArea.color,
-                "line-opacity": 1,
-                "line-width": 3,
-              },
-              source: sourceId,
-              type: "line",
-            });
-
-            // Calculate bounds for this service area
-            serviceArea.geojson.features.forEach((feature) => {
-              if (extendBoundsFromFeature(feature, allBounds)) {
-                hasBounds = true;
-              }
-            });
+            addServiceAreaLayers(map.current, serviceArea);
           } catch (layerError) {
             console.error(
               `[Map] Error adding layers for ${serviceArea.serviceName}:`,
@@ -174,12 +166,12 @@ export const AreasServiced = (props: AreasServicedProps) => {
           }
         }
 
-        if (autoFitBounds && hasBounds && areBoundsValid(allBounds)) {
+        const bounds = calculateBoundsFromServiceAreas(serviceAreasWithGeoJSON);
+        if (autoFitBounds && bounds && areBoundsValid(bounds)) {
           try {
-            // Fit bounds with padding and max zoom to ensure we stay zoomed in
-            map.current.fitBounds(allBounds, {
-              maxZoom: 9.0, // Prevent zooming out too far
-              padding: 20, // Reduced padding to allow more zoom in
+            map.current.fitBounds(bounds, {
+              ...FIT_BOUNDS_OPTIONS,
+              duration: 0,
             });
           } catch {
             // Silently ignore bounds fitting errors
@@ -201,26 +193,28 @@ export const AreasServiced = (props: AreasServicedProps) => {
     center,
     zoom,
     isLoading,
-    serviceAreasWithGeoJSON.length,
+    serviceAreasWithGeoJSON,
     autoFitBounds,
   ]);
 
   if (!mapboxAccessToken) {
     return (
-      <div className={clsx(styles.container, className)}>
-        <div className={styles.map} style={{ height }}>
-          <p>
-            Please set MAPBOX_API_TOKEN in your environment variables to use the
-            map.
-          </p>
+      <div className={className}>
+        <div className={styles.container}>
+          <div className={styles.map} style={{ height }}>
+            <p>
+              Please set MAPBOX_API_TOKEN in your environment variables to use
+              the map.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className={clsx(styles.container, className)}>
+    <div className={className}>
+      <div className={styles.container}>
         {isLoading && (
           <div className={styles.loadingOverlay}>
             <div className={styles.loadingSpinner} />
@@ -232,18 +226,10 @@ export const AreasServiced = (props: AreasServicedProps) => {
       {serviceAreasWithGeoJSON.length > 0 && (
         <div className={styles.mapLegend}>
           {serviceAreasWithGeoJSON.map((serviceArea) => (
-            <div className={styles.mapLegendItem} key={serviceArea.serviceSlug}>
-              <div
-                className={styles.mapLegendBox}
-                style={{
-                  backgroundColor: hexToRgba(serviceArea.color, 0.4),
-                  borderColor: serviceArea.color,
-                }}
-              />
-              <span className={styles.mapLegendLabel}>
-                {serviceArea.serviceName}
-              </span>
-            </div>
+            <LegendItem
+              key={serviceArea.serviceSlug}
+              serviceArea={serviceArea}
+            />
           ))}
         </div>
       )}

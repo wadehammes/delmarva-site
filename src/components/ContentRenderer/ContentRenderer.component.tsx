@@ -65,11 +65,12 @@ import type { ContentEntries } from "src/contentful/parseSections";
 
 interface ContentRendererProps {
   content: ContentEntries;
+  contentLayout?: string;
   locale?: string;
 }
 
 export const ContentRenderer = (props: ContentRendererProps) => {
-  const { content, locale } = props;
+  const { content, contentLayout, locale } = props;
 
   if (!content) {
     return null;
@@ -112,7 +113,13 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentModules fields={parsedModule} locale={locale} />;
+      return (
+        <ContentModules
+          contentLayout={contentLayout}
+          fields={parsedModule}
+          locale={locale}
+        />
+      );
     }
     case "contentGrid": {
       const parsedGrid = parseContentGrid(content as ContentGridEntry);

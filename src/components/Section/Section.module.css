@@ -321,10 +321,13 @@
   justify-content: center;
   width: 100%;
   max-width: 76ch;
-  padding-bottom: 4rem;
   margin: 0 auto;
   text-align: center;
   text-wrap: balance;
+
+  &.hasSectionContent {
+    padding-bottom: 4rem;
+  }
 }
 
 .sectionHeader + *:has(.sectionContent) {

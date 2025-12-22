@@ -32,6 +32,7 @@ export const SectionRenderer = (props: SectionRendererProps) => {
           return (
             <ContentRenderer
               content={content}
+              contentLayout={section.contentLayout}
               key={content.sys.id}
               locale={locale}
             />
