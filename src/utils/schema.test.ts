@@ -112,10 +112,10 @@ describe("schema", () => {
       const baseUrl = "https://www.delmarvasite.com";
       const schema = createOrganizationSchema(baseUrl);
 
-      expect(schema).toEqual({
+      expect(schema).toMatchObject({
         "@context": "https://schema.org",
         "@id": `${baseUrl}#organization`,
-        "@type": "Organization",
+        "@type": "LocalBusiness",
         address: {
           "@type": "PostalAddress",
           addressCountry: "US",
@@ -124,18 +124,25 @@ describe("schema", () => {
           postalCode: "21114",
           streetAddress: "2200 Defense Highway, Suite 107",
         },
+        contactPoint: {
+          "@type": "ContactPoint",
+          email: "hello@delmarvasite.com",
+        },
         faxNumber: "+1-443-292-8090",
         name: "Delmarva Site Development",
         telephone: "+1-443-292-8083",
         url: baseUrl,
       });
+      expect("geo" in schema && schema.geo).toBeDefined();
+      expect("knowsAbout" in schema && schema.knowsAbout).toBeDefined();
+      expect("image" in schema && schema.image).toBeDefined();
     });
 
     it("should include areasServed when provided", () => {
       const baseUrl = "https://www.delmarvasite.com";
       const areasServed = ["Accomack County, VA", "Worcester County, MD"];
 
-      const schema = createOrganizationSchema(baseUrl, areasServed);
+      const schema = createOrganizationSchema(baseUrl, { areasServed });
 
       expect("areaServed" in schema && schema.areaServed).toEqual([
         {
@@ -151,7 +158,7 @@ describe("schema", () => {
 
     it("should not include areasServed when empty array provided", () => {
       const baseUrl = "https://www.delmarvasite.com";
-      const schema = createOrganizationSchema(baseUrl, []);
+      const schema = createOrganizationSchema(baseUrl, { areasServed: [] });
 
       expect(
         "areaServed" in schema ? schema.areaServed : undefined,
@@ -409,7 +416,7 @@ describe("schema", () => {
         "@context": "https://schema.org",
         "@graph": expect.arrayContaining([
           expect.objectContaining({
-            "@type": "Organization",
+            "@type": "LocalBusiness",
           }),
           expect.objectContaining({
             "@type": "WebPage",
@@ -422,7 +429,7 @@ describe("schema", () => {
       expect(graph["@graph"]).toHaveLength(3);
     });
 
-    it("should generate schema graph without webpage when page is null", async () => {
+    it("should generate schema graph with webpage even when page is null", async () => {
       const options = {
         locale: "en" as const,
         page: null,
@@ -432,12 +439,22 @@ describe("schema", () => {
 
       const graph = await generateSchemaGraph(options);
 
-      expect(graph["@graph"]).toHaveLength(2);
-      expect(graph["@graph"]).not.toContainEqual(
+      expect(graph["@graph"]).toHaveLength(3);
+      expect(graph["@graph"]).toContainEqual(
         expect.objectContaining({
           "@type": "WebPage",
         }),
       );
+
+      const webpage = graph["@graph"].find(
+        (item): boolean =>
+          typeof item === "object" &&
+          item !== null &&
+          "@type" in item &&
+          item["@type"] === "WebPage",
+      ) as { "@type": "WebPage"; url: string } | undefined;
+      expect(webpage).toBeDefined();
+      expect(webpage?.url).toBe("https://www.delmarvasite.com/test-page");
     });
 
     it("should generate schema graph with service schemas when services provided", async () => {
@@ -506,7 +523,7 @@ describe("schema", () => {
 
       const organization = graph["@graph"].find((item): boolean => {
         if (typeof item === "object" && item !== null && "@type" in item) {
-          return item["@type"] === "Organization";
+          return item["@type"] === "LocalBusiness";
         }
         return false;
       }) as

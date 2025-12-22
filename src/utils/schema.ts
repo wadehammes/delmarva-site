@@ -1,7 +1,8 @@
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import type {
   BreadcrumbList,
-  Organization,
+  LocalBusiness,
+  OfferCatalog,
   Service,
   WebPage,
   WithContext,
@@ -17,7 +18,7 @@ import { createMediaUrl, envUrl } from "src/utils/helpers";
 export interface SchemaGraphContext {
   "@context": "https://schema.org";
   "@graph": Array<
-    | WithContext<Organization>
+    | WithContext<LocalBusiness>
     | WithContext<WebPage>
     | WithContext<BreadcrumbList>
     | WithContext<Service>
@@ -32,6 +33,17 @@ export interface GenerateSchemaGraphOptions {
   services?: ServiceType[];
   organizationAreasServed?: string[];
   additionalBreadcrumbItems?: Array<{ name: string; url?: string }>;
+  organizationOptions?: OrganizationSchemaOptions;
+}
+
+export interface OrganizationSchemaOptions {
+  areasServed?: string[];
+  email?: string;
+  knowsAbout?: string[];
+  linkedInUrl?: string;
+  logoUrl?: string;
+  description?: string;
+  services?: ServiceType[];
 }
 
 export interface GenerateServicePageSchemaOptions {
@@ -39,19 +51,30 @@ export interface GenerateServicePageSchemaOptions {
   slug: string;
   locale: Locales;
   preview: boolean;
+  organizationOptions?: OrganizationSchemaOptions;
 }
 
 /**
- * Creates an Organization schema
+ * Creates a LocalBusiness schema for the organization
  */
 export function createOrganizationSchema(
   baseUrl: string,
-  areasServed?: string[],
-): WithContext<Organization> {
-  const organization: WithContext<Organization> = {
+  options?: OrganizationSchemaOptions,
+): WithContext<LocalBusiness> {
+  const {
+    areasServed,
+    email,
+    knowsAbout,
+    linkedInUrl,
+    logoUrl,
+    description,
+    services,
+  } = options || {};
+
+  const organization: WithContext<LocalBusiness> = {
     "@context": "https://schema.org",
     "@id": `${baseUrl}#organization`,
-    "@type": "Organization",
+    "@type": "LocalBusiness",
     address: {
       "@type": "PostalAddress",
       addressCountry: "US",
@@ -60,17 +83,83 @@ export function createOrganizationSchema(
       postalCode: "21114",
       streetAddress: "2200 Defense Highway, Suite 107",
     },
+    contactPoint: {
+      "@type": "ContactPoint",
+      areaServed: "US",
+      contactType: "customer service",
+      email: email || "hello@delmarvasite.com",
+      faxNumber: "+1-443-292-8090",
+      telephone: "+1-443-292-8083",
+    },
     faxNumber: "+1-443-292-8090",
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: "38.9926619",
+      longitude: "-76.7006339",
+    },
     name: "Delmarva Site Development",
     telephone: "+1-443-292-8083",
     url: baseUrl,
   };
+
+  if (description) {
+    organization.description = description;
+  }
+
+  if (logoUrl) {
+    organization.logo = {
+      "@type": "ImageObject",
+      url: logoUrl,
+    };
+  } else {
+    organization.image = `${baseUrl}/opengraph-image.png`;
+  }
+
+  const sameAs: string[] = [];
+  if (linkedInUrl) {
+    sameAs.push(linkedInUrl);
+  }
+  if (sameAs.length > 0) {
+    organization.sameAs = sameAs;
+  }
+
+  if (knowsAbout && knowsAbout.length > 0) {
+    organization.knowsAbout = knowsAbout;
+  } else {
+    organization.knowsAbout = [
+      "Site Development",
+      "Land Development",
+      "Construction",
+      "Site Planning",
+      "Site Preparation",
+      "Excavation",
+      "Grading",
+      "Drainage",
+    ];
+  }
 
   if (areasServed && areasServed.length > 0) {
     organization.areaServed = areasServed.map((area) => ({
       "@type": "Place",
       name: area,
     }));
+  }
+
+  if (services && services.length > 0) {
+    const offerCatalog: OfferCatalog = {
+      "@type": "OfferCatalog",
+      itemListElement: services.map((service, index) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: service.serviceName,
+          url: `${baseUrl}/${SERVICES_PAGE_SLUG}/${service.slug}`,
+        },
+        position: index + 1,
+      })),
+      name: "Site Development Services",
+    };
+    organization.hasOfferCatalog = offerCatalog;
   }
 
   return organization;
@@ -198,6 +287,7 @@ export async function generateSchemaGraph(
     services = [],
     organizationAreasServed,
     additionalBreadcrumbItems,
+    organizationOptions,
   } = options;
 
   const baseUrl = envUrl();
@@ -206,16 +296,17 @@ export async function generateSchemaGraph(
   const organizationId = `${baseUrl}#organization`;
 
   const graph: Array<
-    | WithContext<Organization>
+    | WithContext<LocalBusiness>
     | WithContext<WebPage>
     | WithContext<BreadcrumbList>
     | WithContext<Service>
   > = [];
 
-  const organizationSchema = createOrganizationSchema(
-    baseUrl,
-    organizationAreasServed,
-  );
+  const organizationSchema = createOrganizationSchema(baseUrl, {
+    areasServed: organizationAreasServed,
+    services: services.length > 0 ? services : undefined,
+    ...organizationOptions,
+  });
   graph.push(organizationSchema);
 
   if (page) {
@@ -224,6 +315,17 @@ export async function generateSchemaGraph(
       canonicalUrl,
       organizationId,
     );
+    graph.push(webpageSchema);
+  } else {
+    const webpageSchema: WithContext<WebPage> = {
+      "@context": "https://schema.org",
+      "@id": `${canonicalUrl}#webpage`,
+      "@type": "WebPage",
+      publisher: {
+        "@id": organizationId,
+      },
+      url: canonicalUrl,
+    };
     graph.push(webpageSchema);
   }
 
@@ -260,14 +362,17 @@ export async function generateSchemaGraph(
 export async function generateServicePageSchemaGraph(
   options: GenerateServicePageSchemaOptions,
 ): Promise<SchemaGraphContext> {
-  const { service, slug, locale } = options;
+  const { service, slug, locale, organizationOptions } = options;
 
   const baseUrl = envUrl();
   const canonicalUrl = `${baseUrl}/${SERVICES_PAGE_SLUG}/${service.slug}`;
   const organizationId = `${baseUrl}#organization`;
 
   const serviceSchema = await createServiceSchema(service, baseUrl);
-  const organizationSchema = createOrganizationSchema(baseUrl);
+  const organizationSchema = createOrganizationSchema(
+    baseUrl,
+    organizationOptions,
+  );
 
   const webpageSchema: WithContext<WebPage> = {
     "@context": "https://schema.org",
@@ -292,7 +397,7 @@ export async function generateServicePageSchemaGraph(
   ]);
 
   const graph: Array<
-    | WithContext<Organization>
+    | WithContext<LocalBusiness>
     | WithContext<WebPage>
     | WithContext<BreadcrumbList>
     | WithContext<Service>
