@@ -49,29 +49,27 @@ export const Footer = (props: FooterProps) => {
             {linksTitle && (
               <span className={styles.footerLinksTitle}>{linksTitle}</span>
             )}
-            {links && links.length > 0 && (
-              <ul className={styles.footerLinks}>
-                {links.map((link) => {
-                  if (!link) {
-                    return null;
-                  }
+            <ul className={styles.footerLinks}>
+              {links.map((link) => {
+                if (!link) {
+                  return null;
+                }
 
-                  const url = parseCtaUrl(link);
+                const url = parseCtaUrl(link);
 
-                  if (!url) {
-                    return null;
-                  }
+                if (!url) {
+                  return null;
+                }
 
-                  return (
-                    <li key={link.id}>
-                      <Link className={styles.footerLink} href={url}>
-                        {link.text}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+                return (
+                  <li key={link.id}>
+                    <Link className={styles.footerLink} href={url}>
+                      {link.text}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         ) : null}
         {otherLinks && otherLinks.length > 0 ? (
@@ -79,29 +77,27 @@ export const Footer = (props: FooterProps) => {
             {otherLinksTitle && (
               <span className={styles.footerLinksTitle}>{otherLinksTitle}</span>
             )}
-            {otherLinks && otherLinks.length > 0 && (
-              <ul className={styles.footerLinks}>
-                {otherLinks.map((link) => {
-                  if (!link) {
-                    return null;
-                  }
+            <ul className={styles.footerLinks}>
+              {otherLinks.map((link) => {
+                if (!link) {
+                  return null;
+                }
 
-                  const url = parseCtaUrl(link);
+                const url = parseCtaUrl(link);
 
-                  if (!url) {
-                    return null;
-                  }
+                if (!url) {
+                  return null;
+                }
 
-                  return (
-                    <li key={link.id}>
-                      <Link className={styles.footerLink} href={url}>
-                        {link.text}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+                return (
+                  <li key={link.id}>
+                    <Link className={styles.footerLink} href={url}>
+                      {link.text}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         ) : null}
         <div className={styles.footerSection}>

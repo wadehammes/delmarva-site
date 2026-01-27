@@ -57,23 +57,23 @@ const Home = async (props: HomeProps) => {
 
   const draft = await draftMode();
 
-  const page = await fetchPage({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    slug: "home",
-  });
-
-  const navigation = await fetchNavigation({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    slug: NAVIGATION_ID,
-  });
-
-  const footer = await fetchFooter({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    slug: FOOTER_ID,
-  });
+  const [page, navigation, footer] = await Promise.all([
+    fetchPage({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      slug: "home",
+    }),
+    fetchNavigation({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      slug: NAVIGATION_ID,
+    }),
+    fetchFooter({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      slug: FOOTER_ID,
+    }),
+  ]);
 
   if (!page || !navigation || !footer) {
     return notFound();

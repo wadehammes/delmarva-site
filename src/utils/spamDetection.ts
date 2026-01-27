@@ -67,12 +67,15 @@ export function isSpam(content: {
   isSpam: boolean;
   reasons: string[];
 } {
-  const reasons: string[] = [];
-
-  // Check message content
+  // Early return for critical spam patterns
   if (containsSpamPatterns(content.message)) {
-    reasons.push("Message contains spam patterns");
+    return {
+      isSpam: true,
+      reasons: ["Message contains spam patterns"],
+    };
   }
+
+  const reasons: string[] = [];
 
   if (isMessageTooShort(content.message)) {
     reasons.push("Message is too short");
@@ -100,13 +103,12 @@ export function isSpam(content: {
     }
   }
 
-  // Only flag as spam if multiple indicators OR critical spam patterns
+  // Only flag as spam if multiple indicators
   // This prevents false positives from single checks like "message too short"
-  const hasCriticalSpam = containsSpamPatterns(content.message);
   const hasMultipleIndicators = reasons.length >= 2;
 
   return {
-    isSpam: hasCriticalSpam || hasMultipleIndicators,
+    isSpam: hasMultipleIndicators,
     reasons,
   };
 }

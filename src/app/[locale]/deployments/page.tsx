@@ -20,17 +20,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const Deployments = async () => {
-  const navigation = await fetchNavigation({
-    locale: "en",
-    preview: false,
-    slug: NAVIGATION_ID,
-  });
-
-  const footer = await fetchFooter({
-    locale: "en",
-    preview: false,
-    slug: FOOTER_ID,
-  });
+  const [navigation, footer] = await Promise.all([
+    fetchNavigation({
+      locale: "en",
+      preview: false,
+      slug: NAVIGATION_ID,
+    }),
+    fetchFooter({
+      locale: "en",
+      preview: false,
+      slug: FOOTER_ID,
+    }),
+  ]);
 
   if (!footer || !navigation) {
     return notFound();

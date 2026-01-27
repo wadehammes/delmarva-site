@@ -1,10 +1,12 @@
 "use client";
 
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import ReactPlayer from "react-player";
 import styles from "src/components/VideoPlayer/VideoPlayer.module.css";
 import { useIsBrowser } from "src/hooks/useIsBrowser";
+
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 interface VideoPlayerProps {
   autoPlay?: boolean;
