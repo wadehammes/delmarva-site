@@ -60,6 +60,7 @@
 
 .projectCardContent {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 1rem;
   padding: 1em;
@@ -67,7 +68,9 @@
 
 .statsList {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  justify-content: flex-end;
   margin: 0;
 }
 
