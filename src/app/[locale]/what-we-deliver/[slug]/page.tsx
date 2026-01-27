@@ -130,45 +130,45 @@ async function Page({ params }: PageProps) {
 
   const draft = await draftMode();
 
-  const service = await fetchService({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    slug,
-  });
-
-  const navigation = await fetchNavigation({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    slug: NAVIGATION_ID,
-  });
-
-  const footer = await fetchFooter({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    slug: FOOTER_ID,
-  });
+  const [service, navigation, footer] = await Promise.all([
+    fetchService({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      slug,
+    }),
+    fetchNavigation({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      slug: NAVIGATION_ID,
+    }),
+    fetchFooter({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      slug: FOOTER_ID,
+    }),
+  ]);
 
   if (!footer || !navigation || !service) {
     return notFound();
   }
 
-  const servicePhotos = await fetchServicePhotos({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    slug: service.slug,
-  });
-
-  const projects = await fetchProjectsByService({
-    preview: draft.isEnabled,
-    serviceSlug: service.slug,
-  });
-
-  const schemaGraph = await generateServicePageSchemaGraph({
-    locale: validLocale,
-    preview: draft.isEnabled,
-    service,
-    slug: `${SERVICES_PAGE_SLUG}/${service.slug}`,
-  });
+  const [servicePhotos, projects, schemaGraph] = await Promise.all([
+    fetchServicePhotos({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      slug: service.slug,
+    }),
+    fetchProjectsByService({
+      preview: draft.isEnabled,
+      serviceSlug: service.slug,
+    }),
+    generateServicePageSchemaGraph({
+      locale: validLocale,
+      preview: draft.isEnabled,
+      service,
+      slug: `${SERVICES_PAGE_SLUG}/${service.slug}`,
+    }),
+  ]);
 
   return (
     <PageLayout footer={footer} navigation={navigation}>

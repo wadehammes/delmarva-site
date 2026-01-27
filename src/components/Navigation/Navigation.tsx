@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { MobileNavigationDrawer } from "src/components/Navigation/MobileNavigation.component";
 import styles from "src/components/Navigation/Navigation.module.css";
@@ -24,7 +24,6 @@ export const Navigation = (props: NavigationProps) => {
   const { navigation, page: pageProp } = props;
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const isBrowser = useIsBrowser();
   const pathname = usePathname();
@@ -35,6 +34,7 @@ export const Navigation = (props: NavigationProps) => {
 
   // Cache DOM elements to avoid repeated queries
   const sectionElementsRef = useRef<Map<string, HTMLElement>>(new Map());
+  const lastScrollYRef = useRef(0);
   const { isMounted, addCleanup, removeCleanup } = useDOMCleanup();
 
   // DOM cleanup function
@@ -48,16 +48,17 @@ export const Navigation = (props: NavigationProps) => {
       if (!isMounted()) return;
 
       const currentScrollY = window.scrollY;
+      const prevScrollY = lastScrollYRef.current;
 
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      if (currentScrollY > prevScrollY && currentScrollY > 100) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     }, 16),
-    [lastScrollY, isMounted],
+    [isMounted],
   );
 
   // Memoized section scroll handler
@@ -104,7 +105,7 @@ export const Navigation = (props: NavigationProps) => {
 
       setCurrentSectionIndex(currentIndex);
     }, 32),
-    [page?.sections, isMounted],
+    [page?.sections?.length, isMounted],
   );
 
   useEffect(() => {
@@ -154,6 +155,22 @@ export const Navigation = (props: NavigationProps) => {
   // Show background if we're not currently on a hero section
   const shouldShowBackground = !isCurrentSectionHero();
 
+  const ctaButtonTrackingData = useMemo(
+    () =>
+      navigation?.ctaButton
+        ? JSON.stringify({
+            event: "Clicked Navigation CTA Button",
+            label: navigation.ctaButton.text,
+          })
+        : undefined,
+    [navigation?.ctaButton?.text],
+  );
+
+  const mobileNavToggleTrackingData = JSON.stringify({
+    event: "Clicked Mobile Navigation Toggle Button",
+    label: "Menu Toggle",
+  });
+
   if (!navigation) {
     return null;
   }
@@ -195,10 +212,7 @@ export const Navigation = (props: NavigationProps) => {
         {navigation.ctaButton ? (
           <div className={styles.ctaButton}>
             <ButtonLink
-              data-tracking-click={JSON.stringify({
-                event: "Clicked Navigation CTA Button",
-                label: navigation.ctaButton.text,
-              })}
+              data-tracking-click={ctaButtonTrackingData ?? ""}
               href={navigation.ctaButton.pageLink?.url ?? ""}
               label={navigation.ctaButton.text ?? ""}
               variant="primary"
@@ -209,10 +223,7 @@ export const Navigation = (props: NavigationProps) => {
           <button
             aria-label="Navigation Menu Toggle"
             className={styles.mobileNavToggle}
-            data-tracking-click={JSON.stringify({
-              event: "Clicked Mobile Navigation Toggle Button",
-              label: "Menu Toggle",
-            })}
+            data-tracking-click={mobileNavToggleTrackingData}
             onClick={() => setIsMobileNavOpen((prev) => !prev)}
             type="button"
           >
