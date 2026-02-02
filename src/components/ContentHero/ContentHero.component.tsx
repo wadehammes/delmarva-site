@@ -6,11 +6,6 @@ import { HeroVideo } from "src/components/ContentHero/HeroVideo.component";
 import CTA from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import {
-  DelmarvaColors,
-  OverlayStyle,
-  Placement,
-} from "src/contentful/interfaces";
-import {
   type ContentHero as ContentHeroType,
   HeroHeight,
 } from "src/contentful/parseContentHero";
@@ -46,14 +41,12 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
         [styles.heroFullScreen]: heroHeight === HeroHeight.FullScreen,
         [styles.heroEightyPercent]: heroHeight === HeroHeight.EightyPercent,
         [styles.heroSmall]: heroHeight === HeroHeight.Small,
-        [styles.heroContentLeft]: copyPlacement === Placement.LeftAligned,
-        [styles.heroContentRight]: copyPlacement === Placement.RightAligned,
+        [styles.heroContentLeft]: copyPlacement === "Left Aligned",
+        [styles.heroContentRight]: copyPlacement === "Right Aligned",
       })}
       style={
         {
-          "--dot-bg": createBackgroundColor(
-            overlayColor ?? DelmarvaColors.Black,
-          ),
+          "--dot-bg": createBackgroundColor(overlayColor ?? "Black"),
         } as CSSProperties
       }
     >
@@ -88,15 +81,14 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
       </div>
       <div
         className={clsx(styles.heroOverlay, {
-          [styles.heroOverlayStyleMicrodot]:
-            overlayStyle === OverlayStyle.Microdot,
+          [styles.heroOverlayStyleMicrodot]: overlayStyle === "Microdot",
         })}
         style={{
           backgroundColor:
-            overlayStyle !== OverlayStyle.Microdot
-              ? createBackgroundColor(overlayColor ?? DelmarvaColors.Black)
+            overlayStyle !== "Microdot"
+              ? createBackgroundColor(overlayColor ?? "Black")
               : "transparent",
-          opacity: overlayOpacity ?? 0.15,
+          opacity: Number(overlayOpacity ?? 0.15),
         }}
       />
       <div className={clsx(styles.heroContent)}>

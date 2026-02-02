@@ -1,7 +1,7 @@
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
-import type { Locales } from "src/contentful/interfaces";
 import type { TypeContentRecentNewsSkeleton } from "src/contentful/types/TypeContentRecentNews";
+import type { Locales } from "src/i18n/routing";
 
 export interface ContentRecentNewsType {
   id: string;
@@ -51,6 +51,7 @@ export async function fetchRecentNews({
   const limit = 100;
   let total = 0;
   let skip = 0;
+  const seenIds = new Set<string>();
   let allRecentNews: ContentRecentNewsType[] = [];
 
   do {
@@ -74,7 +75,12 @@ export async function fetchRecentNews({
       .filter(
         (recentNews): recentNews is ContentRecentNewsType =>
           recentNews !== null,
-      );
+      )
+      .filter((item) => {
+        if (seenIds.has(item.id)) return false;
+        seenIds.add(item.id);
+        return true;
+      });
 
     total = recentNews.total;
     skip += limit;

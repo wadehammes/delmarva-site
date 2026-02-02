@@ -1,37 +1,76 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import type {
-  CSSColorAdjustScale,
-  DelmarvaColors,
-  OverlayStyle,
-  Placement,
-} from "src/contentful/interfaces";
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
 import { parseContentfulAsset } from "src/contentful/parseContentfulAsset";
-import { type Cta, parseContentfulCta } from "src/contentful/parseCta";
-import type { TypeContentHeroSkeleton } from "src/contentful/types";
+import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
+import type {
+  TypeContentHeroFields,
+  TypeContentHeroSkeleton,
+} from "src/contentful/types";
 
-export enum HeroHeight {
-  EightyPercent = "80% Height",
-  FullScreen = "Full Screen",
-  Small = "Small",
-}
+type HeroHeightType = ExtractSymbolType<
+  NonNullable<TypeContentHeroFields["heroHeight"]>
+>;
 
-// Our simplified version of an copy block entry.
-// We don't need all the data that Contentful gives us.
+export const HeroHeight = {
+  EightyPercent: "80% Height",
+  FullScreen: "Full Screen",
+  Regular: "Regular",
+  Small: "Small",
+} as const satisfies Record<string, HeroHeightType>;
+type PlacementType = ExtractSymbolType<
+  NonNullable<TypeContentHeroFields["copyPlacement"]>
+>;
+type DelmarvaColorsType = ExtractSymbolType<
+  NonNullable<TypeContentHeroFields["overlayColor"]>
+>;
+type OverlayStyleType = ExtractSymbolType<
+  NonNullable<TypeContentHeroFields["overlayStyle"]>
+>;
+type CSSColorAdjustScaleType =
+  | NonNullable<TypeContentHeroFields["backgroundMediaSaturation"]>
+  | 0
+  | 0.1
+  | 0.2
+  | 0.3
+  | 0.5
+  | 0.6
+  | 0.7
+  | 0.8
+  | 0.9
+  | 1;
+
 export interface ContentHero {
-  entryTitle: string;
+  entryTitle?: string;
   copy: Document | undefined;
-  cta?: Cta | null;
-  heroHeight: HeroHeight;
+  cta?: CtaType | null;
+  heroHeight: HeroHeightType;
   id: string;
-  copyPlacement: Placement;
+  copyPlacement: PlacementType;
   backgroundMedia: ContentfulAsset[];
-  backgroundMediaSaturation: CSSColorAdjustScale;
-  overlayColor: DelmarvaColors;
-  overlayOpacity: CSSColorAdjustScale;
-  overlayStyle: OverlayStyle;
+  backgroundMediaSaturation: CSSColorAdjustScaleType;
+  overlayColor: DelmarvaColorsType;
+  overlayOpacity: CSSColorAdjustScaleType;
+  overlayStyle: OverlayStyleType;
 }
+
+const _validateContentHeroCheck: ContentfulTypeCheck<
+  ContentHero,
+  TypeContentHeroFields,
+  | "id"
+  | "copy"
+  | "heroHeight"
+  | "copyPlacement"
+  | "backgroundMedia"
+  | "backgroundMediaSaturation"
+  | "overlayColor"
+  | "overlayOpacity"
+  | "overlayStyle"
+> = true;
 
 export type ContentHeroEntry =
   | Entry<TypeContentHeroSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
@@ -52,15 +91,15 @@ export function parseContentHero(entry: ContentHeroEntry): ContentHero | null {
         ?.map((asset) => parseContentfulAsset(asset))
         .filter((asset): asset is ContentfulAsset => asset !== null) ?? [],
     backgroundMediaSaturation: entry.fields
-      .backgroundMediaSaturation as CSSColorAdjustScale,
+      .backgroundMediaSaturation as CSSColorAdjustScaleType,
     copy: entry.fields.copy,
-    copyPlacement: entry.fields.copyPlacement as Placement,
+    copyPlacement: entry.fields.copyPlacement as PlacementType,
     cta: entry.fields.cta ? parseContentfulCta(entry.fields.cta) : null,
     entryTitle: entry.fields.entryTitle ?? "",
-    heroHeight: entry.fields.heroHeight as HeroHeight,
+    heroHeight: entry.fields.heroHeight as HeroHeightType,
     id: entry.sys.id,
-    overlayColor: entry.fields.overlayColor as DelmarvaColors,
-    overlayOpacity: entry.fields.overlayOpacity as CSSColorAdjustScale,
-    overlayStyle: entry.fields.overlayStyle as OverlayStyle,
+    overlayColor: entry.fields.overlayColor as DelmarvaColorsType,
+    overlayOpacity: entry.fields.overlayOpacity as CSSColorAdjustScaleType,
+    overlayStyle: entry.fields.overlayStyle as OverlayStyleType,
   };
 }

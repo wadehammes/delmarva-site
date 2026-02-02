@@ -1,11 +1,21 @@
 import type { Entry } from "contentful";
+import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import type { ContentEntries } from "src/contentful/parseSections";
-import type { TypeContentMarqueeSkeleton } from "src/contentful/types/TypeContentMarquee";
+import type {
+  TypeContentMarqueeFields,
+  TypeContentMarqueeSkeleton,
+} from "src/contentful/types/TypeContentMarquee";
 
 export interface ContentMarquee {
   id: string;
   items: (ContentEntries | null)[];
 }
+
+const _validateContentMarqueeCheck: ContentfulTypeCheck<
+  ContentMarquee,
+  TypeContentMarqueeFields,
+  "id" | "items"
+> = true;
 
 export type ContentMarqueeEntry =
   | Entry<TypeContentMarqueeSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>

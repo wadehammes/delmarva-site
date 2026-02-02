@@ -1,15 +1,7 @@
 import type { Document as RichTextDocument } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import type { ContentRecentNewsEntry } from "src/contentful/getContentRecentNews";
-import type {
-  ContentGap,
-  ContentLayout,
-  DelmarvaColors,
-  OverlayStyle,
-  Padding,
-  Placement,
-  VerticalAlignment,
-} from "src/contentful/interfaces";
+import type { ExtractSymbolType } from "src/contentful/helpers";
 import type { ContentCardEntry } from "src/contentful/parseContentCard";
 import type { ContentCarouselEntry } from "src/contentful/parseContentCarousel";
 import type { ContentCopyMediaBlockEntry } from "src/contentful/parseContentCopyMediaBlock";
@@ -22,11 +14,35 @@ import type { ContentStatBlockEntry } from "src/contentful/parseContentStatBlock
 import type { ContentTestimonialEntry } from "src/contentful/parseContentTestimonial";
 import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
-import { type Cta, parseContentfulCta } from "src/contentful/parseCta";
+import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
 import type { FormJoinOurTeamEntry } from "src/contentful/parseFormJoinOurTeam";
-import type { TypeSectionSkeleton } from "src/contentful/types";
+import type {
+  TypeSectionFields,
+  TypeSectionSkeleton,
+} from "src/contentful/types/TypeSection";
 
 type ContentStyle = "Overlap Section Above" | "Regular";
+type SectionBackgroundColor = ExtractSymbolType<
+  NonNullable<TypeSectionFields["backgroundColor"]>
+>;
+type SectionContentGap = ExtractSymbolType<
+  NonNullable<TypeSectionFields["contentGap"]>
+>;
+type SectionContentLayout = ExtractSymbolType<
+  NonNullable<TypeSectionFields["contentLayout"]>
+>;
+type SectionOverlayStyle = ExtractSymbolType<
+  NonNullable<TypeSectionFields["sectionBackgroundStyle"]>
+>;
+type SectionPadding = ExtractSymbolType<
+  NonNullable<TypeSectionFields["sectionPadding"]>
+>;
+type SectionContentPlacement = ExtractSymbolType<
+  NonNullable<TypeSectionFields["sectionContentPlacement"]>
+>;
+type SectionVerticalAlignment = ExtractSymbolType<
+  NonNullable<TypeSectionFields["contentVerticalAlignment"]>
+>;
 
 export type ContentEntries =
   | CopyBlockEntry
@@ -46,19 +62,19 @@ export type ContentEntries =
   | undefined;
 
 export interface SectionType {
-  backgroundColor?: DelmarvaColors;
+  backgroundColor?: SectionBackgroundColor;
   content?: ContentEntries[] | undefined;
-  contentGap?: ContentGap;
-  contentLayout?: ContentLayout;
+  contentGap?: SectionContentGap;
+  contentLayout?: SectionContentLayout;
   contentStyle?: ContentStyle;
-  contentVerticalAlignment?: VerticalAlignment;
-  cta?: Cta | null;
+  contentVerticalAlignment?: SectionVerticalAlignment;
+  cta?: CtaType | null;
   id: string;
-  sectionBackgroundStyle?: OverlayStyle;
-  sectionContentPlacement?: Placement;
+  sectionBackgroundStyle?: SectionOverlayStyle;
+  sectionContentPlacement?: SectionContentPlacement;
   sectionEyebrow?: string;
   sectionHeader?: RichTextDocument;
-  sectionPadding?: Padding;
+  sectionPadding?: SectionPadding;
   slug?: string | undefined;
   showSectionSeparator?: boolean;
 }
@@ -70,29 +86,34 @@ export type SectionEntry =
 export function parseContentfulSection(
   section: SectionEntry,
 ): SectionType | null {
-  if (!section || !("fields" in section)) {
+  if (!section) {
     return null;
   }
 
+  if (!("fields" in section)) {
+    return null;
+  }
+
+  const { fields } = section;
+
   return {
-    backgroundColor: section.fields.backgroundColor as DelmarvaColors,
-    content:
-      section.fields?.content?.map((entry) => entry as ContentEntries) ?? [],
-    contentGap: section.fields.contentGap as ContentGap,
-    contentLayout: section.fields.contentLayout as ContentLayout,
-    contentStyle: section.fields.contentStyle as ContentStyle,
-    contentVerticalAlignment: section.fields
-      .contentVerticalAlignment as VerticalAlignment,
-    cta: parseContentfulCta(section.fields.cta) ?? undefined,
+    backgroundColor: fields.backgroundColor as SectionBackgroundColor,
+    content: fields.content?.map((entry) => entry as ContentEntries) ?? [],
+    contentGap: fields.contentGap as SectionContentGap,
+    contentLayout: fields.contentLayout as SectionContentLayout,
+    contentStyle: fields.contentStyle as ContentStyle,
+    contentVerticalAlignment:
+      fields.contentVerticalAlignment as SectionVerticalAlignment,
+    cta: parseContentfulCta(fields.cta) ?? undefined,
     id: section.sys.id,
-    sectionBackgroundStyle: section.fields
-      .sectionBackgroundStyle as OverlayStyle,
-    sectionContentPlacement: section.fields
-      .sectionContentPlacement as Placement,
-    sectionEyebrow: section.fields.sectionEyebrow,
-    sectionHeader: section.fields.sectionHeader,
-    sectionPadding: section.fields.sectionPadding as Padding,
-    showSectionSeparator: Boolean(section.fields.showSectionSeparator),
-    slug: section.fields.slug,
+    sectionBackgroundStyle:
+      fields.sectionBackgroundStyle as SectionOverlayStyle,
+    sectionContentPlacement:
+      fields.sectionContentPlacement as SectionContentPlacement,
+    sectionEyebrow: fields.sectionEyebrow,
+    sectionHeader: fields.sectionHeader,
+    sectionPadding: fields.sectionPadding as SectionPadding,
+    showSectionSeparator: Boolean(fields.showSectionSeparator),
+    slug: fields.slug,
   };
 }

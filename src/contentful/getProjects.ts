@@ -5,7 +5,7 @@ import {
   parseContentfulService,
   type ServiceType,
 } from "src/contentful/getServices";
-import type { Locales } from "src/contentful/interfaces";
+import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
@@ -14,7 +14,11 @@ import {
   type ContentStatBlock,
   parseContentStatBlock,
 } from "src/contentful/parseContentStatBlock";
-import type { TypeProjectSkeleton } from "src/contentful/types/TypeProject";
+import type {
+  TypeProjectFields,
+  TypeProjectSkeleton,
+} from "src/contentful/types/TypeProject";
+import type { Locales } from "src/i18n/routing";
 
 export type ProjectEntry = Entry<
   TypeProjectSkeleton,
@@ -22,8 +26,6 @@ export type ProjectEntry = Entry<
   string
 >;
 
-// Our simplified version of a Project.
-// We don't need all the data that Contentful gives us.
 export interface ProjectType {
   id: string;
   projectName: string;
@@ -34,8 +36,12 @@ export interface ProjectType {
   services: (ServiceType | null)[];
 }
 
-// A function to transform a Contentful project
-// into our own Project object.
+const _validateProjectCheck: ContentfulTypeCheck<
+  ProjectType,
+  TypeProjectFields,
+  "id"
+> = true;
+
 export function parseContentfulProject(
   projectEntry?: ProjectEntry,
 ): ProjectType | null {
@@ -43,14 +49,20 @@ export function parseContentfulProject(
     return null;
   }
 
+  if (!("fields" in projectEntry)) {
+    return null;
+  }
+
+  const { fields } = projectEntry;
+
   return {
-    description: projectEntry.fields.description,
+    description: fields.description,
     id: projectEntry.sys.id,
-    media: projectEntry.fields.media?.map(parseContentfulAsset),
-    projectName: projectEntry.fields.projectName,
-    projectStats: projectEntry.fields.projectStats?.map(parseContentStatBlock),
-    services: projectEntry.fields.services.map(parseContentfulService),
-    slug: projectEntry.fields.slug,
+    media: fields.media?.map(parseContentfulAsset),
+    projectName: fields.projectName,
+    projectStats: fields.projectStats?.map(parseContentStatBlock),
+    services: fields.services.map(parseContentfulService),
+    slug: fields.slug,
   };
 }
 
@@ -59,10 +71,16 @@ export const parseProjectForNavigation = (projectEntry?: ProjectEntry) => {
     return null;
   }
 
+  if (!("fields" in projectEntry)) {
+    return null;
+  }
+
+  const { projectName, slug } = projectEntry.fields;
+
   return {
     id: projectEntry.sys.id,
-    projectName: projectEntry.fields.projectName,
-    slug: projectEntry.fields.slug,
+    projectName,
+    slug,
   };
 };
 
@@ -82,6 +100,7 @@ export async function fetchProjects({
   const limit = 100;
   let total = 0;
   let skip = 0;
+  const seenIds = new Set<string>();
   let allProjects: ProjectType[] = [];
 
   do {
@@ -98,7 +117,12 @@ export async function fetchProjects({
 
     const currentProjectEntries = projects.items
       .map(parseContentfulProject)
-      .filter((project): project is ProjectType => project !== null);
+      .filter((project): project is ProjectType => project !== null)
+      .filter((project) => {
+        if (seenIds.has(project.id)) return false;
+        seenIds.add(project.id);
+        return true;
+      });
 
     total = projects.total;
     skip += limit;
@@ -157,6 +181,7 @@ export async function fetchProjectsByService({
   const limit = 100;
   let total = 0;
   let skip = 0;
+  const seenIds = new Set<string>();
   let allProjects: ProjectType[] = [];
 
   do {
@@ -176,7 +201,12 @@ export async function fetchProjectsByService({
       .filter((project): project is ProjectType => project !== null)
       .filter((project) =>
         project.services.some((service) => service?.slug === serviceSlug),
-      );
+      )
+      .filter((project) => {
+        if (seenIds.has(project.id)) return false;
+        seenIds.add(project.id);
+        return true;
+      });
 
     total = projects.total;
     skip += limit;

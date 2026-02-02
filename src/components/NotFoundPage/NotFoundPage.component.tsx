@@ -1,7 +1,8 @@
+import { getLocale } from "next-intl/server";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import styles from "src/components/NotFoundPage/NotFoundPage.module.css";
-import type { Locales } from "src/contentful/interfaces";
-import { getLocale } from "src/i18n/getLocale";
+import { toLocaleSafe } from "src/i18n/localeUtils";
+import type { Locales } from "src/i18n/routing";
 
 const text: Record<Locales, string> = {
   en: "Oops! Page not found.",
@@ -14,7 +15,7 @@ const buttonText: Record<Locales, string> = {
 };
 
 export const NotFoundPage = async () => {
-  const locale = await getLocale();
+  const locale: Locales = toLocaleSafe(await getLocale());
 
   return (
     <div className={styles.notFoundPage}>

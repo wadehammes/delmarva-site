@@ -1,11 +1,27 @@
 import type { Entry } from "contentful";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import type { ContentEntries } from "src/contentful/parseSections";
-import type { TypeContentGridSkeleton } from "src/contentful/types/TypeContentGrid";
+import type {
+  TypeContentGridFields,
+  TypeContentGridSkeleton,
+} from "src/contentful/types/TypeContentGrid";
+
+type GridLayoutType = ExtractSymbolType<
+  NonNullable<TypeContentGridFields["gridLayout"]>
+>;
 
 export interface ContentGrid {
-  content: (ContentEntries | null)[];
-  gridLayout?: "Four Column" | "Three Column" | "Two Column";
+  content?: (ContentEntries | null)[];
+  gridLayout?: GridLayoutType;
 }
+
+const _validateContentGridCheck: ContentfulTypeCheck<
+  ContentGrid,
+  TypeContentGridFields
+> = true;
 
 export type ContentGridEntry =
   | Entry<TypeContentGridSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>

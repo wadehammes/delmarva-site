@@ -1,29 +1,29 @@
-import { ServiceCountiesMapColor } from "src/contentful/interfaces";
+import type { ExtractSymbolType } from "src/contentful/helpers";
+import type { TypeServiceFields } from "src/contentful/types/TypeService";
 
-/**
- * Maps ServiceCountiesMapColor enum to hex color values for Mapbox
- * Mapbox doesn't support CSS variables, so we return hex values directly
- * Defaults to brand red if color is missing
- */
+type ServiceCountiesMapColor = ExtractSymbolType<
+  NonNullable<TypeServiceFields["serviceCountiesMapColor"]>
+>;
+
 export function mapServiceColorToCss(color?: ServiceCountiesMapColor): string {
   switch (color) {
-    case ServiceCountiesMapColor.Red:
+    case "Red":
       return "#e01e2d";
-    case ServiceCountiesMapColor.Orange:
+    case "Orange":
       return "#ff6600";
-    case ServiceCountiesMapColor.Blue:
+    case "Blue":
       return "#0066cc";
-    case ServiceCountiesMapColor.Green:
+    case "Green":
       return "#00cc66";
-    case ServiceCountiesMapColor.Pink:
+    case "Pink":
       return "#ff66cc";
-    case ServiceCountiesMapColor.Purple:
+    case "Purple":
       return "#9966ff";
-    case ServiceCountiesMapColor.White:
+    case "White":
       return "#ffffff";
-    case ServiceCountiesMapColor.Yellow:
+    case "Yellow":
       return "#ffcc00";
     default:
-      return "#e01e2d"; // Default to brand red
+      return "#e01e2d";
   }
 }

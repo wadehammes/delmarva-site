@@ -1,10 +1,10 @@
-import { setRequestLocale } from "next-intl/server";
+import { getLocale, setRequestLocale } from "next-intl/server";
 import { NotFoundPage } from "src/components/NotFoundPage/NotFoundPage.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
-import type { Locales } from "src/contentful/interfaces";
-import { getLocale } from "src/i18n/getLocale";
+import { toLocaleSafe } from "src/i18n/localeUtils";
+import type { Locales } from "src/i18n/routing";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 
 export default async function NotFound({
@@ -12,8 +12,7 @@ export default async function NotFound({
 }: {
   params?: Promise<{ locale?: Locales }>;
 }) {
-  // Safely handle the locale parameter
-  let locale: Locales = await getLocale();
+  let locale: Locales = toLocaleSafe(await getLocale());
 
   try {
     if (params) {

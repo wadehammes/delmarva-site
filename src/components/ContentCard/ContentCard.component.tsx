@@ -35,7 +35,7 @@ export const ContentCard = (props: ContentCardProps) => {
           })}
         >
           <Image
-            alt={entryTitle}
+            alt={entryTitle ?? ""}
             height={media?.height}
             src={createMediaUrl(media?.src)}
             width={media?.width}

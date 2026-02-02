@@ -1,8 +1,8 @@
 import { draftMode } from "next/headers";
 import { fetchProjectsByService } from "src/contentful/getProjects";
 import { fetchServices } from "src/contentful/getServices";
-import type { Locales } from "src/contentful/interfaces";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
+import type { Locales } from "src/i18n/routing";
 import { AllServicesList } from "./AllServicesList.component";
 
 interface AllServicesListServerProps {

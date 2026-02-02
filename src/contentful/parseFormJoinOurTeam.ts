@@ -1,9 +1,11 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
-import type { TypeFormJoinOurTeamSkeleton } from "src/contentful/types";
+import type { ContentfulTypeCheck } from "src/contentful/helpers";
+import type {
+  TypeFormJoinOurTeamFields,
+  TypeFormJoinOurTeamSkeleton,
+} from "src/contentful/types";
 
-// Our simplified version of an form join our team entry.
-// We don't need all the data that Contentful gives us.
 export interface FormJoinOurTeamType {
   id: string;
   openJobs: string[];
@@ -11,11 +13,16 @@ export interface FormJoinOurTeamType {
   formSubmitSuccessMessage: Document;
 }
 
+const _validateFormJoinOurTeamCheck: ContentfulTypeCheck<
+  FormJoinOurTeamType,
+  TypeFormJoinOurTeamFields,
+  "id" | "description" | "openJobs" | "formSubmitSuccessMessage"
+> = true;
+
 export type FormJoinOurTeamEntry =
   | Entry<TypeFormJoinOurTeamSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
   | undefined;
 
-// A function to transform a Contentful form join our team entry
 export function parseFormJoinOurTeam(
   entry: FormJoinOurTeamEntry,
 ): FormJoinOurTeamType | null {

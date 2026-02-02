@@ -2,8 +2,8 @@ import { draftMode } from "next/headers";
 import { ServiceAccordion } from "src/components/ServiceAccordion/ServiceAccordion.component";
 import { fetchProjectsByService } from "src/contentful/getProjects";
 import { fetchFeaturedServices } from "src/contentful/getServices";
-import type { Locales } from "src/contentful/interfaces";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
+import type { Locales } from "src/i18n/routing";
 
 interface FeaturedServicesProps {
   locale?: string;

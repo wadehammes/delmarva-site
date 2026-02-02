@@ -5,10 +5,6 @@ import type { CSSProperties } from "react";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import CopyBlock from "src/components/ContentCopyBlock/ContentCopyBlock.component";
 import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.component";
-import {
-  DelmarvaColors,
-  MediaBackgroundStyle,
-} from "src/contentful/interfaces";
 import type { ContentCopyMediaBlock as ContentCopyMediaBlockType } from "src/contentful/parseContentCopyMediaBlock";
 import type { ContentImageBlockEntry } from "src/contentful/parseContentImageBlock";
 import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
@@ -41,14 +37,12 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
       </div>
       <div
         className={clsx(styles.mediaBlock, {
-          [styles.blackBg]:
-            mediaBackgroundStyle === MediaBackgroundStyle.BlackBackground,
-          [styles.microdotBg]:
-            mediaBackgroundStyle === MediaBackgroundStyle.MicrodotBackground,
+          [styles.blackBg]: mediaBackgroundStyle === "Black Background",
+          [styles.microdotBg]: mediaBackgroundStyle === "Microdot Background",
         })}
         style={
           {
-            "--dot-bg": createBackgroundColor(DelmarvaColors.Black),
+            "--dot-bg": createBackgroundColor("Black"),
             order: mediaPlacement === "Left" ? 1 : 2,
           } as CSSProperties & { "--dot-bg": string }
         }

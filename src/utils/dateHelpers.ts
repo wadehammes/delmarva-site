@@ -1,4 +1,4 @@
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 
 export const formatDate = (date: string, locale: Locales) => {
   return new Date(date).toLocaleDateString(locale, {

@@ -7,12 +7,6 @@ import { SectionRenderer } from "src/components/SectionRenderer/SectionRenderer.
 import styles from "src/components/ServiceTemplate/ServiceTemplate.module.css";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ServiceType } from "src/contentful/getServices";
-import {
-  ContentGap,
-  ContentLayout,
-  DelmarvaColors,
-  OverlayStyle,
-} from "src/contentful/interfaces";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
 
 interface ServiceTemplateProps {
@@ -29,11 +23,11 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
       <Section
         id={`service-${service.slug}-header`}
         section={{
-          backgroundColor: DelmarvaColors.Black,
-          contentGap: ContentGap.MoreGap,
-          contentLayout: ContentLayout.TwoColumn,
+          backgroundColor: "Black",
+          contentGap: "More Gap",
+          contentLayout: "2-column",
           id: `service-${service.slug}-header`,
-          sectionBackgroundStyle: OverlayStyle.Microdot,
+          sectionBackgroundStyle: "Microdot",
           slug: service.slug,
         }}
       >
@@ -52,7 +46,7 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
       <Section
         id={`service-${service.slug}-projects`}
         section={{
-          contentLayout: ContentLayout.FourColumn,
+          contentLayout: "4-column",
           id: `service-${service.slug}-projects`,
           sectionEyebrow: "Projects",
           slug: service.slug,

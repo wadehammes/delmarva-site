@@ -3,7 +3,7 @@
 import { ServiceAccordion } from "src/components/ServiceAccordion/ServiceAccordion.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ServiceType } from "src/contentful/getServices";
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 
 // Client component that receives data as props
 interface AllServicesListProps {

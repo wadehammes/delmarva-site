@@ -9,7 +9,7 @@ import type {
 } from "schema-dts";
 import type { Page } from "src/contentful/getPages";
 import type { ServiceType } from "src/contentful/getServices";
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 import { getServiceAreasServed } from "src/utils/areasServed";
 import { generateBreadcrumbs } from "src/utils/breadcrumbs";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";

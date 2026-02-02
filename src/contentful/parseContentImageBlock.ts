@@ -8,19 +8,26 @@ import {
   parseServiceForNavigation,
   type ServiceType,
 } from "src/contentful/getServices";
-import type { MediaBackgroundStyle } from "src/contentful/interfaces";
+import type { ExtractSymbolType } from "src/contentful/helpers";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type { TypeContentImageBlockSkeleton } from "src/contentful/types/TypeContentImageBlock";
+import type {
+  TypeContentImageBlockFields,
+  TypeContentImageBlockSkeleton,
+} from "src/contentful/types/TypeContentImageBlock";
+
+type ImageStyleType = ExtractSymbolType<
+  NonNullable<TypeContentImageBlockFields["imageStyle"]>
+>;
 
 export interface ContentImageBlockType {
   id: string;
   image: ContentfulAsset | null;
   caption?: Document;
   captionPlacement: "Above" | "Below";
-  imageStyle?: MediaBackgroundStyle;
+  imageStyle?: ImageStyleType;
   projects?: (Partial<ProjectType> | null)[];
   services?: (Partial<ServiceType> | null)[];
 }
@@ -36,13 +43,20 @@ export function parseContentImageBlock(
     return null;
   }
 
+  if (!("fields" in imageBlock)) {
+    return null;
+  }
+
+  const { caption, captionPlacement, image, imageStyle, projects, services } =
+    imageBlock.fields;
+
   return {
-    caption: imageBlock.fields.caption,
-    captionPlacement: imageBlock.fields.captionPlacement,
+    caption,
+    captionPlacement,
     id: imageBlock.sys.id,
-    image: parseContentfulAsset(imageBlock.fields.image),
-    imageStyle: imageBlock.fields.imageStyle as MediaBackgroundStyle,
-    projects: imageBlock.fields.projects?.map(parseProjectForNavigation),
-    services: imageBlock.fields.services?.map(parseServiceForNavigation),
+    image: parseContentfulAsset(image),
+    imageStyle: imageStyle as ImageStyleType,
+    projects: projects?.map(parseProjectForNavigation),
+    services: services?.map(parseServiceForNavigation),
   };
 }

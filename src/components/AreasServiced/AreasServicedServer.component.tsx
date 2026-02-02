@@ -1,6 +1,5 @@
 import { draftMode } from "next/headers";
 import { fetchServices } from "src/contentful/getServices";
-import { ContentLayout } from "src/contentful/interfaces";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import { AreasServiced } from "./AreasServiced.component";
 
@@ -28,7 +27,7 @@ export const AreasServicedServer = async (props?: AreasServicedServerProps) => {
 
   const height =
     props?.height ??
-    (props?.contentLayout === ContentLayout.SingleColumn ? "600px" : "425px");
+    (props?.contentLayout === "Single Column" ? "600px" : "425px");
 
   return (
     <AreasServiced
