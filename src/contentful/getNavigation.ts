@@ -1,14 +1,24 @@
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
-import { type Cta, parseContentfulCta } from "src/contentful/parseCta";
-import type { TypeNavigationSkeleton } from "src/contentful/types";
+import type { ContentfulTypeCheck } from "src/contentful/helpers";
+import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
+import type {
+  TypeNavigationFields,
+  TypeNavigationSkeleton,
+} from "src/contentful/types";
 
 export interface NavigationType {
   id: string;
   slug: string;
-  links: (Cta | null)[];
-  ctaButton: Cta | null;
+  links: (CtaType | null)[];
+  ctaButton: CtaType | null;
 }
+
+const _validateNavigationCheck: ContentfulTypeCheck<
+  NavigationType,
+  TypeNavigationFields,
+  "id" | "slug" | "links" | "ctaButton"
+> = true;
 
 export type NavigationEntry =
   | Entry<TypeNavigationSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>

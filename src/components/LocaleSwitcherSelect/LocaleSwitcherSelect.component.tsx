@@ -9,7 +9,7 @@ import {
   useTransition,
 } from "react";
 import styles from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.module.css";
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 import { routing, usePathname, useRouter } from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
 

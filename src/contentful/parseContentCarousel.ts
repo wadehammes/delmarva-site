@@ -1,12 +1,29 @@
 import type { Entry } from "contentful";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import type { ContentEntries } from "src/contentful/parseSections";
-import type { TypeContentCarouselSkeleton } from "src/contentful/types/TypeContentCarousel";
+import type {
+  TypeContentCarouselFields,
+  TypeContentCarouselSkeleton,
+} from "src/contentful/types/TypeContentCarousel";
+
+type ControlsPlacementType = ExtractSymbolType<
+  NonNullable<TypeContentCarouselFields["controlsPlacement"]>
+>;
 
 export interface ContentCarousel {
   carouselItems: (ContentEntries | null)[];
-  controlsPlacement: "Over Slides" | "Below Slides";
+  controlsPlacement: ControlsPlacementType;
   id: string;
 }
+
+const _validateContentCarouselCheck: ContentfulTypeCheck<
+  ContentCarousel,
+  TypeContentCarouselFields,
+  "id" | "controlsPlacement" | "carouselItems"
+> = true;
 
 export type ContentCarouselEntry =
   | Entry<TypeContentCarouselSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
@@ -27,8 +44,8 @@ export const parseContentCarousel = (
 
   return {
     carouselItems: carouselItems?.map((entry) => entry as ContentEntries) ?? [],
-    controlsPlacement:
-      contentCarousel.fields.controlsPlacement ?? "Over Slides",
+    controlsPlacement: (contentCarousel.fields.controlsPlacement ??
+      "Over Slides") as ControlsPlacementType,
     id: contentCarousel.sys.id,
   };
 };

@@ -7,21 +7,37 @@ import {
   parseServiceForNavigation,
   type ServiceType,
 } from "src/contentful/getServices";
-import type { MediaBackgroundStyle } from "src/contentful/interfaces";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type { TypeContentVideoBlockSkeleton } from "src/contentful/types/TypeContentVideoBlock";
+import type {
+  TypeContentVideoBlockFields,
+  TypeContentVideoBlockSkeleton,
+} from "src/contentful/types/TypeContentVideoBlock";
+
+type VideoBackgroundStyleType = ExtractSymbolType<
+  NonNullable<TypeContentVideoBlockFields["videoBackgroundStyle"]>
+>;
 
 export interface ContentVideoBlockType {
   id: string;
   videoUrl?: string;
-  videoBackgroundStyle?: MediaBackgroundStyle;
+  videoBackgroundStyle?: VideoBackgroundStyleType;
   videoUpload?: ContentfulAsset | null;
   services?: (Partial<ServiceType> | null)[];
   projects?: (Partial<ProjectType> | null)[];
 }
+
+const _validateContentVideoBlockCheck: ContentfulTypeCheck<
+  ContentVideoBlockType,
+  TypeContentVideoBlockFields,
+  "id"
+> = true;
 
 export type ContentVideoBlockEntry =
   | Entry<TypeContentVideoBlockSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
@@ -34,13 +50,19 @@ export function parseContentfulVideoBlock(
     return null;
   }
 
+  if (!("fields" in videoBlock)) {
+    return null;
+  }
+
+  const { projects, services, videoBackgroundStyle, videoUpload, videoUrl } =
+    videoBlock.fields;
+
   return {
     id: videoBlock.sys.id,
-    projects: videoBlock.fields.projects?.map(parseProjectForNavigation),
-    services: videoBlock.fields.services?.map(parseServiceForNavigation),
-    videoBackgroundStyle: videoBlock.fields
-      .videoBackgroundStyle as MediaBackgroundStyle,
-    videoUpload: parseContentfulAsset(videoBlock.fields.videoUpload),
-    videoUrl: videoBlock.fields.videoUrl,
+    projects: projects?.map(parseProjectForNavigation),
+    services: services?.map(parseServiceForNavigation),
+    videoBackgroundStyle: videoBackgroundStyle as VideoBackgroundStyleType,
+    videoUpload: parseContentfulAsset(videoUpload),
+    videoUrl,
   };
 }

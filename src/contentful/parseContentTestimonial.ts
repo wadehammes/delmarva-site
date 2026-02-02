@@ -1,10 +1,14 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
+import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type { TypeContentTestimonialSkeleton } from "src/contentful/types/TypeContentTestimonial";
+import type {
+  TypeContentTestimonialFields,
+  TypeContentTestimonialSkeleton,
+} from "src/contentful/types/TypeContentTestimonial";
 
 export interface ContentTestimonialType {
   id: string;
@@ -14,6 +18,17 @@ export interface ContentTestimonialType {
   companyLogo: ContentfulAsset | null;
   showQuoteIcon: boolean;
 }
+
+const _validateContentTestimonialCheck: ContentfulTypeCheck<
+  ContentTestimonialType,
+  TypeContentTestimonialFields,
+  | "id"
+  | "quote"
+  | "quoterName"
+  | "quoterTitle"
+  | "companyLogo"
+  | "showQuoteIcon"
+> = true;
 
 export type ContentTestimonialEntry =
   | Entry<TypeContentTestimonialSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>

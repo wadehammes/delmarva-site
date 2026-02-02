@@ -1,14 +1,25 @@
 import type { Entry } from "contentful";
-import type { MediaBackgroundStyle } from "src/contentful/interfaces";
+import type { ExtractSymbolType } from "src/contentful/helpers";
 import { type CopyBlock, parseCopyBlock } from "src/contentful/parseCopyBlock";
 import type { ContentEntries } from "src/contentful/parseSections";
-import type { TypeContentCopyMediaBlockSkeleton } from "src/contentful/types/TypeContentCopyMediaBlock";
+import type {
+  TypeContentCopyMediaBlockFields,
+  TypeContentCopyMediaBlockSkeleton,
+} from "src/contentful/types/TypeContentCopyMediaBlock";
+
+export type MediaBackgroundStyleType = ExtractSymbolType<
+  NonNullable<TypeContentCopyMediaBlockFields["mediaBackgroundStyle"]>
+>;
+
+export type MediaPlacementType = ExtractSymbolType<
+  NonNullable<TypeContentCopyMediaBlockFields["mediaPlacement"]>
+>;
 
 export interface ContentCopyMediaBlock {
   copy: CopyBlock | null;
   media: (ContentEntries | null)[];
-  mediaPlacement: "Left" | "Right" | undefined;
-  mediaBackgroundStyle?: MediaBackgroundStyle;
+  mediaPlacement: MediaPlacementType;
+  mediaBackgroundStyle?: MediaBackgroundStyleType;
   id: string;
 }
 
@@ -38,7 +49,7 @@ export const parseContentCopyMediaBlock = (
     copy: parseCopyBlock(copy),
     id: contentCopyMediaBlock.sys.id,
     media: media?.map((entry) => entry as ContentEntries) ?? [],
-    mediaBackgroundStyle: mediaBackgroundStyle as MediaBackgroundStyle,
-    mediaPlacement,
+    mediaBackgroundStyle: mediaBackgroundStyle as MediaBackgroundStyleType,
+    mediaPlacement: mediaPlacement as MediaPlacementType,
   };
 };

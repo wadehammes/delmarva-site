@@ -1,25 +1,42 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
-import type { Alignment } from "src/contentful/interfaces";
-import { type Cta, parseContentfulCta } from "src/contentful/parseCta";
-import type { TypeCopyBlockSkeleton } from "src/contentful/types";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
+import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
+import type {
+  TypeCopyBlockFields,
+  TypeCopyBlockSkeleton,
+} from "src/contentful/types";
 
-// Our simplified version of an copy block entry.
-// We don't need all the data that Contentful gives us.
+type CopyBlockAlignmentType = ExtractSymbolType<
+  NonNullable<TypeCopyBlockFields["alignment"]>
+>;
+
+type CopyBlockMobileAlignmentType = ExtractSymbolType<
+  NonNullable<TypeCopyBlockFields["mobileAlignment"]>
+>;
+
 export interface CopyBlock {
-  alignment: Alignment;
+  alignment: CopyBlockAlignmentType;
   copy: Document | undefined;
-  cta?: Cta | null;
+  cta?: CtaType | null;
   id: string;
-  mobileAlignment: Alignment;
+  mobileAlignment: CopyBlockMobileAlignmentType;
   slug: string;
 }
+
+const _validateCopyBlockCheck: ContentfulTypeCheck<
+  CopyBlock,
+  TypeCopyBlockFields,
+  "id" | "copy" | "alignment" | "mobileAlignment" | "slug"
+> = true;
 
 export type CopyBlockEntry =
   | Entry<TypeCopyBlockSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
   | undefined;
 
-// A function to transform a Contentful copy block entry
 export function parseCopyBlock(entry: CopyBlockEntry): CopyBlock | null {
   if (!entry) {
     return null;
@@ -29,12 +46,15 @@ export function parseCopyBlock(entry: CopyBlockEntry): CopyBlock | null {
     return null;
   }
 
+  const { alignment, copy, cta, mobileAlignment, slug } = entry.fields;
+
   return {
-    alignment: (entry.fields.alignment ?? "Left") as Alignment,
-    copy: entry.fields.copy,
-    cta: entry.fields.cta ? parseContentfulCta(entry.fields.cta) : null,
+    alignment: (alignment ?? "Left") as CopyBlockAlignmentType,
+    copy,
+    cta: cta ? parseContentfulCta(cta) : null,
     id: entry.sys.id,
-    mobileAlignment: (entry.fields?.mobileAlignment ?? "Left") as Alignment,
-    slug: entry.fields.slug,
+    mobileAlignment: (mobileAlignment ??
+      "Left") as CopyBlockMobileAlignmentType,
+    slug,
   };
 }

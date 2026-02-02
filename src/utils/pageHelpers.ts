@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import type { Page } from "src/contentful/getPages";
 import { fetchServices } from "src/contentful/getServices";
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { aggregateAreasServedFromServices } from "src/utils/areasServed";
 import {

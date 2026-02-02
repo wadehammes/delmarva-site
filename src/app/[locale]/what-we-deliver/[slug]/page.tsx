@@ -14,7 +14,7 @@ import {
   fetchServices,
   type ServiceType,
 } from "src/contentful/getServices";
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import type { SitemapItem } from "src/lib/generateSitemap";
 import { outputSitemap } from "src/lib/generateSitemap";

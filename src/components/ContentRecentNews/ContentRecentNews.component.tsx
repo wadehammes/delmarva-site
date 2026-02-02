@@ -1,6 +1,6 @@
 import type { ContentRecentNewsType } from "src/contentful/getContentRecentNews";
-import type { Locales } from "src/contentful/interfaces";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
+import type { Locales } from "src/i18n/routing";
 import { Link } from "src/i18n/routing";
 import styles from "./ContentRecentNews.module.css";
 

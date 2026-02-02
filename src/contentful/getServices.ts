@@ -2,9 +2,9 @@ import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import type {
-  Locales,
-  ServiceCountiesMapColor,
-} from "src/contentful/interfaces";
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
@@ -18,7 +18,15 @@ import {
   type SectionType,
 } from "src/contentful/parseSections";
 import type { TypeProjectSkeleton } from "src/contentful/types/TypeProject";
-import type { TypeServiceSkeleton } from "src/contentful/types/TypeService";
+import type {
+  TypeServiceFields,
+  TypeServiceSkeleton,
+} from "src/contentful/types/TypeService";
+import type { Locales } from "src/i18n/routing";
+
+export type ServiceCountiesMapColor = ExtractSymbolType<
+  NonNullable<TypeServiceFields["serviceCountiesMapColor"]>
+>;
 
 export type ServiceEntry = Entry<
   TypeServiceSkeleton,
@@ -26,8 +34,6 @@ export type ServiceEntry = Entry<
   string
 >;
 
-// Our simplified version of a Service.
-// We don't need all the data that Contentful gives us.
 export interface ServiceType {
   id: string;
   serviceName: string;
@@ -36,7 +42,7 @@ export interface ServiceType {
   stats?: (ContentStatBlock | null)[];
   sections?: (SectionType | null)[];
   serviceCountiesCsv?: ContentfulAsset | null;
-  serviceCountiesMapColor?: ServiceCountiesMapColor | null;
+  serviceCountiesMapColor?: ServiceCountiesMapColor;
   featuredService?: boolean;
   featuredServicePosition?: number;
   metaTitle: string;
@@ -47,8 +53,21 @@ export interface ServiceType {
   updatedAt: string;
 }
 
-// A function to transform a Contentful service
-// into our own Service object.
+const _validateServiceCheck: ContentfulTypeCheck<
+  ServiceType,
+  TypeServiceFields,
+  | "id"
+  | "serviceName"
+  | "slug"
+  | "description"
+  | "metaTitle"
+  | "metaDescription"
+  | "metaImage"
+  | "enableIndexing"
+  | "publishDate"
+  | "updatedAt"
+> = true;
+
 export function parseContentfulService(
   serviceEntry?: ServiceEntry,
 ): ServiceType | null {
@@ -56,33 +75,39 @@ export function parseContentfulService(
     return null;
   }
 
+  if (!("fields" in serviceEntry)) {
+    return null;
+  }
+
+  const { fields } = serviceEntry;
+
   return {
-    description: serviceEntry.fields.description,
-    enableIndexing: serviceEntry.fields.enableIndexing,
-    featuredService: serviceEntry.fields.featuredService,
-    featuredServicePosition: serviceEntry.fields.featuredServicePosition ?? 0,
+    description: fields.description,
+    enableIndexing: fields.enableIndexing,
+    featuredService: fields.featuredService,
+    featuredServicePosition: fields.featuredServicePosition ?? 0,
     id: serviceEntry.sys.id,
-    metaDescription: serviceEntry.fields.metaDescription,
-    metaImage: parseContentfulAsset(
-      serviceEntry.fields.metaImage,
-    ) as ContentfulAsset,
-    metaTitle: serviceEntry.fields.metaTitle,
+    metaDescription: fields.metaDescription,
+    metaImage: parseContentfulAsset(fields.metaImage) as ContentfulAsset,
+    metaTitle: fields.metaTitle,
     publishDate: serviceEntry.sys.createdAt,
-    sections: serviceEntry.fields.sections?.map(parseContentfulSection),
-    serviceCountiesCsv: parseContentfulAsset(
-      serviceEntry.fields.serviceCountiesCsv,
-    ),
-    serviceCountiesMapColor: serviceEntry.fields
-      .serviceCountiesMapColor as ServiceCountiesMapColor,
-    serviceName: serviceEntry.fields.serviceName,
-    slug: serviceEntry.fields.slug,
-    stats: serviceEntry.fields.stats?.map(parseContentStatBlock),
+    sections: fields.sections?.map(parseContentfulSection),
+    serviceCountiesCsv: parseContentfulAsset(fields.serviceCountiesCsv),
+    serviceCountiesMapColor:
+      fields.serviceCountiesMapColor as ServiceCountiesMapColor,
+    serviceName: fields.serviceName,
+    slug: fields.slug,
+    stats: fields.stats?.map(parseContentStatBlock),
     updatedAt: serviceEntry.sys.updatedAt,
   };
 }
 
 export const parseServiceSlug = (serviceEntry?: ServiceEntry) => {
   if (!serviceEntry) {
+    return null;
+  }
+
+  if (!("fields" in serviceEntry)) {
     return null;
   }
 
@@ -94,15 +119,19 @@ export const parseServiceForNavigation = (serviceEntry?: ServiceEntry) => {
     return null;
   }
 
+  if (!("fields" in serviceEntry)) {
+    return null;
+  }
+
+  const { serviceName, slug } = serviceEntry.fields;
+
   return {
     id: serviceEntry.sys.id,
-    serviceName: serviceEntry.fields.serviceName,
-    slug: serviceEntry.fields.slug,
+    serviceName,
+    slug,
   };
 };
 
-// A function to fetch all services.
-// Optionally uses the Contentful content preview.
 interface FetchServicesOptions {
   preview: boolean;
   locale?: Locales;
@@ -117,6 +146,7 @@ export async function fetchServices({
   const limit = 100;
   let total = 0;
   let skip = 0;
+  const seenIds = new Set<string>();
   let allServices: ServiceType[] = [];
 
   do {
@@ -134,7 +164,12 @@ export async function fetchServices({
 
     const currentServiceEntries = services.items
       .map(parseContentfulService)
-      .filter((service): service is ServiceType => service !== null);
+      .filter((service): service is ServiceType => service !== null)
+      .filter((service) => {
+        if (seenIds.has(service.id)) return false;
+        seenIds.add(service.id);
+        return true;
+      });
 
     total = services.total;
     skip += limit;
@@ -217,6 +252,7 @@ export async function fetchServicePhotos({
   const limit = 100;
   let total = 0;
   let skip = 0;
+  const seenIds = new Set<string>();
   let allPhotos: ContentfulAsset[] = [];
 
   do {
@@ -231,18 +267,21 @@ export async function fetchServicePhotos({
         },
       );
 
-    // Filter projects that have the specified service
     const relevantProjects = projects.items.filter((project) =>
       project.fields.services?.some(
         (service) => service?.fields?.slug === slug,
       ),
     );
 
-    // Extract all photos from project media
     const projectPhotos = relevantProjects
       .flatMap((project) => project.fields.media || [])
       .map(parseContentfulAsset)
-      .filter((photo): photo is ContentfulAsset => photo !== null);
+      .filter((photo): photo is ContentfulAsset => photo !== null)
+      .filter((photo) => {
+        if (seenIds.has(photo.id)) return false;
+        seenIds.add(photo.id);
+        return true;
+      });
 
     allPhotos = [...allPhotos, ...projectPhotos];
 

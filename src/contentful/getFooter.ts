@@ -1,20 +1,30 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
-import { type Cta, parseContentfulCta } from "src/contentful/parseCta";
-import type { TypeFooterSkeleton } from "src/contentful/types";
+import type { ContentfulTypeCheck } from "src/contentful/helpers";
+import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
+import type {
+  TypeFooterFields,
+  TypeFooterSkeleton,
+} from "src/contentful/types";
 
 export interface FooterType {
   id: string;
   slug?: string;
   copyright?: string;
   addresscompanyInfo?: Document;
-  links?: (Cta | null)[];
+  links?: (CtaType | null)[];
   linksTitle?: string;
   linkedInUrl?: string;
-  otherLinks?: (Cta | null)[];
+  otherLinks?: (CtaType | null)[];
   otherLinksTitle?: string;
 }
+
+const _validateFooterCheck: ContentfulTypeCheck<
+  FooterType,
+  TypeFooterFields,
+  "id"
+> = true;
 
 export type FooterEntry =
   | Entry<TypeFooterSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>

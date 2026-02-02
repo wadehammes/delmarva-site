@@ -1,6 +1,6 @@
 import { getLocale as getServerLocale } from "next-intl/server";
-import type { Locales } from "src/contentful/interfaces";
 import { isValidLocale } from "src/i18n/localeUtils";
+import type { Locales } from "src/i18n/routing";
 
 /**
  * Server-side helper to get locale from prop or fallback to next-intl

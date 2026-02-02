@@ -1,24 +1,32 @@
 import type { Entry } from "contentful";
-import type { TypeContentModulesSkeleton } from "src/contentful/types";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
+import type {
+  TypeContentModulesFields,
+  TypeContentModulesSkeleton,
+} from "src/contentful/types";
 
-// Our simplified version of an content module entry.
-// We don't need all the data that Contentful gives us.
+type ModuleType = ExtractSymbolType<
+  NonNullable<TypeContentModulesFields["module"]>
+>;
+
 export interface ContentModule {
   id: string;
-  module:
-    | "All Services List"
-    | "Areas Serviced Map"
-    | "Areas Serviced List"
-    | "Featured Services List"
-    | "Request a Quote Form"
-    | "Recent News List";
+  module: ModuleType;
 }
+
+const _validateContentModuleCheck: ContentfulTypeCheck<
+  ContentModule,
+  TypeContentModulesFields,
+  "id" | "module"
+> = true;
 
 export type ContentModuleEntry =
   | Entry<TypeContentModulesSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
   | undefined;
 
-// A function to transform a Contentful content module entry
 export function parseContentModule(
   entry: ContentModuleEntry,
 ): ContentModule | null {

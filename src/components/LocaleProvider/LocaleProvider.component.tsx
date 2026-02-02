@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, type ReactNode, useContext } from "react";
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 
 interface LocaleContextType {
   locale: Locales | undefined;

@@ -3,8 +3,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Component, type ReactNode } from "react";
 import { LocaleProvider } from "src/components/LocaleProvider/LocaleProvider.component";
-import type { Locales } from "src/contentful/interfaces";
 import { usePreferredTheme } from "src/hooks/usePreferredTheme";
+import type { Locales } from "src/i18n/routing";
 
 interface ErrorBoundaryState {
   hasError: boolean;

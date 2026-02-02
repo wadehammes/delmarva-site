@@ -19,7 +19,7 @@ export const ContentGrid = (props: ContentGridProps) => {
         [styles["four-column"]]: fields.gridLayout === "Four Column",
       })}
     >
-      {fields.content.map((content) => {
+      {(fields.content ?? []).map((content) => {
         if (!content) {
           return null;
         }

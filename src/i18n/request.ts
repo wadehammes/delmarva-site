@@ -1,5 +1,5 @@
 import { getRequestConfig } from "next-intl/server";
-import type { Locales } from "src/contentful/interfaces";
+import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 
 // Import messages statically to avoid dynamic import issues

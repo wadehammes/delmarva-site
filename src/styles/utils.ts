@@ -1,14 +1,19 @@
-import { DelmarvaColors } from "src/contentful/interfaces";
+import type { ExtractSymbolType } from "src/contentful/helpers";
+import type { TypeSectionFields } from "src/contentful/types/TypeSection";
 
-export const createBackgroundColor = (color: DelmarvaColors) => {
+type SectionBackgroundColor = ExtractSymbolType<
+  NonNullable<TypeSectionFields["backgroundColor"]>
+>;
+
+export const createBackgroundColor = (color: SectionBackgroundColor) => {
   switch (color) {
-    case DelmarvaColors.Red:
+    case "Red":
       return "var(--colors-red)";
-    case DelmarvaColors.Black:
+    case "Black":
       return "var(--colors-black)";
-    case DelmarvaColors.Silver:
+    case "Silver":
       return "var(--colors-silver)";
-    case DelmarvaColors.White:
+    case "White":
       return "var(--colors-white)";
     default:
       return "var(--color-bg)";

@@ -1,8 +1,6 @@
 import type { Asset, AssetLink } from "contentful";
 import { createMediaUrl } from "src/utils/helpers";
 
-// Our simplified version of an image asset.
-// We don't need all the data that Contentful gives us.
 export interface ContentfulAsset {
   id: string;
   src: string;
@@ -15,8 +13,6 @@ export type ContentfulAssetEntry =
   | Asset<"WITHOUT_UNRESOLVABLE_LINKS", string>
   | { sys: AssetLink };
 
-// A function to transform a Contentful image asset
-// into our own ContentfulAsset object.
 export function parseContentfulAsset(
   asset?: ContentfulAssetEntry,
 ): ContentfulAsset | null {
