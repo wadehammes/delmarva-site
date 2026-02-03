@@ -21,7 +21,6 @@ export const AllServicesListServer = async (
     preview: draft.isEnabled,
   });
 
-  // Fetch projects for each service
   const servicesWithProjects = await Promise.all(
     services.map(async (service) => {
       const projects = await fetchProjectsByService({
