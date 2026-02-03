@@ -2,6 +2,10 @@ import type { Document } from "@contentful/rich-text-types";
 import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import {
+  FALLBACK_PROJECT_MEDIA_ID,
+  getContentfulAsset,
+} from "src/contentful/getContentfulAsset";
+import {
   parseContentfulService,
   type ServiceType,
 } from "src/contentful/getServices";
@@ -31,7 +35,7 @@ export interface ProjectType {
   projectName: string;
   slug: string;
   description: Document;
-  media: (ContentfulAsset | null)[];
+  media?: (ContentfulAsset | null)[];
   projectStats?: (ContentStatBlock | null)[];
   services: (ServiceType | null)[];
 }
@@ -84,8 +88,15 @@ export const parseProjectForNavigation = (projectEntry?: ProjectEntry) => {
   };
 };
 
-// A function to fetch all pages.
-// Optionally uses the Contentful content preview.
+function mediaWithFallback(
+  project: ProjectType,
+  fallback: ContentfulAsset | null,
+): ProjectType["media"] {
+  if (project.media?.length) return project.media;
+  if (fallback) return [fallback];
+  return project.media;
+}
+
 interface FetchProjectsOptions {
   preview: boolean;
   locale?: Locales;
@@ -96,6 +107,10 @@ export async function fetchProjects({
   locale = "en",
 }: FetchProjectsOptions): Promise<ProjectType[]> {
   const contentful = contentfulClient({ preview });
+  const fallbackMedia = await getContentfulAsset(FALLBACK_PROJECT_MEDIA_ID, {
+    locale,
+    preview,
+  });
 
   const limit = 100;
   let total = 0;
@@ -122,7 +137,11 @@ export async function fetchProjects({
         if (seenIds.has(project.id)) return false;
         seenIds.add(project.id);
         return true;
-      });
+      })
+      .map((project) => ({
+        ...project,
+        media: mediaWithFallback(project, fallbackMedia),
+      }));
 
     total = projects.total;
     skip += limit;
@@ -160,7 +179,18 @@ export async function fetchProject({
       locale,
     });
 
-  return parseContentfulProject(projectResult.items[0]);
+  const project = parseContentfulProject(projectResult.items[0]);
+  if (!project) return null;
+
+  const fallbackMedia = await getContentfulAsset(FALLBACK_PROJECT_MEDIA_ID, {
+    locale,
+    preview,
+  });
+
+  return {
+    ...project,
+    media: mediaWithFallback(project, fallbackMedia),
+  };
 }
 
 // A function to fetch all pages.
@@ -177,6 +207,10 @@ export async function fetchProjectsByService({
   serviceSlug,
 }: FetchProjectsByServiceOptions): Promise<ProjectType[]> {
   const contentful = contentfulClient({ preview });
+  const fallbackMedia = await getContentfulAsset(FALLBACK_PROJECT_MEDIA_ID, {
+    locale,
+    preview,
+  });
 
   const limit = 100;
   let total = 0;
@@ -206,7 +240,11 @@ export async function fetchProjectsByService({
         if (seenIds.has(project.id)) return false;
         seenIds.add(project.id);
         return true;
-      });
+      })
+      .map((project) => ({
+        ...project,
+        media: mediaWithFallback(project, fallbackMedia),
+      }));
 
     total = projects.total;
     skip += limit;

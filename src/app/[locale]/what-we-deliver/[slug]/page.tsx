@@ -159,6 +159,7 @@ async function Page({ params }: PageProps) {
       slug: service.slug,
     }),
     fetchProjectsByService({
+      locale: validLocale,
       preview: draft.isEnabled,
       serviceSlug: service.slug,
     }),

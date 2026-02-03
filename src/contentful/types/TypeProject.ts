@@ -14,7 +14,7 @@ export interface TypeProjectFields {
   projectName: EntryFieldTypes.Symbol;
   slug: EntryFieldTypes.Symbol;
   description: EntryFieldTypes.RichText;
-  media: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>;
+  media?: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>;
   projectStats?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeContentStatBlockSkeleton>
   >;

@@ -60,7 +60,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
         onKeyDown={handleKeyDown}
         type="button"
       >
-        {media && media.length > 0 && (
+        {media?.[0] && (
           <div className={styles.projectCardMedia}>
             <ContentfulAssetRenderer asset={media[0]} />
           </div>
