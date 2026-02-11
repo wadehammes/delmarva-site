@@ -1,69 +1,57 @@
 .content-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--default-padding);
+  justify-content: flex-start;
   padding: 0 2rem;
 
-  &.two-column {
-    container: two-column-grid / inline-size;
-    grid-template-columns: 1fr;
+  & > * {
+    flex: 1 1 200px;
+  }
 
-    @media (min-width: 600px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @container two-column-grid (min-width: 600px) {
-      grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 768px) {
+    & > * {
+      flex: 1 1 calc(50% - var(--default-padding) / 2);
     }
   }
 
-  &.three-column {
-    container: three-column-grid / inline-size;
-    grid-template-columns: 1fr;
+  &.two-column > * {
+    flex: 1 1 200px;
 
-    @media (min-width: 600px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (min-width: 900px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @container three-column-grid (min-width: 600px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @container three-column-grid (min-width: 900px) {
-      grid-template-columns: repeat(3, 1fr);
+    &:only-child {
+      flex: 1 1 100%;
     }
   }
 
-  &.four-column {
-    container: four-column-grid / inline-size;
-    grid-template-columns: 1fr;
+  &.two-column:has(> *:nth-child(2):last-child) > *:first-child {
+    flex: 1 1 200px;
+  }
 
-    @media (min-width: 600px) {
-      grid-template-columns: repeat(2, 1fr);
+  &.two-column:has(> *:nth-child(2):last-child) > *:last-child {
+    flex: 0 0 auto;
+  }
+
+  &.three-column > * {
+    flex: 1 1 150px;
+  }
+
+  &.four-column > * {
+    flex: 1 1 100px;
+  }
+
+  @media (max-width: 768px) {
+    &.two-column > *,
+    &.three-column > *,
+    &.four-column > * {
+      flex: 1 1 calc(50% - var(--default-padding) / 2);
     }
 
-    @media (min-width: 900px) {
-      grid-template-columns: repeat(3, 1fr);
+    &.two-column:has(> *:nth-child(2):last-child) > *:last-child {
+      flex: 1 1 calc(50% - var(--default-padding) / 2);
     }
 
-    @media (min-width: 1200px) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    @container four-column-grid (min-width: 600px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @container four-column-grid (min-width: 900px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @container four-column-grid (min-width: 1200px) {
-      grid-template-columns: repeat(4, 1fr);
+    & > *:only-child {
+      flex: 1 1 100%;
     }
   }
 }

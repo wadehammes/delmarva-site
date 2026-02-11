@@ -1,4 +1,3 @@
-import type { Entry } from "contentful";
 import {
   type ProjectType,
   parseProjectForNavigation,
@@ -15,9 +14,10 @@ import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type {
-  TypeContentVideoBlockFields,
-  TypeContentVideoBlockSkeleton,
+import {
+  isTypeContentVideoBlock,
+  type TypeContentVideoBlockFields,
+  type TypeContentVideoBlockWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentVideoBlock";
 
 type VideoBackgroundStyleType = ExtractSymbolType<
@@ -40,17 +40,13 @@ const _validateContentVideoBlockCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentVideoBlockEntry =
-  | Entry<TypeContentVideoBlockSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentVideoBlockWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseContentfulVideoBlock(
   videoBlock?: ContentVideoBlockEntry,
 ): ContentVideoBlockType | null {
-  if (!videoBlock) {
-    return null;
-  }
-
-  if (!("fields" in videoBlock)) {
+  if (!videoBlock || !isTypeContentVideoBlock(videoBlock)) {
     return null;
   }
 

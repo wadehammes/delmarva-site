@@ -21,3 +21,26 @@ export type TypeCta<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = Entry<TypeCtaSkeleton, Modifiers, Locales>;
+
+export function isTypeCta<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+>(
+  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
+): entry is TypeCta<Modifiers, Locales> {
+  return entry.sys.contentType.sys.id === "cta";
+}
+
+export type TypeCtaWithoutLinkResolutionResponse =
+  TypeCta<"WITHOUT_LINK_RESOLUTION">;
+export type TypeCtaWithoutUnresolvableLinksResponse =
+  TypeCta<"WITHOUT_UNRESOLVABLE_LINKS">;
+export type TypeCtaWithAllLocalesResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeCta<"WITH_ALL_LOCALES", Locales>;
+export type TypeCtaWithAllLocalesAndWithoutLinkResolutionResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeCta<"WITHOUT_LINK_RESOLUTION" | "WITH_ALL_LOCALES", Locales>;
+export type TypeCtaWithAllLocalesAndWithoutUnresolvableLinksResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeCta<"WITHOUT_UNRESOLVABLE_LINKS" | "WITH_ALL_LOCALES", Locales>;

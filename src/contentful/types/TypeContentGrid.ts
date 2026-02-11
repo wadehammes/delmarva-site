@@ -33,3 +33,26 @@ export type TypeContentGrid<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = Entry<TypeContentGridSkeleton, Modifiers, Locales>;
+
+export function isTypeContentGrid<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+>(
+  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
+): entry is TypeContentGrid<Modifiers, Locales> {
+  return entry.sys.contentType.sys.id === "contentGrid";
+}
+
+export type TypeContentGridWithoutLinkResolutionResponse =
+  TypeContentGrid<"WITHOUT_LINK_RESOLUTION">;
+export type TypeContentGridWithoutUnresolvableLinksResponse =
+  TypeContentGrid<"WITHOUT_UNRESOLVABLE_LINKS">;
+export type TypeContentGridWithAllLocalesResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentGrid<"WITH_ALL_LOCALES", Locales>;
+export type TypeContentGridWithAllLocalesAndWithoutLinkResolutionResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentGrid<"WITHOUT_LINK_RESOLUTION" | "WITH_ALL_LOCALES", Locales>;
+export type TypeContentGridWithAllLocalesAndWithoutUnresolvableLinksResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentGrid<"WITHOUT_UNRESOLVABLE_LINKS" | "WITH_ALL_LOCALES", Locales>;

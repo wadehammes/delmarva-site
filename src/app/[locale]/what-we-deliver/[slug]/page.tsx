@@ -175,6 +175,7 @@ async function Page({ params }: PageProps) {
     <PageLayout footer={footer} navigation={navigation}>
       <SchemaScript schema={schemaGraph} />
       <ServiceTemplate
+        locale={validLocale}
         projects={projects}
         service={service}
         servicePhotos={servicePhotos}

@@ -1,11 +1,12 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
-import type {
-  TypeFooterFields,
-  TypeFooterSkeleton,
+import {
+  isTypeFooter,
+  type TypeFooterFields,
+  type TypeFooterSkeleton,
+  type TypeFooterWithoutUnresolvableLinksResponse,
 } from "src/contentful/types";
 
 export interface FooterType {
@@ -27,15 +28,11 @@ const _validateFooterCheck: ContentfulTypeCheck<
 > = true;
 
 export type FooterEntry =
-  | Entry<TypeFooterSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeFooterWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseFooter(entry: FooterEntry): FooterType | null {
-  if (!entry) {
-    return null;
-  }
-
-  if (!("fields" in entry)) {
+  if (!entry || !isTypeFooter(entry)) {
     return null;
   }
 

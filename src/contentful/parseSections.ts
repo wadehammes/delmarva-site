@@ -1,5 +1,4 @@
 import type { Document as RichTextDocument } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import type { ContentRecentNewsEntry } from "src/contentful/getContentRecentNews";
 import type { ExtractSymbolType } from "src/contentful/helpers";
 import type { ContentCardEntry } from "src/contentful/parseContentCard";
@@ -16,9 +15,10 @@ import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlo
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
 import type { FormJoinOurTeamEntry } from "src/contentful/parseFormJoinOurTeam";
-import type {
-  TypeSectionFields,
-  TypeSectionSkeleton,
+import {
+  isTypeSection,
+  type TypeSectionFields,
+  type TypeSectionWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeSection";
 
 type ContentStyle = "Overlap Section Above" | "Regular";
@@ -80,17 +80,13 @@ export interface SectionType {
 }
 
 export type SectionEntry =
-  | Entry<TypeSectionSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeSectionWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseContentfulSection(
   section: SectionEntry,
 ): SectionType | null {
-  if (!section) {
-    return null;
-  }
-
-  if (!("fields" in section)) {
+  if (!section || !isTypeSection(section)) {
     return null;
   }
 

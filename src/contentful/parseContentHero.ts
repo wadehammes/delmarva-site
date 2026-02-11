@@ -1,5 +1,4 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
@@ -7,9 +6,10 @@ import type {
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
 import { parseContentfulAsset } from "src/contentful/parseContentfulAsset";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
-import type {
-  TypeContentHeroFields,
-  TypeContentHeroSkeleton,
+import {
+  isTypeContentHero,
+  type TypeContentHeroFields,
+  type TypeContentHeroWithoutUnresolvableLinksResponse,
 } from "src/contentful/types";
 
 type HeroHeightType = ExtractSymbolType<
@@ -73,15 +73,11 @@ const _validateContentHeroCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentHeroEntry =
-  | Entry<TypeContentHeroSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentHeroWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseContentHero(entry: ContentHeroEntry): ContentHero | null {
-  if (!entry) {
-    return null;
-  }
-
-  if (!("fields" in entry)) {
+  if (!entry || !isTypeContentHero(entry)) {
     return null;
   }
 

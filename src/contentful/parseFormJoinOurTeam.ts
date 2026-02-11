@@ -1,9 +1,9 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
-import type {
-  TypeFormJoinOurTeamFields,
-  TypeFormJoinOurTeamSkeleton,
+import {
+  isTypeFormJoinOurTeam,
+  type TypeFormJoinOurTeamFields,
+  type TypeFormJoinOurTeamWithoutUnresolvableLinksResponse,
 } from "src/contentful/types";
 
 export interface FormJoinOurTeamType {
@@ -20,17 +20,13 @@ const _validateFormJoinOurTeamCheck: ContentfulTypeCheck<
 > = true;
 
 export type FormJoinOurTeamEntry =
-  | Entry<TypeFormJoinOurTeamSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeFormJoinOurTeamWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseFormJoinOurTeam(
   entry: FormJoinOurTeamEntry,
 ): FormJoinOurTeamType | null {
-  if (!entry) {
-    return null;
-  }
-
-  if (!("fields" in entry)) {
+  if (!entry || !isTypeFormJoinOurTeam(entry)) {
     return null;
   }
 

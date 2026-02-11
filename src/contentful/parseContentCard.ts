@@ -1,5 +1,4 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
@@ -8,9 +7,10 @@ import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type {
-  TypeContentCardFields,
-  TypeContentCardSkeleton,
+import {
+  isTypeContentCard,
+  type TypeContentCardFields,
+  type TypeContentCardWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentCard";
 
 type ContentCardMediaType = ExtractSymbolType<
@@ -33,17 +33,13 @@ const _validateContentCardCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentCardEntry =
-  | Entry<TypeContentCardSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentCardWithoutUnresolvableLinksResponse
   | undefined;
 
 export const parseContentCard = (
   card: ContentCardEntry,
 ): ContentCardType | null => {
-  if (!card) {
-    return null;
-  }
-
-  if (!("fields" in card)) {
+  if (!card || !isTypeContentCard(card)) {
     return null;
   }
 

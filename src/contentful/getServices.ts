@@ -1,5 +1,4 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import type {
   ContentfulTypeCheck,
@@ -18,9 +17,11 @@ import {
   type SectionType,
 } from "src/contentful/parseSections";
 import type { TypeProjectSkeleton } from "src/contentful/types/TypeProject";
-import type {
-  TypeServiceFields,
-  TypeServiceSkeleton,
+import {
+  isTypeService,
+  type TypeServiceFields,
+  type TypeServiceSkeleton,
+  type TypeServiceWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeService";
 import type { Locales } from "src/i18n/routing";
 
@@ -28,11 +29,7 @@ export type ServiceCountiesMapColor = ExtractSymbolType<
   NonNullable<TypeServiceFields["serviceCountiesMapColor"]>
 >;
 
-export type ServiceEntry = Entry<
-  TypeServiceSkeleton,
-  "WITHOUT_UNRESOLVABLE_LINKS",
-  string
->;
+export type ServiceEntry = TypeServiceWithoutUnresolvableLinksResponse;
 
 export interface ServiceType {
   id: string;
@@ -71,11 +68,7 @@ const _validateServiceCheck: ContentfulTypeCheck<
 export function parseContentfulService(
   serviceEntry?: ServiceEntry,
 ): ServiceType | null {
-  if (!serviceEntry) {
-    return null;
-  }
-
-  if (!("fields" in serviceEntry)) {
+  if (!serviceEntry || !isTypeService(serviceEntry)) {
     return null;
   }
 
@@ -103,11 +96,7 @@ export function parseContentfulService(
 }
 
 export const parseServiceSlug = (serviceEntry?: ServiceEntry) => {
-  if (!serviceEntry) {
-    return null;
-  }
-
-  if (!("fields" in serviceEntry)) {
+  if (!serviceEntry || !isTypeService(serviceEntry)) {
     return null;
   }
 
@@ -115,11 +104,7 @@ export const parseServiceSlug = (serviceEntry?: ServiceEntry) => {
 };
 
 export const parseServiceForNavigation = (serviceEntry?: ServiceEntry) => {
-  if (!serviceEntry) {
-    return null;
-  }
-
-  if (!("fields" in serviceEntry)) {
+  if (!serviceEntry || !isTypeService(serviceEntry)) {
     return null;
   }
 

@@ -1,12 +1,12 @@
-import type { Entry } from "contentful";
 import { parseServiceSlug } from "src/contentful/getServices";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
 } from "src/contentful/helpers";
-import type {
-  TypeContentStatBlockFields,
-  TypeContentStatBlockSkeleton,
+import {
+  isTypeContentStatBlock,
+  type TypeContentStatBlockFields,
+  type TypeContentStatBlockWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentStatBlock";
 
 type NumberFormatType = ExtractSymbolType<
@@ -43,17 +43,13 @@ const _validateContentStatBlockCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentStatBlockEntry =
-  | Entry<TypeContentStatBlockSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentStatBlockWithoutUnresolvableLinksResponse
   | undefined;
 
 export const parseContentStatBlock = (
   statBlock: ContentStatBlockEntry,
 ): ContentStatBlock | null => {
-  if (!statBlock) {
-    return null;
-  }
-
-  if (!("fields" in statBlock)) {
+  if (!statBlock || !isTypeContentStatBlock(statBlock)) {
     return null;
   }
 

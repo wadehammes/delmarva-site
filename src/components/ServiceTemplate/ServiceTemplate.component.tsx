@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
@@ -8,15 +9,24 @@ import styles from "src/components/ServiceTemplate/ServiceTemplate.module.css";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ServiceType } from "src/contentful/getServices";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
+import type { Locales } from "src/i18n/routing";
+import { filterSectionsByStaleRecentNews } from "src/utils/sectionVisibility";
 
 interface ServiceTemplateProps {
+  locale?: Locales;
+  projects: ProjectType[];
   service: ServiceType;
   servicePhotos: ContentfulAsset[];
-  projects: ProjectType[];
 }
 
 export const ServiceTemplate = async (props: ServiceTemplateProps) => {
-  const { service, servicePhotos, projects } = props;
+  const { locale, service, servicePhotos, projects } = props;
+  const draft = await draftMode();
+  const filteredSections = await filterSectionsByStaleRecentNews(
+    service.sections ?? [],
+    locale ?? "en",
+    draft.isEnabled,
+  );
 
   return (
     <>
@@ -56,12 +66,18 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
           <ProjectCard key={project.id} project={project} />
         ))}
       </Section>
-      {service.sections?.map((section) => {
+      {filteredSections.map((section) => {
         if (!section) {
           return null;
         }
 
-        return <SectionRenderer key={section.id} sections={[section]} />;
+        return (
+          <SectionRenderer
+            key={section.id}
+            locale={locale}
+            sections={[section]}
+          />
+        );
       })}
     </>
   );

@@ -31,3 +31,32 @@ export type TypeContentCopyMediaBlock<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = Entry<TypeContentCopyMediaBlockSkeleton, Modifiers, Locales>;
+
+export function isTypeContentCopyMediaBlock<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+>(
+  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
+): entry is TypeContentCopyMediaBlock<Modifiers, Locales> {
+  return entry.sys.contentType.sys.id === "contentCopyMediaBlock";
+}
+
+export type TypeContentCopyMediaBlockWithoutLinkResolutionResponse =
+  TypeContentCopyMediaBlock<"WITHOUT_LINK_RESOLUTION">;
+export type TypeContentCopyMediaBlockWithoutUnresolvableLinksResponse =
+  TypeContentCopyMediaBlock<"WITHOUT_UNRESOLVABLE_LINKS">;
+export type TypeContentCopyMediaBlockWithAllLocalesResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentCopyMediaBlock<"WITH_ALL_LOCALES", Locales>;
+export type TypeContentCopyMediaBlockWithAllLocalesAndWithoutLinkResolutionResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentCopyMediaBlock<
+  "WITHOUT_LINK_RESOLUTION" | "WITH_ALL_LOCALES",
+  Locales
+>;
+export type TypeContentCopyMediaBlockWithAllLocalesAndWithoutUnresolvableLinksResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentCopyMediaBlock<
+  "WITHOUT_UNRESOLVABLE_LINKS" | "WITH_ALL_LOCALES",
+  Locales
+>;

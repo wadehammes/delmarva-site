@@ -1,11 +1,11 @@
-import type { Entry } from "contentful";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
 } from "src/contentful/helpers";
-import type {
-  TypeContentModulesFields,
-  TypeContentModulesSkeleton,
+import {
+  isTypeContentModules,
+  type TypeContentModulesFields,
+  type TypeContentModulesWithoutUnresolvableLinksResponse,
 } from "src/contentful/types";
 
 type ModuleType = ExtractSymbolType<
@@ -24,17 +24,13 @@ const _validateContentModuleCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentModuleEntry =
-  | Entry<TypeContentModulesSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentModulesWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseContentModule(
   entry: ContentModuleEntry,
 ): ContentModule | null {
-  if (!entry) {
-    return null;
-  }
-
-  if (!("fields" in entry)) {
+  if (!entry || !isTypeContentModules(entry)) {
     return null;
   }
 

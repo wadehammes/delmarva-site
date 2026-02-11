@@ -1,4 +1,3 @@
-import type { Entry } from "contentful";
 import {
   type PageForNavigation,
   parseContentfulPageForNavigation,
@@ -7,7 +6,11 @@ import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
 } from "src/contentful/helpers";
-import type { TypeCtaFields, TypeCtaSkeleton } from "src/contentful/types";
+import {
+  isTypeCta,
+  type TypeCtaFields,
+  type TypeCtaWithoutUnresolvableLinksResponse,
+} from "src/contentful/types";
 
 type CtaButtonVariantType = ExtractSymbolType<
   NonNullable<TypeCtaFields["buttonVariant"]>
@@ -29,16 +32,10 @@ export type Cta = CtaType;
 const _validateCtaCheck: ContentfulTypeCheck<CtaType, TypeCtaFields, "id"> =
   true;
 
-export type CtaEntry =
-  | Entry<TypeCtaSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
-  | undefined;
+export type CtaEntry = TypeCtaWithoutUnresolvableLinksResponse | undefined;
 
 export function parseContentfulCta(cta: CtaEntry): CtaType | null {
-  if (!cta) {
-    return null;
-  }
-
-  if (!("fields" in cta)) {
+  if (!cta || !isTypeCta(cta)) {
     return null;
   }
 

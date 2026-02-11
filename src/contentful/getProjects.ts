@@ -1,5 +1,4 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import {
   FALLBACK_PROJECT_MEDIA_ID,
@@ -18,17 +17,15 @@ import {
   type ContentStatBlock,
   parseContentStatBlock,
 } from "src/contentful/parseContentStatBlock";
-import type {
-  TypeProjectFields,
-  TypeProjectSkeleton,
+import {
+  isTypeProject,
+  type TypeProjectFields,
+  type TypeProjectSkeleton,
+  type TypeProjectWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeProject";
 import type { Locales } from "src/i18n/routing";
 
-export type ProjectEntry = Entry<
-  TypeProjectSkeleton,
-  "WITHOUT_UNRESOLVABLE_LINKS",
-  string
->;
+export type ProjectEntry = TypeProjectWithoutUnresolvableLinksResponse;
 
 export interface ProjectType {
   id: string;
@@ -49,11 +46,7 @@ const _validateProjectCheck: ContentfulTypeCheck<
 export function parseContentfulProject(
   projectEntry?: ProjectEntry,
 ): ProjectType | null {
-  if (!projectEntry) {
-    return null;
-  }
-
-  if (!("fields" in projectEntry)) {
+  if (!projectEntry || !isTypeProject(projectEntry)) {
     return null;
   }
 
@@ -71,11 +64,7 @@ export function parseContentfulProject(
 }
 
 export const parseProjectForNavigation = (projectEntry?: ProjectEntry) => {
-  if (!projectEntry) {
-    return null;
-  }
-
-  if (!("fields" in projectEntry)) {
+  if (!projectEntry || !isTypeProject(projectEntry)) {
     return null;
   }
 

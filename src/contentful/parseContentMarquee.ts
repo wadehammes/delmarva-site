@@ -1,9 +1,9 @@
-import type { Entry } from "contentful";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import type { ContentEntries } from "src/contentful/parseSections";
-import type {
-  TypeContentMarqueeFields,
-  TypeContentMarqueeSkeleton,
+import {
+  isTypeContentMarquee,
+  type TypeContentMarqueeFields,
+  type TypeContentMarqueeWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentMarquee";
 
 export interface ContentMarquee {
@@ -18,17 +18,13 @@ const _validateContentMarqueeCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentMarqueeEntry =
-  | Entry<TypeContentMarqueeSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentMarqueeWithoutUnresolvableLinksResponse
   | undefined;
 
 export const parseContentMarquee = (
   contentMarquee: ContentMarqueeEntry,
 ): ContentMarquee | null => {
-  if (!contentMarquee) {
-    return null;
-  }
-
-  if (!("fields" in contentMarquee)) {
+  if (!contentMarquee || !isTypeContentMarquee(contentMarquee)) {
     return null;
   }
 

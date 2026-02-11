@@ -1,6 +1,9 @@
-import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
-import type { TypeContentRecentNewsSkeleton } from "src/contentful/types/TypeContentRecentNews";
+import {
+  isTypeContentRecentNews,
+  type TypeContentRecentNewsSkeleton,
+  type TypeContentRecentNewsWithoutUnresolvableLinksResponse,
+} from "src/contentful/types/TypeContentRecentNews";
 import type { Locales } from "src/i18n/routing";
 
 export interface ContentRecentNewsType {
@@ -12,17 +15,13 @@ export interface ContentRecentNewsType {
 }
 
 export type ContentRecentNewsEntry =
-  | Entry<TypeContentRecentNewsSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentRecentNewsWithoutUnresolvableLinksResponse
   | undefined;
 
 export const parseContentRecentNews = (
   recentNews: ContentRecentNewsEntry,
 ): ContentRecentNewsType | null => {
-  if (!recentNews) {
-    return null;
-  }
-
-  if (!("fields" in recentNews)) {
+  if (!recentNews || !isTypeContentRecentNews(recentNews)) {
     return null;
   }
 
@@ -93,4 +92,32 @@ export async function fetchRecentNews({
   } while (skip < total);
 
   return allRecentNews;
+}
+
+const oneYearAgoIso = () =>
+  `${
+    new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split(".")[0]
+  }Z`;
+
+interface HasRecentNewsOptions {
+  locale?: Locales;
+  preview: boolean;
+}
+
+export async function hasRecentNews({
+  locale = "en",
+  preview,
+}: HasRecentNewsOptions): Promise<boolean> {
+  const contentful = contentfulClient({ preview });
+  const result =
+    await contentful.withoutUnresolvableLinks.getEntries<TypeContentRecentNewsSkeleton>(
+      {
+        content_type: "contentRecentNews",
+        "fields.date[gt]":
+          oneYearAgoIso() as `${number}-${number}-${number}T${number}:${number}:${number}Z`,
+        limit: 1,
+        locale,
+      },
+    );
+  return result.items.length > 0;
 }
