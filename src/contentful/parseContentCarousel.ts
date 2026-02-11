@@ -1,12 +1,12 @@
-import type { Entry } from "contentful";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
 } from "src/contentful/helpers";
 import type { ContentEntries } from "src/contentful/parseSections";
-import type {
-  TypeContentCarouselFields,
-  TypeContentCarouselSkeleton,
+import {
+  isTypeContentCarousel,
+  type TypeContentCarouselFields,
+  type TypeContentCarouselWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentCarousel";
 
 type ControlsPlacementType = ExtractSymbolType<
@@ -26,17 +26,13 @@ const _validateContentCarouselCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentCarouselEntry =
-  | Entry<TypeContentCarouselSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentCarouselWithoutUnresolvableLinksResponse
   | undefined;
 
 export const parseContentCarousel = (
   contentCarousel: ContentCarouselEntry,
 ): ContentCarousel | null => {
-  if (!contentCarousel) {
-    return null;
-  }
-
-  if (!("fields" in contentCarousel)) {
+  if (!contentCarousel || !isTypeContentCarousel(contentCarousel)) {
     return null;
   }
 

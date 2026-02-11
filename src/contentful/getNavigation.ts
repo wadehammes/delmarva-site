@@ -1,10 +1,11 @@
-import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
-import type {
-  TypeNavigationFields,
-  TypeNavigationSkeleton,
+import {
+  isTypeNavigation,
+  type TypeNavigationFields,
+  type TypeNavigationSkeleton,
+  type TypeNavigationWithoutUnresolvableLinksResponse,
 } from "src/contentful/types";
 
 export interface NavigationType {
@@ -21,15 +22,11 @@ const _validateNavigationCheck: ContentfulTypeCheck<
 > = true;
 
 export type NavigationEntry =
-  | Entry<TypeNavigationSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeNavigationWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseNavigation(entry: NavigationEntry): NavigationType | null {
-  if (!entry) {
-    return null;
-  }
-
-  if (!("fields" in entry)) {
+  if (!entry || !isTypeNavigation(entry)) {
     return null;
   }
 

@@ -91,3 +91,26 @@ export type TypeSection<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = Entry<TypeSectionSkeleton, Modifiers, Locales>;
+
+export function isTypeSection<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+>(
+  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
+): entry is TypeSection<Modifiers, Locales> {
+  return entry.sys.contentType.sys.id === "section";
+}
+
+export type TypeSectionWithoutLinkResolutionResponse =
+  TypeSection<"WITHOUT_LINK_RESOLUTION">;
+export type TypeSectionWithoutUnresolvableLinksResponse =
+  TypeSection<"WITHOUT_UNRESOLVABLE_LINKS">;
+export type TypeSectionWithAllLocalesResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeSection<"WITH_ALL_LOCALES", Locales>;
+export type TypeSectionWithAllLocalesAndWithoutLinkResolutionResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeSection<"WITHOUT_LINK_RESOLUTION" | "WITH_ALL_LOCALES", Locales>;
+export type TypeSectionWithAllLocalesAndWithoutUnresolvableLinksResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeSection<"WITHOUT_UNRESOLVABLE_LINKS" | "WITH_ALL_LOCALES", Locales>;

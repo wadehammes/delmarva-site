@@ -1,4 +1,3 @@
-import type { Entry } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import { type FooterType, parseFooter } from "src/contentful/getFooter";
 import {
@@ -14,18 +13,16 @@ import {
   parseContentfulSection,
   type SectionType,
 } from "src/contentful/parseSections";
-import type {
-  TypePageFields,
-  TypePageSkeleton,
+import {
+  isTypePage,
+  type TypePageFields,
+  type TypePageSkeleton,
+  type TypePageWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypePage";
 import type { Locales } from "src/i18n/routing";
 import { createInternalLink } from "src/utils/urlHelpers";
 
-export type PageEntry = Entry<
-  TypePageSkeleton,
-  "WITHOUT_UNRESOLVABLE_LINKS",
-  string
->;
+export type PageEntry = TypePageWithoutUnresolvableLinksResponse;
 
 export interface Page {
   enableIndexing: boolean;
@@ -58,11 +55,7 @@ const _validatePageCheck: ContentfulTypeCheck<
 > = true;
 
 export function parseContentfulPage(pageEntry?: PageEntry): Page | null {
-  if (!pageEntry) {
-    return null;
-  }
-
-  if (!("fields" in pageEntry)) {
+  if (!pageEntry || !isTypePage(pageEntry)) {
     return null;
   }
 
@@ -102,11 +95,7 @@ export interface PageForNavigation {
 export function parseContentfulPageForNavigation(
   pageEntry: PageEntry,
 ): PageForNavigation | null {
-  if (!pageEntry) {
-    return null;
-  }
-
-  if (!("fields" in pageEntry)) {
+  if (!pageEntry || !isTypePage(pageEntry)) {
     return null;
   }
 

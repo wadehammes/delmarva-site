@@ -40,3 +40,26 @@ export type TypeService<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = Entry<TypeServiceSkeleton, Modifiers, Locales>;
+
+export function isTypeService<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+>(
+  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
+): entry is TypeService<Modifiers, Locales> {
+  return entry.sys.contentType.sys.id === "service";
+}
+
+export type TypeServiceWithoutLinkResolutionResponse =
+  TypeService<"WITHOUT_LINK_RESOLUTION">;
+export type TypeServiceWithoutUnresolvableLinksResponse =
+  TypeService<"WITHOUT_UNRESOLVABLE_LINKS">;
+export type TypeServiceWithAllLocalesResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeService<"WITH_ALL_LOCALES", Locales>;
+export type TypeServiceWithAllLocalesAndWithoutLinkResolutionResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeService<"WITHOUT_LINK_RESOLUTION" | "WITH_ALL_LOCALES", Locales>;
+export type TypeServiceWithAllLocalesAndWithoutUnresolvableLinksResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeService<"WITHOUT_UNRESOLVABLE_LINKS" | "WITH_ALL_LOCALES", Locales>;

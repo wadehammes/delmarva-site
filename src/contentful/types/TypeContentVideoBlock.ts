@@ -31,3 +31,32 @@ export type TypeContentVideoBlock<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = Entry<TypeContentVideoBlockSkeleton, Modifiers, Locales>;
+
+export function isTypeContentVideoBlock<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+>(
+  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
+): entry is TypeContentVideoBlock<Modifiers, Locales> {
+  return entry.sys.contentType.sys.id === "contentVideoBlock";
+}
+
+export type TypeContentVideoBlockWithoutLinkResolutionResponse =
+  TypeContentVideoBlock<"WITHOUT_LINK_RESOLUTION">;
+export type TypeContentVideoBlockWithoutUnresolvableLinksResponse =
+  TypeContentVideoBlock<"WITHOUT_UNRESOLVABLE_LINKS">;
+export type TypeContentVideoBlockWithAllLocalesResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentVideoBlock<"WITH_ALL_LOCALES", Locales>;
+export type TypeContentVideoBlockWithAllLocalesAndWithoutLinkResolutionResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentVideoBlock<
+  "WITHOUT_LINK_RESOLUTION" | "WITH_ALL_LOCALES",
+  Locales
+>;
+export type TypeContentVideoBlockWithAllLocalesAndWithoutUnresolvableLinksResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentVideoBlock<
+  "WITHOUT_UNRESOLVABLE_LINKS" | "WITH_ALL_LOCALES",
+  Locales
+>;

@@ -1,13 +1,13 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type {
-  TypeContentTestimonialFields,
-  TypeContentTestimonialSkeleton,
+import {
+  isTypeContentTestimonial,
+  type TypeContentTestimonialFields,
+  type TypeContentTestimonialWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentTestimonial";
 
 export interface ContentTestimonialType {
@@ -31,17 +31,13 @@ const _validateContentTestimonialCheck: ContentfulTypeCheck<
 > = true;
 
 export type ContentTestimonialEntry =
-  | Entry<TypeContentTestimonialSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentTestimonialWithoutUnresolvableLinksResponse
   | undefined;
 
 export const parseContentTestimonial = (
   testimonial: ContentTestimonialEntry,
 ): ContentTestimonialType | null => {
-  if (!testimonial) {
-    return null;
-  }
-
-  if (!("fields" in testimonial)) {
+  if (!testimonial || !isTypeContentTestimonial(testimonial)) {
     return null;
   }
 

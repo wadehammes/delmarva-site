@@ -1,10 +1,10 @@
-import type { Entry } from "contentful";
 import type { ExtractSymbolType } from "src/contentful/helpers";
 import { type CopyBlock, parseCopyBlock } from "src/contentful/parseCopyBlock";
 import type { ContentEntries } from "src/contentful/parseSections";
-import type {
-  TypeContentCopyMediaBlockFields,
-  TypeContentCopyMediaBlockSkeleton,
+import {
+  isTypeContentCopyMediaBlock,
+  type TypeContentCopyMediaBlockFields,
+  type TypeContentCopyMediaBlockWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentCopyMediaBlock";
 
 export type MediaBackgroundStyleType = ExtractSymbolType<
@@ -24,21 +24,16 @@ export interface ContentCopyMediaBlock {
 }
 
 export type ContentCopyMediaBlockEntry =
-  | Entry<
-      TypeContentCopyMediaBlockSkeleton,
-      "WITHOUT_UNRESOLVABLE_LINKS",
-      string
-    >
+  | TypeContentCopyMediaBlockWithoutUnresolvableLinksResponse
   | undefined;
 
 export const parseContentCopyMediaBlock = (
   contentCopyMediaBlock: ContentCopyMediaBlockEntry,
 ): ContentCopyMediaBlock | null => {
-  if (!contentCopyMediaBlock) {
-    return null;
-  }
-
-  if (!("fields" in contentCopyMediaBlock)) {
+  if (
+    !contentCopyMediaBlock ||
+    !isTypeContentCopyMediaBlock(contentCopyMediaBlock)
+  ) {
     return null;
   }
 

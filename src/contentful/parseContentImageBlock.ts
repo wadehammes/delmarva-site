@@ -1,5 +1,4 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { Entry } from "contentful";
 import {
   type ProjectType,
   parseProjectForNavigation,
@@ -13,9 +12,10 @@ import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
-import type {
-  TypeContentImageBlockFields,
-  TypeContentImageBlockSkeleton,
+import {
+  isTypeContentImageBlock,
+  type TypeContentImageBlockFields,
+  type TypeContentImageBlockWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentImageBlock";
 
 type ImageStyleType = ExtractSymbolType<
@@ -33,17 +33,13 @@ export interface ContentImageBlockType {
 }
 
 export type ContentImageBlockEntry =
-  | Entry<TypeContentImageBlockSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>
+  | TypeContentImageBlockWithoutUnresolvableLinksResponse
   | undefined;
 
 export function parseContentImageBlock(
   imageBlock?: ContentImageBlockEntry,
 ): ContentImageBlockType | null {
-  if (!imageBlock) {
-    return null;
-  }
-
-  if (!("fields" in imageBlock)) {
+  if (!imageBlock || !isTypeContentImageBlock(imageBlock)) {
     return null;
   }
 

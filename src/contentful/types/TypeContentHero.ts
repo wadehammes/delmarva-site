@@ -34,3 +34,26 @@ export type TypeContentHero<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,
 > = Entry<TypeContentHeroSkeleton, Modifiers, Locales>;
+
+export function isTypeContentHero<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode,
+>(
+  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
+): entry is TypeContentHero<Modifiers, Locales> {
+  return entry.sys.contentType.sys.id === "contentHero";
+}
+
+export type TypeContentHeroWithoutLinkResolutionResponse =
+  TypeContentHero<"WITHOUT_LINK_RESOLUTION">;
+export type TypeContentHeroWithoutUnresolvableLinksResponse =
+  TypeContentHero<"WITHOUT_UNRESOLVABLE_LINKS">;
+export type TypeContentHeroWithAllLocalesResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentHero<"WITH_ALL_LOCALES", Locales>;
+export type TypeContentHeroWithAllLocalesAndWithoutLinkResolutionResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentHero<"WITHOUT_LINK_RESOLUTION" | "WITH_ALL_LOCALES", Locales>;
+export type TypeContentHeroWithAllLocalesAndWithoutUnresolvableLinksResponse<
+  Locales extends LocaleCode = LocaleCode,
+> = TypeContentHero<"WITHOUT_UNRESOLVABLE_LINKS" | "WITH_ALL_LOCALES", Locales>;
