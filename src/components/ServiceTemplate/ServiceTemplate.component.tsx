@@ -38,6 +38,7 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
           contentLayout: "2-column",
           id: `service-${service.slug}-header`,
           sectionBackgroundStyle: "Microdot",
+          sectionPadding: "Regular Padding",
           slug: service.slug,
         }}
       >
@@ -56,9 +57,11 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
       <Section
         id={`service-${service.slug}-projects`}
         section={{
+          backgroundColor: "Black",
           contentLayout: "4-column",
           id: `service-${service.slug}-projects`,
           sectionEyebrow: "Projects",
+          sectionPadding: "Regular Padding",
           slug: service.slug,
         }}
       >

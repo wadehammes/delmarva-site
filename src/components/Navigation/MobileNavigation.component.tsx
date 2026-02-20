@@ -37,7 +37,7 @@ export const MobileNavigationDrawer = (props: MobileNavigationDrawerProps) => {
         <DelmarvaLogo />
       </Link>
       <div className={styles.mobileNavList}>
-        {links.map((link) => {
+        {(links ?? []).map((link) => {
           if (!link) {
             return null;
           }

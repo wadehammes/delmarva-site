@@ -9,21 +9,12 @@ import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import {
   formatAnimatedValue,
   getInitialValue,
-  type NumberFormatType,
   parseFormattedValue,
 } from "src/utils/stat.helpers";
 
-// Interface for the minimum required properties for the Stat component
-export interface StatData {
-  decorator?: "None" | "Plus Sign";
-  value: number;
-  description: string;
-  type?: NumberFormatType;
-}
-
 export interface StatProps {
   align?: "left" | "center" | "right";
-  stat: StatData | ContentStatBlock;
+  stat: ContentStatBlock;
   size?: "small" | "medium" | "large";
   className?: string;
   trigger?: boolean;
@@ -37,21 +28,26 @@ export const Stat = (props: StatProps) => {
     align = "center",
     trigger = false,
   } = props;
-  const { value, description, type = "Numerical", decorator = "None" } = stat;
-
+  const {
+    stat: statValue,
+    statDescription,
+    statType,
+    description = statDescription,
+    decorator = "None",
+  } = stat;
   const numberRef = useRef<HTMLSpanElement>(null);
   const { ref: statRef, inView } = useOptimizedInView();
 
   useEffect(() => {
     const numberElement = numberRef.current;
-    if (!numberElement) return;
+    if (!numberElement || statValue == null) return;
 
     // For accordion stats, animate when trigger is true
     // For regular stats, animate when inView is true
     const shouldAnimate = trigger ? trigger : inView;
     if (!shouldAnimate) return;
 
-    const parsed = parseFormattedValue(value, type);
+    const parsed = parseFormattedValue(statValue, statType);
     if (!parsed) return;
 
     const { numericValue, suffix, numDigits } = parsed;
@@ -75,7 +71,7 @@ export const Stat = (props: StatProps) => {
             currentValue,
             suffix,
             numDigits,
-            type,
+            statType,
           );
         },
       },
@@ -84,7 +80,9 @@ export const Stat = (props: StatProps) => {
     return () => {
       tl.kill();
     };
-  }, [trigger, inView, value, type, decorator]);
+  }, [trigger, inView, statValue, statType, decorator]);
+
+  if (statValue == null) return null;
 
   return (
     <div
@@ -101,7 +99,7 @@ export const Stat = (props: StatProps) => {
         })}
         ref={numberRef}
       >
-        {getInitialValue(value, type)}
+        {getInitialValue(statValue, statType)}
       </span>
       <p className={styles.description}>{description}</p>
     </div>

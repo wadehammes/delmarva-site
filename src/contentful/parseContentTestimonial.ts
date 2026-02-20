@@ -13,21 +13,16 @@ import {
 export interface ContentTestimonialType {
   id: string;
   quote: Document;
-  quoterName: string;
-  quoterTitle: string;
-  companyLogo: ContentfulAsset | null;
-  showQuoteIcon: boolean;
+  quoterName?: string;
+  quoterTitle?: string;
+  companyLogo?: ContentfulAsset | null;
+  showQuoteIcon?: boolean;
 }
 
 const _validateContentTestimonialCheck: ContentfulTypeCheck<
   ContentTestimonialType,
   TypeContentTestimonialFields,
-  | "id"
-  | "quote"
-  | "quoterName"
-  | "quoterTitle"
-  | "companyLogo"
-  | "showQuoteIcon"
+  "id"
 > = true;
 
 export type ContentTestimonialEntry =

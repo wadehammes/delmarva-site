@@ -23,13 +23,21 @@ const otherModule = (): ContentModuleEntry =>
   }) as ContentModuleEntry;
 
 const sectionWithRecentNewsList = (): SectionType => ({
+  backgroundColor: "Black",
   content: [recentNewsListModule()],
+  contentLayout: "Single Column",
   id: "section-news",
+  sectionPadding: "Regular Padding",
+  slug: "section-news",
 });
 
 const sectionWithoutRecentNewsList = (): SectionType => ({
+  backgroundColor: "Black",
   content: [otherModule()],
+  contentLayout: "Single Column",
   id: "section-other",
+  sectionPadding: "Regular Padding",
+  slug: "section-other",
 });
 
 beforeEach(() => {

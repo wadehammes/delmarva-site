@@ -14,64 +14,66 @@ export type ContentfulRequiredKeys<TFields> = Exclude<
   "entryTitle"
 >;
 
-type ContentfulMissingKeys<TRequired, TPresent> = Exclude<TRequired, TPresent>;
-
-type ContentfulExtraKeys<TPresent, TAllowed> = Exclude<TPresent, TAllowed>;
-
 type ContentfulRequiredSet<TFields, TAdditionalKeys extends string> =
   | ContentfulRequiredKeys<TFields>
   | TAdditionalKeys;
 
-type ContentfulAllowedSet<TFields, TAdditionalKeys extends string> =
-  | keyof TFields
-  | TAdditionalKeys;
-
-type ContentfulTypeCheckMissing<
+type ContentfulTypeCheckMissingFields<
   TFields,
   TAdditionalKeys extends string,
   TParsedType,
-> = ContentfulMissingKeys<
+> = Exclude<keyof TFields | TAdditionalKeys, keyof TParsedType | "entryTitle">;
+
+type ContentfulTypeCheckMissingRequired<
+  TFields,
+  TAdditionalKeys extends string,
+  TParsedType,
+> = Exclude<
   ContentfulRequiredSet<TFields, TAdditionalKeys>,
   RequiredKeys<TParsedType>
 >;
 
-type ContentfulTypeCheckExtra<
+type ContentfulTypeCheckExtraRequired<
   TFields,
   TAdditionalKeys extends string,
   TParsedType,
-> = ContentfulExtraKeys<
+> = Exclude<
   RequiredKeys<TParsedType>,
-  ContentfulAllowedSet<TFields, TAdditionalKeys>
+  ContentfulRequiredSet<TFields, TAdditionalKeys>
 >;
 
 export type ContentfulTypeCheck<
   TParsedType,
   TFields,
   TAdditionalKeys extends string = never,
-> = [ContentfulRequiredSet<TFields, TAdditionalKeys>] extends [never]
-  ? [RequiredKeys<TParsedType>] extends [never]
-    ? true
-    : { extra: ContentfulTypeCheckExtra<TFields, TAdditionalKeys, TParsedType> }
-  : ContentfulRequiredSet<
-        TFields,
-        TAdditionalKeys
-      > extends RequiredKeys<TParsedType>
-    ? RequiredKeys<TParsedType> extends ContentfulAllowedSet<
-        TFields,
-        TAdditionalKeys
-      >
+> = [
+  ContentfulTypeCheckMissingFields<TFields, TAdditionalKeys, TParsedType>,
+] extends [never]
+  ? [
+      ContentfulTypeCheckMissingRequired<TFields, TAdditionalKeys, TParsedType>,
+    ] extends [never]
+    ? [
+        ContentfulTypeCheckExtraRequired<TFields, TAdditionalKeys, TParsedType>,
+      ] extends [never]
       ? true
       : {
-          extra: ContentfulTypeCheckExtra<
+          extraRequired: ContentfulTypeCheckExtraRequired<
             TFields,
             TAdditionalKeys,
             TParsedType
           >;
         }
     : {
-        missing: ContentfulTypeCheckMissing<
+        missingRequired: ContentfulTypeCheckMissingRequired<
           TFields,
           TAdditionalKeys,
           TParsedType
         >;
-      };
+      }
+  : {
+      missingFields: ContentfulTypeCheckMissingFields<
+        TFields,
+        TAdditionalKeys,
+        TParsedType
+      >;
+    };

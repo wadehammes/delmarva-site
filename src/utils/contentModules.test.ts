@@ -18,16 +18,25 @@ const otherModule = (): ContentModuleEntry =>
   }) as ContentModuleEntry;
 
 const sectionWithRecentNewsList = (): SectionType => ({
+  backgroundColor: "Black",
   content: [recentNewsListModule()],
+  contentLayout: "Single Column",
   id: "section-1",
+  sectionPadding: "Regular Padding",
+  slug: "section-1",
 });
 
 const sectionWithOtherModule = (): SectionType => ({
+  backgroundColor: "Black",
   content: [otherModule()],
+  contentLayout: "Single Column",
   id: "section-2",
+  sectionPadding: "Regular Padding",
+  slug: "section-2",
 });
 
 const sectionWithMultipleContent = (): SectionType => ({
+  backgroundColor: "Black",
   content: [
     {
       fields: {},
@@ -35,7 +44,10 @@ const sectionWithMultipleContent = (): SectionType => ({
     } as ContentEntries,
     recentNewsListModule(),
   ],
+  contentLayout: "Single Column",
   id: "section-3",
+  sectionPadding: "Regular Padding",
+  slug: "section-3",
 });
 
 describe("sectionContainsRecentNewsList", () => {
@@ -54,21 +66,40 @@ describe("sectionContainsRecentNewsList", () => {
 
   it("returns false when section is null or has no content", () => {
     expect(sectionContainsRecentNewsList(null)).toBe(false);
-    expect(sectionContainsRecentNewsList({ content: [], id: "empty" })).toBe(
-      false,
-    );
-    expect(sectionContainsRecentNewsList({ id: "no-content" })).toBe(false);
+    expect(
+      sectionContainsRecentNewsList({
+        backgroundColor: "Black",
+        content: [],
+        contentLayout: "Single Column",
+        id: "empty",
+        sectionPadding: "Regular Padding",
+        slug: "empty",
+      }),
+    ).toBe(false);
+    expect(
+      sectionContainsRecentNewsList({
+        backgroundColor: "Black",
+        contentLayout: "Single Column",
+        id: "no-content",
+        sectionPadding: "Regular Padding",
+        slug: "no-content",
+      }),
+    ).toBe(false);
   });
 
   it("returns false when section has content but no contentModules", () => {
     const section: SectionType = {
+      backgroundColor: "Black",
       content: [
         {
           fields: {},
           sys: { contentType: { sys: { id: "contentHero" } }, id: "h1" },
         } as ContentEntries,
       ],
+      contentLayout: "Single Column",
       id: "s1",
+      sectionPadding: "Regular Padding",
+      slug: "s1",
     };
     expect(sectionContainsRecentNewsList(section)).toBe(false);
   });

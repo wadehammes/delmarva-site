@@ -14,15 +14,16 @@ type ControlsPlacementType = ExtractSymbolType<
 >;
 
 export interface ContentCarousel {
-  carouselItems: (ContentEntries | null)[];
-  controlsPlacement: ControlsPlacementType;
+  carouselItems?: (ContentEntries | null)[];
+  controlsPlacement?: ControlsPlacementType;
+  slug?: string;
   id: string;
 }
 
 const _validateContentCarouselCheck: ContentfulTypeCheck<
   ContentCarousel,
   TypeContentCarouselFields,
-  "id" | "controlsPlacement" | "carouselItems"
+  "id"
 > = true;
 
 export type ContentCarouselEntry =
@@ -43,5 +44,6 @@ export const parseContentCarousel = (
     controlsPlacement: (contentCarousel.fields.controlsPlacement ??
       "Over Slides") as ControlsPlacementType,
     id: contentCarousel.sys.id,
+    slug: contentCarousel.fields.slug ?? "",
   };
 };

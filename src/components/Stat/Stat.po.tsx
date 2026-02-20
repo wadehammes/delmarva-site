@@ -5,9 +5,10 @@ import { Stat, type StatProps } from "./Stat.component";
 export class StatPO extends BasePageObject {
   private defaultProps: StatProps = {
     stat: {
-      description: "Test description",
-      type: "Numerical",
-      value: 1000,
+      id: "stat-default",
+      stat: 1000,
+      statDescription: "Test description",
+      statType: "Numerical",
     },
   };
 

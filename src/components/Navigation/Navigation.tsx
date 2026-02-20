@@ -185,7 +185,7 @@ export const Navigation = (props: NavigationProps) => {
         })}
       >
         <ul className={styles.navList}>
-          {navigation.links.map((link) => {
+          {(navigation.links ?? []).map((link) => {
             if (!link) {
               return null;
             }

@@ -245,13 +245,13 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
 
           return (
             <div className={styles.statItem} key={stat.id}>
-              <dt className={styles.statDescription}>{stat.description}</dt>
+              <dt className={styles.statDescription}>{stat.statDescription}</dt>
               <dd className={styles.statValue}>
                 {formatNumber({
                   decorator: stat.decorator,
                   keepInitialValue: true,
-                  num: stat.value ?? 0,
-                  type: stat.type,
+                  num: stat.stat ?? 0,
+                  type: stat.statType,
                 })}
               </dd>
             </div>

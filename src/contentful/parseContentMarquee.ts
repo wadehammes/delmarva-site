@@ -8,13 +8,13 @@ import {
 
 export interface ContentMarquee {
   id: string;
-  items: (ContentEntries | null)[];
+  items?: (ContentEntries | null)[];
 }
 
 const _validateContentMarqueeCheck: ContentfulTypeCheck<
   ContentMarquee,
   TypeContentMarqueeFields,
-  "id" | "items"
+  "id"
 > = true;
 
 export type ContentMarqueeEntry =

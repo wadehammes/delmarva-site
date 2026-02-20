@@ -23,7 +23,7 @@ export interface CtaType {
   text: string;
   pageLink?: PageForNavigation | null;
   externalLink?: string;
-  variant?: CtaButtonVariantType;
+  buttonVariant?: CtaButtonVariantType;
   arrow?: CtaArrowType;
 }
 
@@ -43,10 +43,10 @@ export function parseContentfulCta(cta: CtaEntry): CtaType | null {
 
   return {
     arrow: arrow ?? "No Arrow",
+    buttonVariant: buttonVariant ?? "Primary",
     externalLink: externalLink ?? "",
     id: cta.sys.id,
     pageLink: pageLink ? parseContentfulPageForNavigation(pageLink) : null,
     text: text ?? "",
-    variant: buttonVariant ?? "Primary",
   };
 }

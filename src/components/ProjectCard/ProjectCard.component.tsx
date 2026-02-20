@@ -86,8 +86,8 @@ export const ProjectCard = (props: ProjectCardProps) => {
                       {formatNumber({
                         decorator: stat.decorator,
                         keepInitialValue: true,
-                        num: stat?.value ?? 0,
-                        type: stat?.type,
+                        num: stat?.stat ?? 0,
+                        type: stat?.statType,
                       })}
                     </dd>
                   </div>

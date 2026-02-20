@@ -17,6 +17,7 @@ import {
   type ContentStatBlock,
   parseContentStatBlock,
 } from "src/contentful/parseContentStatBlock";
+import type { MarketType } from "src/contentful/parseMarket";
 import {
   isTypeProject,
   type TypeProjectFields,
@@ -32,6 +33,7 @@ export interface ProjectType {
   projectName: string;
   slug: string;
   description: Document;
+  markets?: (MarketType | null)[];
   media?: (ContentfulAsset | null)[];
   projectStats?: (ContentStatBlock | null)[];
   services: (ServiceType | null)[];

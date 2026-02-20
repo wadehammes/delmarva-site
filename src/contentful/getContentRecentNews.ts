@@ -1,6 +1,8 @@
 import { contentfulClient } from "src/contentful/client";
+import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import {
   isTypeContentRecentNews,
+  type TypeContentRecentNewsFields,
   type TypeContentRecentNewsSkeleton,
   type TypeContentRecentNewsWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentRecentNews";
@@ -13,6 +15,12 @@ export interface ContentRecentNewsType {
   linkUrl: string;
   date: string;
 }
+
+const _validateContentRecentNewsCheck: ContentfulTypeCheck<
+  ContentRecentNewsType,
+  TypeContentRecentNewsFields,
+  "id"
+> = true;
 
 export type ContentRecentNewsEntry =
   | TypeContentRecentNewsWithoutUnresolvableLinksResponse

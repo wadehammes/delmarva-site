@@ -15,9 +15,10 @@ export const CTA = (props: CTAProps) => {
     return null;
   }
 
-  const { variant, arrow } = cta;
+  const { buttonVariant: ctaButtonVariant, arrow } = cta;
 
-  const buttonVariant = variant === "Primary" ? "primary" : "secondary";
+  const buttonVariant =
+    ctaButtonVariant === "Primary" ? "primary" : "secondary";
 
   return (
     <ButtonLink

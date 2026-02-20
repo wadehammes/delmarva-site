@@ -12,33 +12,37 @@ export const StatExample = () => {
     >
       <Stat
         stat={{
-          description: "Happy customers served",
-          type: "Numerical",
-          value: 1500,
+          id: "stat-1",
+          stat: 1500,
+          statDescription: "Happy customers served",
+          statType: "Numerical",
         }}
       />
 
       <Stat
         stat={{
-          description: "Customer satisfaction rate",
-          type: "Percentage",
-          value: 95,
+          id: "stat-2",
+          stat: 95,
+          statDescription: "Customer satisfaction rate",
+          statType: "Percentage",
         }}
       />
 
       <Stat
         stat={{
-          description: "Revenue generated",
-          type: "Currency",
-          value: 50000,
+          id: "stat-3",
+          stat: 50000,
+          statDescription: "Revenue generated",
+          statType: "Currency",
         }}
       />
 
       <Stat
         stat={{
-          description: "Years of experience",
-          type: "Numerical",
-          value: 25,
+          id: "stat-4",
+          stat: 25,
+          statDescription: "Years of experience",
+          statType: "Numerical",
         }}
       />
     </div>

@@ -42,9 +42,10 @@ export interface ServiceType {
   serviceCountiesMapColor?: ServiceCountiesMapColor;
   featuredService?: boolean;
   featuredServicePosition?: number;
+  featuredStat?: ContentStatBlock | null;
   metaTitle: string;
   metaDescription: string;
-  metaImage: ContentfulAsset;
+  metaImage: ContentfulAsset | null;
   publishDate: string;
   enableIndexing: boolean;
   updatedAt: string;
@@ -53,16 +54,7 @@ export interface ServiceType {
 const _validateServiceCheck: ContentfulTypeCheck<
   ServiceType,
   TypeServiceFields,
-  | "id"
-  | "serviceName"
-  | "slug"
-  | "description"
-  | "metaTitle"
-  | "metaDescription"
-  | "metaImage"
-  | "enableIndexing"
-  | "publishDate"
-  | "updatedAt"
+  "id" | "publishDate" | "updatedAt"
 > = true;
 
 export function parseContentfulService(
