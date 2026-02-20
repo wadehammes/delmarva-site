@@ -1,8 +1,8 @@
 .serviceAccordion {
-  container-type: inline-size;
   display: grid;
-  gap: 2rem;
   grid-template-columns: 1fr;
+  gap: 2rem;
+  container-type: inline-size;
 
   @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;

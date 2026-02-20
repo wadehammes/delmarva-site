@@ -20,8 +20,8 @@ type ContentCardMediaType = ExtractSymbolType<
 export interface ContentCardType {
   id: string;
   entryTitle?: string;
-  media: ContentfulAsset | null;
-  mediaType: ContentCardMediaType;
+  media?: ContentfulAsset | null;
+  mediaType?: ContentCardMediaType;
   cardCopy: Document;
   modalCopy?: Document;
 }
@@ -29,7 +29,7 @@ export interface ContentCardType {
 const _validateContentCardCheck: ContentfulTypeCheck<
   ContentCardType,
   TypeContentCardFields,
-  "id" | "media" | "mediaType" | "cardCopy"
+  "id"
 > = true;
 
 export type ContentCardEntry =

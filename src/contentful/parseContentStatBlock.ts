@@ -9,37 +9,28 @@ import {
   type TypeContentStatBlockWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentStatBlock";
 
-type NumberFormatType = ExtractSymbolType<
+export type NumberFormatType = ExtractSymbolType<
   NonNullable<TypeContentStatBlockFields["statType"]>
 >;
 
-type DecoratorType = ExtractSymbolType<
+export type DecoratorType = ExtractSymbolType<
   NonNullable<TypeContentStatBlockFields["decorator"]>
 >;
 
 export interface ContentStatBlock {
   id: string;
   stat: number;
-  decorator: DecoratorType;
   statDescription: string;
-  statServiceReference?: string | null;
   statType: NumberFormatType;
-  description: string;
-  value: number;
-  type: NumberFormatType;
+  decorator?: DecoratorType;
+  statServiceReference?: string | null;
+  description?: string;
 }
 
 const _validateContentStatBlockCheck: ContentfulTypeCheck<
   ContentStatBlock,
   TypeContentStatBlockFields,
-  | "id"
-  | "stat"
-  | "statDescription"
-  | "statType"
-  | "decorator"
-  | "description"
-  | "value"
-  | "type"
+  "id"
 > = true;
 
 export type ContentStatBlockEntry =
@@ -56,7 +47,6 @@ export const parseContentStatBlock = (
   const { stat, statDescription, statType } = statBlock.fields;
 
   const description = statDescription || "";
-  const value = stat ?? 0;
   const type = (statType as NumberFormatType) || "Numerical";
   const decorator = (statBlock.fields.decorator ?? "None") as DecoratorType;
 
@@ -64,13 +54,11 @@ export const parseContentStatBlock = (
     decorator,
     description,
     id: statBlock.sys.id,
-    stat: value,
+    stat,
     statDescription: description,
     statServiceReference: parseServiceSlug(
       statBlock.fields?.statServiceReference,
     ),
     statType: type,
-    type,
-    value,
   };
 };

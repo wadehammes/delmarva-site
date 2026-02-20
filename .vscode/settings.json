@@ -23,8 +23,8 @@
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "biome.lsp.bin": "/Users/wadehammes/Projects/delmarva-site/node_modules/.bin/biome",
-  "biome.configurationPath": "/Users/wadehammes/Projects/delmarva-site/biome.json",
+  "biome.lsp.bin": "node_modules/.bin/biome",
+  "biome.configurationPath": "biome.json",
   "editor.codeActionsOnSave": {
     "source.quickfix.biome": "explicit",
     "source.fixall.biome": "explicit",

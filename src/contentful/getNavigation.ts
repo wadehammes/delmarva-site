@@ -11,14 +11,14 @@ import {
 export interface NavigationType {
   id: string;
   slug: string;
-  links: (CtaType | null)[];
-  ctaButton: CtaType | null;
+  links?: (CtaType | null)[];
+  ctaButton?: CtaType | null;
 }
 
 const _validateNavigationCheck: ContentfulTypeCheck<
   NavigationType,
   TypeNavigationFields,
-  "id" | "slug" | "links" | "ctaButton"
+  "id"
 > = true;
 
 export type NavigationEntry =

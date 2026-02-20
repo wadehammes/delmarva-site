@@ -1,4 +1,7 @@
-import type { ExtractSymbolType } from "src/contentful/helpers";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import { type CopyBlock, parseCopyBlock } from "src/contentful/parseCopyBlock";
 import type { ContentEntries } from "src/contentful/parseSections";
 import {
@@ -16,12 +19,18 @@ export type MediaPlacementType = ExtractSymbolType<
 >;
 
 export interface ContentCopyMediaBlock {
-  copy: CopyBlock | null;
-  media: (ContentEntries | null)[];
-  mediaPlacement: MediaPlacementType;
+  copy?: CopyBlock | null;
+  media?: (ContentEntries | null)[];
+  mediaPlacement?: MediaPlacementType;
   mediaBackgroundStyle?: MediaBackgroundStyleType;
   id: string;
 }
+
+const _validateContentCopyMediaBlockCheck: ContentfulTypeCheck<
+  ContentCopyMediaBlock,
+  TypeContentCopyMediaBlockFields,
+  "id"
+> = true;
 
 export type ContentCopyMediaBlockEntry =
   | TypeContentCopyMediaBlockWithoutUnresolvableLinksResponse

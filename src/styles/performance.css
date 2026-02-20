@@ -16,9 +16,9 @@
 
 /* Optimize for animations */
 .performance-optimized {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Optimized transitions */

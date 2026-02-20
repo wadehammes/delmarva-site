@@ -33,7 +33,12 @@ describe("Stat", () => {
 
   it("renders with initial value of $0K for currency (1000)", () => {
     po.render({
-      stat: { description: "Revenue", type: "Currency", value: 1000 },
+      stat: {
+        id: "stat-currency",
+        stat: 1000,
+        statDescription: "Revenue",
+        statType: "Currency",
+      },
     });
 
     expect(screen.getByText("$0K")).toBeInTheDocument();
@@ -42,7 +47,12 @@ describe("Stat", () => {
 
   it("renders with initial value of 0% for percentage (95)", () => {
     po.render({
-      stat: { description: "Success rate", type: "Percentage", value: 95 },
+      stat: {
+        id: "stat-pct",
+        stat: 95,
+        statDescription: "Success rate",
+        statType: "Percentage",
+      },
     });
 
     expect(screen.getByText("0%")).toBeInTheDocument();
@@ -51,7 +61,12 @@ describe("Stat", () => {
 
   it("renders with initial value of 0 for single digit numerical (7)", () => {
     po.render({
-      stat: { description: "Count", type: "Numerical", value: 7 },
+      stat: {
+        id: "stat-7",
+        stat: 7,
+        statDescription: "Count",
+        statType: "Numerical",
+      },
     });
 
     expect(screen.getByText("0")).toBeInTheDocument();
@@ -60,7 +75,12 @@ describe("Stat", () => {
 
   it("renders with initial value of 0M for large numerical (7000000)", () => {
     po.render({
-      stat: { description: "Users", type: "Numerical", value: 7000000 },
+      stat: {
+        id: "stat-m",
+        stat: 7000000,
+        statDescription: "Users",
+        statType: "Numerical",
+      },
     });
 
     expect(screen.getByText("0M")).toBeInTheDocument();
@@ -69,7 +89,12 @@ describe("Stat", () => {
 
   it("renders with initial value of 00 for small numerical (15)", () => {
     po.render({
-      stat: { description: "Items", type: "Numerical", value: 15 },
+      stat: {
+        id: "stat-15",
+        stat: 15,
+        statDescription: "Items",
+        statType: "Numerical",
+      },
     });
 
     expect(screen.getByText("00")).toBeInTheDocument();

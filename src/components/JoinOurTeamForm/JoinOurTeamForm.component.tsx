@@ -235,7 +235,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
                   value={value}
                 >
                   <option value="">{t("messages.selectPosition")}</option>
-                  {fields.openJobs.map((job) => (
+                  {(fields.openJobs ?? []).map((job) => (
                     <option key={job} value={job}>
                       {job}
                     </option>

@@ -19,18 +19,18 @@ type CopyBlockMobileAlignmentType = ExtractSymbolType<
 >;
 
 export interface CopyBlock {
-  alignment: CopyBlockAlignmentType;
-  copy: Document | undefined;
+  alignment?: CopyBlockAlignmentType;
+  copy?: Document | undefined;
   cta?: CtaType | null;
   id: string;
-  mobileAlignment: CopyBlockMobileAlignmentType;
+  mobileAlignment?: CopyBlockMobileAlignmentType;
   slug: string;
 }
 
 const _validateCopyBlockCheck: ContentfulTypeCheck<
   CopyBlock,
   TypeCopyBlockFields,
-  "id" | "copy" | "alignment" | "mobileAlignment" | "slug"
+  "id"
 > = true;
 
 export type CopyBlockEntry =

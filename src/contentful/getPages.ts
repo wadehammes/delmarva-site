@@ -34,7 +34,7 @@ export interface Page {
   publishDate: string;
   sections: (SectionType | null)[];
   slug: string;
-  title: string | undefined;
+  title?: string | undefined;
   updatedAt: string;
   navigationOverride?: NavigationType | null;
   footerOverride?: FooterType | null;
@@ -43,15 +43,7 @@ export interface Page {
 const _validatePageCheck: ContentfulTypeCheck<
   Page,
   TypePageFields,
-  | "id"
-  | "enableIndexing"
-  | "metaDescription"
-  | "metaTitle"
-  | "sections"
-  | "slug"
-  | "title"
-  | "updatedAt"
-  | "publishDate"
+  "id" | "updatedAt" | "publishDate"
 > = true;
 
 export function parseContentfulPage(pageEntry?: PageEntry): Page | null {

@@ -1,6 +1,9 @@
 import type { Document as RichTextDocument } from "@contentful/rich-text-types";
 import type { ContentRecentNewsEntry } from "src/contentful/getContentRecentNews";
-import type { ExtractSymbolType } from "src/contentful/helpers";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import type { ContentCardEntry } from "src/contentful/parseContentCard";
 import type { ContentCarouselEntry } from "src/contentful/parseContentCarousel";
 import type { ContentCopyMediaBlockEntry } from "src/contentful/parseContentCopyMediaBlock";
@@ -21,7 +24,9 @@ import {
   type TypeSectionWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeSection";
 
-type ContentStyle = "Overlap Section Above" | "Regular";
+type ContentStyle = ExtractSymbolType<
+  NonNullable<TypeSectionFields["contentStyle"]>
+>;
 type SectionBackgroundColor = ExtractSymbolType<
   NonNullable<TypeSectionFields["backgroundColor"]>
 >;
@@ -62,22 +67,29 @@ export type ContentEntries =
   | undefined;
 
 export interface SectionType {
-  backgroundColor?: SectionBackgroundColor;
-  content?: ContentEntries[] | undefined;
+  id: string;
+  slug: string;
+  backgroundColor: SectionBackgroundColor;
+  contentLayout: SectionContentLayout;
+  sectionPadding: SectionPadding;
+  content?: (ContentEntries | null)[];
   contentGap?: SectionContentGap;
-  contentLayout?: SectionContentLayout;
   contentStyle?: ContentStyle;
   contentVerticalAlignment?: SectionVerticalAlignment;
   cta?: CtaType | null;
-  id: string;
   sectionBackgroundStyle?: SectionOverlayStyle;
   sectionContentPlacement?: SectionContentPlacement;
   sectionEyebrow?: string;
   sectionHeader?: RichTextDocument;
-  sectionPadding?: SectionPadding;
-  slug?: string | undefined;
   showSectionSeparator?: boolean;
 }
+
+const _validateSectionCheck: ContentfulTypeCheck<
+  SectionType,
+  TypeSectionFields,
+  "id"
+> = true;
+void _validateSectionCheck;
 
 export type SectionEntry =
   | TypeSectionWithoutUnresolvableLinksResponse

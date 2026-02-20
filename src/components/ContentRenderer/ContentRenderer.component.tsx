@@ -104,7 +104,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentMarquee entries={parsedMarquee.items} />;
+      return <ContentMarquee entries={parsedMarquee.items ?? []} />;
     }
     case "contentModules": {
       const parsedModule = parseContentModule(content as ContentModuleEntry);

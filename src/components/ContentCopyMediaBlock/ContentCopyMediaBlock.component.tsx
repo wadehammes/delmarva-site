@@ -33,7 +33,7 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
         className={styles.copyBlock}
         style={{ order: mediaPlacement === "Left" ? 2 : 1 }}
       >
-        <CopyBlock fields={copy} />
+        <CopyBlock fields={copy ?? null} />
       </div>
       <div
         className={clsx(styles.mediaBlock, {
@@ -48,7 +48,7 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
         }
       >
         <Carousel animation="fade" spaceBetween={0}>
-          {media
+          {(media ?? [])
             .filter((item) => item != null)
             .filter((item) => {
               const contentType = item.sys.contentType.sys.id;

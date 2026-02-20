@@ -8,15 +8,15 @@ import {
 
 export interface FormJoinOurTeamType {
   id: string;
-  openJobs: string[];
-  description: Document | undefined;
+  openJobs?: string[];
+  description?: Document | undefined;
   formSubmitSuccessMessage: Document;
 }
 
 const _validateFormJoinOurTeamCheck: ContentfulTypeCheck<
   FormJoinOurTeamType,
   TypeFormJoinOurTeamFields,
-  "id" | "description" | "openJobs" | "formSubmitSuccessMessage"
+  "id"
 > = true;
 
 export type FormJoinOurTeamEntry =

@@ -54,7 +54,7 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
         className={clsx(styles.heroMedia)}
         style={{ filter: `grayscale(${backgroundMediaSaturation})` }}
       >
-        {backgroundMedia.map((media) => {
+        {(backgroundMedia ?? []).map((media) => {
           const mediaUrl = createMediaUrl(media.src);
           const isVideo = isVideoUrl(mediaUrl);
 

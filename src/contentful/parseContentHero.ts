@@ -46,30 +46,22 @@ type CSSColorAdjustScaleType =
 
 export interface ContentHero {
   entryTitle?: string;
-  copy: Document | undefined;
+  copy?: Document | undefined;
   cta?: CtaType | null;
-  heroHeight: HeroHeightType;
+  heroHeight?: HeroHeightType;
   id: string;
-  copyPlacement: PlacementType;
-  backgroundMedia: ContentfulAsset[];
-  backgroundMediaSaturation: CSSColorAdjustScaleType;
-  overlayColor: DelmarvaColorsType;
-  overlayOpacity: CSSColorAdjustScaleType;
-  overlayStyle: OverlayStyleType;
+  copyPlacement?: PlacementType;
+  backgroundMedia?: ContentfulAsset[];
+  backgroundMediaSaturation?: CSSColorAdjustScaleType;
+  overlayColor?: DelmarvaColorsType;
+  overlayOpacity?: CSSColorAdjustScaleType;
+  overlayStyle?: OverlayStyleType;
 }
 
 const _validateContentHeroCheck: ContentfulTypeCheck<
   ContentHero,
   TypeContentHeroFields,
-  | "id"
-  | "copy"
-  | "heroHeight"
-  | "copyPlacement"
-  | "backgroundMedia"
-  | "backgroundMediaSaturation"
-  | "overlayColor"
-  | "overlayOpacity"
-  | "overlayStyle"
+  "id"
 > = true;
 
 export type ContentHeroEntry =

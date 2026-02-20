@@ -20,7 +20,7 @@ export interface ContentModule {
 const _validateContentModuleCheck: ContentfulTypeCheck<
   ContentModule,
   TypeContentModulesFields,
-  "id" | "module"
+  "id"
 > = true;
 
 export type ContentModuleEntry =

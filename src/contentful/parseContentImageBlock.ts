@@ -7,7 +7,10 @@ import {
   parseServiceForNavigation,
   type ServiceType,
 } from "src/contentful/getServices";
-import type { ExtractSymbolType } from "src/contentful/helpers";
+import type {
+  ContentfulTypeCheck,
+  ExtractSymbolType,
+} from "src/contentful/helpers";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
@@ -27,10 +30,16 @@ export interface ContentImageBlockType {
   image: ContentfulAsset | null;
   caption?: Document;
   captionPlacement: "Above" | "Below";
-  imageStyle?: ImageStyleType;
+  imageStyle: ImageStyleType;
   projects?: (Partial<ProjectType> | null)[];
   services?: (Partial<ServiceType> | null)[];
 }
+
+const _validateContentImageBlockCheck: ContentfulTypeCheck<
+  ContentImageBlockType,
+  TypeContentImageBlockFields,
+  "id"
+> = true;
 
 export type ContentImageBlockEntry =
   | TypeContentImageBlockWithoutUnresolvableLinksResponse
