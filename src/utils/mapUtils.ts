@@ -33,6 +33,12 @@ export function isValidCoordinate(coord: unknown[]): coord is [number, number] {
   );
 }
 
+export function isValidProjectLocation(
+  loc: { lat: number; lon: number } | undefined,
+): boolean {
+  return !!loc && isValidCoordinate([loc.lon, loc.lat]);
+}
+
 /**
  * Extracts coordinates from a GeoJSON feature and extends bounds
  */

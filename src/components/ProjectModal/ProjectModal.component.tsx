@@ -3,12 +3,17 @@
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { Modal } from "src/components/Modal/Modal.component";
+import { ProjectStaticMap } from "src/components/ProjectStaticMap/ProjectStaticMap.component";
+import { ProjectStatsList } from "src/components/ProjectStatsList/ProjectStatsList.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import { Link } from "src/i18n/routing";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";
-import { formatNumber } from "src/utils/numberHelpers";
+import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectModal.module.css";
+
+const MODAL_MAP_WIDTH = 640;
+const MODAL_MAP_HEIGHT = 360;
 
 interface ProjectModalProps {
   isOpen: boolean;
@@ -25,7 +30,34 @@ export const ProjectModal = ({
     return null;
   }
 
-  const { projectName, description, media, projectStats, services } = project;
+  const {
+    projectName,
+    description,
+    media,
+    projectLocation,
+    projectStats,
+    services,
+  } = project;
+
+  const allMedia = media ?? [];
+  const showMap = isValidProjectLocation(projectLocation) && projectLocation;
+  const showCarousel = allMedia.length > 0 || !!showMap;
+
+  const carouselSlides = [
+    ...(showMap
+      ? [
+          <ProjectStaticMap
+            height={MODAL_MAP_HEIGHT}
+            key="project-map"
+            projectLocation={showMap}
+            width={MODAL_MAP_WIDTH}
+          />,
+        ]
+      : []),
+    ...allMedia.map((item) =>
+      item ? <ContentfulAssetRenderer asset={item} key={item.id} /> : null,
+    ),
+  ].filter(Boolean);
 
   return (
     <Modal
@@ -62,15 +94,9 @@ export const ProjectModal = ({
 
       <Modal.Body>
         <div className={styles.mediaSection}>
-          {media && media.length > 0 && (
+          {showCarousel && (
             <Carousel animation="fade" controlsSize="Small" spaceBetween={0}>
-              {media.map((media) => {
-                if (!media) {
-                  return null;
-                }
-
-                return <ContentfulAssetRenderer asset={media} key={media.id} />;
-              })}
+              {carouselSlides}
             </Carousel>
           )}
         </div>
@@ -82,29 +108,7 @@ export const ProjectModal = ({
 
           {projectStats && projectStats.length > 0 && (
             <div className={styles.statsSection}>
-              <dl className={styles.statsList}>
-                {projectStats.map((stat) => {
-                  if (!stat) {
-                    return null;
-                  }
-
-                  return (
-                    <div className={styles.stat} key={stat.id}>
-                      <dt className={styles.statDescription}>
-                        {stat.description}
-                      </dt>
-                      <dd className={styles.statValue}>
-                        {formatNumber({
-                          decorator: stat.decorator,
-                          keepInitialValue: true,
-                          num: stat?.stat ?? 0,
-                          type: stat?.statType,
-                        })}
-                      </dd>
-                    </div>
-                  );
-                })}
-              </dl>
+              <ProjectStatsList stats={projectStats} />
             </div>
           )}
         </div>

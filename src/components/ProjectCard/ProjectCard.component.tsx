@@ -3,11 +3,13 @@
 import { useMemo } from "react";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { ProjectModal } from "src/components/ProjectModal/ProjectModal.component";
+import { ProjectStaticMap } from "src/components/ProjectStaticMap/ProjectStaticMap.component";
+import { ProjectStatsList } from "src/components/ProjectStatsList/ProjectStatsList.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { useModal } from "src/hooks/useModal";
-import { formatNumber } from "src/utils/numberHelpers";
+import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
@@ -19,7 +21,11 @@ export const ProjectCard = (props: ProjectCardProps) => {
   const { project, selectedServiceSlug } = props;
   const { isOpen, open, close } = useModal();
 
-  const { projectName, description, media, projectStats } = project;
+  const { projectName, description, media, projectLocation, projectStats } =
+    project;
+
+  const showMap = isValidProjectLocation(projectLocation) && projectLocation;
+  const showMediaSection = showMap || media?.[0];
 
   const projectStatsByService: (ContentStatBlock | null)[] | null =
     useMemo(() => {
@@ -60,13 +66,17 @@ export const ProjectCard = (props: ProjectCardProps) => {
         onKeyDown={handleKeyDown}
         type="button"
       >
-        {media?.[0] && (
+        {showMediaSection && (
           <div className={styles.projectCardMedia}>
-            <ContentfulAssetRenderer
-              asset={media[0]}
-              height={202}
-              width={360}
-            />
+            {showMap ? (
+              <ProjectStaticMap projectLocation={projectLocation} />
+            ) : media?.[0] ? (
+              <ContentfulAssetRenderer
+                asset={media[0]}
+                height={202}
+                width={360}
+              />
+            ) : null}
           </div>
         )}
         <div className={styles.projectCardContent}>
@@ -75,29 +85,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
             <RichText document={description} />
           </header>
           <div className={styles.statsList}>
-            <dl>
-              {projectStatsByService?.map((stat) => {
-                if (!stat) {
-                  return null;
-                }
-
-                return (
-                  <div className={styles.stat} key={stat.id}>
-                    <dt className={styles.statDescription}>
-                      {stat.description}
-                    </dt>
-                    <dd className={styles.statValue}>
-                      {formatNumber({
-                        decorator: stat.decorator,
-                        keepInitialValue: true,
-                        num: stat?.stat ?? 0,
-                        type: stat?.statType,
-                      })}
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
+            <ProjectStatsList stats={projectStatsByService ?? []} />
           </div>
         </div>
       </button>

@@ -93,7 +93,10 @@ describe("AreasServiced", () => {
 
   beforeEach(() => {
     jest.resetModules();
-    process.env = { ...originalEnv, MAPBOX_API_TOKEN: "test-token" };
+    process.env = {
+      ...originalEnv,
+      NEXT_PUBLIC_MAPBOX_API_TOKEN: "test-token",
+    };
   });
 
   afterEach(() => {
@@ -112,11 +115,11 @@ describe("AreasServiced", () => {
     });
   });
 
-  it("renders error message when MAPBOX_API_TOKEN is missing", async () => {
-    process.env.MAPBOX_API_TOKEN = "";
+  it("renders error message when NEXT_PUBLIC_MAPBOX_API_TOKEN is missing", async () => {
+    process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN = "";
     render(<AreasServiced services={[mockService]} />);
     expect(
-      screen.getByText(/Please set MAPBOX_API_TOKEN/i),
+      screen.getByText(/Please set NEXT_PUBLIC_MAPBOX_API_TOKEN/i),
     ).toBeInTheDocument();
     // Wait for async operations to complete to avoid act warnings
     await act(async () => {

@@ -99,7 +99,7 @@ export const AreasServiced = (props: AreasServicedProps) => {
     autoFitBounds = true,
   } = props;
 
-  const mapboxAccessToken = process.env.MAPBOX_API_TOKEN;
+  const mapboxAccessToken = process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN;
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [state, dispatch] = useReducer(areasReducer, {
@@ -231,8 +231,8 @@ export const AreasServiced = (props: AreasServicedProps) => {
         <div className={styles.container}>
           <div className={styles.map} style={{ height }}>
             <p>
-              Please set MAPBOX_API_TOKEN in your environment variables to use
-              the map.
+              Please set NEXT_PUBLIC_MAPBOX_API_TOKEN in your environment
+              variables to use the map.
             </p>
           </div>
         </div>

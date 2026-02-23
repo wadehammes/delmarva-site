@@ -1,4 +1,5 @@
 import type { Document } from "@contentful/rich-text-types";
+import type { EntryFields } from "contentful";
 import { contentfulClient } from "src/contentful/client";
 import {
   FALLBACK_PROJECT_MEDIA_ID,
@@ -30,8 +31,9 @@ export type ProjectEntry = TypeProjectWithoutUnresolvableLinksResponse;
 
 export interface ProjectType {
   id: string;
+  projectCompletionDate?: string;
+  projectLocation?: EntryFields.Location;
   projectName: string;
-  projectCompletionDate: string;
   slug: string;
   description: Document;
   markets?: (MarketType | null)[];
@@ -60,6 +62,7 @@ export function parseContentfulProject(
     id: projectEntry.sys.id,
     media: fields.media?.map(parseContentfulAsset),
     projectCompletionDate: fields.projectCompletionDate,
+    projectLocation: fields.projectLocation,
     projectName: fields.projectName,
     projectStats: fields.projectStats?.map(parseContentStatBlock),
     services: fields.services.map(parseContentfulService),
@@ -119,7 +122,7 @@ export async function fetchProjects({
           include: 10,
           limit,
           locale,
-          order: ["-fields.projectCompletionDate"],
+          order: ["-fields.projectCompletionDate", "-sys.createdAt"],
           skip,
         },
       );
@@ -220,7 +223,7 @@ export async function fetchProjectsByService({
           include: 10,
           limit,
           locale,
-          order: ["-fields.projectCompletionDate"],
+          order: ["-fields.projectCompletionDate", "-sys.createdAt"],
           skip,
         },
       );
