@@ -124,6 +124,12 @@ const nextConfig: NextConfig = withNextIntl({
         port: "",
         protocol: "https",
       },
+      {
+        hostname: "api.mapbox.com",
+        pathname: "/styles/v1/**",
+        port: "",
+        protocol: "https",
+      },
     ],
   },
   outputFileTracingExcludes: {

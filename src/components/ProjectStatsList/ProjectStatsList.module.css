@@ -1,0 +1,27 @@
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--colors-silver);
+}
+
+.statDescription {
+  font-size: 0.875rem;
+  line-height: 1.2;
+  color: var(--colors-black);
+  text-align: left;
+}
+
+.statValue {
+  font-family: var(--font-family-numbers);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--colors-black);
+}
+
+.statsList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
