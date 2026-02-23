@@ -75,7 +75,6 @@ export interface TypeSectionFields {
     | "Full Width"
     | "Single Column"
   >;
-  contentStyle?: EntryFieldTypes.Symbol<"Overlap Section Above" | "Regular">;
   contentGap?: EntryFieldTypes.Symbol<"More Gap" | "No Gap" | "Regular">;
   contentVerticalAlignment?: EntryFieldTypes.Symbol<
     "Bottom" | "Center" | "Stretch" | "Top"

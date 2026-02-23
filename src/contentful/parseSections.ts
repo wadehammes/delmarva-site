@@ -24,9 +24,6 @@ import {
   type TypeSectionWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeSection";
 
-type ContentStyle = ExtractSymbolType<
-  NonNullable<TypeSectionFields["contentStyle"]>
->;
 type SectionBackgroundColor = ExtractSymbolType<
   NonNullable<TypeSectionFields["backgroundColor"]>
 >;
@@ -74,7 +71,6 @@ export interface SectionType {
   sectionPadding: SectionPadding;
   content?: (ContentEntries | null)[];
   contentGap?: SectionContentGap;
-  contentStyle?: ContentStyle;
   contentVerticalAlignment?: SectionVerticalAlignment;
   cta?: CtaType | null;
   sectionBackgroundStyle?: SectionOverlayStyle;
@@ -89,7 +85,6 @@ const _validateSectionCheck: ContentfulTypeCheck<
   TypeSectionFields,
   "id"
 > = true;
-void _validateSectionCheck;
 
 type SectionEntry = TypeSectionWithoutUnresolvableLinksResponse | undefined;
 
@@ -107,7 +102,6 @@ export function parseContentfulSection(
     content: fields.content?.map((entry) => entry as ContentEntries) ?? [],
     contentGap: fields.contentGap as SectionContentGap,
     contentLayout: fields.contentLayout as SectionContentLayout,
-    contentStyle: fields.contentStyle as ContentStyle,
     contentVerticalAlignment:
       fields.contentVerticalAlignment as SectionVerticalAlignment,
     cta: parseContentfulCta(fields.cta) ?? undefined,

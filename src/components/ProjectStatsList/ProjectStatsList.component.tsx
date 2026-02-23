@@ -22,9 +22,7 @@ export const ProjectStatsList = (props: ProjectStatsListProps) => {
 
         return (
           <div className={styles.stat} key={stat.id}>
-            <dt className={styles.statDescription}>
-              {stat.description ?? stat.statDescription}
-            </dt>
+            <dt className={styles.statDescription}>{stat.statDescription}</dt>
             <dd className={styles.statValue}>
               {formatNumber({
                 decorator: stat.decorator,

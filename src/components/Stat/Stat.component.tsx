@@ -32,7 +32,6 @@ export const Stat = (props: StatProps) => {
     stat: statValue,
     statDescription,
     statType,
-    description = statDescription,
     decorator = "None",
   } = stat;
   const numberRef = useRef<HTMLSpanElement>(null);
@@ -101,7 +100,7 @@ export const Stat = (props: StatProps) => {
       >
         {getInitialValue(statValue, statType)}
       </span>
-      <p className={styles.description}>{description}</p>
+      <p className={styles.description}>{statDescription}</p>
     </div>
   );
 };

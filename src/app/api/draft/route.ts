@@ -13,5 +13,5 @@ export async function GET(request: Request) {
 
   draft.enable();
 
-  redirect(searchParams.get("redirect") || "/");
+  redirect(`/${searchParams.get("redirect") || ""}`);
 }
