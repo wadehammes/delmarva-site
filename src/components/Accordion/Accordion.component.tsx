@@ -30,7 +30,8 @@ export const Accordion = ({
   onToggle,
   title,
 }: AccordionProps) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [userToggledOpen, setUserToggledOpen] = useState<boolean | null>(null);
+  const isOpen = userToggledOpen !== null ? userToggledOpen : defaultOpen;
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Generate stable IDs that work consistently across server and client
@@ -42,7 +43,7 @@ export const Accordion = ({
 
   const toggleAccordion = () => {
     const newIsOpen = !isOpen;
-    setIsOpen(newIsOpen);
+    setUserToggledOpen(newIsOpen);
     onToggle?.(newIsOpen);
   };
 
@@ -101,7 +102,7 @@ export const Accordion = ({
         })}
         id={contentId}
         ref={contentRef}
-        style={{ height: defaultOpen ? "auto" : 0, overflow: "hidden" }}
+        style={{ height: isOpen ? "auto" : 0, overflow: "hidden" }}
       >
         <div className={styles.accordionInner}>{children}</div>
       </section>

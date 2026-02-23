@@ -16,6 +16,5 @@ export const routing = defineRouting({
 const navigation = createNavigation(routing);
 
 export const Link = navigation.Link;
-export const redirect = navigation.redirect;
 export const usePathname = navigation.usePathname;
 export const useRouter = navigation.useRouter;

@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import {
   type ChangeEvent,
   useCallback,
-  useEffect,
+  useRef,
   useState,
   useTransition,
 } from "react";
@@ -36,21 +36,20 @@ export default function LocaleSwitcherSelect() {
   const params = useParams();
 
   const currentLocale = params.locale as Locales;
+  const clearTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
-  // Announce loading and error states to screen readers
-  useEffect(() => {
-    if (isPending) {
-      setAnnouncement("Changing language, please wait...");
+  const announce = useCallback((message: string) => {
+    if (clearTimerRef.current) clearTimeout(clearTimerRef.current);
+    setAnnouncement(message);
+    if (message) {
+      clearTimerRef.current = setTimeout(() => {
+        setAnnouncement("");
+        clearTimerRef.current = undefined;
+      }, 3000);
     }
-  }, [isPending]);
-
-  // Clear announcement after a delay
-  useEffect(() => {
-    if (announcement) {
-      const timer = setTimeout(() => setAnnouncement(""), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [announcement]);
+  }, []);
 
   const onSelectChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
@@ -61,6 +60,8 @@ export default function LocaleSwitcherSelect() {
         return;
       }
 
+      announce("Changing language, please wait...");
+
       startTransition(() => {
         try {
           // @ts-expect-error -- TypeScript will validate that only known `params`
@@ -68,17 +69,15 @@ export default function LocaleSwitcherSelect() {
           // always match for the current route, we can skip runtime checks.
           router.replace({ params, pathname }, { locale: nextLocale });
 
-          // Announce successful language change
-          setAnnouncement(`Language changed to ${localeLabel[nextLocale]}`);
+          announce(`Language changed to ${localeLabel[nextLocale]}`);
         } catch (error) {
           console.error("Error during locale switch:", error);
-          // Reset the select to the current locale if there's an error
           event.target.value = currentLocale as string;
-          setAnnouncement("Error changing language. Please try again.");
+          announce("Error changing language. Please try again.");
         }
       });
     },
-    [router, params, pathname, currentLocale, isPending],
+    [router, params, pathname, currentLocale, isPending, announce],
   );
 
   const handleKeyDown = useCallback(

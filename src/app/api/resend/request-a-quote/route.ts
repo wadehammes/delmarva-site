@@ -76,12 +76,12 @@ export async function POST(request: Request) {
     });
 
     const data = await resend.emails.send({
-      from: "Delmarva Site Development - Quote Request <forms@delmarvasite.com>",
+      from: "Delmarva Site Development <no-reply@delmarvasite.net>",
       html: notificationHtml,
       replyTo: `${name} <${email}>`,
       subject: `New Quote Request: ${companyName} — ${name}`,
       text: `New quote request received from ${name} at ${companyName}.`,
-      to: "delivered+requestAQuote@resend.dev",
+      to: "w@dehammes.com",
     });
 
     if (data.error) {

@@ -27,5 +27,3 @@ export const PageComponent = async (props: PageComponentProps) => {
     </>
   );
 };
-
-export default PageComponent;

@@ -1,7 +1,7 @@
 "use client";
 
 import mapboxgl from "mapbox-gl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import type { ServiceType } from "src/contentful/getServices";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
@@ -42,6 +42,32 @@ interface ServiceAreaWithGeoJSON extends ServiceArea {
   geojson: GeoJSONFeatureCollection;
 }
 
+type AreasState =
+  | { status: "loading" }
+  | { status: "success"; serviceAreasWithGeoJSON: ServiceAreaWithGeoJSON[] };
+
+function areasReducer(
+  _state: AreasState,
+  action:
+    | { type: "SUCCESS"; payload: ServiceAreaWithGeoJSON[] }
+    | { type: "EMPTY" }
+    | { type: "START" },
+): AreasState {
+  switch (action.type) {
+    case "START":
+      return { status: "loading" };
+    case "SUCCESS":
+      return {
+        serviceAreasWithGeoJSON: action.payload,
+        status: "success",
+      };
+    case "EMPTY":
+      return { serviceAreasWithGeoJSON: [], status: "success" };
+    default:
+      return _state;
+  }
+}
+
 const LegendItem = ({
   serviceArea,
 }: {
@@ -76,27 +102,30 @@ export const AreasServiced = (props: AreasServicedProps) => {
   const mapboxAccessToken = process.env.MAPBOX_API_TOKEN;
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [serviceAreasWithGeoJSON, setServiceAreasWithGeoJSON] = useState<
-    ServiceAreaWithGeoJSON[]
-  >([]);
+  const [state, dispatch] = useReducer(areasReducer, {
+    status: "loading",
+  });
+
+  const isLoading = state.status === "loading";
+  const serviceAreasWithGeoJSON =
+    state.status === "success" ? state.serviceAreasWithGeoJSON : [];
 
   useEffect(() => {
     let isCancelled = false;
 
     const loadAllData = async () => {
-      setIsLoading(true);
+      dispatch({ type: "START" });
 
       const serviceAreas = await parseServicesToServiceAreas(services);
 
       if (isCancelled) return;
 
       if (serviceAreas.length === 0) {
-        setIsLoading(false);
+        dispatch({ type: "EMPTY" });
         return;
       }
 
-      const serviceAreasWithGeoJSON = await Promise.all(
+      const withGeoJSON = await Promise.all(
         serviceAreas.map(async (serviceArea) => {
           const geojson = await countiesToBoundaryLines(serviceArea.counties);
           const mergedGeoJSON = mergeFeaturesToSingleBoundary(geojson.features);
@@ -110,12 +139,11 @@ export const AreasServiced = (props: AreasServicedProps) => {
 
       if (isCancelled) return;
 
-      const validServiceAreas = serviceAreasWithGeoJSON.filter(
+      const validServiceAreas = withGeoJSON.filter(
         (sa) => sa.geojson.features.length > 0,
       );
 
-      setServiceAreasWithGeoJSON(validServiceAreas);
-      setIsLoading(false);
+      dispatch({ payload: validServiceAreas, type: "SUCCESS" });
     };
 
     loadAllData();

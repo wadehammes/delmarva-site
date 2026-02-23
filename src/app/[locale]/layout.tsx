@@ -54,7 +54,6 @@ export default async function RootLayout({
           title="Sitemap"
           type="application/xml"
         />
-        <link href="https://use.typekit.net/now7rdc.css" rel="stylesheet" />
       </head>
       <body>
         {draft.isEnabled ? (
