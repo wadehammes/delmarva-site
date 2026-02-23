@@ -1,22 +1,18 @@
-import dynamic from "next/dynamic";
-import { ContentCard } from "src/components/ContentCard/ContentCard.component";
-import { ContentCarouselComponent } from "src/components/ContentCarousel/ContentCarousel.component";
-import { ContentCopyBlock } from "src/components/ContentCopyBlock/ContentCopyBlock.component";
-import { ContentCopyMediaBlock } from "src/components/ContentCopyMediaBlock/ContentCopyMediaBlock.component";
-import { ContentGrid } from "src/components/ContentGrid/ContentGrid.component";
-import { ContentHeroComponent } from "src/components/ContentHero/ContentHero.component";
-import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
-import { ContentMarquee } from "src/components/ContentMarquee/ContentMarquee.component";
-import { ContentModules } from "src/components/ContentModules/ContentModules.component";
-import { ContentRecentNews } from "src/components/ContentRecentNews/ContentRecentNews.component";
-import { ContentTestimonial } from "src/components/ContentTestimonial/ContentTestimonial.component";
-import { Stat } from "src/components/Stat/Stat.component";
-
-const JoinOurTeam = dynamic(
-  () => import("src/components/JoinOurTeamForm/JoinOurTeamForm.component"),
-  { ssr: true },
-);
-
+import {
+  ContentCard,
+  ContentCarouselComponent,
+  ContentCopyBlock,
+  ContentCopyMediaBlock,
+  ContentGrid,
+  ContentHeroComponent,
+  ContentImageBlock,
+  ContentMarquee,
+  ContentModules,
+  ContentRecentNews,
+  ContentTestimonial,
+  JoinOurTeam,
+  Stat,
+} from "src/components/ContentRenderer/ContentRendererRegistry";
 import {
   type ContentRecentNewsEntry,
   parseContentRecentNews,

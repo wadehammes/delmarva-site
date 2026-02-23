@@ -48,12 +48,11 @@
 }
 
 .projectCardMedia {
-  height: 200px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
 
   img {
     width: 100%;
-    height: 250px;
     object-fit: cover;
   }
 }
@@ -77,6 +76,7 @@
 .stat {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
   padding: 0.5rem 0;
   border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
@@ -84,7 +84,9 @@
 
 .statDescription {
   font-size: 0.875rem;
+  line-height: 1.2;
   color: var(--colors-black);
+  text-align: left;
 }
 
 .statValue {

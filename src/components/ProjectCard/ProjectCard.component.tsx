@@ -62,7 +62,11 @@ export const ProjectCard = (props: ProjectCardProps) => {
       >
         {media?.[0] && (
           <div className={styles.projectCardMedia}>
-            <ContentfulAssetRenderer asset={media[0]} />
+            <ContentfulAssetRenderer
+              asset={media[0]}
+              height={202}
+              width={360}
+            />
           </div>
         )}
         <div className={styles.projectCardContent}>

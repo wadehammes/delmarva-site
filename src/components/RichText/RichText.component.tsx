@@ -5,6 +5,7 @@ import {
 import {
   BLOCKS,
   INLINES,
+  MARKS,
   type Document as RichTextDocument,
 } from "@contentful/rich-text-types";
 import clsx from "clsx";
@@ -19,20 +20,36 @@ interface RichTextProps extends HTMLAttributes<HTMLDivElement> {
   as?: ElementType;
   className?: string;
   document: RichTextDocument | undefined;
+  enlargeBoldText?: boolean;
 }
 
 export const RichText = (props: RichTextProps) => {
-  const { document, as: Component = "div", className, ...rest } = props;
+  const {
+    document,
+    as: Component = "div",
+    className,
+    enlargeBoldText = false,
+    ...rest
+  } = props;
 
   if (!document) {
     return null;
   }
 
   const documentParsing: Options = {
+    renderMark: {
+      [MARKS.BOLD]: (text) =>
+        enlargeBoldText ? (
+          <b className={styles.enlargeBoldText}>{text}</b>
+        ) : (
+          <b>{text}</b>
+        ),
+    },
     renderNode: {
       [INLINES.HYPERLINK]: (node, children) => (
         <Link href={node.data.uri}>{children}</Link>
       ),
+      [BLOCKS.PARAGRAPH]: (_node, children) => <p>{children}</p>,
       [BLOCKS.EMBEDDED_ASSET]: (node) => {
         const image = parseContentfulAsset(node.data.target);
 

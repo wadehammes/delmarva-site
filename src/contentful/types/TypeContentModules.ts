@@ -9,6 +9,7 @@ import type {
 export interface TypeContentModulesFields {
   entryTitle?: EntryFieldTypes.Symbol;
   module: EntryFieldTypes.Symbol<
+    | "All Projects"
     | "All Services List"
     | "Areas Serviced List"
     | "Areas Serviced Map"
