@@ -5,7 +5,3 @@ export const EMAIL_VALIDATION_REGEX = new RegExp(
 export const PHONE_NUMBER_VALIDATION_REGEX = new RegExp(
   /^(\+1\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
 );
-
-export const ZIPCODE_VALIDATION_REGEX = new RegExp(
-  /^([0-9]{5}(?:-[0-9]{4})?)$/,
-);

@@ -11,6 +11,22 @@ interface ButtonLinkProps extends HTMLAttributes<HTMLAnchorElement> {
   arrow?: "No Arrow" | "Right Arrow" | "Right-Up Arrow";
 }
 
+const ButtonLinkArrow = ({
+  arrow,
+}: {
+  arrow: "No Arrow" | "Right Arrow" | "Right-Up Arrow";
+}) => {
+  if (arrow === "Right Arrow") {
+    return <span className={styles.arrow}>→</span>;
+  }
+
+  if (arrow === "Right-Up Arrow") {
+    return <span className={styles.arrow}>↗</span>;
+  }
+
+  return null;
+};
+
 export const ButtonLink = (props: ButtonLinkProps) => {
   const {
     label,
@@ -21,18 +37,6 @@ export const ButtonLink = (props: ButtonLinkProps) => {
     className,
     ...rest
   } = props;
-
-  const renderArrow = () => {
-    if (arrow === "Right Arrow") {
-      return <span className={styles.arrow}>→</span>;
-    }
-
-    if (arrow === "Right-Up Arrow") {
-      return <span className={styles.arrow}>↗</span>;
-    }
-
-    return null;
-  };
 
   return (
     <Link
@@ -48,7 +52,7 @@ export const ButtonLink = (props: ButtonLinkProps) => {
       href={href}
       {...rest}
     >
-      {label} {renderArrow()}
+      {label} <ButtonLinkArrow arrow={arrow} />
     </Link>
   );
 };

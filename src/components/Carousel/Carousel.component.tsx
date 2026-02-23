@@ -128,10 +128,10 @@ export const Carousel = (props: CarouselProps) => {
         slidesPerView={animation === "fade" ? 1 : slidesPerView}
         spaceBetween={animation === "fade" ? 0 : spaceBetween}
       >
-        {children.map((child, index) => (
+        {children.map((child, position) => (
           <SwiperSlide
             className={clsx(styles.slide, slideClassName)}
-            key={index}
+            key={`slide-${position}`}
           >
             {child}
           </SwiperSlide>

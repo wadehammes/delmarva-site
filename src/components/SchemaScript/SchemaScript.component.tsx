@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { JsonLD } from "src/components/JsonLD/JsonLD.component";
 import { serializeJsonLd } from "src/utils/jsonLd";
 import type { SchemaGraphContext } from "src/utils/schema";
 
@@ -9,17 +9,8 @@ interface SchemaScriptProps {
 }
 
 /**
- * Reusable component for rendering Schema.org JSON-LD structured data
+ * Renders Schema.org JSON-LD structured data using the shared JsonLD component.
  */
-export const SchemaScript = ({ schema }: SchemaScriptProps) => {
-  const jsonLdId = useId();
-
-  return (
-    <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js requires this for JSON-LD
-      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
-      id={jsonLdId}
-      type="application/ld+json"
-    />
-  );
-};
+export const SchemaScript = ({ schema }: SchemaScriptProps) => (
+  <JsonLD content={serializeJsonLd(schema)} />
+);

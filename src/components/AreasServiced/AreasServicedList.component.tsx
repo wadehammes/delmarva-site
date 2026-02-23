@@ -51,10 +51,8 @@ const ServiceItem = ({ serviceArea }: ServiceItemProps) => {
         <h3 className={styles.serviceName}>{serviceArea.serviceName}</h3>
       </div>
       <ul className={styles.countiesList}>
-        {serviceArea.counties.map((county, index) => (
-          <li key={`${serviceArea.serviceSlug}-${county}-${index}`}>
-            {county}
-          </li>
+        {serviceArea.counties.map((county) => (
+          <li key={`${serviceArea.serviceSlug}-${county}`}>{county}</li>
         ))}
       </ul>
     </li>

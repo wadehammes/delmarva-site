@@ -313,7 +313,7 @@ describe("schema", () => {
         "@id": `${baseUrl}/what-we-deliver/${mockService.slug}#service`,
         "@type": "Service",
         description: "Test description",
-        image: mockService.metaImage!.src,
+        image: mockService.metaImage?.src,
         name: mockService.serviceName,
         url: `${baseUrl}/what-we-deliver/${mockService.slug}`,
       });
@@ -381,9 +381,9 @@ describe("schema", () => {
 
       const schema = await createServiceSchema(mockService, baseUrl);
 
-      expect(schema?.image).toBe(mockService.metaImage!.src);
+      expect(schema?.image).toBe(mockService.metaImage?.src);
       expect(mockCreateMediaUrl).toHaveBeenCalledWith(
-        mockService.metaImage!.src,
+        mockService.metaImage?.src,
       );
     });
 

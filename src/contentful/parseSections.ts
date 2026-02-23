@@ -91,9 +91,7 @@ const _validateSectionCheck: ContentfulTypeCheck<
 > = true;
 void _validateSectionCheck;
 
-export type SectionEntry =
-  | TypeSectionWithoutUnresolvableLinksResponse
-  | undefined;
+type SectionEntry = TypeSectionWithoutUnresolvableLinksResponse | undefined;
 
 export function parseContentfulSection(
   section: SectionEntry,

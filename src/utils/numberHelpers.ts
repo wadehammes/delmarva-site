@@ -18,18 +18,19 @@ export const formatNumber = ({
   type = "Numerical",
   keepInitialValue = false,
 }: FormatNumberOptions): string => {
+  const value = num ?? 0;
   const decoratorString =
     decorator === "Plus Sign" && type !== "Percentage" ? "+" : "";
 
-  const formatLargeNumber = (value: number): string => {
+  const formatLargeNumber = (n: number): string => {
     if (keepInitialValue) {
-      return `${value.toLocaleString()}${decoratorString}`.trim();
+      return `${n.toLocaleString()}${decoratorString}`.trim();
     }
 
-    const absValue = Math.abs(value);
+    const absValue = Math.abs(n);
 
     const formatWithSuffix = (divisor: number, suffix: string): string => {
-      return `${(value / divisor).toFixed(1).replace(/\.0$/, "")}${suffix}${decoratorString}`.trim();
+      return `${(n / divisor).toFixed(1).replace(/\.0$/, "")}${suffix}${decoratorString}`.trim();
     };
 
     if (absValue >= 1e12) {
@@ -48,15 +49,15 @@ export const formatNumber = ({
       return formatWithSuffix(1e3, "K");
     }
 
-    return `${value.toLocaleString()}${decoratorString}`.trim();
+    return `${n.toLocaleString()}${decoratorString}`.trim();
   };
 
   switch (type) {
     case "Currency":
-      return `$${formatLargeNumber(num)}`;
+      return `$${formatLargeNumber(value)}`;
     case "Percentage":
-      return `${num.toLocaleString()}%`;
+      return `${value.toLocaleString()}%`;
     default:
-      return `${formatLargeNumber(num)}`;
+      return `${formatLargeNumber(value)}`;
   }
 };

@@ -6,6 +6,7 @@ import { useId, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "src/components/Button/Button.component";
+import { FormSubmitSuccess } from "src/components/FormSubmitSuccess/FormSubmitSuccess.component";
 import styles from "src/components/JoinOurTeamForm/JoinOurTeamForm.module.css";
 import { RichText } from "src/components/RichText/RichText.component";
 import { StyledInput } from "src/components/StyledInput/StyledInput.component";
@@ -141,9 +142,9 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
 
   if (isSubmitSuccessful) {
     return (
-      <div className={styles.formSubmitSuccess}>
+      <FormSubmitSuccess>
         <RichText document={formSubmitSuccessMessage} />
-      </div>
+      </FormSubmitSuccess>
     );
   }
 

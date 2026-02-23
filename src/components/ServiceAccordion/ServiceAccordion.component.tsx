@@ -1,6 +1,7 @@
 "use client";
 
 import { gsap } from "gsap";
+import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Accordion } from "src/components/Accordion/Accordion.component";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
@@ -9,6 +10,7 @@ import { RichText } from "src/components/RichText/RichText.component";
 import { Stat } from "src/components/Stat/Stat.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ServiceType } from "src/contentful/getServices";
+import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { useDOMCleanup } from "src/hooks/useIsBrowser";
 import type { Locales } from "src/i18n/routing";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";
@@ -18,6 +20,66 @@ import styles from "./ServiceAccordion.module.css";
 const buttonText: Record<Locales, string> = {
   en: "View Service",
   es: "Ver Servicio",
+};
+
+interface ServiceAccordionStatsProps {
+  isAccordionOpen: boolean;
+  stats: (ContentStatBlock | null)[] | undefined;
+  statsGridRef: RefObject<HTMLDivElement | null>;
+  statsRef: RefObject<HTMLDListElement | null>;
+}
+
+const ServiceAccordionStats = ({
+  isAccordionOpen,
+  stats,
+  statsGridRef,
+  statsRef,
+}: ServiceAccordionStatsProps) => {
+  const numberOfStats = stats?.length;
+
+  if (!numberOfStats) return null;
+
+  if (numberOfStats <= 3) {
+    return (
+      <div className={styles.statsGrid} ref={statsGridRef}>
+        {stats.map((stat) => {
+          if (!stat) return null;
+
+          return (
+            <Stat
+              align="left"
+              key={stat.id}
+              size="small"
+              stat={stat}
+              trigger={isAccordionOpen}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <dl className={styles.statsList} ref={statsRef}>
+      {stats.map((stat) => {
+        if (!stat) return null;
+
+        return (
+          <div className={styles.statItem} key={stat.id}>
+            <dt className={styles.statDescription}>{stat.statDescription}</dt>
+            <dd className={styles.statValue}>
+              {formatNumber({
+                decorator: stat.decorator,
+                keepInitialValue: true,
+                num: stat.stat ?? 0,
+                type: stat.statType,
+              })}
+            </dd>
+          </div>
+        );
+      })}
+    </dl>
+  );
 };
 
 interface ServiceAccordionProps {
@@ -212,55 +274,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     [isMounted],
   );
 
-  // Memoized stats rendering
-  const renderStats = useCallback(() => {
-    const numberOfStats = stats?.length;
-
-    if (!numberOfStats) return null;
-
-    if (numberOfStats <= 3) {
-      return (
-        <div className={styles.statsGrid} ref={statsGridRef}>
-          {stats.map((stat) => {
-            if (!stat) return null;
-
-            return (
-              <Stat
-                align="left"
-                key={stat.id}
-                size="small"
-                stat={stat}
-                trigger={isAccordionOpen}
-              />
-            );
-          })}
-        </div>
-      );
-    }
-
-    return (
-      <dl className={styles.statsList} ref={statsRef}>
-        {stats.map((stat) => {
-          if (!stat) return null;
-
-          return (
-            <div className={styles.statItem} key={stat.id}>
-              <dt className={styles.statDescription}>{stat.statDescription}</dt>
-              <dd className={styles.statValue}>
-                {formatNumber({
-                  decorator: stat.decorator,
-                  keepInitialValue: true,
-                  num: stat.stat ?? 0,
-                  type: stat.statType,
-                })}
-              </dd>
-            </div>
-          );
-        })}
-      </dl>
-    );
-  }, [stats, isAccordionOpen]);
-
   return (
     <Accordion
       headerElement="h3"
@@ -272,7 +285,12 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           <div ref={richTextRef}>
             <RichText document={description} />
           </div>
-          {renderStats()}
+          <ServiceAccordionStats
+            isAccordionOpen={isAccordionOpen}
+            stats={stats}
+            statsGridRef={statsGridRef}
+            statsRef={statsRef}
+          />
           <div className={styles.serviceAccordionCta} ref={ctaRef}>
             <ButtonLink
               arrow="Right Arrow"

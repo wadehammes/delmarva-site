@@ -164,12 +164,12 @@ export async function POST(request: Request) {
 
     const data = await resend.emails.send({
       attachments: attachments.length > 0 ? attachments : undefined,
-      from: "Delmarva Site Development - New Application <forms@delmarvasite.com>",
+      from: "Delmarva Site Development <no-reply@delmarvasite.net>",
       html: notificationHtml,
       replyTo: `${name} <${email}>`,
       subject: `New Job Application: ${name} for ${position}`,
       text: `New job application received from ${name} for ${position}. Check the HTML version for full details.`,
-      to: "delivered+joinOurTeam@resend.dev",
+      to: "w@dehammes.com",
     });
 
     const delayConfirmationEmail = setTimeout(async () => {
@@ -179,11 +179,11 @@ export async function POST(request: Request) {
       });
 
       await resend.emails.send({
-        from: "Delmarva Site Development - <hello@delmarvasite.com>",
+        from: "Delmarva Site Development <no-reply@delmarvasite.net>",
         html: confirmationHtml,
         subject: `Application Received for ${position}`,
         text: `Hi ${name}, we've received your application for ${position}. We'll review it and get back to you soon.`,
-        to: "delivered+joinOurTeam@resend.dev",
+        to: email,
       });
     }, 500);
 

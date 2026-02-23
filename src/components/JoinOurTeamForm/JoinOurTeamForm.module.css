@@ -368,18 +368,6 @@
   line-height: 1.25;
 }
 
-.formSubmitSuccess {
-  width: 100%;
-  padding: 1.5rem;
-  font-size: 1.25rem;
-  line-height: 1.5;
-  color: var(--colors-black);
-  text-align: center;
-  background-color: color-mix(in srgb, var(--colors-red) 5%, white);
-  border: 1px solid var(--colors-red);
-  border-radius: 10px;
-}
-
 .honeypot {
   position: absolute;
   left: -9999px;

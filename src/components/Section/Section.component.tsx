@@ -3,6 +3,7 @@ import type { HTMLAttributes } from "react";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import styles from "src/components/Section/Section.module.css";
+import { SectionEyebrow } from "src/components/Section/SectionEyebrow.component";
 import type { SectionType } from "src/contentful/parseSections";
 import { isReactNodeEmptyArray } from "src/utils/helpers";
 
@@ -58,18 +59,6 @@ export const Section = async (props: SectionProps) => {
       ? ({ "--dot-bg": getDotBackgroundVar(backgroundColor) } as CSSVariables)
       : undefined;
 
-  const renderEyebrow = () => {
-    if (!sectionEyebrow) return null;
-
-    const EyebrowElement = sectionHeader ? "p" : "h2";
-
-    return (
-      <EyebrowElement className={styles.sectionEyebrow}>
-        <span className={styles.sectionEyebrowText}>{sectionEyebrow}</span>
-      </EyebrowElement>
-    );
-  };
-
   const EyebrowHeaderElement = sectionHeader ? "div" : "header";
 
   return (
@@ -97,7 +86,10 @@ export const Section = async (props: SectionProps) => {
     >
       {sectionEyebrow ? (
         <EyebrowHeaderElement className={styles.sectionHeaderEyebrow}>
-          {renderEyebrow()}
+          <SectionEyebrow
+            hasSectionHeader={!!sectionHeader}
+            text={sectionEyebrow}
+          />
         </EyebrowHeaderElement>
       ) : null}
 

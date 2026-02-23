@@ -5,6 +5,7 @@ import { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "src/components/Button/Button.component";
+import { FormSubmitSuccess } from "src/components/FormSubmitSuccess/FormSubmitSuccess.component";
 import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import { useSendRequestAQuoteFormMutation } from "src/hooks/mutations/useSendRequestAQuoteForm.mutation";
@@ -80,9 +81,7 @@ export const RequestAQuoteForm = () => {
   };
 
   if (isSubmitSuccessful) {
-    return (
-      <div className={styles.formSubmitSuccess}>{t("messages.success")}</div>
-    );
+    return <FormSubmitSuccess>{t("messages.success")}</FormSubmitSuccess>;
   }
 
   return (

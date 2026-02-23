@@ -11,14 +11,6 @@
   margin-top: 0.5rem;
 }
 
-.formSubmitSuccess {
-  padding: 1rem;
-  color: var(--color-success-fg, #085b32);
-  background-color: var(--color-success-bg, #e6fbf0);
-  border: 1px solid var(--color-success-border, #b7efd0);
-  border-radius: 0.5rem;
-}
-
 .honeypot {
   position: absolute;
   left: -9999px;
