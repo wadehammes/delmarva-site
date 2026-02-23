@@ -31,6 +31,7 @@ export type ProjectEntry = TypeProjectWithoutUnresolvableLinksResponse;
 export interface ProjectType {
   id: string;
   projectName: string;
+  projectCompletionDate: string;
   slug: string;
   description: Document;
   markets?: (MarketType | null)[];
@@ -58,6 +59,7 @@ export function parseContentfulProject(
     description: fields.description,
     id: projectEntry.sys.id,
     media: fields.media?.map(parseContentfulAsset),
+    projectCompletionDate: fields.projectCompletionDate,
     projectName: fields.projectName,
     projectStats: fields.projectStats?.map(parseContentStatBlock),
     services: fields.services.map(parseContentfulService),
@@ -117,6 +119,7 @@ export async function fetchProjects({
           include: 10,
           limit,
           locale,
+          order: ["-fields.projectCompletionDate"],
           skip,
         },
       );
@@ -217,6 +220,7 @@ export async function fetchProjectsByService({
           include: 10,
           limit,
           locale,
+          order: ["-fields.projectCompletionDate"],
           skip,
         },
       );

@@ -83,15 +83,16 @@ const ServiceAccordionStats = ({
 };
 
 interface ServiceAccordionProps {
-  service: ServiceType;
+  defaultOpen?: boolean;
   locale: Locales;
   projects: ProjectType[];
+  service: ServiceType;
 }
 
 export const ServiceAccordion = (props: ServiceAccordionProps) => {
-  const { service, locale, projects } = props;
+  const { defaultOpen = false, service, locale, projects } = props;
   const { serviceName, description, stats, slug } = service;
-  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(defaultOpen);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const richTextRef = useRef<HTMLDivElement>(null);
@@ -276,6 +277,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
 
   return (
     <Accordion
+      defaultOpen={defaultOpen}
       headerElement="h3"
       onToggle={handleAccordionToggle}
       title={serviceName}
@@ -283,7 +285,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       <div className={styles.serviceAccordion} ref={contentRef}>
         <div className={styles.serviceAccordionContent}>
           <div ref={richTextRef}>
-            <RichText document={description} />
+            <RichText document={description} enlargeBoldText />
           </div>
           <ServiceAccordionStats
             isAccordionOpen={isAccordionOpen}

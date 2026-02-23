@@ -522,6 +522,7 @@ input[type="checkbox"] {
   --color-white-bg: var(--colors-white);
   --colors-orange: #ff6600;
   --card-bg: color-mix(in srgb, var(--colors-black) 95%, var(--colors-white));
+  --divider: rgba(255, 255, 255, 0.15);
   --default-padding: 2rem;
   --gap: 2rem;
   --gap-md: var(--gap, 2rem);

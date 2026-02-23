@@ -1,18 +1,13 @@
-import dynamic from "next/dynamic";
-import { AllServicesListServer } from "src/components/AllServicesList/AllServicesListServer.component";
-import { AreasServicedListServer } from "src/components/AreasServiced/AreasServicedListServer.component";
-import { AreasServicedServer } from "src/components/AreasServiced/AreasServicedServer.component";
-import { ContentRecentNewsList } from "src/components/ContentRecentNewsList/ContentRecentNewsList.component";
-import { FeaturedServices } from "src/components/FeaturedServices/FeaturedServices.component";
+import { AllProjectsListServer } from "src/components/AllProjectsList/AllProjectsListServer.component";
+import {
+  AllServicesListServer,
+  AreasServicedListServer,
+  AreasServicedServer,
+  ContentRecentNewsList,
+  FeaturedServices,
+  RequestAQuoteForm,
+} from "src/components/ContentModules/ContentModulesRegistry";
 import type { ContentModule } from "src/contentful/parseContentModules";
-
-const RequestAQuoteForm = dynamic(
-  () =>
-    import("src/components/RequestAQuoteForm/RequestAQuoteForm.component").then(
-      (mod) => mod.RequestAQuoteForm,
-    ),
-  { ssr: true },
-);
 
 interface ContentModulesProps {
   contentLayout?: string;
@@ -43,6 +38,9 @@ export const ContentModules = (props: ContentModulesProps) => {
     }
     case "Areas Serviced List": {
       return <AreasServicedListServer locale={locale} />;
+    }
+    case "All Projects": {
+      return <AllProjectsListServer />;
     }
     default: {
       return null;

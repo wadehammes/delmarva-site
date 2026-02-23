@@ -13,6 +13,7 @@ export interface TypeProjectFields {
   entryTitle?: EntryFieldTypes.Symbol;
   projectName: EntryFieldTypes.Symbol;
   slug: EntryFieldTypes.Symbol;
+  projectCompletionDate: EntryFieldTypes.Date;
   description: EntryFieldTypes.RichText;
   media?: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>;
   projectStats?: EntryFieldTypes.Array<
