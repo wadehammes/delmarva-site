@@ -13,6 +13,24 @@ import { createMediaUrl, envUrl } from "src/utils/helpers";
 import type { GenerateSchemaGraphOptions } from "src/utils/schema";
 import { generateSchemaGraph } from "src/utils/schema";
 
+const SITE_NAME = "Delmarva Site Development";
+
+function buildAlternateLanguages(
+  path: string,
+  baseUrl: string,
+): Record<string, string> {
+  const pathSegment = path ? `/${path}` : "";
+  return Object.fromEntries(
+    routing.locales.map((locale) => {
+      const url =
+        locale === routing.defaultLocale
+          ? `${baseUrl}${pathSegment}`
+          : `${baseUrl}/${locale}${pathSegment}`;
+      return [locale, url];
+    }),
+  );
+}
+
 export interface PageData {
   page: Page;
   services?: Awaited<ReturnType<typeof fetchServices>>;
@@ -130,18 +148,29 @@ export function createPageMetadata(
   page: Page,
   canonicalUrl: string,
   options?: {
-    title?: string;
     imageAlt?: string;
+    path?: string;
+    title?: string;
   },
 ): Metadata {
+  const baseUrl = envUrl();
+  const path = options?.path ?? "";
+  const images = createMetadataImages(page.metaImage, options?.imageAlt);
+
   return {
     alternates: {
       canonical: new URL(canonicalUrl),
+      languages: buildAlternateLanguages(path, baseUrl),
     },
     description: page.metaDescription,
     keywords: page?.metaKeywords?.join(",") ?? "",
     openGraph: {
-      images: createMetadataImages(page.metaImage, options?.imageAlt),
+      description: page.metaDescription,
+      images,
+      siteName: SITE_NAME,
+      title: options?.title ?? page.metaTitle,
+      type: "website",
+      url: canonicalUrl,
     },
     robots:
       page.enableIndexing && process.env.ENVIRONMENT === "production"
@@ -149,7 +178,10 @@ export function createPageMetadata(
         : "noindex, nofollow",
     title: options?.title ?? page.metaTitle,
     twitter: {
-      images: createMetadataImages(page.metaImage, options?.imageAlt),
+      card: "summary_large_image",
+      description: page.metaDescription,
+      images,
+      title: options?.title ?? page.metaTitle,
     },
   };
 }
@@ -166,14 +198,26 @@ export function createServiceMetadata(
     slug: string;
   },
   canonicalUrl: string,
+  options?: { pathPrefix?: string },
 ): Metadata {
+  const pathPrefix = options?.pathPrefix ?? "";
+  const path = pathPrefix ? `${pathPrefix}/${service.slug}` : service.slug;
+  const baseUrl = envUrl();
+  const images = createMetadataImages(service.metaImage, service.metaTitle);
+
   return {
     alternates: {
       canonical: new URL(canonicalUrl),
+      languages: buildAlternateLanguages(path, baseUrl),
     },
     description: service.metaDescription,
     openGraph: {
-      images: createMetadataImages(service.metaImage, service.metaTitle),
+      description: service.metaDescription,
+      images,
+      siteName: SITE_NAME,
+      title: service.metaTitle,
+      type: "website",
+      url: canonicalUrl,
     },
     robots:
       service.enableIndexing && process.env.ENVIRONMENT === "production"
@@ -181,7 +225,10 @@ export function createServiceMetadata(
         : "noindex, nofollow",
     title: service.metaTitle,
     twitter: {
-      images: createMetadataImages(service.metaImage, service.metaTitle),
+      card: "summary_large_image",
+      description: service.metaDescription,
+      images,
+      title: service.metaTitle,
     },
   };
 }

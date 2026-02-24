@@ -115,6 +115,7 @@ export async function generateMetadata({
   return createServiceMetadata(
     service,
     `${envUrl()}/${SERVICES_PAGE_SLUG}/${service.slug}`,
+    { pathPrefix: SERVICES_PAGE_SLUG },
   );
 }
 

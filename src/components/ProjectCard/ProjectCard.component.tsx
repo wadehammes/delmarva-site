@@ -66,7 +66,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
     if (syncUrlOnOpen && project.slug) {
       const params = new URLSearchParams(window.location.search);
       params.set("project", project.slug);
-      router.replace(`${pathname}?${params}`);
+      router.replace(`${pathname}?${params}`, { scroll: false });
     }
   };
 

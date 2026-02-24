@@ -116,7 +116,9 @@ export async function generateMetadata({
     return notFound();
   }
 
-  return createPageMetadata(page, `${envUrl()}/${page.slug}`);
+  return createPageMetadata(page, `${envUrl()}/${page.slug}`, {
+    path: page.slug,
+  });
 }
 
 async function Page({ params, searchParams }: PageProps) {
