@@ -2,7 +2,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
   font-size: 0.875rem;
   color: var(--color-text);
   appearance: none;
@@ -62,7 +62,7 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  z-index: 0;
+  z-index: 2;
   color: inherit;
   pointer-events: none;
 }

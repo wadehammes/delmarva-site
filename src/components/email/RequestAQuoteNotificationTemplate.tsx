@@ -66,5 +66,3 @@ export const RequestAQuoteNotificationTemplate: React.FC<
     </Tailwind>
   </Html>
 );
-
-export default RequestAQuoteNotificationTemplate;

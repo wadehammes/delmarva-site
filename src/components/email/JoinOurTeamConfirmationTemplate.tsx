@@ -133,5 +133,3 @@ const link = {
   color: "#0366d6",
   textDecoration: "underline",
 };
-
-export default JoinOurTeamConfirmationTemplate;

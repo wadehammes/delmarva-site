@@ -1,5 +1,7 @@
 "use client";
 
+import { Link } from "src/i18n/routing";
+import { SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { hexToRgba } from "src/utils/mapUtils";
 import type { ServiceArea } from "src/utils/serviceAreaUtils";
 import styles from "./AreasServicedList.module.css";
@@ -52,7 +54,14 @@ const ServiceItem = ({ serviceArea }: ServiceItemProps) => {
       </div>
       <ul className={styles.countiesList}>
         {serviceArea.counties.map((county) => (
-          <li key={`${serviceArea.serviceSlug}-${county}`}>{county}</li>
+          <li key={`${serviceArea.serviceSlug}-${county}`}>
+            <Link
+              className={styles.countyLink}
+              href={`/${SERVICES_PAGE_SLUG}/${serviceArea.serviceSlug}`}
+            >
+              {county}
+            </Link>
+          </li>
         ))}
       </ul>
     </li>

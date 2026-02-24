@@ -1,4 +1,24 @@
 {
+  "Footer": {
+    "scroll": "Scroll"
+  },
+  "Modal": {
+    "closeLabel": "Close modal"
+  },
+  "Navigation": {
+    "menuToggle": "Navigation Menu Toggle"
+  },
+  "ProjectCard": {
+    "viewDetails": "View details for {name}"
+  },
+  "ProjectCarousel": {
+    "nextProject": "Next project",
+    "previousProject": "Previous project"
+  },
+  "ServiceTemplate": {
+    "eyebrow": "Our Services",
+    "projects": "Projects"
+  },
   "RequestAQuoteForm": {
     "labels": {
       "companyName": "Company name",

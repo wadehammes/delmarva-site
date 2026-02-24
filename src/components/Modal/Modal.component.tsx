@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { gsap } from "gsap";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useIsBrowser } from "src/hooks/useIsBrowser";
@@ -34,19 +35,22 @@ interface ModalFooterProps {
   className?: string;
 }
 
-const ModalHeader = ({ children, className, onClose }: ModalHeaderProps) => (
-  <div className={clsx(styles.modalHeader, className)}>
-    <button
-      aria-label="Close modal"
-      className={styles.closeButton}
-      onClick={onClose}
-      type="button"
-    >
-      <CloseIcon className={styles.closeIcon} />
-    </button>
-    {children}
-  </div>
-);
+const ModalHeader = ({ children, className, onClose }: ModalHeaderProps) => {
+  const t = useTranslations("Modal");
+  return (
+    <div className={clsx(styles.modalHeader, className)}>
+      <button
+        aria-label={t("closeLabel")}
+        className={styles.closeButton}
+        onClick={onClose}
+        type="button"
+      >
+        <CloseIcon className={styles.closeIcon} />
+      </button>
+      {children}
+    </div>
+  );
+};
 
 const ModalBody = ({ children, className }: ModalBodyProps) => (
   <div className={clsx(styles.modalBody, className)}>{children}</div>

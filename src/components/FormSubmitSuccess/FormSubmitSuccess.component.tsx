@@ -27,5 +27,3 @@ export const FormSubmitSuccess = ({ children }: FormSubmitSuccessProps) => (
     <div className={styles.formSubmitSuccessContent}>{children}</div>
   </output>
 );
-
-export default FormSubmitSuccess;

@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { Carousel } from "src/components/Carousel/Carousel.component";
-import CopyBlock from "src/components/ContentCopyBlock/ContentCopyBlock.component";
+import { ContentCopyBlock as CopyBlock } from "src/components/ContentCopyBlock/ContentCopyBlock.component";
 import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.component";
 import type { ContentCopyMediaBlock as ContentCopyMediaBlockType } from "src/contentful/parseContentCopyMediaBlock";
 import type { ContentImageBlockEntry } from "src/contentful/parseContentImageBlock";
@@ -68,5 +68,3 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
     </div>
   );
 };
-
-export default ContentCopyMediaBlock;

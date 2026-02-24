@@ -219,5 +219,3 @@ export const RequestAQuoteForm = () => {
     </form>
   );
 };
-
-export default RequestAQuoteForm;

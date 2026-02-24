@@ -8,10 +8,11 @@ import { filterSectionsByStaleRecentNews } from "src/utils/sectionVisibility";
 interface PageComponentProps extends HTMLAttributes<HTMLDivElement> {
   fields: Page;
   locale?: string;
+  searchParams?: { project?: string };
 }
 
 export const PageComponent = async (props: PageComponentProps) => {
-  const { fields, children, locale } = props;
+  const { fields, children, locale, searchParams } = props;
   const { sections } = fields;
   const draft = await draftMode();
   const filteredSections = await filterSectionsByStaleRecentNews(
@@ -23,7 +24,11 @@ export const PageComponent = async (props: PageComponentProps) => {
   return (
     <>
       {children}
-      <SectionRenderer locale={locale} sections={filteredSections} />
+      <SectionRenderer
+        locale={locale}
+        searchParams={searchParams}
+        sections={filteredSections}
+      />
     </>
   );
 };

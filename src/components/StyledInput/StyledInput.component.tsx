@@ -61,5 +61,3 @@ export const StyledInput = forwardRef(
     );
   },
 );
-
-export default StyledInput;

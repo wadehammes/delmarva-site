@@ -1,6 +1,6 @@
 "use client";
 
-import ContentImageBlock from "src/components/ContentImageBlock/ContentImageBlock.component";
+import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
 import { ContentVideoBlock } from "src/components/ContentVideoBlock/ContentVideoBlock.component";
 import {
   type ContentImageBlockEntry,

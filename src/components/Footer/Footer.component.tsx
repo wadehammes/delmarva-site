@@ -1,6 +1,7 @@
 "use client";
 
-import LocaleSwitcherSelect from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.component";
+import { useTranslations } from "next-intl";
+import { LocaleSwitcherSelect } from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { FooterType } from "src/contentful/getFooter";
 import { Link } from "src/i18n/routing";
@@ -15,6 +16,7 @@ interface FooterProps {
 
 export const Footer = (props: FooterProps) => {
   const { footer } = props;
+  const t = useTranslations("Footer");
 
   if (!footer) return null;
 
@@ -37,7 +39,7 @@ export const Footer = (props: FooterProps) => {
           }}
           type="button"
         >
-          <span>Scroll</span>
+          <span>{t("scroll")}</span>
         </button>
       </div>
       <div className={styles.footerContent}>
@@ -101,7 +103,9 @@ export const Footer = (props: FooterProps) => {
           </div>
         ) : null}
         <div className={styles.footerSection}>
-          <RichText document={addresscompanyInfo} />
+          <div className={styles.footerAddress}>
+            <RichText document={addresscompanyInfo} />
+          </div>
           <div className={styles.footerSocials}>
             {linkedInUrl && (
               <Link href={linkedInUrl}>

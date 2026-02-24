@@ -22,5 +22,3 @@ export const ServiceComponent = (props: ServiceComponentProps) => {
     </ServiceProvider>
   );
 };
-
-export default ServiceComponent;

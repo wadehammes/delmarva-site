@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { ProjectModal } from "src/components/ProjectModal/ProjectModal.component";
@@ -13,13 +15,32 @@ import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
+  openOnMount?: boolean;
   project: ProjectType;
   selectedServiceSlug?: string;
 }
 
 export const ProjectCard = (props: ProjectCardProps) => {
-  const { project, selectedServiceSlug } = props;
+  const { openOnMount, project, selectedServiceSlug } = props;
+  const t = useTranslations("ProjectCard");
   const { isOpen, open, close } = useModal();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleClose = () => {
+    close();
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("project")) {
+        params.delete("project");
+        router.replace(params.toString() ? `${pathname}?${params}` : pathname);
+      }
+    }
+  };
+
+  const handleMountRef = (el: HTMLButtonElement | null) => {
+    if (el && openOnMount) open();
+  };
 
   const { projectName, description, media, projectLocation, projectStats } =
     project;
@@ -60,10 +81,11 @@ export const ProjectCard = (props: ProjectCardProps) => {
   return (
     <>
       <button
-        aria-label={`View details for ${projectName}`}
+        aria-label={t("viewDetails", { name: projectName ?? "" })}
         className={styles.projectCard}
         onClick={handleCardClick}
         onKeyDown={handleKeyDown}
+        ref={handleMountRef}
         type="button"
       >
         {showMediaSection && (
@@ -89,7 +111,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
           </div>
         </div>
       </button>
-      <ProjectModal isOpen={isOpen} onClose={close} project={project} />
+      <ProjectModal isOpen={isOpen} onClose={handleClose} project={project} />
     </>
   );
 };

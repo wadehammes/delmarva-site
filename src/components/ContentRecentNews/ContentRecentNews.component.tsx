@@ -37,5 +37,3 @@ export const ContentRecentNews = async (props: ContentRecentNewsProps) => {
     </div>
   );
 };
-
-export default ContentRecentNews;

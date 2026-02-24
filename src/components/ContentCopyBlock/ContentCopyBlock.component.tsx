@@ -42,9 +42,11 @@ export const ContentCopyBlock = forwardRef<
       ref={divRef}
     >
       <RichText document={copy} />
-      {cta ? <CTA cta={cta} /> : null}
+      {cta ? (
+        <div className={styles.ctaContainer}>
+          <CTA cta={cta} />
+        </div>
+      ) : null}
     </div>
   );
 });
-
-export default ContentCopyBlock;

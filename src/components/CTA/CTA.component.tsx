@@ -31,5 +31,3 @@ export const CTA = (props: CTAProps) => {
     />
   );
 };
-
-export default CTA;

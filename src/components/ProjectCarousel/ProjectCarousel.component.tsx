@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef } from "react";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import type { ProjectType } from "src/contentful/getProjects";
@@ -23,6 +24,7 @@ interface ProjectCarouselProps {
 }
 
 export const ProjectCarousel = (props: ProjectCarouselProps) => {
+  const t = useTranslations("ProjectCarousel");
   const {
     projects,
     selectedServiceSlug,
@@ -144,7 +146,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
 
       <div className={styles.navigationControls}>
         <button
-          aria-label="Previous project"
+          aria-label={t("previousProject")}
           className={styles.navigationButton}
           id={elementIds.navigationPrev}
           type="button"
@@ -153,7 +155,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
         </button>
         <div className={styles.pagination} id={elementIds.pagination} />
         <button
-          aria-label="Next project"
+          aria-label={t("nextProject")}
           className={styles.navigationButton}
           id={elementIds.navigationNext}
           type="button"

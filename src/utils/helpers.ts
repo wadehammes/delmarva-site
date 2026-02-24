@@ -1,5 +1,3 @@
-import type { Page } from "src/contentful/getPages";
-
 export const isBrowser = () => {
   return Boolean(typeof window !== "undefined");
 };
@@ -103,24 +101,4 @@ export const isContentType = (
   contentType: string,
 ): boolean => {
   return content?.sys?.contentType?.sys?.id === contentType;
-};
-
-/**
- * Checks if a page has a hero component as its first section
- * @param page - The page to check
- * @returns true if the first section contains a hero component, false otherwise
- */
-export const hasHeroAsFirstSection = (page?: Page): boolean => {
-  if (!page?.sections || page.sections.length === 0) {
-    return false;
-  }
-
-  const firstSection = page.sections[0];
-  if (!firstSection?.content || firstSection.content.length === 0) {
-    return false;
-  }
-
-  // Check if the first content item in the first section is a hero
-  const firstContent = firstSection.content[0];
-  return isContentType(firstContent, "contentHero");
 };

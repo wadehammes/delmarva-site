@@ -276,5 +276,3 @@ const colors = {
   green: "#28a745",
   orange: "#fd7e14",
 };
-
-export default JoinOurTeamNotificationTemplate;

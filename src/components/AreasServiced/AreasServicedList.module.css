@@ -55,7 +55,6 @@
     padding-left: 1.5rem;
     font-size: 0.9375rem;
     line-height: 1.6;
-    color: var(--color-text);
 
     &::before {
       position: absolute;
@@ -63,5 +62,16 @@
       color: var(--colors-gray);
       content: "•";
     }
+  }
+}
+
+.countyLink {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+
+  &:hover,
+  &:focus {
+    color: var(--colors-red);
   }
 }

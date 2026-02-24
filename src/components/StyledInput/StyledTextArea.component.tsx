@@ -62,5 +62,3 @@ export const StyledTextArea = forwardRef(
     );
   },
 );
-
-export default StyledTextArea;

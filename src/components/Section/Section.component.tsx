@@ -10,11 +10,12 @@ import { isReactNodeEmptyArray } from "src/utils/helpers";
 interface SectionProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
   id: string;
+  isFirstSectionWithHero?: boolean;
   section?: SectionType | null;
 }
 
 export const Section = async (props: SectionProps) => {
-  const { children, id, section } = props;
+  const { children, className, id, isFirstSectionWithHero, section } = props;
 
   if (!section) {
     return null;
@@ -62,7 +63,7 @@ export const Section = async (props: SectionProps) => {
 
   return (
     <section
-      className={clsx(styles.section, {
+      className={clsx(styles.section, className, {
         [styles.fullWidth]: contentLayout === "Full Width",
         [styles.whiteBg]: backgroundColor === "White",
         [styles.blackBg]: backgroundColor === "Black",
@@ -73,7 +74,9 @@ export const Section = async (props: SectionProps) => {
         [styles.lessPadding]: sectionPadding === "Less Padding",
         [styles.morePadding]: sectionPadding === "More Padding",
         [styles.noPadding]: sectionPadding === "No Padding",
-        [styles.noTopPadding]: sectionPadding === "No Top Padding",
+        [styles.firstSectionWithHero]: isFirstSectionWithHero,
+        [styles.noTopPadding]:
+          isFirstSectionWithHero || sectionPadding === "No Top Padding",
         [styles.noBottomPadding]: sectionPadding === "No Bottom Padding",
         [styles.moreTopPadding]: sectionPadding === "More Top Padding",
         [styles.lessBottomPadding]: sectionPadding === "Less Bottom Padding",
