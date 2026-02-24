@@ -64,6 +64,8 @@ export const Section = async (props: SectionProps) => {
   const getDesktopColumns = (contentLayout: SectionType["contentLayout"]) => {
     switch (contentLayout) {
       case "2-column":
+      case "2-column 40/60":
+      case "2-column 60/40":
         return 2;
       case "3-column":
         return 3;
@@ -133,6 +135,8 @@ export const Section = async (props: SectionProps) => {
         <div
           className={clsx(styles.sectionContent, {
             [styles.twoColumn]: contentLayout === "2-column",
+            [styles.twoColumn4060]: contentLayout === "2-column 40/60",
+            [styles.twoColumn6040]: contentLayout === "2-column 60/40",
             [styles.threeColumn]: contentLayout === "3-column",
             [styles.fourColumn]: contentLayout === "4-column",
             [styles.contained]: contentLayout !== "Full Width",
