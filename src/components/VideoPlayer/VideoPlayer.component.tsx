@@ -77,7 +77,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
           controls={controls}
           height="100%"
           loop
-          muted
+          muted={autoPlay || debouncedPlayInView}
           playing={autoPlay || debouncedPlayInView}
           src={src}
           width="100%"
