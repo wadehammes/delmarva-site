@@ -19,8 +19,12 @@ export const createMediaUrl = (src: string) => {
     return "";
   }
 
-  if (src.startsWith("http")) {
+  if (src.startsWith("https://")) {
     return src;
+  }
+
+  if (src.startsWith("http://")) {
+    return src.replace(/^http:\/\//i, "https://");
   }
 
   if (src.startsWith("//")) {

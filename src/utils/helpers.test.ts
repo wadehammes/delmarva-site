@@ -86,12 +86,12 @@ describe("helpers", () => {
       expect(createMediaUrl(undefined as unknown as string)).toBe("");
     });
 
-    it("should return URL as-is for URLs starting with http", () => {
+    it("should return URL as-is for https, and convert http to https", () => {
       expect(createMediaUrl("https://example.com/image.jpg")).toBe(
         "https://example.com/image.jpg",
       );
       expect(createMediaUrl("http://example.com/image.jpg")).toBe(
-        "http://example.com/image.jpg",
+        "https://example.com/image.jpg",
       );
     });
 
