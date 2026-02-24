@@ -1,6 +1,6 @@
-import { formatNumber } from "./numberHelpers";
+import { formatNumber, type NumberFormatType } from "./numberHelpers";
 
-export type NumberFormatType = "Numerical" | "Percentage" | "Currency";
+export type { NumberFormatType };
 
 export interface ParsedValue {
   numericValue: number;

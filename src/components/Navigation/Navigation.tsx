@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { MobileNavigationDrawer } from "src/components/Navigation/MobileNavigation.component";
@@ -22,6 +23,7 @@ interface NavigationProps {
 
 export const Navigation = (props: NavigationProps) => {
   const { navigation, page: pageProp } = props;
+  const t = useTranslations("Navigation");
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
@@ -190,13 +192,18 @@ export const Navigation = (props: NavigationProps) => {
               return null;
             }
 
+            const linkUrl = link.pageLink?.url ?? "";
+            const isActive =
+              pathname === linkUrl ||
+              (linkUrl && pathname.startsWith(`${linkUrl}/`));
+
             return (
               <li className={styles.navItem} key={link.id}>
                 <Link
                   className={clsx({
-                    [styles.active]: link.pageLink?.url === pathname,
+                    [styles.active]: isActive,
                   })}
-                  href={link.pageLink?.url ?? ""}
+                  href={linkUrl}
                 >
                   {link.text}
                 </Link>
@@ -221,7 +228,7 @@ export const Navigation = (props: NavigationProps) => {
         ) : null}
         <div className={styles.mobileNavToggleContainer}>
           <button
-            aria-label="Navigation Menu Toggle"
+            aria-label={t("menuToggle")}
             className={styles.mobileNavToggle}
             data-tracking-click={mobileNavToggleTrackingData}
             onClick={() => setIsMobileNavOpen((prev) => !prev)}

@@ -46,6 +46,10 @@
     padding: 0;
 
     @media screen and (min-width: 900px) {
+      grid-column: 2 / -2;
+    }
+
+    @media screen and (min-width: 1440px) {
       grid-column: 3 / -3;
     }
   }
@@ -55,6 +59,10 @@
     grid-column: 1 / -1;
 
     @media screen and (min-width: 900px) {
+      grid-column: 2 / -2;
+    }
+
+    @media screen and (min-width: 1440px) {
       grid-column: 3 / -3;
     }
 
@@ -83,13 +91,14 @@
 
   &.threeColumn {
     --columns: 1;
-    --columns-md: 3;
+    --columns-md: 2;
     --columns-lg: 3;
   }
 
   &.fourColumn {
     --columns: 1;
-    --columns-md: 4;
+    --columns-md: 2;
+    --columns-lg: 4;
   }
 
   &.fiveColumn {
@@ -214,6 +223,10 @@
     padding-top: 0;
   }
 
+  &.firstSectionWithHero {
+    margin-top: -6rem;
+  }
+
   &.noBottomPadding {
     padding-bottom: 0;
   }
@@ -304,6 +317,10 @@
   text-align: center;
 
   @media screen and (min-width: 900px) {
+    grid-column: 2 / -1;
+  }
+
+  @media screen and (min-width: 1440px) {
     grid-column: 3 / -1;
   }
 

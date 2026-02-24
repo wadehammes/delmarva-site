@@ -14,8 +14,8 @@ import { routing, usePathname, useRouter } from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
 
 const localeLabel: Record<Locales, string> = {
-  en: "🇺🇸  English",
-  es: "🇲🇽  Español",
+  en: "English",
+  es: "Español",
 };
 
 const ariaLabel: Record<Locales, string> = {
@@ -28,7 +28,7 @@ const ariaDescription: Record<Locales, string> = {
   es: "Elige tu idioma preferido para navegar por este sitio web",
 };
 
-export default function LocaleSwitcherSelect() {
+export const LocaleSwitcherSelect = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [announcement, setAnnouncement] = useState<string>("");
@@ -148,4 +148,4 @@ export default function LocaleSwitcherSelect() {
       ) : null}
     </div>
   );
-}
+};

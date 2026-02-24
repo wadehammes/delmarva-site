@@ -5,23 +5,15 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: max(9.5rem, clamp(2.5rem, 6vw, 5rem)) clamp(1rem, 5vw, 2rem)
-    clamp(3rem, 4vw, 8rem);
+  padding: clamp(5rem, 12vw, 12rem) clamp(1rem, 5vw, 2rem)
+    clamp(3rem, 5vw, 8rem);
+  color: var(--colors-white);
   text-align: center;
 }
 
 .heroContentLeft {
   justify-content: flex-start;
   text-align: left;
-}
-
-.heroContentRight {
-  justify-content: flex-end;
-  text-align: right;
-}
-
-.heroFullScreen {
-  height: 100vh;
 }
 
 .heroEightyPercent {
@@ -31,18 +23,6 @@
 
   @media (min-width: 768px) {
     height: 80vh;
-  }
-}
-
-.heroSmall {
-  min-height: 200px;
-  max-height: 400px;
-  padding: max(8.5rem, clamp(2.5rem, 5vw, 4rem)) clamp(1rem, 4vw, 2rem)
-    clamp(2rem, 4vw, 2rem);
-
-  @media screen and (min-width: 768px) {
-    padding: max(8.5rem, clamp(3rem, 6vw, 5rem)) clamp(1rem, 4vw, 2rem)
-      clamp(3rem, 5vw, 4rem);
   }
 }
 
@@ -86,15 +66,38 @@
   align-items: center;
   justify-content: center;
   max-width: 100ch;
-  padding: 0 clamp(1rem, 4vw, 2rem);
+  padding: 0 2rem;
   text-wrap: balance;
-  transform: translateY(-1em);
-
-  h1 {
-    font-size: clamp(2.75em, 5vw, 6em);
-  }
 }
 
-.ctaContainer {
-  margin-top: 1rem;
+.heroContentLeft .heroContent {
+  align-items: flex-start;
+}
+
+.heroContent header {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.heroTitle {
+  font-size: clamp(2.75rem, 5vw, 5em);
+}
+
+.heroCarousel {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
+}
+
+.heroSlide {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
+}
+
+.heroPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: var(--colors-black);
 }

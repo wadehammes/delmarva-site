@@ -41,5 +41,3 @@ export const ContentImageBlock = (props: ContentImageBlockProps) => {
     </figure>
   );
 };
-
-export default ContentImageBlock;

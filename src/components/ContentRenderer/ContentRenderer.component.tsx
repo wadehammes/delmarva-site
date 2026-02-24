@@ -63,10 +63,11 @@ interface ContentRendererProps {
   content: ContentEntries;
   contentLayout?: string;
   locale?: string;
+  searchParams?: { project?: string };
 }
 
 export const ContentRenderer = (props: ContentRendererProps) => {
-  const { content, contentLayout, locale } = props;
+  const { content, contentLayout, locale, searchParams } = props;
 
   if (!content) {
     return null;
@@ -100,7 +101,12 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentMarquee entries={parsedMarquee.items ?? []} />;
+      return (
+        <ContentMarquee
+          entries={parsedMarquee.items ?? []}
+          searchParams={searchParams}
+        />
+      );
     }
     case "contentModules": {
       const parsedModule = parseContentModule(content as ContentModuleEntry);
@@ -114,6 +120,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
           contentLayout={contentLayout}
           fields={parsedModule}
           locale={locale}
+          searchParams={searchParams}
         />
       );
     }
@@ -124,7 +131,13 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentGrid fields={parsedGrid} locale={locale} />;
+      return (
+        <ContentGrid
+          fields={parsedGrid}
+          locale={locale}
+          searchParams={searchParams}
+        />
+      );
     }
     case "contentStatBlock": {
       const parsedStatBlock = parseContentStatBlock(

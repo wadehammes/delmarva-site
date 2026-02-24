@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import type { HTMLAttributes } from "react";
 import { Footer } from "src/components/Footer/Footer.component";
 import { Navigation } from "src/components/Navigation/Navigation";
@@ -7,21 +6,17 @@ import { PageProvider } from "src/components/PageLayout/PageProvider";
 import type { FooterType } from "src/contentful/getFooter";
 import type { NavigationType } from "src/contentful/getNavigation";
 import type { Page } from "src/contentful/getPages";
-import { hasHeroAsFirstSection } from "src/utils/helpers";
 
 interface PageLayoutProps extends HTMLAttributes<HTMLDivElement> {
-  navigation: NavigationType;
   footer: FooterType;
+  navigation: NavigationType;
   page?: Page;
 }
 
 export const PageLayout = async (props: PageLayoutProps) => {
-  const { children, navigation, footer, page } = props;
+  const { children, footer, navigation, page } = props;
 
-  const hasHero = hasHeroAsFirstSection(page);
-  const contentClassName = clsx(styles["page-layout-content"], {
-    [styles["page-layout-content--no-hero"]]: !hasHero,
-  });
+  const contentClassName = styles["page-layout-content"];
 
   return (
     <PageProvider page={page}>

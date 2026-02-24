@@ -1,11 +1,49 @@
+.serviceHeaderSection [class*="sectionContent"] {
+  grid-template-columns: 1fr;
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 40% 60%;
+  }
+}
+
 .serviceHeader {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
+.serviceHeaderEyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.serviceHeaderEyebrowText {
+  color: var(--color-text);
+}
+
 .serviceHeaderTitle {
-  font-size: clamp(2.75rem, 5vw, 5em);
+  position: relative;
+  padding-bottom: 1rem;
+  margin: 0;
+  font-size: clamp(2.25rem, 4vw, 3.5em);
+
+  &::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 4rem;
+    height: 3px;
+    content: "";
+    background-color: var(--colors-red);
+  }
+}
+
+.serviceHeaderDescription {
+  line-height: 1.7;
+  letter-spacing: 0.01em;
 }
 
 .servicePhotos {

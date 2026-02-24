@@ -13,10 +13,11 @@ interface ContentModulesProps {
   contentLayout?: string;
   fields: ContentModule;
   locale?: string;
+  searchParams?: { project?: string };
 }
 
 export const ContentModules = (props: ContentModulesProps) => {
-  const { contentLayout, fields, locale } = props;
+  const { contentLayout, fields, locale, searchParams } = props;
 
   switch (fields.module) {
     case "Featured Services List": {
@@ -40,12 +41,10 @@ export const ContentModules = (props: ContentModulesProps) => {
       return <AreasServicedListServer locale={locale} />;
     }
     case "All Projects": {
-      return <AllProjectsListServer />;
+      return <AllProjectsListServer searchParams={searchParams} />;
     }
     default: {
       return null;
     }
   }
 };
-
-export default ContentModules;

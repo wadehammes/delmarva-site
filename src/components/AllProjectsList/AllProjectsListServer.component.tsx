@@ -1,10 +1,12 @@
 import { draftMode } from "next/headers";
 import { fetchProjects } from "src/contentful/getProjects";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
+import { resolveProjectSlug } from "src/utils/wordpressProjectSlugMap";
 import { AllProjectsList } from "./AllProjectsList.component";
 
 interface AllProjectsListServerProps {
   locale?: string;
+  searchParams?: { project?: string };
 }
 
 export const AllProjectsListServer = async (
@@ -18,5 +20,8 @@ export const AllProjectsListServer = async (
     preview: draft.isEnabled,
   });
 
-  return <AllProjectsList projects={projects} />;
+  const projectParam = props?.searchParams?.project;
+  const projectSlug = projectParam ? resolveProjectSlug(projectParam) : null;
+
+  return <AllProjectsList projectSlug={projectSlug} projects={projects} />;
 };

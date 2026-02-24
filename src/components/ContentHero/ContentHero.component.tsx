@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import styles from "src/components/ContentHero/ContentHero.module.css";
 import { HeroVideo } from "src/components/ContentHero/HeroVideo.component";
-import CTA from "src/components/CTA/CTA.component";
+import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import {
   type ContentHero as ContentHeroType,
@@ -93,10 +93,12 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
       />
       <div className={clsx(styles.heroContent)}>
         {copy ? <RichText as="header" document={copy} /> : null}
-        {cta ? <CTA cta={cta} /> : null}
+        {cta ? (
+          <div className={styles.ctaContainer}>
+            <CTA cta={cta} />
+          </div>
+        ) : null}
       </div>
     </div>
   );
 };
-
-export default ContentHeroComponent;

@@ -225,7 +225,33 @@ const productionRedirects = sources.map((source) => ({
   source,
 }));
 
-const sharedRedirects = [];
+const sharedRedirects = [
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: "/project-portfolio",
+  },
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: "/project-portfolio/",
+  },
+  {
+    destination: "/what-we-deliver?project=:slug",
+    permanent: true,
+    source: "/project/:slug",
+  },
+  {
+    destination: "/what-we-deliver?project=:slug",
+    permanent: true,
+    source: "/project/:slug/",
+  },
+  {
+    destination: "/request-a-proposal",
+    permanent: true,
+    source: "/contact-us",
+  },
+];
 
 // Enhanced security headers
 const scriptSrc = [
