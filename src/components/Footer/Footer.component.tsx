@@ -1,7 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
-import { LocaleSwitcherSelect } from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { FooterType } from "src/contentful/getFooter";
 import { Link } from "src/i18n/routing";
@@ -9,6 +9,14 @@ import LinkedInIcon from "src/icons/linkedin.svg";
 import DelmarvaBadge from "src/logos/delmarva-white-outlined-badge-full-color-rgb.svg";
 import { parseCtaUrl } from "src/utils/urlHelpers";
 import styles from "./Footer.module.css";
+
+const LocaleSwitcherSelect = dynamic(
+  () =>
+    import(
+      "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.component"
+    ).then((m) => ({ default: m.LocaleSwitcherSelect })),
+  { ssr: false },
+);
 
 interface FooterProps {
   footer: FooterType | null;
