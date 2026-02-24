@@ -44,7 +44,7 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
     return notFound();
   }
 
-  return createPageMetadata(page, envUrl());
+  return createPageMetadata(page, envUrl(), { path: "" });
 }
 
 const Home = async (props: HomeProps) => {

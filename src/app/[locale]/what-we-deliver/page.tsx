@@ -50,7 +50,9 @@ export async function generateMetadata(
     return notFound();
   }
 
-  return createPageMetadata(page, `${envUrl()}/${SERVICES_PAGE_SLUG}`);
+  return createPageMetadata(page, `${envUrl()}/${SERVICES_PAGE_SLUG}`, {
+    path: SERVICES_PAGE_SLUG,
+  });
 }
 
 const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {

@@ -17,11 +17,18 @@ interface RootLayoutProps {
   params: Promise<{ locale: string }>;
 }
 
+const SITE_NAME = "Delmarva Site Development";
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    creator: "Delmarva Site Development",
+    applicationName: SITE_NAME,
+    creator: SITE_NAME,
     metadataBase: new URL(`${envUrl()}/`),
-    publisher: "Delmarva Site Development",
+    publisher: SITE_NAME,
+    title: {
+      default: SITE_NAME,
+      template: `%s | ${SITE_NAME}`,
+    },
   };
 }
 
