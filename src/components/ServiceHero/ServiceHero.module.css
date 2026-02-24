@@ -38,25 +38,6 @@
   z-index: 1;
 }
 
-.heroOverlayStyleMicrodot {
-  --dot-color: color-mix(in srgb, var(--dot-bg) 60%, var(--colors-white));
-  --dot-size: 1px;
-  --dot-space: 5px;
-  background:
-    linear-gradient(
-      90deg,
-      var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-      transparent 1%
-    )
-    center / var(--dot-space) var(--dot-space),
-    linear-gradient(
-      var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-      transparent 1%
-    )
-    center / var(--dot-space) var(--dot-space),
-    var(--dot-color);
-}
-
 .heroContent {
   position: relative;
   z-index: 2;

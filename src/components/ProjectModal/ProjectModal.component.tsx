@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
+import { useCallback, useState } from "react";
+import buttonStyles from "src/components/Button/Button.module.css";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { Modal } from "src/components/Modal/Modal.component";
@@ -7,7 +10,8 @@ import { ProjectStaticMap } from "src/components/ProjectStaticMap/ProjectStaticM
 import { ProjectStatsList } from "src/components/ProjectStatsList/ProjectStatsList.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
-import { Link } from "src/i18n/routing";
+import ShareIcon from "src/icons/Share.svg";
+import { Button as UIButton } from "src/ui/Button/Button.component";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectModal.module.css";
@@ -26,6 +30,23 @@ export const ProjectModal = ({
   onClose,
   project,
 }: ProjectModalProps) => {
+  const t = useTranslations("ProjectModal");
+  const locale = useLocale();
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied">("idle");
+
+  const handleShare = useCallback(() => {
+    if (!project?.slug) return;
+    const path =
+      locale === "en"
+        ? `/${SERVICES_PAGE_SLUG}`
+        : `/${locale}/${SERVICES_PAGE_SLUG}`;
+    const url = `${window.location.origin}${path}?project=${project.slug}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyStatus("copied");
+      setTimeout(() => setCopyStatus("idle"), 2000);
+    });
+  }, [locale, project?.slug]);
+
   if (!project) {
     return null;
   }
@@ -34,12 +55,15 @@ export const ProjectModal = ({
     projectName,
     description,
     media,
+    markets,
     projectLocation,
     projectStats,
     services,
   } = project;
 
   const allMedia = media ?? [];
+  const allMarkets =
+    markets?.filter((m): m is NonNullable<typeof m> => m != null) ?? [];
   const showMap = isValidProjectLocation(projectLocation) && projectLocation;
   const showCarousel = allMedia.length > 0 || !!showMap;
 
@@ -78,14 +102,9 @@ export const ProjectModal = ({
               }
 
               return (
-                <Link
-                  href={`/${SERVICES_PAGE_SLUG}/${service.slug}`}
-                  key={service.id}
-                >
-                  <span className={styles.serviceTag} key={service.id}>
-                    {service.serviceName}
-                  </span>
-                </Link>
+                <span className={styles.serviceTag} key={service.id}>
+                  {service.serviceName}
+                </span>
               );
             })}
           </div>
@@ -106,11 +125,27 @@ export const ProjectModal = ({
             <RichText document={description} />
           </div>
 
-          {projectStats && projectStats.length > 0 && (
+          {(projectStats?.length ?? 0) > 0 || allMarkets.length > 0 ? (
             <div className={styles.statsSection}>
-              <ProjectStatsList stats={projectStats} />
+              <ProjectStatsList
+                markets={allMarkets}
+                marketsLabel={t("markets")}
+                stats={projectStats ?? []}
+              />
             </div>
-          )}
+          ) : null}
+
+          <div className={styles.shareSection}>
+            <UIButton
+              className={`${buttonStyles.button} ${buttonStyles.outline} ${styles.shareButton}`}
+              data-tracking-click="project-modal-share"
+              onClick={handleShare}
+              type="button"
+            >
+              <ShareIcon />
+              {copyStatus === "copied" ? t("shareCopied") : t("shareProject")}
+            </UIButton>
+          </div>
         </div>
       </Modal.Body>
     </Modal>

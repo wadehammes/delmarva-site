@@ -1,7 +1,3 @@
-import {
-  type ProjectType,
-  parseContentfulProject,
-} from "src/contentful/getProjects";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import {
   isTypeMarket,
@@ -11,7 +7,7 @@ import {
 
 export interface MarketType {
   id: string;
-  projects?: (ProjectType | null)[];
+  marketTitle?: string;
 }
 
 const _validateMarketCheck: ContentfulTypeCheck<
@@ -29,10 +25,10 @@ export function parseContentfulMarket(market: MarketEntry): MarketType | null {
     return null;
   }
 
-  const { projects } = market.fields;
+  const { marketTitle } = market.fields;
 
   return {
     id: market.sys.id,
-    projects: projects?.map(parseContentfulProject),
+    marketTitle,
   };
 }

@@ -56,6 +56,7 @@ export interface ContentHero {
   overlayColor?: DelmarvaColorsType;
   overlayOpacity?: CSSColorAdjustScaleType;
   overlayStyle?: OverlayStyleType;
+  showHeaderStyledBorder?: boolean;
 }
 
 const _validateContentHeroCheck: ContentfulTypeCheck<
@@ -89,5 +90,6 @@ export function parseContentHero(entry: ContentHeroEntry): ContentHero | null {
     overlayColor: entry.fields.overlayColor as DelmarvaColorsType,
     overlayOpacity: entry.fields.overlayOpacity as CSSColorAdjustScaleType,
     overlayStyle: entry.fields.overlayStyle as OverlayStyleType,
+    showHeaderStyledBorder: Boolean(entry.fields.showHeaderStyledBorder),
   };
 }

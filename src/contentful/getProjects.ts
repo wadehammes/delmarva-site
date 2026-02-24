@@ -18,7 +18,10 @@ import {
   type ContentStatBlock,
   parseContentStatBlock,
 } from "src/contentful/parseContentStatBlock";
-import type { MarketType } from "src/contentful/parseMarket";
+import {
+  type MarketType,
+  parseContentfulMarket,
+} from "src/contentful/parseMarket";
 import {
   isTypeProject,
   type TypeProjectFields,
@@ -28,6 +31,11 @@ import {
 import type { Locales } from "src/i18n/routing";
 
 export type ProjectEntry = TypeProjectWithoutUnresolvableLinksResponse;
+
+export interface ProjectMarketType {
+  id: string;
+  name: string;
+}
 
 export interface ProjectType {
   id: string;
@@ -60,6 +68,7 @@ export function parseContentfulProject(
   return {
     description: fields.description,
     id: projectEntry.sys.id,
+    markets: fields.markets?.map(parseContentfulMarket).filter(Boolean) ?? [],
     media: fields.media?.map(parseContentfulAsset),
     projectCompletionDate: fields.projectCompletionDate,
     projectLocation: fields.projectLocation,

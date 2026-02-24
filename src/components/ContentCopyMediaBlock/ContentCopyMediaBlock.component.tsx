@@ -39,6 +39,7 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
         className={clsx(styles.mediaBlock, {
           [styles.blackBg]: mediaBackgroundStyle === "Black Background",
           [styles.microdotBg]: mediaBackgroundStyle === "Microdot Background",
+          microdotBg: mediaBackgroundStyle === "Microdot Background",
         })}
         style={
           {

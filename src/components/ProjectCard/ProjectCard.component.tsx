@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
@@ -11,36 +10,31 @@ import { RichText } from "src/components/RichText/RichText.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { useModal } from "src/hooks/useModal";
+import { useProjectModal } from "src/hooks/useProjectModal";
+import { usePathname, useRouter } from "src/i18n/routing";
 import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
-  openOnMount?: boolean;
   project: ProjectType;
+  projectSlugFromServer?: string | null;
   selectedServiceSlug?: string;
+  syncUrlOnOpen?: boolean;
 }
 
 export const ProjectCard = (props: ProjectCardProps) => {
-  const { openOnMount, project, selectedServiceSlug } = props;
+  const { project, projectSlugFromServer, selectedServiceSlug, syncUrlOnOpen } =
+    props;
   const t = useTranslations("ProjectCard");
-  const { isOpen, open, close } = useModal();
-  const pathname = usePathname();
   const router = useRouter();
+  const pathname = usePathname();
 
-  const handleClose = () => {
-    close();
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.has("project")) {
-        params.delete("project");
-        router.replace(params.toString() ? `${pathname}?${params}` : pathname);
-      }
-    }
-  };
-
-  const handleMountRef = (el: HTMLButtonElement | null) => {
-    if (el && openOnMount) open();
-  };
+  const projectModal = useProjectModal({
+    projectSlug: project.slug ?? "",
+    projectSlugFromServer: projectSlugFromServer ?? null,
+  });
+  const localModal = useModal(false);
+  const modal = syncUrlOnOpen ? projectModal : localModal;
 
   const { projectName, description, media, projectLocation, projectStats } =
     project;
@@ -68,13 +62,18 @@ export const ProjectCard = (props: ProjectCardProps) => {
     }, [projectStats, selectedServiceSlug]);
 
   const handleCardClick = () => {
-    open();
+    modal.open();
+    if (syncUrlOnOpen && project.slug) {
+      const params = new URLSearchParams(window.location.search);
+      params.set("project", project.slug);
+      router.replace(`${pathname}?${params}`);
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      open();
+      handleCardClick();
     }
   };
 
@@ -85,7 +84,6 @@ export const ProjectCard = (props: ProjectCardProps) => {
         className={styles.projectCard}
         onClick={handleCardClick}
         onKeyDown={handleKeyDown}
-        ref={handleMountRef}
         type="button"
       >
         {showMediaSection && (
@@ -111,7 +109,11 @@ export const ProjectCard = (props: ProjectCardProps) => {
           </div>
         </div>
       </button>
-      <ProjectModal isOpen={isOpen} onClose={handleClose} project={project} />
+      <ProjectModal
+        isOpen={modal.isOpen}
+        onClose={modal.close}
+        project={project}
+      />
     </>
   );
 };

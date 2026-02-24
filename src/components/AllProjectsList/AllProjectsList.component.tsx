@@ -9,15 +9,16 @@ interface AllProjectsListProps {
 }
 
 export const AllProjectsList = ({
-  projectSlug = null,
+  projectSlug: projectSlugFromServer = null,
   projects,
 }: AllProjectsListProps) => (
   <>
     {projects.map((project) => (
       <ProjectCard
         key={project.id}
-        openOnMount={projectSlug != null && project.slug === projectSlug}
         project={project}
+        projectSlugFromServer={projectSlugFromServer}
+        syncUrlOnOpen
       />
     ))}
   </>

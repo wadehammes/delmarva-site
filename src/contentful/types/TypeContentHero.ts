@@ -24,6 +24,7 @@ export interface TypeContentHeroFields {
   heroHeight?: EntryFieldTypes.Symbol<
     "80% Height" | "Full Screen" | "Regular" | "Small"
   >;
+  showHeaderStyledBorder?: EntryFieldTypes.Boolean;
 }
 
 export type TypeContentHeroSkeleton = EntrySkeletonType<

@@ -3,6 +3,7 @@
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useReducer, useRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
+import clsx from "clsx";
 import type { ServiceType } from "src/contentful/getServices";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
 import { mergeFeaturesToSingleBoundary } from "src/utils/geometryUtils";
@@ -227,9 +228,9 @@ export const AreasServiced = (props: AreasServicedProps) => {
 
   if (!mapboxAccessToken) {
     return (
-      <div className={className}>
+      <div className={clsx(styles.wrapper, className)}>
         <div className={styles.container}>
-          <div className={styles.map} style={{ height }}>
+          <div className={styles.map} style={height ? { height } : undefined}>
             <p>
               Please set NEXT_PUBLIC_MAPBOX_API_TOKEN in your environment
               variables to use the map.
@@ -241,7 +242,7 @@ export const AreasServiced = (props: AreasServicedProps) => {
   }
 
   return (
-    <div className={className}>
+    <div className={clsx(styles.wrapper, className)}>
       <div className={styles.container}>
         {isLoading && (
           <div className={styles.loadingOverlay}>
@@ -249,7 +250,11 @@ export const AreasServiced = (props: AreasServicedProps) => {
             <p>Loading service areas...</p>
           </div>
         )}
-        <div className={styles.map} ref={mapContainer} style={{ height }} />
+        <div
+          className={styles.map}
+          ref={mapContainer}
+          style={height ? { height } : undefined}
+        />
       </div>
       {serviceAreasWithGeoJSON.length > 0 && (
         <div className={styles.mapLegend}>

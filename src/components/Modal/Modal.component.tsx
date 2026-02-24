@@ -157,16 +157,7 @@ export const Modal = ({
           "-=0.1",
         );
     } else {
-      // Animate out
-      animation = gsap.timeline({
-        onComplete: () => {
-          if (overlayRef.current && contentRef.current) {
-            gsap.set([overlayRef.current, contentRef.current], {
-              display: "none",
-            });
-          }
-        },
-      });
+      animation = gsap.timeline();
 
       animation
         .to(contentRef.current, {
@@ -184,7 +175,20 @@ export const Modal = ({
             opacity: 0,
           },
           "-=0.1",
-        );
+        )
+        .add(() => {
+          const overlay = overlayRef.current;
+          const content = contentRef.current;
+          if (overlay && content) {
+            setTimeout(() => {
+              if (overlayRef.current && contentRef.current) {
+                gsap.set([overlayRef.current, contentRef.current], {
+                  display: "none",
+                });
+              }
+            }, 350);
+          }
+        });
     }
 
     // Cleanup function to kill animation if component unmounts

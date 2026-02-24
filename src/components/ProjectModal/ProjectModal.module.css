@@ -24,12 +24,13 @@
 
 .serviceTag {
   display: inline-block;
-  padding: 0.25rem 0.75rem 0.25rem;
+  padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1;
-  color: var(--colors-white);
-  background-color: var(--colors-red);
+  color: var(--colors-black);
+  background-color: transparent;
+  border: 1px solid var(--colors-silver);
   border-radius: 1rem;
 }
 
@@ -83,5 +84,29 @@
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--colors-black);
+  }
+}
+
+.shareSection {
+  padding-top: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+  .shareButton {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.75rem;
+    color: var(--colors-black);
+    border-color: var(--colors-black);
+
+    &:hover {
+      color: var(--colors-white);
+      background-color: var(--colors-black);
+    }
+
+    svg {
+      flex-shrink: 0;
+      width: 0.875rem;
+      height: 0.875rem;
+    }
   }
 }

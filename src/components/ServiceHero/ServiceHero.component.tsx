@@ -78,7 +78,7 @@ export const ServiceHero = (props: ServiceHeroProps) => {
         )}
       </div>
       <div
-        className={clsx(styles.heroOverlay, styles.heroOverlayStyleMicrodot)}
+        className={clsx(styles.heroOverlay, "microdotBg", "microdotBg--light")}
         style={{
           backgroundColor: "transparent",
           opacity: 0.15,

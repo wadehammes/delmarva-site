@@ -49,7 +49,16 @@ export const RichText = (props: RichTextProps) => {
       [INLINES.HYPERLINK]: (node, children) => (
         <Link href={node.data.uri}>{children}</Link>
       ),
-      [BLOCKS.PARAGRAPH]: (_node, children) => <p>{children}</p>,
+      [BLOCKS.PARAGRAPH]: (node, children) => {
+        const isEmpty =
+          !node.content?.length ||
+          node.content.every(
+            (child) =>
+              child.nodeType !== "text" || !String(child.value ?? "").trim(),
+          );
+        if (isEmpty) return null;
+        return <p>{children}</p>;
+      },
       [BLOCKS.EMBEDDED_ASSET]: (node) => {
         const image = parseContentfulAsset(node.data.target);
 

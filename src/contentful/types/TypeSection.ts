@@ -75,6 +75,9 @@ export interface TypeSectionFields {
     | "Full Width"
     | "Single Column"
   >;
+  mobileContentLayout?: EntryFieldTypes.Symbol<
+    "1-column" | "2-column" | "Full Width"
+  >;
   contentGap?: EntryFieldTypes.Symbol<"More Gap" | "No Gap" | "Regular">;
   contentVerticalAlignment?: EntryFieldTypes.Symbol<
     "Bottom" | "Center" | "Stretch" | "Top"

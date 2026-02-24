@@ -15,6 +15,12 @@
     "nextProject": "Proyecto siguiente",
     "previousProject": "Proyecto anterior"
   },
+  "ProjectModal": {
+    "markets": "Mercados",
+    "projectMarkets": "Mercados del Proyecto",
+    "shareCopied": "¡Copiado!",
+    "shareProject": "Compartir Proyecto"
+  },
   "ServiceTemplate": {
     "eyebrow": "Nuestros Servicios",
     "projects": "Proyectos"

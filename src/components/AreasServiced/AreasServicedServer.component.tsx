@@ -25,16 +25,12 @@ export const AreasServicedServer = async (props?: AreasServicedServerProps) => {
     preview: draft.isEnabled,
   });
 
-  const height =
-    props?.height ??
-    (props?.contentLayout === "Single Column" ? "600px" : "425px");
-
   return (
     <AreasServiced
       autoFitBounds={props?.autoFitBounds}
       center={props?.center}
       className={props?.className}
-      height={height}
+      height={props?.height}
       services={services}
       zoom={props?.zoom}
     />

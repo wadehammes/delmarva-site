@@ -17,13 +17,18 @@ type ContentCardMediaType = ExtractSymbolType<
   NonNullable<TypeContentCardFields["mediaType"]>
 >;
 
+export type ContentCardBackgroundColor = ExtractSymbolType<
+  NonNullable<TypeContentCardFields["cardBackgroundColor"]>
+>;
+
 export interface ContentCardType {
   id: string;
-  entryTitle?: string;
   media?: ContentfulAsset | null;
   mediaType?: ContentCardMediaType;
   cardCopy: Document;
+  cardBackgroundColor?: ContentCardBackgroundColor;
   modalCopy?: Document;
+  cardMicrodotBg?: boolean;
 }
 
 const _validateContentCardCheck: ContentfulTypeCheck<
@@ -43,11 +48,19 @@ export const parseContentCard = (
     return null;
   }
 
-  const { entryTitle, media, cardCopy, modalCopy, mediaType } = card.fields;
+  const {
+    media,
+    cardCopy,
+    modalCopy,
+    mediaType,
+    cardBackgroundColor,
+    cardMicrodotBg,
+  } = card.fields;
 
   return {
+    cardBackgroundColor,
     cardCopy,
-    entryTitle: entryTitle || "",
+    cardMicrodotBg: cardMicrodotBg ?? false,
     id: card.sys.id,
     media: parseContentfulAsset(media) || null,
     mediaType: (mediaType ?? "Regular Image") as ContentCardMediaType,

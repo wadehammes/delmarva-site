@@ -83,7 +83,6 @@
     }
   }
 
-  /* Legacy class support - can be removed once components are updated */
   &.twoColumn {
     --columns: 1;
     --columns-md: 2;
@@ -113,6 +112,18 @@
     --columns-lg: 6;
   }
 
+  &.mobileTwoColumn {
+    --columns: 1;
+
+    @media (min-width: 368px) {
+      --columns: 2;
+    }
+
+    @media (min-width: 768px) {
+      --columns: var(--desktop-columns);
+    }
+  }
+
   &[class*="Column"] {
     align-items: stretch;
   }
@@ -133,7 +144,7 @@
 
   &.blueprintBg {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.05) 2px, transparent 2px),
+      linear-gradient(rgba(255, 255, 255, 0.025) 2px, transparent 2px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.05) 2px, transparent 2px),
       linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -147,26 +158,7 @@
       100px 100px,
       20px 20px,
       20px 20px;
-    border-top: 2px solid rgba(255, 255, 255, 0.01);
-  }
-
-  &.microdotBg {
-    --dot-color: color-mix(in srgb, var(--dot-bg) 80%, var(--colors-white));
-    --dot-size: 1px;
-    --dot-space: 5px;
-    background:
-      linear-gradient(
-        90deg,
-        var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-        transparent 1%
-      )
-      center / var(--dot-space) var(--dot-space),
-      linear-gradient(
-        var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-        transparent 1%
-      )
-      center / var(--dot-space) var(--dot-space),
-      var(--dot-color);
+    border-top: 1px solid rgba(255, 255, 255, 0.01);
   }
 
   &.overlap > .sectionContent {
@@ -345,6 +337,11 @@
   margin: 0 auto;
   text-align: center;
   text-wrap: balance;
+
+  h1::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
   &.hasSectionContent {
     padding-bottom: 4rem;
