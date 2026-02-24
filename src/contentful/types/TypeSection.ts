@@ -67,6 +67,8 @@ export interface TypeSectionFields {
     "Blueprint" | "Microdot" | "Solid Color"
   >;
   contentLayout: EntryFieldTypes.Symbol<
+    | "2-column 40/60"
+    | "2-column 60/40"
     | "2-column"
     | "3-column"
     | "4-column"

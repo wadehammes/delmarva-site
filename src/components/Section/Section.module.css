@@ -88,6 +88,30 @@
     --columns-md: 2;
   }
 
+  &.twoColumn4060 {
+    --columns: 1;
+
+    @media screen and (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media screen and (min-width: 900px) {
+      grid-template-columns: 40fr 60fr;
+    }
+  }
+
+  &.twoColumn6040 {
+    --columns: 1;
+
+    @media screen and (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media screen and (min-width: 900px) {
+      grid-template-columns: 60fr 40fr;
+    }
+  }
+
   &.threeColumn {
     --columns: 1;
     --columns-md: 2;
