@@ -24,7 +24,6 @@ export interface ContentStatBlock {
   statType: NumberFormatType;
   decorator?: DecoratorType;
   statServiceReference?: string | null;
-  description?: string;
 }
 
 const _validateContentStatBlockCheck: ContentfulTypeCheck<
@@ -46,16 +45,14 @@ export const parseContentStatBlock = (
 
   const { stat, statDescription, statType } = statBlock.fields;
 
-  const description = statDescription || "";
   const type = (statType as NumberFormatType) || "Numerical";
   const decorator = (statBlock.fields.decorator ?? "None") as DecoratorType;
 
   return {
     decorator,
-    description,
     id: statBlock.sys.id,
     stat,
-    statDescription: description,
+    statDescription,
     statServiceReference: parseServiceSlug(
       statBlock.fields?.statServiceReference,
     ),

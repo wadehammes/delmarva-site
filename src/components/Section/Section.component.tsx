@@ -24,7 +24,6 @@ export const Section = async (props: SectionProps) => {
     cta,
     sectionContentPlacement = "Center",
     contentLayout = "Single Column",
-    contentStyle = "Regular",
     backgroundColor = "System Default",
     sectionPadding = "Regular Padding",
     sectionEyebrow,
@@ -64,7 +63,6 @@ export const Section = async (props: SectionProps) => {
   return (
     <section
       className={clsx(styles.section, {
-        [styles.overlap]: contentStyle === "Overlap Section Above",
         [styles.fullWidth]: contentLayout === "Full Width",
         [styles.whiteBg]: backgroundColor === "White",
         [styles.blackBg]: backgroundColor === "Black",

@@ -18,6 +18,12 @@ type ContentfulRequiredSet<TFields, TAdditionalKeys extends string> =
   | ContentfulRequiredKeys<TFields>
   | TAdditionalKeys;
 
+type ContentfulAllowedKeys<
+  TFields,
+  TAdditionalKeys extends string,
+  TOptionalAdditionalKeys extends string,
+> = keyof TFields | TAdditionalKeys | TOptionalAdditionalKeys | "entryTitle";
+
 type ContentfulTypeCheckMissingFields<
   TFields,
   TAdditionalKeys extends string,
@@ -42,10 +48,21 @@ type ContentfulTypeCheckExtraRequired<
   ContentfulRequiredSet<TFields, TAdditionalKeys>
 >;
 
+type ContentfulTypeCheckExtraFields<
+  TFields,
+  TAdditionalKeys extends string,
+  TOptionalAdditionalKeys extends string,
+  TParsedType,
+> = Exclude<
+  keyof TParsedType,
+  ContentfulAllowedKeys<TFields, TAdditionalKeys, TOptionalAdditionalKeys>
+>;
+
 export type ContentfulTypeCheck<
   TParsedType,
   TFields,
   TAdditionalKeys extends string = never,
+  TOptionalAdditionalKeys extends string = never,
 > = [
   ContentfulTypeCheckMissingFields<TFields, TAdditionalKeys, TParsedType>,
 ] extends [never]
@@ -55,7 +72,23 @@ export type ContentfulTypeCheck<
     ? [
         ContentfulTypeCheckExtraRequired<TFields, TAdditionalKeys, TParsedType>,
       ] extends [never]
-      ? true
+      ? [
+          ContentfulTypeCheckExtraFields<
+            TFields,
+            TAdditionalKeys,
+            TOptionalAdditionalKeys,
+            TParsedType
+          >,
+        ] extends [never]
+        ? true
+        : {
+            extraFields: ContentfulTypeCheckExtraFields<
+              TFields,
+              TAdditionalKeys,
+              TOptionalAdditionalKeys,
+              TParsedType
+            >;
+          }
       : {
           extraRequired: ContentfulTypeCheckExtraRequired<
             TFields,
