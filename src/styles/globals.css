@@ -593,3 +593,64 @@ input[type="checkbox"] {
     --grid-padding: 0;
   }
 }
+
+/* Sonner toast – green success theme */
+.toaster {
+  --toast-bg: #c8e6d1;
+  --toast-border: #2d6a4f;
+  --toast-text: #1b4332;
+}
+
+.toaster [data-sonner-toaster] {
+  padding: 1rem;
+}
+
+.toast {
+  position: relative;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  font-family: var(--font-family-body);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--toast-text);
+  background-color: var(--toast-bg);
+  border: 1px solid var(--toast-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(27, 67, 50, 0.2);
+}
+
+.toast[data-type="success"] {
+  border-left: 4px solid #1b4332;
+}
+
+.toast [data-icon] {
+  display: none;
+}
+
+.toast > *:not(.toast-close) {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-close {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  order: 999;
+  padding: 0.25rem;
+  margin-left: auto;
+  color: var(--toast-text);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}

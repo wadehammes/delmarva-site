@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Component, type ReactNode } from "react";
+import { Toaster } from "sonner";
 import { LocaleProvider } from "src/components/LocaleProvider/LocaleProvider.component";
 import { usePreferredTheme } from "src/hooks/usePreferredTheme";
 import type { Locales } from "src/i18n/routing";
@@ -60,6 +61,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         <div style={{ padding: "20px", textAlign: "center" }}>
           <h2>Something went wrong.</h2>
           <button
+            aria-label="Try again"
             onClick={() => this.setState({ error: undefined, hasError: false })}
             style={{
               cursor: "pointer",
@@ -100,6 +102,17 @@ function ProvidersContent({ children, locale }: ProvidersProps) {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <LocaleProvider locale={locale}>{children}</LocaleProvider>
+        <Toaster
+          className="toaster"
+          closeButton
+          position="top-center"
+          toastOptions={{
+            classNames: {
+              closeButton: "toast-close",
+              toast: "toast",
+            },
+          }}
+        />
       </QueryClientProvider>
     </ErrorBoundary>
   );

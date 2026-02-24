@@ -11,6 +11,7 @@ export interface FormJoinOurTeamType {
   openJobs?: string[];
   description?: Document | undefined;
   formSubmitSuccessMessage: Document;
+  emailsToSendNotification?: string[];
 }
 
 const _validateFormJoinOurTeamCheck: ContentfulTypeCheck<
@@ -32,6 +33,7 @@ export function parseFormJoinOurTeam(
 
   return {
     description: entry.fields.description,
+    emailsToSendNotification: entry.fields.emailsToSendNotification || [],
     formSubmitSuccessMessage: entry.fields.formSubmitSuccessMessage,
     id: entry.sys.id,
     openJobs: entry.fields.openJobs || [],

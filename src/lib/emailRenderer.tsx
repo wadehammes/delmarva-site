@@ -1,7 +1,8 @@
 import { render } from "@react-email/render";
-import { JoinOurTeamConfirmationTemplate } from "../components/email/JoinOurTeamConfirmationTemplate";
-import { JoinOurTeamNotificationTemplate } from "../components/email/JoinOurTeamNotificationTemplate";
-import { RequestAQuoteNotificationTemplate } from "../components/email/RequestAQuoteNotificationTemplate";
+import { JoinOurTeamConfirmationTemplate } from "../components/Email/JoinOurTeamConfirmationTemplate";
+import { JoinOurTeamNotificationTemplate } from "../components/Email/JoinOurTeamNotificationTemplate";
+import { RequestAQuoteNotificationTemplate } from "../components/Email/RequestAQuoteNotificationTemplate";
+import { getEmailBaseUrl } from "./emailConstants";
 
 export interface NotificationEmailData {
   name: string;
@@ -26,13 +27,19 @@ export interface ConfirmationEmailData {
 export async function renderNotificationEmail(
   data: NotificationEmailData,
 ): Promise<string> {
-  return await render(<JoinOurTeamNotificationTemplate {...data} />);
+  const baseUrl = getEmailBaseUrl();
+  return await render(
+    <JoinOurTeamNotificationTemplate {...data} baseUrl={baseUrl} />,
+  );
 }
 
 export async function renderConfirmationEmail(
   data: ConfirmationEmailData,
 ): Promise<string> {
-  return await render(<JoinOurTeamConfirmationTemplate {...data} />);
+  const baseUrl = getEmailBaseUrl();
+  return await render(
+    <JoinOurTeamConfirmationTemplate {...data} baseUrl={baseUrl} />,
+  );
 }
 
 export interface RequestAQuoteNotificationEmailData {
@@ -46,5 +53,8 @@ export interface RequestAQuoteNotificationEmailData {
 export async function renderRequestAQuoteNotificationEmail(
   data: RequestAQuoteNotificationEmailData,
 ): Promise<string> {
-  return await render(<RequestAQuoteNotificationTemplate {...data} />);
+  const baseUrl = getEmailBaseUrl();
+  return await render(
+    <RequestAQuoteNotificationTemplate {...data} baseUrl={baseUrl} />,
+  );
 }

@@ -29,6 +29,29 @@ export const HeroVideo = ({ src }: HeroVideoProps) => {
     }
   }, [inView]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleFirstInteraction: () => void = () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+      document.removeEventListener("touchstart", handleFirstInteraction);
+      document.removeEventListener("click", handleFirstInteraction);
+    };
+
+    document.addEventListener("touchstart", handleFirstInteraction, {
+      once: true,
+      passive: true,
+    });
+    document.addEventListener("click", handleFirstInteraction, { once: true });
+    return () => {
+      document.removeEventListener("touchstart", handleFirstInteraction);
+      document.removeEventListener("click", handleFirstInteraction);
+    };
+  }, []);
+
   return (
     <div
       ref={ref}
@@ -36,7 +59,7 @@ export const HeroVideo = ({ src }: HeroVideoProps) => {
       suppressHydrationWarning
     >
       <video
-        autoPlay={false}
+        autoPlay
         height="100%"
         loop
         muted
@@ -51,7 +74,6 @@ export const HeroVideo = ({ src }: HeroVideoProps) => {
           top: 0,
           width: "100%",
         }}
-        webkit-playsinline="true"
         width="100%"
       >
         <source src={src} type="video/mp4" />

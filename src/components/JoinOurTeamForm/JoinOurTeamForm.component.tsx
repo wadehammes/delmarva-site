@@ -1,12 +1,13 @@
 "use client";
 
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useId, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
-import { FormSubmitSuccess } from "src/components/FormSubmitSuccess/FormSubmitSuccess.component";
 import styles from "src/components/JoinOurTeamForm/JoinOurTeamForm.module.css";
 import { RichText } from "src/components/RichText/RichText.component";
 import { StyledInput } from "src/components/StyledInput/StyledInput.component";
@@ -25,20 +26,21 @@ interface JoinOurTeamFormProps {
 }
 
 export interface JoinOurTeamInputs {
+  address: string;
   briefDescription: string;
-  workEligibility: boolean;
+  city: string;
+  coverLetter: File | null;
   email: string;
+  emailsToSendNotification?: string[];
   name: string;
   phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  coverLetter: File | null;
-  resume: File | null;
   position: string;
   recaptchaToken: string;
+  resume: File | null;
+  state: string;
   website?: string; // Honeypot field
+  workEligibility: boolean;
+  zipCode: string;
 }
 
 const defaultValues: JoinOurTeamInputs = {
@@ -68,7 +70,8 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
     handleSubmit,
     control,
     clearErrors,
-    formState: { isSubmitting, errors, isSubmitSuccessful },
+    reset,
+    formState: { isSubmitting, errors },
   } = useForm({
     defaultValues,
     mode: "onChange",
@@ -114,6 +117,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             city,
             coverLetter,
             email,
+            emailsToSendNotification: fields.emailsToSendNotification,
             name,
             phone,
             position,
@@ -124,6 +128,12 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             workEligibility,
             zipCode,
           });
+          const message =
+            documentToPlainTextString(formSubmitSuccessMessage).trim() ||
+            "Application received. We'll be in touch soon.";
+          toast.success(message);
+          reset(defaultValues);
+          reCaptcha.current?.reset();
         } catch (_e) {
           throw new Error("Failed to submit application. Please try again.");
         }
@@ -139,14 +149,6 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
     errors.workEligibility;
 
   const { description, formSubmitSuccessMessage } = fields;
-
-  if (isSubmitSuccessful) {
-    return (
-      <FormSubmitSuccess>
-        <RichText document={formSubmitSuccessMessage} />
-      </FormSubmitSuccess>
-    );
-  }
 
   return (
     <div className={styles.container}>

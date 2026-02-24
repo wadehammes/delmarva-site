@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
-import { FormSubmitSuccess } from "src/components/FormSubmitSuccess/FormSubmitSuccess.component";
 import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import { useSendRequestAQuoteFormMutation } from "src/hooks/mutations/useSendRequestAQuoteForm.mutation";
@@ -44,7 +44,8 @@ export const RequestAQuoteForm = () => {
     handleSubmit,
     control,
     clearErrors,
-    formState: { isSubmitting, errors, isSubmitSuccessful },
+    reset,
+    formState: { isSubmitting, errors },
   } = useForm({
     defaultValues,
     mode: "onChange",
@@ -73,16 +74,15 @@ export const RequestAQuoteForm = () => {
             recaptchaToken: captcha,
             website,
           });
+          toast.success(t("messages.success"));
+          reset(defaultValues);
+          reCaptcha.current?.reset();
         } catch (_e) {
           throw new Error("Failed to submit request. Please try again.");
         }
       }
     }
   };
-
-  if (isSubmitSuccessful) {
-    return <FormSubmitSuccess>{t("messages.success")}</FormSubmitSuccess>;
-  }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

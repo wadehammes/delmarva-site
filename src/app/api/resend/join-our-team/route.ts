@@ -6,9 +6,10 @@ import {
 } from "src/lib/emailRenderer";
 import { US_STATES_MAP } from "src/utils/constants";
 import {
-  fileToBase64,
+  blobToBase64,
   getFileExtension,
   getMimeType,
+  getNotificationTo,
 } from "src/utils/emailHelpers";
 import { isNonNullable } from "src/utils/helpers";
 import { verifyRecaptchaToken } from "src/utils/recaptcha";
@@ -16,8 +17,43 @@ import { isSpam } from "src/utils/spamDetection";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const fallbackNotificationTo = "w@dehammes.com";
+
+function parseFormData(formData: FormData): JoinOurTeamInputs {
+  const get = (key: string) => formData.get(key);
+  const getString = (key: string) => (get(key) as string | null) ?? "";
+  const workEligibilityRaw = getString("workEligibility");
+  const workEligibility =
+    workEligibilityRaw === "true" || workEligibilityRaw !== "false";
+  const emailsRaw = get("emailsToSendNotification");
+  const emailsToSendNotification =
+    typeof emailsRaw === "string" && emailsRaw
+      ? (JSON.parse(emailsRaw) as string[])
+      : undefined;
+  return {
+    address: getString("address"),
+    briefDescription: getString("briefDescription"),
+    city: getString("city"),
+    coverLetter: (get("coverLetter") as File | null) ?? null,
+    email: getString("email"),
+    emailsToSendNotification,
+    name: getString("name"),
+    phone: getString("phone"),
+    position: getString("position"),
+    recaptchaToken: getString("recaptchaToken"),
+    resume: (get("resume") as File | null) ?? null,
+    state: getString("state"),
+    website: getString("website") || undefined,
+    workEligibility,
+    zipCode: getString("zipCode"),
+  };
+}
+
 export async function POST(request: Request) {
-  const res: JoinOurTeamInputs = await request.json();
+  const contentType = request.headers.get("content-type") ?? "";
+  const res: JoinOurTeamInputs = contentType.includes("multipart/form-data")
+    ? parseFormData(await request.formData())
+    : await request.json();
 
   // Honeypot check - if website field is filled, it's likely a bot
   if (res.website && res.website.trim() !== "") {
@@ -107,10 +143,11 @@ export async function POST(request: Request) {
     }> = [];
 
     // Add resume attachment if provided
-    if (resume instanceof File && resume.size > 0) {
+    if (resume instanceof Blob && resume.size > 0) {
       try {
-        const resumeBase64 = await fileToBase64(resume);
-        const resumeExtension = getFileExtension(resume.name);
+        const resumeBase64 = await blobToBase64(resume);
+        const resumeName = resume instanceof File ? resume.name : "resume.pdf";
+        const resumeExtension = getFileExtension(resumeName);
         const resumeMimeType = getMimeType(resumeExtension);
 
         attachments.push({
@@ -124,10 +161,12 @@ export async function POST(request: Request) {
     }
 
     // Add cover letter attachment if provided
-    if (coverLetter instanceof File && coverLetter.size > 0) {
+    if (coverLetter instanceof Blob && coverLetter.size > 0) {
       try {
-        const coverLetterBase64 = await fileToBase64(coverLetter);
-        const coverLetterExtension = getFileExtension(coverLetter.name);
+        const coverLetterBase64 = await blobToBase64(coverLetter);
+        const coverLetterName =
+          coverLetter instanceof File ? coverLetter.name : "cover-letter.pdf";
+        const coverLetterExtension = getFileExtension(coverLetterName);
         const coverLetterMimeType = getMimeType(coverLetterExtension);
 
         attachments.push({
@@ -146,7 +185,7 @@ export async function POST(request: Request) {
       briefDescription,
       city,
       coverLetter:
-        coverLetter instanceof File && coverLetter.size > 0
+        coverLetter instanceof Blob && coverLetter.size > 0
           ? "File attached"
           : "No cover letter provided",
       email,
@@ -154,7 +193,7 @@ export async function POST(request: Request) {
       phone,
       position,
       resume:
-        resume instanceof File && resume.size > 0
+        resume instanceof Blob && resume.size > 0
           ? "File attached"
           : "No resume provided",
       state: stateName, // Use the full state name
@@ -162,14 +201,20 @@ export async function POST(request: Request) {
       zipCode,
     });
 
+    const notificationTo = getNotificationTo(
+      res.emailsToSendNotification && res.emailsToSendNotification.length > 0
+        ? res.emailsToSendNotification
+        : fallbackNotificationTo,
+    );
+
     const data = await resend.emails.send({
       attachments: attachments.length > 0 ? attachments : undefined,
-      from: "Delmarva Site Development <no-reply@delmarvasite.net>",
+      from: "Delmarva Site Development <mail@delmarvasite.net>",
       html: notificationHtml,
       replyTo: `${name} <${email}>`,
       subject: `New Job Application: ${name} for ${position}`,
       text: `New job application received from ${name} for ${position}. Check the HTML version for full details.`,
-      to: "w@dehammes.com",
+      to: notificationTo,
     });
 
     const delayConfirmationEmail = setTimeout(async () => {
@@ -179,7 +224,7 @@ export async function POST(request: Request) {
       });
 
       await resend.emails.send({
-        from: "Delmarva Site Development <no-reply@delmarvasite.net>",
+        from: "Delmarva Site Development <mail@delmarvasite.net>",
         html: confirmationHtml,
         subject: `Application Received for ${position}`,
         text: `Hi ${name}, we've received your application for ${position}. We'll review it and get back to you soon.`,

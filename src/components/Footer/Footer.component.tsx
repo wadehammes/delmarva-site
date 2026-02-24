@@ -42,6 +42,7 @@ export const Footer = (props: FooterProps) => {
     <footer className={styles.footer}>
       <div className="page-scroll">
         <button
+          aria-label={t("scroll")}
           onClick={() => {
             window.scrollTo({ behavior: "smooth", top: 0 });
           }}
