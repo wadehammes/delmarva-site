@@ -151,6 +151,34 @@ body {
   border-radius: 20px;
 }
 
+.microdotBg {
+  --dot-mix: 80%;
+  --dot-color: color-mix(
+    in srgb,
+    var(--dot-bg) var(--dot-mix),
+    var(--colors-white)
+  );
+  --dot-size: 1px;
+  --dot-space: 5px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+      transparent 1%
+    )
+    center / var(--dot-space) var(--dot-space),
+    linear-gradient(
+      var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+      transparent 1%
+    )
+    center / var(--dot-space) var(--dot-space),
+    var(--dot-color);
+}
+
+.microdotBg--light {
+  --dot-mix: 60%;
+}
+
 .page {
   display: flex;
   flex-flow: column nowrap;
@@ -209,6 +237,7 @@ b {
   text-decoration: underline;
   appearance: none;
   background: none;
+  border: none;
 
   &:hover {
     cursor: pointer;
@@ -507,7 +536,7 @@ input[type="checkbox"] {
   --divider: rgba(255, 255, 255, 0.15);
   --color-bg: var(--colors-black);
   --color-text: var(--colors-white);
-  --card-bg: color-mix(in srgb, var(--colors-black) 80%, var(--colors-white));
+  --card-bg: color-mix(in srgb, var(--colors-black) 92%, var(--colors-white));
 }
 
 :root {

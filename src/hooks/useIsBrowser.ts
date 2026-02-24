@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 /**
  * Hook to determine if the component is running in the browser
  * Useful for preventing SSR issues when accessing browser APIs
+ * Uses useLayoutEffect so client-only content (e.g. modals) renders before first paint
  *
  * @returns boolean - true if running in browser, false during SSR
  *
@@ -21,7 +22,7 @@ import { useEffect, useRef, useState } from "react";
 export const useIsBrowser = (): boolean => {
   const [isBrowser, setIsBrowser] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsBrowser(true);
   }, []);
 

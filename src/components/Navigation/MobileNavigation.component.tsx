@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { Link } from "src/components/Link/Link.component";
 import styles from "src/components/Navigation/Navigation.module.css";
@@ -21,7 +22,7 @@ export const MobileNavigationDrawer = (props: MobileNavigationDrawerProps) => {
   }
 
   return (
-    <div className={styles.mobileNav}>
+    <div className={clsx(styles.mobileNav, "microdotBg")}>
       <button
         className={styles.closeButton}
         data-tracking-click={JSON.stringify({
@@ -55,16 +56,19 @@ export const MobileNavigationDrawer = (props: MobileNavigationDrawerProps) => {
           );
         })}
         {ctaButton ? (
-          <ButtonLink
-            data-tracking-click={JSON.stringify({
-              event: "Clicked Mobile Navigation CTA Button",
-              label: ctaButton.text,
-            })}
-            href={ctaButton.pageLink?.url || ctaButton.externalLink || "#"}
-            label={ctaButton.text}
-          >
-            {ctaButton.text}
-          </ButtonLink>
+          <div className={styles.ctaContainer}>
+            <ButtonLink
+              className={styles.mobileNavCta}
+              data-tracking-click={JSON.stringify({
+                event: "Clicked Mobile Navigation CTA Button",
+                label: ctaButton.text,
+              })}
+              href={ctaButton.pageLink?.url || ctaButton.externalLink || "#"}
+              label={ctaButton.text}
+            >
+              {ctaButton.text}
+            </ButtonLink>
+          </div>
         ) : null}
       </div>
     </div>

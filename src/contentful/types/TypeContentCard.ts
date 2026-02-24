@@ -12,6 +12,10 @@ export interface TypeContentCardFields {
   mediaType?: EntryFieldTypes.Symbol<"Headshot" | "Regular Image">;
   cardCopy: EntryFieldTypes.RichText;
   modalCopy?: EntryFieldTypes.RichText;
+  cardBackgroundColor?: EntryFieldTypes.Symbol<
+    "Black" | "Red" | "System Color" | "White"
+  >;
+  cardMicrodotBg?: EntryFieldTypes.Boolean;
 }
 
 export type TypeContentCardSkeleton = EntrySkeletonType<

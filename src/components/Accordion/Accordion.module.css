@@ -12,6 +12,15 @@
   will-change: transform;
 }
 
+@keyframes accordionIconSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .accordionButton {
   display: flex;
   gap: 1rem;
@@ -35,6 +44,10 @@
 
   &:hover {
     color: var(--colors-red);
+
+    .accordionIcon {
+      animation: accordionIconSpin 0.35s ease-in-out;
+    }
   }
 
   &.isOpen .plusIcon {

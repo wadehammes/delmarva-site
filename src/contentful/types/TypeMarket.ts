@@ -5,13 +5,10 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
-import type { TypeProjectSkeleton } from "./TypeProject";
 
 export interface TypeMarketFields {
   entryTitle?: EntryFieldTypes.Symbol;
-  projects?: EntryFieldTypes.Array<
-    EntryFieldTypes.EntryLink<TypeProjectSkeleton>
-  >;
+  marketTitle?: EntryFieldTypes.Symbol;
 }
 
 export type TypeMarketSkeleton = EntrySkeletonType<TypeMarketFields, "market">;

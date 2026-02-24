@@ -5,7 +5,10 @@ import { RichText } from "src/components/RichText/RichText.component";
 import styles from "src/components/Section/Section.module.css";
 import { SectionEyebrow } from "src/components/Section/SectionEyebrow.component";
 import type { SectionType } from "src/contentful/parseSections";
-import { isReactNodeEmptyArray } from "src/utils/helpers";
+import {
+  hasRichTextMeaningfulContent,
+  isReactNodeEmptyArray,
+} from "src/utils/helpers";
 
 interface SectionProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -25,6 +28,7 @@ export const Section = async (props: SectionProps) => {
     cta,
     sectionContentPlacement = "Center",
     contentLayout = "Single Column",
+    mobileContentLayout,
     backgroundColor = "System Default",
     sectionPadding = "Regular Padding",
     sectionEyebrow,
@@ -34,6 +38,9 @@ export const Section = async (props: SectionProps) => {
     contentVerticalAlignment = "Top",
     sectionBackgroundStyle = "Solid Color",
   } = section;
+
+  const effectiveMobileLayout =
+    contentLayout === "Full Width" ? undefined : mobileContentLayout;
 
   type CSSVariables = React.CSSProperties & { [key: string]: string | number };
 
@@ -54,12 +61,30 @@ export const Section = async (props: SectionProps) => {
     }
   };
 
+  const getDesktopColumns = (contentLayout: SectionType["contentLayout"]) => {
+    switch (contentLayout) {
+      case "2-column":
+        return 2;
+      case "3-column":
+        return 3;
+      case "4-column":
+        return 4;
+      case "5-column":
+        return 5;
+      case "6-column":
+        return 6;
+      default:
+        return 1;
+    }
+  };
+
   const sectionStyle: CSSVariables | undefined =
     sectionBackgroundStyle === "Microdot"
       ? ({ "--dot-bg": getDotBackgroundVar(backgroundColor) } as CSSVariables)
       : undefined;
 
-  const EyebrowHeaderElement = sectionHeader ? "div" : "header";
+  const hasSectionHeader = hasRichTextMeaningfulContent(sectionHeader);
+  const EyebrowHeaderElement = hasSectionHeader ? "div" : "header";
 
   return (
     <section
@@ -70,7 +95,7 @@ export const Section = async (props: SectionProps) => {
         [styles.redBg]: backgroundColor === "Red",
         [styles.silverBg]: backgroundColor === "Silver",
         [styles.blueprintBg]: sectionBackgroundStyle === "Blueprint",
-        [styles.microdotBg]: sectionBackgroundStyle === "Microdot",
+        microdotBg: sectionBackgroundStyle === "Microdot",
         [styles.lessPadding]: sectionPadding === "Less Padding",
         [styles.morePadding]: sectionPadding === "More Padding",
         [styles.noPadding]: sectionPadding === "No Padding",
@@ -88,13 +113,13 @@ export const Section = async (props: SectionProps) => {
       {sectionEyebrow ? (
         <EyebrowHeaderElement className={styles.sectionHeaderEyebrow}>
           <SectionEyebrow
-            hasSectionHeader={!!sectionHeader}
+            hasSectionHeader={!!hasSectionHeader}
             text={sectionEyebrow}
           />
         </EyebrowHeaderElement>
       ) : null}
 
-      {sectionHeader ? (
+      {hasSectionHeader ? (
         <header
           className={clsx(styles.sectionHeader, {
             [styles.hasSectionContent]: !isReactNodeEmptyArray(children),
@@ -112,6 +137,7 @@ export const Section = async (props: SectionProps) => {
             [styles.fourColumn]: contentLayout === "4-column",
             [styles.contained]: contentLayout !== "Full Width",
             [styles.singleColumn]: contentLayout === "Single Column",
+            [styles.mobileTwoColumn]: effectiveMobileLayout === "2-column",
             [styles.left]: sectionContentPlacement === "Left Aligned",
             [styles.right]: sectionContentPlacement === "Right Aligned",
             [styles.noGap]: contentGap === "No Gap",
@@ -120,6 +146,11 @@ export const Section = async (props: SectionProps) => {
             [styles.bottomAligned]: contentVerticalAlignment === "Bottom",
             [styles.stretchAligned]: contentVerticalAlignment === "Stretch",
           })}
+          style={
+            {
+              "--desktop-columns": getDesktopColumns(contentLayout),
+            } as CSSVariables
+          }
         >
           {children}
         </div>

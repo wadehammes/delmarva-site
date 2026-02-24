@@ -33,6 +33,7 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
     overlayColor,
     overlayOpacity,
     overlayStyle,
+    showHeaderStyledBorder,
   } = fields;
 
   return (
@@ -80,18 +81,26 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
         })}
       </div>
       <div
-        className={clsx(styles.heroOverlay, {
-          [styles.heroOverlayStyleMicrodot]: overlayStyle === "Microdot",
-        })}
-        style={{
-          backgroundColor:
-            overlayStyle !== "Microdot"
-              ? createBackgroundColor(overlayColor ?? "Black")
-              : "transparent",
-          opacity: Number(overlayOpacity ?? 0.15),
-        }}
+        className={clsx(
+          styles.heroOverlay,
+          overlayStyle === "Microdot" && "microdotBg",
+          overlayStyle === "Microdot" && "microdotBg--light",
+          overlayStyle === "Microdot" && styles.microdotSubtle,
+        )}
+        style={
+          overlayStyle === "Microdot"
+            ? { opacity: Number(overlayOpacity ?? 0.5) }
+            : {
+                backgroundColor: createBackgroundColor(overlayColor ?? "Black"),
+                opacity: Number(overlayOpacity ?? 0.15),
+              }
+        }
       />
-      <div className={clsx(styles.heroContent)}>
+      <div
+        className={clsx(styles.heroContent, {
+          [styles.showHeaderStyledBorder]: showHeaderStyledBorder,
+        })}
+      >
         {copy ? <RichText as="header" document={copy} /> : null}
         {cta ? (
           <div className={styles.ctaContainer}>

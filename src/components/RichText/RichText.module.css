@@ -5,7 +5,29 @@
   text-align: inherit;
   text-wrap: pretty;
 
-  h1,
+  h1 {
+    position: relative;
+    padding-bottom: 1rem;
+    margin: 0 0 1rem 0;
+    font-size: clamp(2.25rem, 4vw, 3.5em);
+    font-weight: 700;
+
+    &:only-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 4rem;
+      height: 3px;
+      content: "";
+      background-color: var(--colors-red);
+    }
+  }
+
   h2,
   h3,
   h4,

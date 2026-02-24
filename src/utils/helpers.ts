@@ -93,6 +93,31 @@ export const isNonNullable = <T>(value: T): value is NonNullable<T> => {
  * @param contentType - The content type to check for (e.g., "contentHero", "copyBlock")
  * @returns true if the content is of the specified type, false otherwise
  */
+const isRichTextBlockEmpty = (block: {
+  nodeType?: string;
+  content?: Array<{ nodeType?: string; value?: string }>;
+}): boolean => {
+  if (block.nodeType !== "paragraph") return false;
+  if (!block.content?.length) return true;
+  return block.content.every(
+    (child) => child.nodeType !== "text" || !String(child.value ?? "").trim(),
+  );
+};
+
+export const hasRichTextMeaningfulContent = (
+  doc:
+    | {
+        content?: Array<{
+          nodeType?: string;
+          content?: Array<{ nodeType?: string; value?: string }>;
+        }>;
+      }
+    | undefined,
+): boolean => {
+  if (!doc?.content?.length) return false;
+  return doc.content.some((block) => !isRichTextBlockEmpty(block));
+};
+
 export const isContentType = (
   content:
     | { sys?: { contentType?: { sys?: { id?: string } } } }

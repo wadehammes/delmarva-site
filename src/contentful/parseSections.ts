@@ -45,6 +45,9 @@ type SectionContentPlacement = ExtractSymbolType<
 type SectionVerticalAlignment = ExtractSymbolType<
   NonNullable<TypeSectionFields["contentVerticalAlignment"]>
 >;
+type SectionMobileContentLayout = ExtractSymbolType<
+  NonNullable<TypeSectionFields["mobileContentLayout"]>
+>;
 
 export type ContentEntries =
   | CopyBlockEntry
@@ -68,6 +71,7 @@ export interface SectionType {
   slug: string;
   backgroundColor: SectionBackgroundColor;
   contentLayout: SectionContentLayout;
+  mobileContentLayout?: SectionMobileContentLayout;
   sectionPadding: SectionPadding;
   content?: (ContentEntries | null)[];
   contentGap?: SectionContentGap;
@@ -106,6 +110,8 @@ export function parseContentfulSection(
       fields.contentVerticalAlignment as SectionVerticalAlignment,
     cta: parseContentfulCta(fields.cta) ?? undefined,
     id: section.sys.id,
+    mobileContentLayout:
+      fields.mobileContentLayout as SectionMobileContentLayout,
     sectionBackgroundStyle:
       fields.sectionBackgroundStyle as SectionOverlayStyle,
     sectionContentPlacement:
