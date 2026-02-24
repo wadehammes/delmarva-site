@@ -24,6 +24,7 @@ export const MobileNavigationDrawer = (props: MobileNavigationDrawerProps) => {
   return (
     <div className={clsx(styles.mobileNav, "microdotBg")}>
       <button
+        aria-label="Close"
         className={styles.closeButton}
         data-tracking-click={JSON.stringify({
           event: "Clicked Mobile NavigationClose Button",

@@ -21,6 +21,7 @@ const nextConfig: NextConfig = withNextIntl({
     MAPBOX_API_TOKEN: process.env.MAPBOX_API_TOKEN,
     RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    RESEND_DEV_TO_EMAIL: process.env.RESEND_DEV_TO_EMAIL,
   },
 
   experimental: {

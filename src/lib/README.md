@@ -127,6 +127,35 @@ All templates use the `{{variableName}}` syntax for dynamic content:
 - **Variable validation**: Always check that required variables are provided
 - **Error handling**: Gracefully handle missing template variables
 
+### Email logo and branding
+
+All templates use a shared header (logo) and footer. The logo URL is built from `getEmailAssetBaseUrl()` + `EMAIL_LOGO_PATH` (PNG for email client compatibility). When **ENVIRONMENT=local** (e.g. in `.env.local`), you can set `EMAIL_ASSET_BASE_URL=https://www.delmarvasite.com` so the logo loads from your live site instead of localhost (email clients can’t load images from localhost). In Preview and Production, `getEmailAssetBaseUrl()` returns the normal site URL and this override is ignored.
+
+### Testing Resend locally
+
+1. **Get an API key**  
+   In the [Resend dashboard](https://resend.com/api-keys), create an API key and add it to `.env.local`:
+   ```
+   RESEND_API_KEY=re_xxxxxxxxxxxx
+   ```
+
+2. **Run the app**  
+   Start the dev server (`pnpm dev`). Form submissions will call the Resend API and send real emails. When you run the **dev server** (`pnpm dev`), notification redirect uses `RESEND_DEV_TO_EMAIL` so you don’t email real recipients; deployed (staging/production) always uses real recipients.
+
+3. **Redirect notification emails in dev (optional)**  
+   When running the dev server (`NODE_ENV=development`), set in `.env.local`:
+   ```
+   RESEND_DEV_TO_EMAIL=delivered@resend.dev
+   ```
+   Then all **notification** emails (Request a Quote and Join Our Team) are sent to this address instead of the configured recipients. Confirmation emails still go to the applicant. Deployed (staging/production) ignores this and uses normal recipients.
+
+   Resend test addresses:
+   - `delivered@resend.dev` – simulates successful delivery (view in Resend dashboard → Emails)
+   - `bounced@resend.dev` – test bounces
+   - `complained@resend.dev` – test spam complaints
+
+   You can also set `RESEND_DEV_TO_EMAIL` to your own email to receive copies locally.
+
 ## Troubleshooting
 
 ### Template Not Found

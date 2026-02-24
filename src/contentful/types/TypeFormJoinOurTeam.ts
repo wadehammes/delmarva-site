@@ -11,6 +11,7 @@ export interface TypeFormJoinOurTeamFields {
   description?: EntryFieldTypes.RichText;
   openJobs?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
   formSubmitSuccessMessage: EntryFieldTypes.RichText;
+  emailsToSendNotification?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
 }
 
 export type TypeFormJoinOurTeamSkeleton = EntrySkeletonType<

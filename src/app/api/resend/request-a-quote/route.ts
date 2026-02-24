@@ -1,10 +1,13 @@
 import { Resend } from "resend";
 import type { RequestAQuoteInputs } from "src/components/RequestAQuoteForm/RequestAQuoteForm.component";
 import { renderRequestAQuoteNotificationEmail } from "src/lib/emailRenderer";
+import { getNotificationTo } from "src/utils/emailHelpers";
 import { verifyRecaptchaToken } from "src/utils/recaptcha";
 import { isSpam } from "src/utils/spamDetection";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+const fallbackNotificationTo = "w@dehammes.com";
 
 export async function POST(request: Request) {
   const res: RequestAQuoteInputs = await request.json();
@@ -76,12 +79,12 @@ export async function POST(request: Request) {
     });
 
     const data = await resend.emails.send({
-      from: "Delmarva Site Development <no-reply@delmarvasite.net>",
+      from: "Delmarva Site Development <mail@delmarvasite.net>",
       html: notificationHtml,
       replyTo: `${name} <${email}>`,
-      subject: `New Quote Request: ${companyName} — ${name}`,
-      text: `New quote request received from ${name} at ${companyName}.`,
-      to: "w@dehammes.com",
+      subject: `Request for Proposal: ${companyName} — ${name}`,
+      text: `Request for Proposal received from ${name} at ${companyName}.`,
+      to: getNotificationTo(fallbackNotificationTo),
     });
 
     if (data.error) {

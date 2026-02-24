@@ -148,21 +148,27 @@ export const Carousel = (props: CarouselProps) => {
             {showNavigation && (
               <>
                 <button
+                  aria-label="Previous slide"
                   className={styles.navigationButton}
                   id={navigationPrevId}
                   type="button"
                 >
-                  <span className={styles.navigationIcon}>←</span>
+                  <span aria-hidden className={styles.navigationIcon}>
+                    ←
+                  </span>
                 </button>
                 {showPagination && (
                   <div className={styles.pagination} id={paginationId} />
                 )}
                 <button
+                  aria-label="Next slide"
                   className={styles.navigationButton}
                   id={navigationNextId}
                   type="button"
                 >
-                  <span className={styles.navigationIcon}>→</span>
+                  <span aria-hidden className={styles.navigationIcon}>
+                    →
+                  </span>
                 </button>
               </>
             )}

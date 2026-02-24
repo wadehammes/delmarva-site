@@ -71,6 +71,7 @@ export const ContentCard = (props: ContentCardProps) => {
     <>
       {isInteractive ? (
         <button
+          aria-label="View details"
           className={clsx(styles.contentCard, styles.interactive, {
             microdotBg: cardMicrodotBg,
           })}
