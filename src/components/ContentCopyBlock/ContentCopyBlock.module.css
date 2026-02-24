@@ -74,5 +74,9 @@
 }
 
 .ctaContainer {
-  margin-top: 1rem;
+  margin-top: 0;
+
+  @media (min-width: 768px) {
+    margin-top: 1rem;
+  }
 }

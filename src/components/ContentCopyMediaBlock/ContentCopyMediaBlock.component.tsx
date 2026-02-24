@@ -26,13 +26,11 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
     <div
       className={clsx(styles.contentCopyMediaBlock, {
         [styles.inView]: inView,
+        [styles.mediaLeft]: mediaPlacement === "Left",
       })}
       ref={ref}
     >
-      <div
-        className={styles.copyBlock}
-        style={{ order: mediaPlacement === "Left" ? 2 : 1 }}
-      >
+      <div className={styles.copyBlock}>
         <CopyBlock fields={copy ?? null} />
       </div>
       <div
@@ -44,7 +42,6 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
         style={
           {
             "--dot-bg": createBackgroundColor("Black"),
-            order: mediaPlacement === "Left" ? 1 : 2,
           } as CSSProperties & { "--dot-bg": string }
         }
       >
