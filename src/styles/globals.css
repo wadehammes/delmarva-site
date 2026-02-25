@@ -599,9 +599,6 @@ input[type="checkbox"] {
   --toast-bg: #c8e6d1;
   --toast-border: #2d6a4f;
   --toast-text: #1b4332;
-}
-
-.toaster [data-sonner-toaster] {
   padding: 1rem;
 }
 
