@@ -1,28 +1,37 @@
 .container {
-  display: flex;
-  flex-flow: column nowrap;
+  display: grid;
   gap: 2rem;
   container-type: inline-size;
 
-  @media (min-width: 1100px) {
-    flex-flow: row nowrap;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
   }
-}
 
-.formCopy {
-  flex: 1;
+  @media screen and (min-width: 900px) {
+    grid-template-columns: 40fr 60fr;
+    gap: 4rem;
+  }
 }
 
 .form {
   display: flex;
-  flex: 1.25;
   flex-flow: column nowrap;
-  gap: 2.5rem;
+  gap: 2rem;
   align-items: center;
   justify-content: center;
   width: 100%;
   max-width: 120ch;
   margin: 0 auto;
+}
+
+.topFieldsGrid {
+  display: grid;
+  gap: 2rem 1rem;
+  width: 100%;
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .fieldsetWrapper {
@@ -33,29 +42,29 @@
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-}
 
-.label {
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 300;
-  line-height: 1.25;
-  color: var(--colors-white);
-  text-align: left;
-}
+  .label {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.25;
+    color: var(--colors-white);
+    text-align: left;
 
-.label:has(+ .fieldDescription[data-required="true"])::after {
-  color: var(--colors-red);
-  content: " *";
-}
+    &:has(+ .fieldDescription[data-required="true"])::after {
+      color: var(--colors-red);
+      content: " *";
+    }
+  }
 
-.fieldDescription {
-  width: 100%;
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  color: var(--colors-gray);
-  text-align: left;
+  .fieldDescription {
+    width: 100%;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--colors-gray);
+    text-align: left;
+  }
 }
 
 .selectWrapper {
@@ -93,61 +102,61 @@
       0 -1px 1px var(--colors-red),
       0 1px 0 var(--colors-red);
   }
-}
 
-.selectChevron {
-  position: absolute;
-  top: 50%;
-  right: 0.75rem;
-  z-index: 0;
-  color: var(--colors-black);
-  pointer-events: none;
-  transform: translateY(-50%);
-  transition: all 0.2s ease-in-out;
-}
-
-.selectWrapper:focus-within .selectChevron {
-  color: var(--colors-black);
-}
-
-.selectWrapper:hover .selectChevron {
-  color: var(--colors-black);
-}
-
-.select {
-  width: 100%;
-  padding: 1.25rem 0 1.25rem 1.25rem;
-  font-family: inherit;
-  font-size: 16px;
-  color: var(--colors-black);
-  appearance: none;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-
-  &:focus {
-    outline: 0;
+  &.selectHasError .selectChevron {
+    color: var(--colors-red);
   }
 
-  option {
-    padding: 0.5rem;
+  &:focus-within .selectChevron,
+  &:hover .selectChevron {
     color: var(--colors-black);
-    background-color: white;
   }
 
-  &:invalid {
-    color: var(--colors-gray);
+  .selectChevron {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    z-index: 0;
+    color: var(--colors-black);
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: all 0.2s ease-in-out;
   }
-}
 
-.addressRow {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  width: 100%;
+  .select {
+    width: 100%;
+    padding: 1.25rem 0 1.25rem 1.25rem;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--colors-black);
+    appearance: none;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
 
-  @media (min-width: 768px) {
-    grid-template-columns: 2fr 1fr 1fr;
+    &:focus {
+      outline: 0;
+    }
+
+    &:invalid {
+      color: var(--colors-gray);
+    }
+
+    option {
+      padding: 0.5rem;
+      color: var(--colors-black);
+      background-color: white;
+    }
+  }
+
+  .errorMessage {
+    position: absolute;
+    bottom: -1.75rem;
+    left: 0;
+    z-index: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--colors-red);
   }
 }
 
@@ -184,71 +193,97 @@
       0 -1px 1px var(--colors-red),
       0 1px 0 var(--colors-red);
   }
+
+  &.fileInputHasError .fileInput::file-selector-button {
+    background-color: var(--colors-red);
+    border: 1px solid var(--colors-red);
+  }
+
+  .fileInput {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--colors-black);
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+
+    &:focus {
+      outline: 0;
+    }
+
+    &::file-selector-button {
+      padding: 0.75rem 1.5rem;
+      margin-right: 1.5rem;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--colors-white);
+      cursor: pointer;
+      background-color: var(--colors-red);
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease-in-out;
+
+      &:active {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transform: translateY(0);
+      }
+
+      &:hover {
+        background-color: color-mix(in srgb, var(--colors-red) 80%, black);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
+      }
+    }
+
+    &::-webkit-file-upload-button {
+      padding: 0.75rem 1.5rem;
+      margin-right: 1.5rem;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--colors-white);
+      cursor: pointer;
+      background-color: var(--colors-red);
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease-in-out;
+
+      &:active {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transform: translateY(0);
+      }
+
+      &:hover {
+        background-color: color-mix(in srgb, var(--colors-red) 80%, black);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  .errorMessage {
+    position: absolute;
+    bottom: -1.75rem;
+    left: 0;
+    z-index: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--colors-red);
+  }
 }
 
-.fileInput {
+.addressRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   width: 100%;
-  font-family: inherit;
-  font-size: 16px;
-  color: var(--colors-black);
-  cursor: pointer;
-  background: transparent;
-  border: 0;
 
-  &::file-selector-button {
-    padding: 0.75rem 1.5rem;
-    margin-right: 1.5rem;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--colors-white);
-    cursor: pointer;
-    background-color: var(--colors-red);
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background-color: color-mix(in srgb, var(--colors-red) 80%, black);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transform: translateY(0);
-    }
-  }
-
-  &:focus {
-    outline: 0;
-  }
-
-  &::-webkit-file-upload-button {
-    padding: 0.75rem 1.5rem;
-    margin-right: 1.5rem;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--colors-white);
-    cursor: pointer;
-    background-color: var(--colors-red);
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background-color: color-mix(in srgb, var(--colors-red) 80%, black);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transform: translateY(0);
-    }
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 2fr 1fr 1fr;
   }
 }
 
@@ -259,74 +294,55 @@
   align-items: center;
   width: 100%;
   padding: 1rem;
-}
 
-.checkbox {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  margin-top: 0.25rem;
-  appearance: none;
-  cursor: pointer;
-  background-color: white;
-  border: 2px solid var(--colors-gray);
-  border-radius: 4px;
-  transition: all 0.2s ease-in-out;
+  .checkbox {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    margin-top: 0.25rem;
+    appearance: none;
+    cursor: pointer;
+    background-color: white;
+    border: 2px solid var(--colors-gray);
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background-color: color-mix(in srgb, var(--colors-red) 10%, white);
-    border-color: var(--colors-red);
+    &:hover {
+      background-color: color-mix(in srgb, var(--colors-red) 10%, white);
+      border-color: var(--colors-red);
+    }
+
+    &:checked {
+      background-color: var(--colors-red);
+      border-color: var(--colors-red);
+    }
+
+    &:checked::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 1;
+      color: white;
+      content: "✓";
+      transform: translate(-50%, -50%);
+    }
+
+    &:focus {
+      outline: 2px solid var(--colors-red);
+      outline-offset: 2px;
+    }
   }
 
-  &:checked {
-    background-color: var(--colors-red);
-    border-color: var(--colors-red);
+  .checkboxLabel {
+    font-size: 1rem;
+    line-height: 1.25;
+    color: var(--colors-white);
+    cursor: pointer;
+    user-select: none;
   }
-
-  &:checked::after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 1;
-    color: white;
-    content: "✓";
-    transform: translate(-50%, -50%);
-  }
-
-  &:focus {
-    outline: 2px solid var(--colors-red);
-    outline-offset: 2px;
-  }
-}
-
-.checkboxLabel {
-  font-size: 1rem;
-  line-height: 1.25;
-  color: var(--colors-white);
-  cursor: pointer;
-  user-select: none;
-}
-
-.errorMessage {
-  position: absolute;
-  bottom: -1.75rem;
-  left: 0;
-  z-index: 1;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--colors-red);
-}
-
-.selectWrapper.selectHasError .selectChevron {
-  color: var(--colors-red);
-}
-
-.fileInputWrapper.fileInputHasError .fileInput::file-selector-button {
-  background-color: var(--colors-red);
-  border: 1px solid var(--colors-red);
 }
 
 .formSubmitContainer {
@@ -336,7 +352,7 @@
   align-items: center;
   width: 100%;
 
-  @media (min-width: 768px) {
+  @media screen and (min-width: 768px) {
     flex-flow: row nowrap;
     justify-content: space-between;
   }
@@ -347,7 +363,7 @@
     color: var(--colors-red);
     text-align: center;
 
-    @media (min-width: 768px) {
+    @media screen and (min-width: 768px) {
       text-align: left;
     }
   }

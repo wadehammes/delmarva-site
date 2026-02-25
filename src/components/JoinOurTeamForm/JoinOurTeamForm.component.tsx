@@ -152,115 +152,113 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
 
   return (
     <div className={styles.container}>
-      {description ? (
-        <div className={styles.formCopy}>
-          <RichText document={description} />
-        </div>
-      ) : null}
+      {description ? <RichText document={description} /> : null}
 
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          control={control}
-          name="name"
-          render={({ field: { onChange, value, name, ref } }) => (
-            <StyledInput
-              hasError={errors.name}
-              label={`${t("labels.fullName")} *`}
-              name={name}
-              onChange={onChange}
-              placeholder={t("placeholders.fullName")}
-              ref={ref}
-              value={value}
-            />
-          )}
-          rules={{ required: true }}
-        />
+        <div className={styles.topFieldsGrid}>
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, value, name, ref } }) => (
+              <StyledInput
+                hasError={errors.name}
+                label={`${t("labels.fullName")} *`}
+                name={name}
+                onChange={onChange}
+                placeholder={t("placeholders.fullName")}
+                ref={ref}
+                value={value}
+              />
+            )}
+            rules={{ required: true }}
+          />
 
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, value, name, ref } }) => (
-            <StyledInput
-              hasError={errors.email}
-              label={`${t("labels.email")} *`}
-              name={name}
-              onChange={(e) => {
-                clearErrors("email");
-                onChange(e);
-              }}
-              placeholder={t("placeholders.email")}
-              ref={ref}
-              value={value}
-            />
-          )}
-          rules={{ pattern: EMAIL_VALIDATION_REGEX, required: true }}
-        />
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value, name, ref } }) => (
+              <StyledInput
+                hasError={errors.email}
+                label={`${t("labels.email")} *`}
+                name={name}
+                onChange={(e) => {
+                  clearErrors("email");
+                  onChange(e);
+                }}
+                placeholder={t("placeholders.email")}
+                ref={ref}
+                value={value}
+              />
+            )}
+            rules={{ pattern: EMAIL_VALIDATION_REGEX, required: true }}
+          />
 
-        <Controller
-          control={control}
-          name="phone"
-          render={({ field: { onChange, value, name, ref } }) => (
-            <StyledInput
-              hasError={errors.phone}
-              label={t("labels.phone")}
-              name={name}
-              onChange={onChange}
-              placeholder={t("placeholders.phone")}
-              ref={ref}
-              value={value}
-            />
-          )}
-          rules={{ pattern: PHONE_NUMBER_VALIDATION_REGEX }}
-        />
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field: { onChange, value, name, ref } }) => (
+              <StyledInput
+                hasError={errors.phone}
+                label={t("labels.phone")}
+                name={name}
+                onChange={onChange}
+                placeholder={t("placeholders.phone")}
+                ref={ref}
+                value={value}
+              />
+            )}
+            rules={{ pattern: PHONE_NUMBER_VALIDATION_REGEX }}
+          />
 
-        <Controller
-          control={control}
-          name="position"
-          render={({ field: { onChange, value, name, ref } }) => (
-            <div className={styles.fieldsetWrapper}>
-              <label className={styles.label} htmlFor={positionId}>
-                {t("labels.position")} *
-              </label>
-              <div
-                className={clsx(styles.selectWrapper, {
-                  [styles.selectHasError]: errors.position,
-                })}
-              >
-                <select
-                  className={styles.select}
-                  id={positionId}
-                  name={name}
-                  onChange={(e) => {
-                    console.log("Position changed:", e.target.value);
-                    onChange(e.target.value);
-                  }}
-                  ref={ref}
-                  value={value}
+          <Controller
+            control={control}
+            name="position"
+            render={({ field: { onChange, value, name, ref } }) => (
+              <div className={styles.fieldsetWrapper}>
+                <label className={styles.label} htmlFor={positionId}>
+                  {t("labels.position")} *
+                </label>
+                <div
+                  className={clsx(styles.selectWrapper, {
+                    [styles.selectHasError]: errors.position,
+                  })}
                 >
-                  <option value="">{t("messages.selectPosition")}</option>
-                  {(fields.openJobs ?? []).map((job) => (
-                    <option key={job} value={job}>
-                      {job}
-                    </option>
-                  ))}
-                </select>
-                <span
-                  aria-hidden="true"
-                  className={styles.selectChevron}
-                  role="presentation"
-                >
-                  <ChevronDown />
-                </span>
-                {errors.position && (
-                  <span className={styles.errorMessage}>
-                    {t("messages.positionRequired")}
+                  <select
+                    className={styles.select}
+                    id={positionId}
+                    name={name}
+                    onChange={(e) => {
+                      console.log("Position changed:", e.target.value);
+                      onChange(e.target.value);
+                    }}
+                    ref={ref}
+                    value={value}
+                  >
+                    <option value="">{t("messages.selectPosition")}</option>
+                    {(fields.openJobs ?? []).map((job) => (
+                      <option key={job} value={job}>
+                        {job}
+                      </option>
+                    ))}
+                  </select>
+                  <span
+                    aria-hidden="true"
+                    className={styles.selectChevron}
+                    role="presentation"
+                  >
+                    <ChevronDown />
                   </span>
-                )}
+                  {errors.position && (
+                    <span className={styles.errorMessage}>
+                      {t("messages.positionRequired")}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-          rules={{ required: true }}
-        />
+            )}
+            rules={{ required: true }}
+          />
+        </div>
 
         <Controller
           control={control}
