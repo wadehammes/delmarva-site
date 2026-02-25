@@ -1,7 +1,8 @@
 import { render } from "@react-email/render";
+import { GeneralInquiryNotificationTemplate } from "../components/Email/GeneralInquiryNotificationTemplate";
 import { JoinOurTeamConfirmationTemplate } from "../components/Email/JoinOurTeamConfirmationTemplate";
 import { JoinOurTeamNotificationTemplate } from "../components/Email/JoinOurTeamNotificationTemplate";
-import { RequestAQuoteNotificationTemplate } from "../components/Email/RequestAQuoteNotificationTemplate";
+import { RequestAProposalNotificationTemplate } from "../components/Email/RequestAProposalNotificationTemplate";
 import { getEmailBaseUrl } from "./emailConstants";
 
 export interface NotificationEmailData {
@@ -42,7 +43,23 @@ export async function renderConfirmationEmail(
   );
 }
 
-export interface RequestAQuoteNotificationEmailData {
+export interface GeneralInquiryNotificationEmailData {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
+export async function renderGeneralInquiryNotificationEmail(
+  data: GeneralInquiryNotificationEmailData,
+): Promise<string> {
+  const baseUrl = getEmailBaseUrl();
+  return await render(
+    <GeneralInquiryNotificationTemplate {...data} baseUrl={baseUrl} />,
+  );
+}
+
+export interface RequestAProposalNotificationEmailData {
   companyName: string;
   name: string;
   email: string;
@@ -50,11 +67,11 @@ export interface RequestAQuoteNotificationEmailData {
   projectDetails: string;
 }
 
-export async function renderRequestAQuoteNotificationEmail(
-  data: RequestAQuoteNotificationEmailData,
+export async function renderRequestAProposalNotificationEmail(
+  data: RequestAProposalNotificationEmailData,
 ): Promise<string> {
   const baseUrl = getEmailBaseUrl();
   return await render(
-    <RequestAQuoteNotificationTemplate {...data} baseUrl={baseUrl} />,
+    <RequestAProposalNotificationTemplate {...data} baseUrl={baseUrl} />,
   );
 }

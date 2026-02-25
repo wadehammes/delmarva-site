@@ -147,7 +147,7 @@ All templates use a shared header (logo) and footer. The logo URL is built from 
    ```
    RESEND_DEV_TO_EMAIL=delivered@resend.dev
    ```
-   Then all **notification** emails (Request a Quote and Join Our Team) are sent to this address instead of the configured recipients. Confirmation emails still go to the applicant. Deployed (staging/production) ignores this and uses normal recipients.
+   Then all **notification** emails (Request a Proposal and Join Our Team) are sent to this address instead of the configured recipients. Confirmation emails still go to the applicant. Deployed (staging/production) ignores this and uses normal recipients.
 
    Resend test addresses:
    - `delivered@resend.dev` – simulates successful delivery (view in Resend dashboard → Emails)

@@ -1,7 +1,7 @@
 .serviceHeaderSection [class*="sectionContent"] {
   grid-template-columns: 1fr;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1200px) {
     grid-template-columns: 40% 60%;
   }
 }

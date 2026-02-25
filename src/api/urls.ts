@@ -1,6 +1,7 @@
 import { FetchMethods, fetchOptions } from "src/api/helpers";
+import type { GeneralInquiryInputs } from "src/components/GeneralInquiryForm/GeneralInquiryForm.component";
 import type { JoinOurTeamInputs } from "src/components/JoinOurTeamForm/JoinOurTeamForm.component";
-import type { RequestAQuoteInputs } from "src/components/RequestAQuoteForm/RequestAQuoteForm.component";
+import type { RequestAProposalInputs } from "src/components/RequestAProposalForm/RequestAProposalForm.component";
 
 function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
   const form = new FormData();
@@ -28,6 +29,32 @@ function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
 }
 
 export const api = {
+  generalInquiry: ({
+    email,
+    emailsToBcc,
+    emailsToSendNotification,
+    message,
+    name,
+    phone,
+    recaptchaToken,
+    website,
+  }: GeneralInquiryInputs) =>
+    fetch(
+      "/api/resend/general-inquiry",
+      fetchOptions({
+        body: JSON.stringify({
+          email,
+          emailsToBcc,
+          emailsToSendNotification,
+          message,
+          name,
+          phone,
+          recaptchaToken,
+          website,
+        }),
+        method: FetchMethods.Post,
+      }),
+    ),
   joinOurTeam: (data: JoinOurTeamInputs) => {
     const hasFiles =
       data.resume instanceof File || data.coverLetter instanceof File;
@@ -63,21 +90,25 @@ export const api = {
       }),
     );
   },
-  requestAQuote: ({
+  requestAProposal: ({
     companyName,
     email,
+    emailsToBcc,
+    emailsToSendNotification,
     name,
     phone,
     projectDetails,
     recaptchaToken,
     website,
-  }: RequestAQuoteInputs) =>
+  }: RequestAProposalInputs) =>
     fetch(
-      "/api/resend/request-a-quote",
+      "/api/resend/request-a-proposal",
       fetchOptions({
         body: JSON.stringify({
           companyName,
           email,
+          emailsToBcc,
+          emailsToSendNotification,
           name,
           phone,
           projectDetails,

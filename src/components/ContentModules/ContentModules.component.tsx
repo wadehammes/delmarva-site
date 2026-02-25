@@ -5,7 +5,6 @@ import {
   AreasServicedServer,
   ContentRecentNewsList,
   FeaturedServices,
-  RequestAQuoteForm,
 } from "src/components/ContentModules/ContentModulesRegistry";
 import type { ContentModule } from "src/contentful/parseContentModules";
 
@@ -25,9 +24,6 @@ export const ContentModules = (props: ContentModulesProps) => {
     }
     case "Recent News List": {
       return <ContentRecentNewsList locale={locale} />;
-    }
-    case "Request a Quote Form": {
-      return <RequestAQuoteForm />;
     }
     case "All Services List": {
       return <AllServicesListServer locale={locale} />;

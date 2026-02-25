@@ -164,6 +164,17 @@ export type {
 } from "./TypeFooter";
 export { isTypeFooter } from "./TypeFooter";
 export type {
+  TypeForm,
+  TypeFormFields,
+  TypeFormSkeleton,
+  TypeFormWithAllLocalesAndWithoutLinkResolutionResponse,
+  TypeFormWithAllLocalesAndWithoutUnresolvableLinksResponse,
+  TypeFormWithAllLocalesResponse,
+  TypeFormWithoutLinkResolutionResponse,
+  TypeFormWithoutUnresolvableLinksResponse,
+} from "./TypeForm";
+export { isTypeForm } from "./TypeForm";
+export type {
   TypeFormJoinOurTeam,
   TypeFormJoinOurTeamFields,
   TypeFormJoinOurTeamSkeleton,

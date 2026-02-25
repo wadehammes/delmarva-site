@@ -8,24 +8,31 @@ import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
 import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
-import { useSendRequestAQuoteFormMutation } from "src/hooks/mutations/useSendRequestAQuoteForm.mutation";
+import type { FormType } from "src/contentful/parseForm";
+import { useSendRequestAProposalFormMutation } from "src/hooks/mutations/useSendRequestAProposalForm.mutation";
 import {
   EMAIL_VALIDATION_REGEX,
   PHONE_NUMBER_VALIDATION_REGEX,
 } from "src/utils/regex";
-import styles from "./RequestAQuoteForm.module.css";
+import styles from "./RequestAProposalForm.module.css";
 
-export interface RequestAQuoteInputs {
+interface RequestAProposalFormProps {
+  fields: FormType;
+}
+
+export interface RequestAProposalInputs {
   companyName: string;
   name: string;
   email: string;
   phone: string;
   projectDetails: string;
   recaptchaToken: string;
-  website?: string; // Honeypot field
+  website?: string;
+  emailsToSendNotification?: string[];
+  emailsToBcc?: string[];
 }
 
-const defaultValues: RequestAQuoteInputs = {
+const defaultValues: RequestAProposalInputs = {
   companyName: "",
   email: "",
   name: "",
@@ -35,8 +42,12 @@ const defaultValues: RequestAQuoteInputs = {
   website: "",
 };
 
-export const RequestAQuoteForm = () => {
-  const t = useTranslations("RequestAQuoteForm");
+export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
+  const { fields } = props;
+
+  const { emailsToSendNotification, emailsToBcc } = fields;
+
+  const t = useTranslations("RequestAProposalForm");
 
   const reCaptcha = useRef<ReCAPTCHA>(null);
 
@@ -52,9 +63,9 @@ export const RequestAQuoteForm = () => {
     reValidateMode: "onChange",
   });
 
-  const sendMutation = useSendRequestAQuoteFormMutation();
+  const sendMutation = useSendRequestAProposalFormMutation();
 
-  const onSubmit: SubmitHandler<RequestAQuoteInputs> = async (data) => {
+  const onSubmit: SubmitHandler<RequestAProposalInputs> = async (data) => {
     clearErrors("email");
 
     if (reCaptcha?.current) {
@@ -68,6 +79,8 @@ export const RequestAQuoteForm = () => {
           await sendMutation.mutateAsync({
             companyName,
             email,
+            emailsToBcc: emailsToBcc,
+            emailsToSendNotification,
             name,
             phone,
             projectDetails,
@@ -177,7 +190,7 @@ export const RequestAQuoteForm = () => {
         <div />
         <div>
           <Button
-            data-tracking-click="request-a-quote-form-submit"
+            data-tracking-click="request-a-proposal-form-submit"
             isDisabled={isSubmitting}
             label={t("messages.submit")}
             type="submit"
@@ -187,7 +200,6 @@ export const RequestAQuoteForm = () => {
         </div>
       </div>
 
-      {/* Honeypot field - hidden from users but visible to bots */}
       <div className={styles.honeypot}>
         <label htmlFor="website">
           Please leave this field empty (anti-spam)

@@ -19,6 +19,7 @@ import type { TypeContentTestimonialSkeleton } from "./TypeContentTestimonial";
 import type { TypeContentVideoBlockSkeleton } from "./TypeContentVideoBlock";
 import type { TypeCopyBlockSkeleton } from "./TypeCopyBlock";
 import type { TypeCtaSkeleton } from "./TypeCta";
+import type { TypeFormSkeleton } from "./TypeForm";
 import type { TypeFormJoinOurTeamSkeleton } from "./TypeFormJoinOurTeam";
 
 export interface TypeSectionFields {
@@ -43,6 +44,7 @@ export interface TypeSectionFields {
       | TypeCopyBlockSkeleton
       | TypeCtaSkeleton
       | TypeFormJoinOurTeamSkeleton
+      | TypeFormSkeleton
     >
   >;
   cta?: EntryFieldTypes.EntryLink<TypeCtaSkeleton>;

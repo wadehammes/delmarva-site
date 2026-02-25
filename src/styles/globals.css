@@ -202,6 +202,9 @@ img,
 video {
   width: 100%;
   max-width: 100%;
+}
+
+video {
   height: auto;
 }
 
@@ -471,12 +474,23 @@ input[type="checkbox"] {
     gap: var(--gap-md, var(--gap, 4rem));
   }
 
-  @media screen and (min-width: 1440px) {
+  @media screen and (min-width: 1024px) {
     grid-template-columns: repeat(
         var(--columns-lg, var(--columns-md, var(--columns, 1))),
         1fr
       );
     gap: var(--gap-lg, var(--gap-md, var(--gap, 4rem)));
+  }
+
+  @media screen and (min-width: 1440px) {
+    grid-template-columns: repeat(
+        var(
+          --columns-xl,
+          var(--columns-lg, var(--columns-md, var(--columns, 1)))
+        ),
+        1fr
+      );
+    gap: var(--gap-xl, var(--gap-lg, var(--gap-md, var(--gap, 4rem))));
   }
 
   &.contained:not(.singleColumn) {
@@ -516,11 +530,14 @@ input[type="checkbox"] {
     --columns: 1;
     --columns-md: 3;
     --columns-lg: 3;
+    --columns-xl: 3;
   }
 
   &.fourColumn {
     --columns: 1;
     --columns-md: 4;
+    --columns-lg: 4;
+    --columns-xl: 4;
   }
 }
 
