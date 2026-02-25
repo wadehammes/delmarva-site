@@ -7,10 +7,13 @@
 
   h1 {
     position: relative;
-    padding-bottom: 1rem;
     margin: 0 0 1rem 0;
     font-size: clamp(2.25rem, 4vw, 3.5em);
     font-weight: 700;
+
+    &:has(::after) {
+      padding-bottom: 1rem;
+    }
 
     &:only-child {
       padding-bottom: 0;

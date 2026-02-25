@@ -54,7 +54,10 @@ export const RequestAQuoteNotificationTemplate: React.FC<
             </Link>
           </Text>
           <Text style={emailTheme.textBlock}>
-            <strong>Phone:</strong> {phone}
+            <strong>Phone:</strong>{" "}
+            <Link href={`tel:${phone}`} style={emailTheme.link}>
+              {phone}
+            </Link>
           </Text>
           <Text style={emailTheme.label}>Project details</Text>
           <Text style={emailTheme.textBlockLast}>{projectDetails}</Text>

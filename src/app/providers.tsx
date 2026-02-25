@@ -111,6 +111,7 @@ function ProvidersContent({ children, locale }: ProvidersProps) {
               closeButton: "toast-close",
               toast: "toast",
             },
+            unstyled: true,
           }}
         />
       </QueryClientProvider>
