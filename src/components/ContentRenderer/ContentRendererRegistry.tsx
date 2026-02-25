@@ -111,3 +111,11 @@ export const AllProjectsList = dynamic(
     ),
   { ssr: true },
 );
+
+export const FormRenderer = dynamic(
+  () =>
+    import("src/components/FormRenderer/FormRenderer.component").then((m) => ({
+      default: m.FormRenderer,
+    })),
+  { ssr: true },
+);

@@ -10,6 +10,7 @@ import {
   ContentModules,
   ContentRecentNews,
   ContentTestimonial,
+  FormRenderer,
   JoinOurTeam,
   Stat,
 } from "src/components/ContentRenderer/ContentRendererRegistry";
@@ -53,6 +54,8 @@ import {
 } from "src/contentful/parseContentTestimonial";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { parseCopyBlock } from "src/contentful/parseCopyBlock";
+import type { FormEntry } from "src/contentful/parseForm";
+import { parseContentfulForm } from "src/contentful/parseForm";
 import {
   type FormJoinOurTeamEntry,
   parseFormJoinOurTeam,
@@ -224,6 +227,15 @@ export const ContentRenderer = (props: ContentRendererProps) => {
       }
 
       return <JoinOurTeam fields={parsedForm} />;
+    }
+    case "form": {
+      const parsedForm = parseContentfulForm(content as FormEntry);
+
+      if (!parsedForm) {
+        return null;
+      }
+
+      return <FormRenderer fields={parsedForm} />;
     }
     default: {
       return null;

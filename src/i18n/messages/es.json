@@ -25,7 +25,7 @@
     "eyebrow": "Nuestros Servicios",
     "projects": "Proyectos"
   },
-  "RequestAQuoteForm": {
+  "RequestAProposalForm": {
     "labels": {
       "companyName": "Nombre de la empresa",
       "email": "Correo electrónico",
@@ -44,6 +44,25 @@
       "submit": "Enviar",
       "submitting": "Enviando...",
       "success": "¡Gracias! Hemos recibido tu solicitud y te contactaremos pronto."
+    }
+  },
+  "GeneralInquiryForm": {
+    "labels": {
+      "email": "Correo electrónico",
+      "fullName": "Nombre completo",
+      "message": "Mensaje",
+      "phone": "Teléfono"
+    },
+    "placeholders": {
+      "email": "tu@ejemplo.com",
+      "fullName": "Jane Doe",
+      "message": "¿En qué podemos ayudarte?...",
+      "phone": "(555) 555-5555"
+    },
+    "messages": {
+      "submit": "Enviar",
+      "submitting": "Enviando...",
+      "success": "¡Gracias! Hemos recibido tu consulta y te responderemos pronto."
     }
   },
   "JoinOurTeamForm": {

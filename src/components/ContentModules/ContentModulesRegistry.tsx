@@ -39,11 +39,3 @@ export const FeaturedServices = dynamic(
     ),
   { ssr: true },
 );
-
-export const RequestAQuoteForm = dynamic(
-  () =>
-    import("src/components/RequestAQuoteForm/RequestAQuoteForm.component").then(
-      (m) => ({ default: m.RequestAQuoteForm }),
-    ),
-  { ssr: true },
-);

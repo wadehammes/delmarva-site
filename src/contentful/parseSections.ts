@@ -17,6 +17,7 @@ import type { ContentTestimonialEntry } from "src/contentful/parseContentTestimo
 import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
+import type { FormEntry } from "src/contentful/parseForm";
 import type { FormJoinOurTeamEntry } from "src/contentful/parseFormJoinOurTeam";
 import {
   isTypeSection,
@@ -64,6 +65,7 @@ export type ContentEntries =
   | FormJoinOurTeamEntry
   | ContentCardEntry
   | ContentMarqueeEntry
+  | FormEntry
   | undefined;
 
 export interface SectionType {

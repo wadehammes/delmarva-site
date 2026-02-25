@@ -15,7 +15,6 @@ export interface TypeContentModulesFields {
     | "Areas Serviced Map"
     | "Featured Services List"
     | "Recent News List"
-    | "Request a Quote Form"
   >;
 }
 

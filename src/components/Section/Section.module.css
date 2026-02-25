@@ -15,9 +15,19 @@
     grid-template-columns: repeat(var(--columns-md, var(--columns, 1)), 1fr);
   }
 
-  @media screen and (min-width: 1440px) {
+  @media screen and (min-width: 1024px) {
     grid-template-columns: repeat(
         var(--columns-lg, var(--columns-md, var(--columns, 1))),
+        1fr
+      );
+  }
+
+  @media screen and (min-width: 1440px) {
+    grid-template-columns: repeat(
+        var(
+          --columns-xl,
+          var(--columns-lg, var(--columns-md, var(--columns, 1)))
+        ),
         1fr
       );
   }
@@ -116,24 +126,28 @@
     --columns: 1;
     --columns-md: 2;
     --columns-lg: 3;
+    --columns-xl: 3;
   }
 
   &.fourColumn {
     --columns: 1;
     --columns-md: 2;
-    --columns-lg: 4;
+    --columns-lg: 3;
+    --columns-xl: 4;
   }
 
   &.fiveColumn {
     --columns: 1;
-    --columns-md: 3;
-    --columns-lg: 5;
+    --columns-md: 2;
+    --columns-lg: 3;
+    --columns-xl: 5;
   }
 
   &.sixColumn {
-    --columns: 2;
-    --columns-md: 3;
-    --columns-lg: 6;
+    --columns: 1;
+    --columns-md: 2;
+    --columns-lg: 4;
+    --columns-xl: 6;
   }
 
   &.mobileTwoColumn {

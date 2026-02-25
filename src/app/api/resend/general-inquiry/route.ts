@@ -1,6 +1,6 @@
 import { Resend } from "resend";
-import type { RequestAQuoteInputs } from "src/components/RequestAQuoteForm/RequestAQuoteForm.component";
-import { renderRequestAQuoteNotificationEmail } from "src/lib/emailRenderer";
+import type { GeneralInquiryInputs } from "src/components/GeneralInquiryForm/GeneralInquiryForm.component";
+import { renderGeneralInquiryNotificationEmail } from "src/lib/emailRenderer";
 import { getNotificationTo } from "src/utils/emailHelpers";
 import { verifyRecaptchaToken } from "src/utils/recaptcha";
 import { isSpam } from "src/utils/spamDetection";
@@ -10,56 +10,48 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const fallbackNotificationTo = "w@dehammes.com";
 
 export async function POST(request: Request) {
-  const res: RequestAQuoteInputs = await request.json();
+  const res: GeneralInquiryInputs = await request.json();
 
-  // Honeypot check - if website field is filled, it's likely a bot
   if (res.website && res.website.trim() !== "") {
-    console.warn("Spam detected (honeypot): Request A Quote form", {
+    console.warn("Spam detected (honeypot): General Inquiry form", {
       email: res.email,
       name: res.name,
     });
-    // Return success response to avoid alerting bots
     return Response.json({ id: "spam-blocked", message: "success" });
   }
 
-  // Verify reCAPTCHA token
   const isRecaptchaValid = await verifyRecaptchaToken(res.recaptchaToken);
 
   if (!isRecaptchaValid) {
-    console.warn("Spam detected (reCAPTCHA failed): Request A Quote form", {
+    console.warn("Spam detected (reCAPTCHA failed): General Inquiry form", {
       email: res.email,
       name: res.name,
     });
-    // Return success response to avoid alerting bots
     return Response.json({ id: "spam-blocked", message: "success" });
   }
 
   const email = res.email;
   const name = res.name;
   const phone = res.phone || "No phone number provided.";
-  const companyName = res.companyName || "No company provided.";
-  const projectDetails = res.projectDetails || "No details provided.";
+  const message = res.message || "No message provided.";
 
-  // Keyword-based spam detection
-  // Combine all text fields for spam checking
-  const combinedContent = [name, companyName, email, phone, projectDetails]
+  const combinedContent = [name, email, phone, message]
     .filter(Boolean)
     .join(" ");
 
   const spamCheck = isSpam({
-    companyName,
+    companyName: "",
     email,
     message: combinedContent,
     name,
   });
 
   if (spamCheck.isSpam) {
-    console.warn("Spam detected (keywords): Request A Quote form", {
+    console.warn("Spam detected (keywords): General Inquiry form", {
       email,
       name,
       reasons: spamCheck.reasons,
     });
-    // Return success response to avoid alerting bots
     return Response.json({ id: "spam-blocked", message: "success" });
   }
 
@@ -69,22 +61,28 @@ export async function POST(request: Request) {
     });
   }
 
+  const toAddresses = res.emailsToSendNotification?.length
+    ? res.emailsToSendNotification
+    : [fallbackNotificationTo];
+
+  const to = getNotificationTo(toAddresses);
+
   try {
-    const notificationHtml = await renderRequestAQuoteNotificationEmail({
-      companyName,
+    const notificationHtml = await renderGeneralInquiryNotificationEmail({
       email,
+      message,
       name,
       phone,
-      projectDetails,
     });
 
     const data = await resend.emails.send({
+      bcc: res.emailsToBcc?.length ? res.emailsToBcc : undefined,
       from: "Delmarva Site Development <mail@delmarvasite.net>",
       html: notificationHtml,
       replyTo: `${name} <${email}>`,
-      subject: `Request for Proposal: ${companyName} — ${name}`,
-      text: `Request for Proposal received from ${name} at ${companyName}.`,
-      to: getNotificationTo(fallbackNotificationTo),
+      subject: `General Inquiry: ${name}`,
+      text: `General inquiry received from ${name}.`,
+      to,
     });
 
     if (data.error) {

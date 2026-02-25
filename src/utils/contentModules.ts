@@ -17,7 +17,7 @@ export function hasContentModule(
     | "Areas Serviced List"
     | "Areas Serviced Map"
     | "Recent News List"
-    | "Request a Quote Form",
+    | "Request a Proposal Form",
 ): boolean {
   if (!page.sections || page.sections.length === 0) {
     return false;

@@ -14,36 +14,25 @@ import { EmailFooter } from "./EmailFooter";
 import { EmailHeader } from "./EmailHeader";
 import { emailTheme } from "./emailTheme";
 
-interface RequestAQuoteNotificationTemplateProps {
+interface GeneralInquiryNotificationTemplateProps {
   baseUrl?: string;
-  companyName: string;
   name: string;
   email: string;
   phone: string;
-  projectDetails: string;
+  message: string;
 }
 
-export const RequestAQuoteNotificationTemplate: React.FC<
-  RequestAQuoteNotificationTemplateProps
-> = ({
-  baseUrl = getEmailBaseUrl(),
-  companyName,
-  email,
-  name,
-  phone,
-  projectDetails,
-}) => (
+export const GeneralInquiryNotificationTemplate: React.FC<
+  GeneralInquiryNotificationTemplateProps
+> = ({ baseUrl = getEmailBaseUrl(), email, message, name, phone }) => (
   <Html>
     <Head />
-    <Preview>Request for Proposal from {companyName}</Preview>
+    <Preview>General inquiry from {name}</Preview>
     <Body style={emailTheme.main}>
       <Container style={emailTheme.container}>
         <EmailHeader baseUrl={baseUrl} />
         <Section style={emailTheme.section}>
-          <Text style={emailTheme.heading}>Request for Proposal</Text>
-          <Text style={emailTheme.textBlock}>
-            <strong>Company:</strong> {companyName}
-          </Text>
+          <Text style={emailTheme.heading}>General Inquiry</Text>
           <Text style={emailTheme.textBlock}>
             <strong>Name:</strong> {name}
           </Text>
@@ -59,8 +48,8 @@ export const RequestAQuoteNotificationTemplate: React.FC<
               {phone}
             </Link>
           </Text>
-          <Text style={emailTheme.label}>Project details</Text>
-          <Text style={emailTheme.textBlockLast}>{projectDetails}</Text>
+          <Text style={emailTheme.label}>Message</Text>
+          <Text style={emailTheme.textBlockLast}>{message}</Text>
         </Section>
         <EmailFooter baseUrl={baseUrl} />
       </Container>
