@@ -65,11 +65,15 @@
 
 .slide {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  width: 100% !important;
   height: var(--project-carousel-slide-height);
   transition: all 0.3s ease;
+
+  > * {
+    width: 100%;
+    min-width: 0;
+  }
 
   &:global(.swiper-slide-visible) {
     z-index: 1;

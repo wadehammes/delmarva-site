@@ -67,7 +67,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
   const swiperConfig = useMemo(
     () => ({
       breakpoints: {
-        768: { spaceBetween: 48 },
+        768: { slidesPerView: "auto" as const, spaceBetween: 48 },
       },
       centeredSlides: true,
       coverflowEffect: {
@@ -93,7 +93,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
       },
       preventInteractionOnTransition: true,
       resizeObserver: true,
-      slidesPerView: "auto" as const,
+      slidesPerView: 1,
       spaceBetween: 16,
       watchOverflow: true,
       watchSlidesProgress: true,
