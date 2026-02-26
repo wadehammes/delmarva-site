@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 
@@ -48,10 +49,14 @@ export interface LocaleParams {
 /**
  * Helper to extract and validate locale from Next.js params
  */
-export function getValidatedLocale(
+export async function getValidatedLocale(
   params: Promise<LocaleParams>,
 ): Promise<Locales> {
-  return params.then(({ locale }) => validateLocale(locale));
+  const { locale } = await params;
+  if (locale.includes(".")) {
+    notFound();
+  }
+  return validateLocale(locale);
 }
 
 /**

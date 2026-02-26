@@ -1,7 +1,6 @@
 "use client";
 
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
@@ -11,7 +10,7 @@ import { usePage } from "src/components/PageLayout/PageProvider";
 import type { NavigationType } from "src/contentful/getNavigation";
 import type { Page } from "src/contentful/getPages";
 import { useDOMCleanup, useIsBrowser } from "src/hooks/useIsBrowser";
-import { Link } from "src/i18n/routing";
+import { Link, usePathname } from "src/i18n/routing";
 import Menu from "src/icons/Menu.svg";
 import DelmarvaLogo from "src/logos/delmarva-white-full-cutout-full-color-rgb.svg";
 import { throttle } from "src/utils/throttle";
