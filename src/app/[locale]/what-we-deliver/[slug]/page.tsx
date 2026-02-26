@@ -32,6 +32,8 @@ import {
 } from "src/utils/pageHelpers";
 import { generateServicePageSchemaGraph } from "src/utils/schema";
 
+export const revalidate = 604800;
+
 interface PageParams {
   slug: string;
   locale: Locales;

@@ -27,6 +27,8 @@ import {
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
 
+export const revalidate = 604800;
+
 interface PageParams {
   slug: string;
   locale: string;

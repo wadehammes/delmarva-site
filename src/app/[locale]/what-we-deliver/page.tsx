@@ -7,6 +7,7 @@ import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
+import { routing } from "src/i18n/routing";
 import {
   FOOTER_ID,
   NAVIGATION_ID,
@@ -18,6 +19,12 @@ import {
   generatePageSchemaGraph,
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
+
+export const revalidate = 604800;
+
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 interface WhatWeDeliverParams {
   locale: string;

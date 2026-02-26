@@ -4,19 +4,21 @@ import styles from "src/components/DeployPage/DeployPage.module.css";
 export const DeployPage = async () => {
   return (
     <div className={styles.deployPage}>
-      <h1>Deployments</h1>
-      <p>
-        This will only deploy the code that is already there, this will not
-        deploy new code or cause any issues, so do not fear!
-      </p>
+      <header className={styles.deployPageHeader}>
+        <h1 className={styles.deployPageTitle}>Refresh Site Content</h1>
+        <p>
+          Publish your latest content from the CMS to the live site. This only
+          updates content—no code changes, so you can use without fear!
+        </p>
+      </header>
       <div className={styles.buttonGroup}>
         <DeployButton
-          deployHook="https://api.vercel.com/v1/integrations/deploy/"
-          label="Redeploy Staging"
+          deployHook="https://api.vercel.com/v1/integrations/deploy/prj_IjZMy4WuZf1N2uGfbLneZHcSIJvl/KMXxoK51Xj"
+          label="Refresh staging.delmarvasite.com"
         />
         <DeployButton
-          deployHook="https://api.vercel.com/v1/integrations/deploy/"
-          label="Redeploy Production"
+          deployHook="https://api.vercel.com/v1/integrations/deploy/prj_IjZMy4WuZf1N2uGfbLneZHcSIJvl/ArJpwW4pCd"
+          label="Refresh delmarvasite.com"
         />
       </div>
     </div>
