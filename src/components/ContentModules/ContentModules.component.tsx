@@ -16,7 +16,7 @@ interface ContentModulesProps {
 }
 
 export const ContentModules = (props: ContentModulesProps) => {
-  const { contentLayout, fields, locale, searchParams } = props;
+  const { contentLayout, fields, locale } = props;
 
   switch (fields.module) {
     case "Featured Services List": {
@@ -37,7 +37,7 @@ export const ContentModules = (props: ContentModulesProps) => {
       return <AreasServicedListServer locale={locale} />;
     }
     case "All Projects": {
-      return <AllProjectsListServer searchParams={searchParams} />;
+      return <AllProjectsListServer locale={locale} />;
     }
     default: {
       return null;
