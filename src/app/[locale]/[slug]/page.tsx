@@ -36,7 +36,6 @@ interface PageParams {
 
 interface PageProps {
   params: Promise<PageParams>;
-  searchParams?: Promise<{ project?: string }>;
 }
 
 export async function generateStaticParams(): Promise<PageParams[]> {
@@ -102,6 +101,7 @@ export async function generateMetadata({
   const { slug, locale } = await params;
 
   const validLocale = await validateAndSetLocale(locale);
+
   if (!validLocale) {
     return notFound();
   }
@@ -123,9 +123,8 @@ export async function generateMetadata({
   });
 }
 
-async function Page({ params, searchParams }: PageProps) {
+async function Page({ params }: PageProps) {
   const { slug, locale } = await params;
-  const resolvedSearchParams = searchParams ? await searchParams : undefined;
 
   const validLocale = await validateAndSetLocale(locale);
 
@@ -167,11 +166,7 @@ async function Page({ params, searchParams }: PageProps) {
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
       <SchemaScript schema={schemaGraph} />
-      <PageComponent
-        fields={page}
-        locale={validLocale}
-        searchParams={resolvedSearchParams}
-      />
+      <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );
 }

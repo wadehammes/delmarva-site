@@ -20,6 +20,7 @@ const nextConfig: NextConfig = withNextIntl({
     GOOGLE_TAG_MANAGER_ID: process.env.GOOGLE_TAG_MANAGER_ID,
     MAPBOX_API_TOKEN: process.env.MAPBOX_API_TOKEN,
     RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+    REFRESH_CONTENT_ACCESS_TOKEN: process.env.REFRESH_CONTENT_ACCESS_TOKEN,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     RESEND_DEV_TO_EMAIL: process.env.RESEND_DEV_TO_EMAIL,
   },
@@ -218,12 +219,7 @@ const nextConfig: NextConfig = withNextIntl({
 });
 
 // Redirect test and home slug pages on Production
-const sources = [
-  "/:slug(test-page.*)",
-  "/deployments",
-  "/refresh-content",
-  "/es/refresh-content",
-];
+const sources = ["/:slug(test-page.*)"];
 
 const productionRedirects = sources.map((source) => ({
   destination: "/",
@@ -238,24 +234,9 @@ const sharedRedirects = [
     source: "/project-portfolio",
   },
   {
-    destination: "/what-we-deliver",
-    permanent: true,
-    source: "/project-portfolio/",
-  },
-  {
     destination: "/what-we-deliver?project=:slug",
     permanent: true,
     source: "/project/:slug",
-  },
-  {
-    destination: "/what-we-deliver?project=:slug",
-    permanent: true,
-    source: "/project/:slug/",
-  },
-  {
-    destination: "/request-a-proposal",
-    permanent: true,
-    source: "/contact-us",
   },
 ];
 

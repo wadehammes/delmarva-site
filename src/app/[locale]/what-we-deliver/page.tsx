@@ -32,7 +32,6 @@ interface WhatWeDeliverParams {
 
 interface WhatWeDeliverProps {
   params: Promise<WhatWeDeliverParams>;
-  searchParams?: Promise<{ project?: string }>;
 }
 
 export async function generateMetadata(
@@ -64,9 +63,6 @@ export async function generateMetadata(
 
 const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
   const { locale } = await props.params;
-  const searchParams = props.searchParams
-    ? await props.searchParams
-    : undefined;
 
   const validLocale = await validateAndSetLocale(locale);
 
@@ -108,11 +104,7 @@ const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
       <SchemaScript schema={schemaGraph} />
-      <PageComponent
-        fields={page}
-        locale={validLocale}
-        searchParams={searchParams}
-      />
+      <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );
 };

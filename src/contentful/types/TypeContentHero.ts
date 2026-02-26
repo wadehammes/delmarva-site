@@ -16,7 +16,7 @@ export interface TypeContentHeroFields {
   >;
   backgroundMedia?: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>;
   backgroundMediaSaturation?: EntryFieldTypes.Number<
-    0 | 0.1 | 0.2 | 0.3 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1
+    0 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1
   >;
   overlayColor?: EntryFieldTypes.Symbol<"Black" | "Red" | "Silver" | "White">;
   overlayOpacity?: EntryFieldTypes.Number;

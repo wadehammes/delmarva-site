@@ -29,13 +29,13 @@ interface HomeParams {
 
 interface HomeProps {
   params: Promise<HomeParams>;
-  searchParams?: Promise<{ project?: string }>;
 }
 
 export async function generateMetadata(props: HomeProps): Promise<Metadata> {
   const { locale } = await props.params;
 
   const validLocale = await validateAndSetLocale(locale);
+
   if (!validLocale) {
     return notFound();
   }
@@ -57,9 +57,6 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
 
 const Home = async (props: HomeProps) => {
   const { locale } = await props.params;
-  const searchParams = props.searchParams
-    ? await props.searchParams
-    : undefined;
 
   const validLocale = await validateAndSetLocale(locale);
 
@@ -101,11 +98,7 @@ const Home = async (props: HomeProps) => {
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
       <SchemaScript schema={schemaGraph} />
-      <PageComponent
-        fields={page}
-        locale={validLocale}
-        searchParams={searchParams}
-      />
+      <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );
 };
