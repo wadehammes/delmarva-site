@@ -33,14 +33,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
   children,
   params,
 }: RootLayoutProps) {
   const { locale } = await params;
 
-  // Validate that the locale is one of our supported locales
   if (!routing.locales.includes(locale as Locales)) {
     return notFound();
   }
