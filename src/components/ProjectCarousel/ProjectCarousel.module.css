@@ -67,9 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Dynamic slide width calculation - will be set by JavaScript */
-  width: calc(100vw - 2rem) !important;
-  max-width: 280px !important;
+  width: 100% !important;
   height: var(--project-carousel-slide-height);
   transition: all 0.3s ease;
 
@@ -105,18 +103,16 @@
     transform: translateX(-10%) scale(0.9);
   }
 
-  /* Responsive slide width adjustments */
   @media (min-width: 768px) {
     width: calc(100vw - 4rem) !important;
-    max-width: 350px !important;
+    max-width: 350px;
   }
 
   @media (min-width: 1024px) {
     width: calc(100vw - 6rem) !important;
-    max-width: 390px !important;
+    max-width: 390px;
   }
 
-  /* Ensure slides don't exceed container width */
   @media (min-width: 1200px) {
     width: 390px !important;
   }
