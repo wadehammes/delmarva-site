@@ -218,7 +218,12 @@ const nextConfig: NextConfig = withNextIntl({
 });
 
 // Redirect test and home slug pages on Production
-const sources = ["/:slug(test-page.*)", "/deployments"];
+const sources = [
+  "/:slug(test-page.*)",
+  "/deployments",
+  "/refresh-content",
+  "/es/refresh-content",
+];
 
 const productionRedirects = sources.map((source) => ({
   destination: "/",

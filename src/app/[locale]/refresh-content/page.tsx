@@ -8,14 +8,15 @@ import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 import { envUrl } from "src/utils/helpers";
 
 export const dynamic = "force-static";
+export const revalidate = 604800;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     alternates: {
-      canonical: new URL(`${envUrl()}/deployments`),
+      canonical: new URL(`${envUrl()}/refresh-content`),
     },
     robots: "noindex, nofollow",
-    title: "Deployments | Delmarva Site Development",
+    title: "Refresh Site Content | Delmarva Site Development",
   };
 }
 

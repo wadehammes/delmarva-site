@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
 
 interface DeployButtonProps {
@@ -17,22 +18,23 @@ export const DeployButton = (props: DeployButtonProps) => {
       const response = await fetch(deployHook);
       if (response.ok) {
         setClicked(true);
+        toast.success("Refresh successfully triggered");
       }
     } catch {
-      // Optionally handle error (e.g., set error state)
+      toast.error("Failed to refresh");
     }
   };
 
   return (
     <Button
       data-tracking-click={JSON.stringify({
-        event: "Clicked Deploy Button",
-        label: "Deploy",
+        event: "Clicked Refresh Content Button",
+        label: "Refresh",
       })}
       isDisabled={clicked}
-      label={clicked ? "Deploying (wait ~2min)" : label}
+      label={clicked ? "Refreshing (wait ~2min)" : label}
       onPress={handleDeploy}
-      variant={clicked ? "primary" : "outline"}
+      variant={clicked ? "primary" : "secondary"}
     />
   );
 };

@@ -37,12 +37,14 @@ describe("DeployButton", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: /deploying \(wait ~2min\)/i }),
+        screen.getByRole("button", { name: /refreshing \(wait ~2min\)/i }),
       ).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(screen.getByRole("button")).toBeDisabled();
+      expect(
+        screen.getByRole("button", { name: /refreshing \(wait ~2min\)/i }),
+      ).toBeDisabled();
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -68,7 +70,9 @@ describe("DeployButton", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByRole("button")).not.toBeDisabled();
+      expect(
+        screen.getByRole("button", { name: /deploy test/i }),
+      ).not.toBeDisabled();
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -92,7 +96,9 @@ describe("DeployButton", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByRole("button")).not.toBeDisabled();
+      expect(
+        screen.getByRole("button", { name: /deploy test/i }),
+      ).not.toBeDisabled();
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -124,10 +130,14 @@ describe("DeployButton", () => {
     await user.click(deployButton);
 
     await waitFor(() => {
-      expect(screen.getByRole("button")).toBeDisabled();
+      expect(
+        screen.getByRole("button", { name: /refreshing \(wait ~2min\)/i }),
+      ).toBeDisabled();
     });
 
-    const disabledButton = screen.getByRole("button");
+    const disabledButton = screen.getByRole("button", {
+      name: /refreshing \(wait ~2min\)/i,
+    });
     await user.click(disabledButton);
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
