@@ -94,8 +94,9 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
       preventInteractionOnTransition: true,
       resizeObserver: true,
       slidesPerView: "auto" as const,
-      spaceBetween: 0,
+      spaceBetween: 16,
       watchOverflow: true,
+      watchSlidesProgress: true,
     }),
     [elementIds],
   );
