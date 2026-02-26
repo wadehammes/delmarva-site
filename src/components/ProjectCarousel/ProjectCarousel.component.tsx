@@ -66,6 +66,9 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
   // Memoize Swiper configuration for better performance
   const swiperConfig = useMemo(
     () => ({
+      breakpoints: {
+        768: { spaceBetween: 48 },
+      },
       centeredSlides: true,
       coverflowEffect: {
         depth: 0,
@@ -82,7 +85,6 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
         prevEl: `#${elementIds.navigationPrev}`,
       },
       observeParents: true,
-      // Additional performance and reliability options
       observer: true,
       pagination: {
         clickable: true,
@@ -92,7 +94,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
       preventInteractionOnTransition: true,
       resizeObserver: true,
       slidesPerView: "auto" as const,
-      spaceBetween: 48,
+      spaceBetween: 0,
       watchOverflow: true,
     }),
     [elementIds],
