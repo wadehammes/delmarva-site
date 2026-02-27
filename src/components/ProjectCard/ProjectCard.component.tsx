@@ -4,9 +4,9 @@ import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { ProjectModal } from "src/components/ProjectModal/ProjectModal.component";
-import { ProjectStaticMap } from "src/components/ProjectStaticMap/ProjectStaticMap.component";
 import { ProjectStatsList } from "src/components/ProjectStatsList/ProjectStatsList.component";
 import { RichText } from "src/components/RichText/RichText.component";
+import { StaticMapImage } from "src/components/StaticMapImage/StaticMapImage.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { useModal } from "src/hooks/useModal";
@@ -89,7 +89,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
         {showMediaSection && (
           <div className={styles.projectCardMedia}>
             {showMap ? (
-              <ProjectStaticMap projectLocation={projectLocation} />
+              <StaticMapImage location={projectLocation} />
             ) : media?.[0] ? (
               <ContentfulAssetRenderer
                 asset={media[0]}

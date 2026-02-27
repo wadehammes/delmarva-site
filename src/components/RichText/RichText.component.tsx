@@ -54,7 +54,7 @@ export const RichText = (props: RichTextProps) => {
           !node.content?.length ||
           node.content.every(
             (child) =>
-              child.nodeType !== "text" || !String(child.value ?? "").trim(),
+              child.nodeType === "text" && !String(child.value ?? "").trim(),
           );
         if (isEmpty) return null;
         return <p>{children}</p>;

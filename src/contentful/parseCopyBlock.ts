@@ -1,4 +1,5 @@
 import type { Document } from "@contentful/rich-text-types";
+import type { EntryFields } from "contentful";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
@@ -18,6 +19,10 @@ type CopyBlockMobileAlignmentType = ExtractSymbolType<
   NonNullable<TypeCopyBlockFields["mobileAlignment"]>
 >;
 
+type StaticLocationImagePlacementType = ExtractSymbolType<
+  NonNullable<TypeCopyBlockFields["staticLocationImagePlacement"]>
+>;
+
 export interface CopyBlock {
   alignment?: CopyBlockAlignmentType;
   copyEyebrow?: string;
@@ -26,6 +31,8 @@ export interface CopyBlock {
   id: string;
   mobileAlignment?: CopyBlockMobileAlignmentType;
   slug: string;
+  staticLocationImage?: EntryFields.Location;
+  staticLocationImagePlacement?: StaticLocationImagePlacementType;
 }
 
 const _validateCopyBlockCheck: ContentfulTypeCheck<
@@ -43,8 +50,16 @@ export function parseCopyBlock(entry: CopyBlockEntry): CopyBlock | null {
     return null;
   }
 
-  const { alignment, copy, cta, mobileAlignment, slug, copyEyebrow } =
-    entry.fields;
+  const {
+    alignment,
+    copy,
+    cta,
+    mobileAlignment,
+    slug,
+    copyEyebrow,
+    staticLocationImage,
+    staticLocationImagePlacement,
+  } = entry.fields;
 
   return {
     alignment,
@@ -54,5 +69,7 @@ export function parseCopyBlock(entry: CopyBlockEntry): CopyBlock | null {
     id: entry.sys.id,
     mobileAlignment,
     slug,
+    staticLocationImage,
+    staticLocationImagePlacement,
   };
 }

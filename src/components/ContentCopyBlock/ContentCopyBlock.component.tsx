@@ -6,8 +6,10 @@ import { useObjectRef } from "react-aria";
 import styles from "src/components/ContentCopyBlock/ContentCopyBlock.module.css";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
+import { StaticMapImage } from "src/components/StaticMapImage/StaticMapImage.component";
 import type { CopyBlock } from "src/contentful/parseCopyBlock";
 import { Alignment } from "src/interfaces/common.interfaces";
+import { isValidProjectLocation } from "src/utils/mapUtils";
 
 interface ContentCopyBlockProps {
   fields: CopyBlock | null;
@@ -24,11 +26,33 @@ export const ContentCopyBlock = forwardRef<
     return null;
   }
 
-  const { id, copy, cta, slug, copyEyebrow } = fields;
+  const {
+    id,
+    copy,
+    cta,
+    slug,
+    copyEyebrow,
+    staticLocationImage,
+    staticLocationImagePlacement,
+  } = fields;
 
   if (!copy) {
     return null;
   }
+
+  const showStaticMap =
+    staticLocationImage && isValidProjectLocation(staticLocationImage);
+  const mapAbove = staticLocationImagePlacement === "Above Copy";
+
+  const mapNode = showStaticMap ? (
+    <div className={styles.staticMap} key="map">
+      <StaticMapImage location={staticLocationImage} />
+    </div>
+  ) : null;
+
+  const copyNode = <RichText document={copy} key="copy" />;
+
+  const orderedChildren = mapAbove ? [mapNode, copyNode] : [copyNode, mapNode];
 
   return (
     <div
@@ -46,7 +70,7 @@ export const ContentCopyBlock = forwardRef<
           <p>{copyEyebrow}</p>
         </div>
       ) : null}
-      <RichText document={copy} />
+      {orderedChildren}
       {cta ? (
         <div className={styles.ctaContainer}>
           <CTA cta={cta} />
