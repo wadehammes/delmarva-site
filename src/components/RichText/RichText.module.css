@@ -9,7 +9,7 @@
     position: relative;
     padding-bottom: 1rem;
     margin: 0 0 1rem 0;
-    font-size: clamp(2.25rem, 4vw, 3.5em);
+    font-size: clamp(2.4rem, 4vw, 3.5em);
     font-weight: 700;
 
     &:only-child {
@@ -22,7 +22,7 @@
       bottom: 0;
       left: 0;
       width: 5rem;
-      height: 2px;
+      height: 1px;
       content: "";
       background-color: var(--colors-red);
     }

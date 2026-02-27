@@ -26,6 +26,7 @@ export interface TypeSectionFields {
   entryTitle?: EntryFieldTypes.Symbol;
   slug: EntryFieldTypes.Symbol;
   sectionEyebrow?: EntryFieldTypes.Symbol;
+  sectionEyebrowAlignment?: EntryFieldTypes.Symbol<"Center" | "Left" | "Right">;
   sectionHeader?: EntryFieldTypes.RichText;
   content?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<

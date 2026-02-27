@@ -28,7 +28,7 @@
   position: relative;
   padding-bottom: 1rem;
   margin: 0;
-  font-size: clamp(2.25rem, 4vw, 3.5em);
+  font-size: clamp(2.4rem, 4vw, 3.5em);
 
   &::after {
     position: absolute;

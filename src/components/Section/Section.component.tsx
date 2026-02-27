@@ -32,6 +32,7 @@ export const Section = async (props: SectionProps) => {
     backgroundColor = "System Default",
     sectionPadding = "Regular Padding",
     sectionEyebrow,
+    sectionEyebrowAlignment = "Left",
     sectionHeader,
     contentGap = "Regular",
     showSectionSeparator = false,
@@ -113,8 +114,15 @@ export const Section = async (props: SectionProps) => {
       style={sectionStyle}
     >
       {sectionEyebrow ? (
-        <EyebrowHeaderElement className={styles.sectionHeaderEyebrow}>
+        <EyebrowHeaderElement
+          className={clsx(styles.sectionHeaderEyebrow, {
+            [styles.centerAligned]: sectionEyebrowAlignment === "Center",
+            [styles.leftAligned]: sectionEyebrowAlignment === "Left",
+            [styles.rightAligned]: sectionEyebrowAlignment === "Right",
+          })}
+        >
           <SectionEyebrow
+            alignment={sectionEyebrowAlignment}
             hasSectionHeader={!!hasSectionHeader}
             text={sectionEyebrow}
           />

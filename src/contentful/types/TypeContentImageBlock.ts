@@ -16,6 +16,8 @@ export interface TypeContentImageBlockFields {
   imageStyle: EntryFieldTypes.Symbol<
     "Black Background" | "Microdot Background" | "None"
   >;
+  imageMaxWidth?: EntryFieldTypes.Integer;
+  imageMaxWidthMobile?: EntryFieldTypes.Integer;
   services?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeServiceSkeleton>
   >;

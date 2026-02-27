@@ -300,19 +300,19 @@ h1,
 
 h2,
 .h2 {
-  font-size: clamp(1.75em, 4vw, 2.5em);
+  font-size: clamp(1.85em, 4vw, 2.5em);
   font-weight: 700;
 }
 
 h3,
 .h3 {
-  font-size: clamp(1.35em, 2vw, 2em);
+  font-size: clamp(1.45em, 2vw, 2em);
   font-weight: 600;
 }
 
 p {
   font-family: var(--font-family-body);
-  font-size: clamp(1em, 2vw, 1.35em);
+  font-size: clamp(1.075em, 3vw, 1.25em);
   line-height: 1.5;
   color: var(--colors-text);
 }
@@ -358,7 +358,7 @@ b {
   text-align: center;
 
   h1 {
-    font-size: clamp(2rem, 10vw, 3rem);
+    font-size: clamp(2.125rem, 10vw, 3rem);
     line-height: 1.1;
   }
 

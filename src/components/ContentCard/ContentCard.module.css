@@ -41,7 +41,7 @@
   padding: clamp(1.25rem, 2vw, 2rem);
 
   h3 {
-    font-size: clamp(1.05rem, 3vw, 1.75rem);
+    font-size: clamp(1.125rem, 3vw, 1.75rem);
   }
 
   .headshot & {

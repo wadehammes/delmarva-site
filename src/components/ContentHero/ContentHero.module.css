@@ -89,7 +89,7 @@
   h1 {
     padding-bottom: 0;
     margin-bottom: 0;
-    font-size: clamp(2.75em, 5vw, 6em);
+    font-size: clamp(2.5em, 5vw, 6em);
 
     &::after {
       display: none;
@@ -107,8 +107,8 @@
     bottom: 0;
     left: 50%;
     display: block;
-    width: 4rem;
-    height: 2px;
+    width: 5rem;
+    height: 1px;
     content: "";
     background-color: var(--colors-red);
     transform: translateX(-50%);
