@@ -18,12 +18,16 @@
 
 .carousel {
   min-height: 320px;
+
+  :global(.swiper-wrapper) {
+    align-items: stretch;
+  }
 }
 
 .slide {
   display: flex;
   align-items: stretch;
-  height: auto;
+  height: 100%;
 }
 
 .slideInner {
@@ -31,5 +35,6 @@
   display: flex;
   flex: 1;
   min-width: 0;
+  height: 100%;
   padding: 10px;
 }

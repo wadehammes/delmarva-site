@@ -1,6 +1,5 @@
-import { draftMode } from "next/headers";
 import Providers from "src/app/providers";
-import { ExitDraftModeLink } from "src/components/ExitDraftModeLink/ExitDraftModeLink.component";
+import { DraftModeBanner } from "src/components/DraftModeBanner/DraftModeBanner.component";
 import "src/styles/globals.css";
 import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
@@ -44,8 +43,6 @@ export default async function RootLayout({
 
   setRequestLocale(locale);
 
-  const draft = await draftMode();
-
   return (
     <html lang={locale}>
       {process.env.GOOGLE_TAG_MANAGER_ID && (
@@ -60,12 +57,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        {draft.isEnabled ? (
-          <div className="draftMode">
-            You are previewing in draft mode!{" "}
-            <ExitDraftModeLink style={{ textDecoration: "underline" }} />
-          </div>
-        ) : null}
+        <DraftModeBanner />
         <NextIntlClientProvider locale={locale}>
           <Providers locale={locale as Locales}>{children}</Providers>
         </NextIntlClientProvider>

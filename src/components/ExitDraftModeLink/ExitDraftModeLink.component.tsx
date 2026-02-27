@@ -7,7 +7,10 @@ export const ExitDraftModeLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const pathname = usePathname();
 
   return (
-    <a href={`/api/disable-draft?redirect=${pathname}`} {...props}>
+    <a
+      href={`/api/disable-draft?redirect=${encodeURIComponent(pathname)}`}
+      {...props}
+    >
       Exit Draft Mode
     </a>
   );
