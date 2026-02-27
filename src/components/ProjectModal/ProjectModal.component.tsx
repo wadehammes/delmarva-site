@@ -9,6 +9,7 @@ import { Modal } from "src/components/Modal/Modal.component";
 import { ProjectStaticMap } from "src/components/ProjectStaticMap/ProjectStaticMap.component";
 import { ProjectStatsList } from "src/components/ProjectStatsList/ProjectStatsList.component";
 import { RichText } from "src/components/RichText/RichText.component";
+import { FALLBACK_PROJECT_MEDIA_ID } from "src/contentful/getContentfulAsset";
 import type { ProjectType } from "src/contentful/getProjects";
 import ShareIcon from "src/icons/Share.svg";
 import { Button as UIButton } from "src/ui/Button/Button.component";
@@ -65,7 +66,10 @@ export const ProjectModal = ({
   const allMarkets =
     markets?.filter((m): m is NonNullable<typeof m> => m != null) ?? [];
   const showMap = isValidProjectLocation(projectLocation) && projectLocation;
-  const showCarousel = allMedia.length > 0 || !!showMap;
+  const isOnlyFallbackMedia =
+    allMedia.length === 1 && allMedia[0]?.id === FALLBACK_PROJECT_MEDIA_ID;
+  const mediaToShow = isOnlyFallbackMedia && showMap ? [] : allMedia;
+  const showCarousel = mediaToShow.length > 0 || !!showMap;
 
   const carouselSlides = [
     ...(showMap
@@ -78,7 +82,7 @@ export const ProjectModal = ({
           />,
         ]
       : []),
-    ...allMedia.map((item) =>
+    ...mediaToShow.map((item) =>
       item ? <ContentfulAssetRenderer asset={item} key={item.id} /> : null,
     ),
   ].filter(Boolean);

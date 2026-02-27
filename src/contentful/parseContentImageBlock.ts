@@ -31,6 +31,8 @@ export interface ContentImageBlockType {
   caption?: Document;
   captionPlacement: "Above" | "Below";
   imageStyle: ImageStyleType;
+  imageMaxWidth?: number;
+  imageMaxWidthMobile?: number;
   projects?: (Partial<ProjectType> | null)[];
   services?: (Partial<ServiceType> | null)[];
 }
@@ -52,14 +54,24 @@ export function parseContentImageBlock(
     return null;
   }
 
-  const { caption, captionPlacement, image, imageStyle, projects, services } =
-    imageBlock.fields;
+  const {
+    caption,
+    captionPlacement,
+    image,
+    imageMaxWidth,
+    imageMaxWidthMobile,
+    imageStyle,
+    projects,
+    services,
+  } = imageBlock.fields;
 
   return {
     caption,
     captionPlacement,
     id: imageBlock.sys.id,
     image: parseContentfulAsset(image),
+    imageMaxWidth,
+    imageMaxWidthMobile,
     imageStyle: imageStyle as ImageStyleType,
     projects: projects?.map(parseProjectForNavigation),
     services: services?.map(parseServiceForNavigation),

@@ -101,7 +101,7 @@
 .footerLink {
   display: block;
   padding: 0.25rem 0;
-  font-size: clamp(0.95em, 2vw, 1.1em);
+  font-size: clamp(1em, 2vw, 1.1em);
   font-weight: 300;
   color: var(--colors-text);
   text-decoration: none;

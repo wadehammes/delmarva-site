@@ -173,7 +173,7 @@
   grid-template-columns: repeat(var(--grid-columns), 1fr);
   gap: 0;
   width: 100%;
-  padding: 2rem;
+  padding: 3rem 2rem;
   background-color: var(--color-bg);
 
   @media (min-width: 768px) {
@@ -315,6 +315,14 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 
+  &.centerAligned {
+    text-align: center;
+  }
+
+  &.rightAligned {
+    text-align: right;
+  }
+
   &::after {
     position: absolute;
     bottom: 0.4rem;
@@ -346,22 +354,53 @@
   width: 100%;
   text-align: center;
 
-  @media screen and (min-width: 900px) {
-    grid-column: 2 / -1;
+  &.centerAligned {
+    grid-column: 2 / -2;
+
+    .sectionEyebrowText {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+
+    @media screen and (min-width: 900px) {
+      grid-column: 4 / -4;
+    }
+
+    @media screen and (min-width: 1440px) {
+      grid-column: 8 / -8;
+    }
   }
 
-  @media screen and (min-width: 1440px) {
-    grid-column: 3 / -1;
-  }
-
-  &.left {
+  &.leftAligned {
     justify-content: flex-start;
     text-align: left;
+
+    @media screen and (min-width: 900px) {
+      grid-column: 2 / -1;
+    }
+
+    @media screen and (min-width: 1440px) {
+      grid-column: 3 / -1;
+    }
   }
 
-  &.right {
+  &.rightAligned {
+    grid-column: 1 / -1;
     justify-content: flex-end;
     text-align: right;
+
+    .sectionEyebrowText {
+      padding-right: 0;
+      padding-left: 1rem;
+    }
+
+    @media screen and (min-width: 900px) {
+      grid-column: 1 / -2;
+    }
+
+    @media screen and (min-width: 1440px) {
+      grid-column: 1 / -3;
+    }
   }
 }
 

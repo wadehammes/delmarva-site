@@ -25,6 +25,10 @@ import {
   type TypeSectionWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeSection";
 
+export type SectionEyebrowAlignment = ExtractSymbolType<
+  NonNullable<TypeSectionFields["sectionEyebrowAlignment"]>
+>;
+
 type SectionBackgroundColor = ExtractSymbolType<
   NonNullable<TypeSectionFields["backgroundColor"]>
 >;
@@ -82,6 +86,7 @@ export interface SectionType {
   sectionBackgroundStyle?: SectionOverlayStyle;
   sectionContentPlacement?: SectionContentPlacement;
   sectionEyebrow?: string;
+  sectionEyebrowAlignment?: SectionEyebrowAlignment;
   sectionHeader?: RichTextDocument;
   showSectionSeparator?: boolean;
 }
@@ -104,23 +109,20 @@ export function parseContentfulSection(
   const { fields } = section;
 
   return {
-    backgroundColor: fields.backgroundColor as SectionBackgroundColor,
+    backgroundColor: fields.backgroundColor,
     content: fields.content?.map((entry) => entry as ContentEntries) ?? [],
-    contentGap: fields.contentGap as SectionContentGap,
-    contentLayout: fields.contentLayout as SectionContentLayout,
-    contentVerticalAlignment:
-      fields.contentVerticalAlignment as SectionVerticalAlignment,
+    contentGap: fields.contentGap,
+    contentLayout: fields.contentLayout,
+    contentVerticalAlignment: fields.contentVerticalAlignment,
     cta: parseContentfulCta(fields.cta) ?? undefined,
     id: section.sys.id,
-    mobileContentLayout:
-      fields.mobileContentLayout as SectionMobileContentLayout,
-    sectionBackgroundStyle:
-      fields.sectionBackgroundStyle as SectionOverlayStyle,
-    sectionContentPlacement:
-      fields.sectionContentPlacement as SectionContentPlacement,
+    mobileContentLayout: fields.mobileContentLayout,
+    sectionBackgroundStyle: fields.sectionBackgroundStyle,
+    sectionContentPlacement: fields.sectionContentPlacement,
     sectionEyebrow: fields.sectionEyebrow,
+    sectionEyebrowAlignment: fields.sectionEyebrowAlignment,
     sectionHeader: fields.sectionHeader,
-    sectionPadding: fields.sectionPadding as SectionPadding,
+    sectionPadding: fields.sectionPadding,
     showSectionSeparator: Boolean(fields.showSectionSeparator),
     slug: fields.slug,
   };
