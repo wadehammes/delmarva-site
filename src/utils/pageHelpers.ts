@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import type { Page } from "src/contentful/getPages";
 import { fetchServices } from "src/contentful/getServices";
+import type { SectionType } from "src/contentful/parseSections";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { aggregateAreasServedFromServices } from "src/utils/areasServed";
@@ -9,7 +10,7 @@ import {
   hasAreasServicedListModule,
   hasServiceListModule,
 } from "src/utils/contentModules";
-import { createMediaUrl, envUrl } from "src/utils/helpers";
+import { createMediaUrl, envUrl, isContentType } from "src/utils/helpers";
 import type { GenerateSchemaGraphOptions } from "src/utils/schema";
 import { generateSchemaGraph } from "src/utils/schema";
 
@@ -141,6 +142,28 @@ export function createMetadataImages(
   ];
 }
 
+export function pageHasVideoBlock(entity: {
+  sections?: (SectionType | null)[];
+}): boolean {
+  for (const section of entity.sections ?? []) {
+    for (const content of section?.content ?? []) {
+      if (isContentType(content, "contentVideoBlock")) return true;
+    }
+  }
+  return false;
+}
+
+const VIDEO_PRECONNECT_LINKS: Array<{ rel: string; url: string }> = [
+  { rel: "preconnect", url: "https://player.vimeo.com" },
+  { rel: "preconnect", url: "https://www.youtube.com" },
+];
+
+export function getVideoPreconnectLinks(entity: {
+  sections?: (SectionType | null)[];
+}): Array<{ rel: string; url: string }> | undefined {
+  return pageHasVideoBlock(entity) ? VIDEO_PRECONNECT_LINKS : undefined;
+}
+
 /**
  * Generates page metadata with common fields
  */
@@ -196,6 +219,7 @@ export function createServiceMetadata(
     metaImage: { src: string } | null | undefined;
     enableIndexing: boolean;
     slug: string;
+    sections?: (SectionType | null)[];
   },
   canonicalUrl: string,
   options?: { pathPrefix?: string },
@@ -204,7 +228,6 @@ export function createServiceMetadata(
   const path = pathPrefix ? `${pathPrefix}/${service.slug}` : service.slug;
   const baseUrl = envUrl();
   const images = createMetadataImages(service.metaImage, service.metaTitle);
-
   return {
     alternates: {
       canonical: new URL(canonicalUrl),

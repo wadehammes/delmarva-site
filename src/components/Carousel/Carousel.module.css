@@ -57,7 +57,7 @@
   &.controlsBelowSlides {
     position: relative;
     right: auto;
-    bottom: auto;
+    bottom: 1rem;
     transform: translateY(-5px);
   }
 

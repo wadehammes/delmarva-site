@@ -15,6 +15,10 @@ export interface TypeCopyBlockFields {
   cta?: EntryFieldTypes.EntryLink<TypeCtaSkeleton>;
   alignment?: EntryFieldTypes.Symbol<"Center" | "Left" | "Right">;
   mobileAlignment?: EntryFieldTypes.Symbol<"Center" | "Left" | "Right">;
+  staticLocationImage?: EntryFieldTypes.Location;
+  staticLocationImagePlacement?: EntryFieldTypes.Symbol<
+    "Above Copy" | "Below Copy"
+  >;
 }
 
 export type TypeCopyBlockSkeleton = EntrySkeletonType<

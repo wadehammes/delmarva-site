@@ -1,6 +1,7 @@
 import { ContentRenderer } from "src/components/ContentRenderer/ContentRenderer.component";
 import { Section } from "src/components/Section/Section.component";
 import type { SectionType } from "src/contentful/parseSections";
+import { isTypeContentHero } from "src/contentful/types";
 
 interface SectionRendererProps {
   locale?: string;
@@ -22,10 +23,11 @@ export const SectionRenderer = (props: SectionRendererProps) => {
     }
 
     const sectionId = `${section.slug}-${section.id}`;
-    const hasHero = section.content?.some(
-      (c) => c?.sys?.contentType?.sys?.id === "contentHero",
-    );
-    const isFirstSectionWithHero = index === 0 && !!hasHero;
+    const hasVisibleHero = section.content?.some((c) => {
+      if (!c || !isTypeContentHero(c)) return false;
+      return !c.fields.hideHero;
+    });
+    const isFirstSectionWithHero = index === 0 && !!hasVisibleHero;
 
     return (
       <Section
