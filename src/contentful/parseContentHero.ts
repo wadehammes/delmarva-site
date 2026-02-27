@@ -16,12 +16,6 @@ type HeroHeightType = ExtractSymbolType<
   NonNullable<TypeContentHeroFields["heroHeight"]>
 >;
 
-export const HeroHeight = {
-  EightyPercent: "80% Height",
-  FullScreen: "Full Screen",
-  Regular: "Regular",
-  Small: "Small",
-} as const satisfies Record<string, HeroHeightType>;
 type PlacementType = ExtractSymbolType<
   NonNullable<TypeContentHeroFields["copyPlacement"]>
 >;
@@ -57,6 +51,7 @@ export interface ContentHero {
   overlayOpacity?: CSSColorAdjustScaleType;
   overlayStyle?: OverlayStyleType;
   showHeaderStyledBorder?: boolean;
+  hideHero?: boolean;
 }
 
 const _validateContentHeroCheck: ContentfulTypeCheck<
@@ -86,6 +81,7 @@ export function parseContentHero(entry: ContentHeroEntry): ContentHero | null {
     cta: entry.fields.cta ? parseContentfulCta(entry.fields.cta) : null,
     entryTitle: entry.fields.entryTitle ?? "",
     heroHeight: entry.fields.heroHeight as HeroHeightType,
+    hideHero: Boolean(entry.fields.hideHero),
     id: entry.sys.id,
     overlayColor: entry.fields.overlayColor as DelmarvaColorsType,
     overlayOpacity: entry.fields.overlayOpacity as CSSColorAdjustScaleType,

@@ -21,12 +21,16 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   const { copy, media, mediaPlacement, mediaBackgroundStyle } = fields;
 
   const { ref, inView } = useOptimizedInView();
+  const hasVideo = (media ?? []).some(
+    (item) => item?.sys?.contentType?.sys?.id === "contentVideoBlock",
+  );
 
   return (
     <div
       className={clsx(styles.contentCopyMediaBlock, {
         [styles.inView]: inView,
         [styles.mediaLeft]: mediaPlacement === "Left",
+        [styles.hasVideo]: hasVideo,
       })}
       ref={ref}
     >

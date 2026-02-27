@@ -25,6 +25,7 @@ export interface TypeContentHeroFields {
     "80% Height" | "Full Screen" | "Regular" | "Small"
   >;
   showHeaderStyledBorder?: EntryFieldTypes.Boolean;
+  hideHero?: EntryFieldTypes.Boolean;
 }
 
 export type TypeContentHeroSkeleton = EntrySkeletonType<

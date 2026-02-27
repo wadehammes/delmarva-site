@@ -58,6 +58,7 @@
     position: relative;
     right: auto;
     bottom: auto;
+    transform: translateY(-5px);
   }
 
   &.controlsSmall {

@@ -5,10 +5,7 @@ import styles from "src/components/ContentHero/ContentHero.module.css";
 import { HeroVideo } from "src/components/ContentHero/HeroVideo.component";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
-import {
-  type ContentHero as ContentHeroType,
-  HeroHeight,
-} from "src/contentful/parseContentHero";
+import type { ContentHero as ContentHeroType } from "src/contentful/parseContentHero";
 import { createBackgroundColor } from "src/styles/utils";
 import { createMediaUrl, isVideoUrl } from "src/utils/helpers";
 
@@ -34,14 +31,16 @@ export const ContentHeroComponent = (props: ContentHeroComponentProps) => {
     overlayOpacity,
     overlayStyle,
     showHeaderStyledBorder,
+    hideHero,
   } = fields;
 
   return (
     <div
       className={clsx(styles.hero, {
-        [styles.heroFullScreen]: heroHeight === HeroHeight.FullScreen,
-        [styles.heroEightyPercent]: heroHeight === HeroHeight.EightyPercent,
-        [styles.heroSmall]: heroHeight === HeroHeight.Small,
+        [styles.hideHero]: hideHero,
+        [styles.heroFullScreen]: heroHeight === "Full Screen",
+        [styles.heroEightyPercent]: heroHeight === "80% Height",
+        [styles.heroSmall]: heroHeight === "Small",
         [styles.heroContentLeft]: copyPlacement === "Left Aligned",
         [styles.heroContentRight]: copyPlacement === "Right Aligned",
       })}

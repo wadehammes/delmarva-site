@@ -43,6 +43,24 @@
     opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
+  .contentCopyMediaBlock.hasVideo & {
+    width: calc(100% + 5rem);
+    margin-left: -2.5rem;
+
+    [data-video-player] :global([class*="player"]) {
+      border-radius: 0;
+    }
+
+    @media (min-width: 900px) {
+      width: auto;
+      margin-left: 0;
+
+      [data-video-player] :global([class*="player"]) {
+        border-radius: 8px;
+      }
+    }
+  }
+
   &.blackBg {
     padding: 1rem;
     background-color: color-mix(in srgb, var(--colors-black) 80%, black);

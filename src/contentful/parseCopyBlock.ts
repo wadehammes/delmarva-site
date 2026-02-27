@@ -20,6 +20,7 @@ type CopyBlockMobileAlignmentType = ExtractSymbolType<
 
 export interface CopyBlock {
   alignment?: CopyBlockAlignmentType;
+  copyEyebrow?: string;
   copy?: Document | undefined;
   cta?: CtaType | null;
   id: string;
@@ -42,15 +43,16 @@ export function parseCopyBlock(entry: CopyBlockEntry): CopyBlock | null {
     return null;
   }
 
-  const { alignment, copy, cta, mobileAlignment, slug } = entry.fields;
+  const { alignment, copy, cta, mobileAlignment, slug, copyEyebrow } =
+    entry.fields;
 
   return {
-    alignment: (alignment ?? "Left") as CopyBlockAlignmentType,
+    alignment,
     copy,
+    copyEyebrow,
     cta: cta ? parseContentfulCta(cta) : null,
     id: entry.sys.id,
-    mobileAlignment: (mobileAlignment ??
-      "Left") as CopyBlockMobileAlignmentType,
+    mobileAlignment,
     slug,
   };
 }

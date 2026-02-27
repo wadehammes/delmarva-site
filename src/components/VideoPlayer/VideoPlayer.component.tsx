@@ -51,7 +51,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
   }
 
   return (
-    <div className={clsx(styles.container)}>
+    <div className={clsx(styles.container)} data-video-player>
       <div
         className={clsx(styles.player, {
           [styles.rounded]: rounded,

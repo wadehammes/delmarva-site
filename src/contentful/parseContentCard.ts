@@ -63,7 +63,7 @@ export const parseContentCard = (
     cardMicrodotBg: cardMicrodotBg ?? false,
     id: card.sys.id,
     media: parseContentfulAsset(media) || null,
-    mediaType: (mediaType ?? "Regular Image") as ContentCardMediaType,
+    mediaType,
     modalCopy,
   };
 };

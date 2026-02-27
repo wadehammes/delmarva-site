@@ -72,7 +72,7 @@ export function parseContentImageBlock(
     image: parseContentfulAsset(image),
     imageMaxWidth,
     imageMaxWidthMobile,
-    imageStyle: imageStyle as ImageStyleType,
+    imageStyle,
     projects: projects?.map(parseProjectForNavigation),
     services: services?.map(parseServiceForNavigation),
   };

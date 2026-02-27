@@ -57,7 +57,7 @@ export function parseContentfulVideoBlock(
     id: videoBlock.sys.id,
     projects: projects?.map(parseProjectForNavigation),
     services: services?.map(parseServiceForNavigation),
-    videoBackgroundStyle: videoBackgroundStyle as VideoBackgroundStyleType,
+    videoBackgroundStyle,
     videoUpload: parseContentfulAsset(videoUpload),
     videoUrl,
   };
