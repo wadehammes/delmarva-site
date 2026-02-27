@@ -171,7 +171,12 @@ const nextConfig: NextConfig = withNextIntl({
     rules: {
       "*.svg": {
         as: "*.js",
-        loaders: ["@svgr/webpack"],
+        loaders: [
+          {
+            loader: "@svgr/webpack",
+            options: { svgo: false },
+          },
+        ],
       },
     },
   },
@@ -194,14 +199,7 @@ const nextConfig: NextConfig = withNextIntl({
           use: {
             loader: "@svgr/webpack",
             options: {
-              svgoConfig: {
-                plugins: [
-                  {
-                    active: false,
-                    name: "removeViewBox",
-                  },
-                ],
-              },
+              svgo: false,
             },
           },
         });
