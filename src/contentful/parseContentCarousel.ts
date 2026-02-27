@@ -37,13 +37,16 @@ export const parseContentCarousel = (
     return null;
   }
 
-  const { carouselItems } = contentCarousel.fields;
+  const {
+    carouselItems,
+    controlsPlacement = "Over Slides",
+    slug,
+  } = contentCarousel.fields;
 
   return {
     carouselItems: carouselItems?.map((entry) => entry as ContentEntries) ?? [],
-    controlsPlacement: (contentCarousel.fields.controlsPlacement ??
-      "Over Slides") as ControlsPlacementType,
+    controlsPlacement,
     id: contentCarousel.sys.id,
-    slug: contentCarousel.fields.slug ?? "",
+    slug,
   };
 };

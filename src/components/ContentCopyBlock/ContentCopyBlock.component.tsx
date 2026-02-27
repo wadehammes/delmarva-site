@@ -24,7 +24,7 @@ export const ContentCopyBlock = forwardRef<
     return null;
   }
 
-  const { id, copy, cta, slug } = fields;
+  const { id, copy, cta, slug, copyEyebrow } = fields;
 
   if (!copy) {
     return null;
@@ -41,6 +41,11 @@ export const ContentCopyBlock = forwardRef<
       id={slug || id}
       ref={divRef}
     >
+      {copyEyebrow ? (
+        <div className={styles.copyEyebrow}>
+          <p>{copyEyebrow}</p>
+        </div>
+      ) : null}
       <RichText document={copy} />
       {cta ? (
         <div className={styles.ctaContainer}>

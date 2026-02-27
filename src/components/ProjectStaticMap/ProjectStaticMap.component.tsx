@@ -3,9 +3,9 @@
 import type { EntryFields } from "contentful";
 import Image from "next/image";
 import { useMemo } from "react";
+import { Skeleton } from "src/components/Skeleton/Skeleton.component";
 import { isValidProjectLocation } from "src/utils/mapUtils";
 import { getProjectMapStaticUrl } from "src/utils/staticMapUrl";
-import styles from "./ProjectStaticMap.module.css";
 
 interface ProjectStaticMapProps {
   projectLocation: EntryFields.Location;
@@ -50,11 +50,5 @@ export const ProjectStaticMap = (props: ProjectStaticMapProps) => {
     return <Image alt="" height={height} src={staticMapUrl} width={width} />;
   }
 
-  return (
-    <div
-      aria-hidden="true"
-      className={styles.shimmer}
-      style={{ height, width }}
-    />
-  );
+  return <Skeleton height={height} variant="block" width={width} />;
 };

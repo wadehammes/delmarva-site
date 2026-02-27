@@ -53,7 +53,7 @@ export const parseContentCopyMediaBlock = (
     copy: parseCopyBlock(copy),
     id: contentCopyMediaBlock.sys.id,
     media: media?.map((entry) => entry as ContentEntries) ?? [],
-    mediaBackgroundStyle: mediaBackgroundStyle as MediaBackgroundStyleType,
-    mediaPlacement: mediaPlacement as MediaPlacementType,
+    mediaBackgroundStyle,
+    mediaPlacement,
   };
 };

@@ -9,6 +9,12 @@
     clamp(3rem, 3vw, 8rem);
   text-align: center;
 
+  &.hideHero {
+    display: none;
+    visibility: hidden;
+    height: 0;
+  }
+
   &.heroContentLeft {
     justify-content: flex-start;
     text-align: left;

@@ -1,0 +1,35 @@
+.wrapper {
+  position: relative;
+  min-height: 320px;
+}
+
+.skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background-color: var(--color-bg);
+  transition: opacity 0.2s ease;
+}
+
+.skeleton[data-ready="true"] {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.carousel {
+  min-height: 320px;
+}
+
+.slide {
+  display: flex;
+  align-items: stretch;
+  height: auto;
+}
+
+.slideInner {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+}

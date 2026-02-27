@@ -9,6 +9,7 @@ import type { TypeCtaSkeleton } from "./TypeCta";
 
 export interface TypeCopyBlockFields {
   entryTitle?: EntryFieldTypes.Symbol;
+  copyEyebrow?: EntryFieldTypes.Symbol;
   copy?: EntryFieldTypes.RichText;
   slug: EntryFieldTypes.Symbol;
   cta?: EntryFieldTypes.EntryLink<TypeCtaSkeleton>;

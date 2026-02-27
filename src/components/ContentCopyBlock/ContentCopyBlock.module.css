@@ -73,6 +73,20 @@
   }
 }
 
+.copyEyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  p {
+    margin: 0;
+    font-size: inherit;
+  }
+}
+
 .ctaContainer {
   margin-top: 0;
 

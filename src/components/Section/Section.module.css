@@ -264,6 +264,16 @@
   &.fullWidth {
     padding-right: 0;
     padding-left: 0;
+
+    & > .sectionHeaderEyebrow {
+      padding-right: 1.5rem;
+      padding-left: 1.5rem;
+
+      @media (min-width: 900px) {
+        padding-right: 0;
+        padding-left: 0;
+      }
+    }
   }
 
   &.whiteBg {
