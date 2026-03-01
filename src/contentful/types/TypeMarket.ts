@@ -5,10 +5,24 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
+import type { TypeContentStatBlockSkeleton } from "./TypeContentStatBlock";
+import type { TypeSectionSkeleton } from "./TypeSection";
 
 export interface TypeMarketFields {
   entryTitle?: EntryFieldTypes.Symbol;
   marketTitle?: EntryFieldTypes.Symbol;
+  slug: EntryFieldTypes.Symbol;
+  description?: EntryFieldTypes.RichText;
+  stats?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeContentStatBlockSkeleton>
+  >;
+  sections?: EntryFieldTypes.Array<
+    EntryFieldTypes.EntryLink<TypeSectionSkeleton>
+  >;
+  metadataTitle?: EntryFieldTypes.Symbol;
+  metadataDescription?: EntryFieldTypes.Symbol;
+  socialImage?: EntryFieldTypes.AssetLink;
+  enableIndexing?: EntryFieldTypes.Boolean;
 }
 
 export type TypeMarketSkeleton = EntrySkeletonType<TypeMarketFields, "market">;

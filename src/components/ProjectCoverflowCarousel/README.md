@@ -1,4 +1,4 @@
-# ProjectCarousel Component
+# ProjectCoverflowCarousel Component
 
 A specialized carousel component for displaying project cards using the Swiper library with a coverflow effect.
 
@@ -13,11 +13,11 @@ A specialized carousel component for displaying project cards using the Swiper l
 ## Usage
 
 ```tsx
-import { ProjectCarousel } from "src/components/ProjectCarousel/ProjectCarousel.component";
+import { ProjectCoverflowCarousel } from "src/components/ProjectCoverflowCarousel/ProjectCoverflowCarousel.component";
 
-<ProjectCarousel 
-  projects={projects} 
-  selectedServiceSlug={serviceSlug} 
+<ProjectCoverflowCarousel
+  projects={projects}
+  selectedServiceSlug={serviceSlug}
 />
 ```
 
@@ -33,7 +33,7 @@ import { ProjectCarousel } from "src/components/ProjectCarousel/ProjectCarousel.
 The component uses CSS custom properties for responsive sizing:
 
 - `--project-carousel-slide-width`: Width of each slide
-- `--project-carousel-slide-height`: Height of each slide  
+- `--project-carousel-slide-height`: Height of each slide
 - `--project-carousel-gap`: Gap between slides
 
 These properties are automatically adjusted based on screen size breakpoints.
@@ -42,4 +42,4 @@ These properties are automatically adjusted based on screen size breakpoints.
 
 - Swiper library with EffectCoverflow module
 - ProjectCard component
-- CSS modules for styling 
+- CSS modules for styling

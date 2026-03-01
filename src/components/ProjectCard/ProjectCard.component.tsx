@@ -36,8 +36,14 @@ export const ProjectCard = (props: ProjectCardProps) => {
   const localModal = useModal(false);
   const modal = syncUrlOnOpen ? projectModal : localModal;
 
-  const { projectName, description, media, projectLocation, projectStats } =
-    project;
+  const {
+    markets,
+    projectName,
+    description,
+    media,
+    projectLocation,
+    projectStats,
+  } = project;
 
   const showMap = isValidProjectLocation(projectLocation) && projectLocation;
   const showMediaSection = showMap || media?.[0];
@@ -105,7 +111,14 @@ export const ProjectCard = (props: ProjectCardProps) => {
             <RichText document={description} />
           </header>
           <div className={styles.statsList}>
-            <ProjectStatsList stats={projectStatsByService ?? []} />
+            <ProjectStatsList
+              markets={
+                markets?.filter((m): m is NonNullable<typeof m> => m != null) ??
+                []
+              }
+              marketsLabel={t("markets")}
+              stats={projectStatsByService ?? []}
+            />
           </div>
         </div>
       </button>

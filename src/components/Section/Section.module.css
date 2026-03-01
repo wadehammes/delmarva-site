@@ -265,11 +265,15 @@
     padding-right: 0;
     padding-left: 0;
 
-    & > .sectionHeaderEyebrow {
-      padding-right: 1.5rem;
-      padding-left: 1.5rem;
+    & > [class*="sectionContent"] {
+      grid-column: 1 / -1;
+    }
 
-      @media (min-width: 900px) {
+    & > .sectionHeaderEyebrow {
+      padding-right: var(--default-padding);
+      padding-left: var(--default-padding);
+
+      @media screen and (min-width: 900px) {
         padding-right: 0;
         padding-left: 0;
       }

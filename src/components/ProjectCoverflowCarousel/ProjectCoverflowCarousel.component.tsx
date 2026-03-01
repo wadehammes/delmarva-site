@@ -8,39 +8,38 @@ import Chevron from "src/icons/Chevron.svg";
 import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper/types";
-import styles from "./ProjectCarousel.module.css";
+import styles from "./ProjectCoverflowCarousel.module.css";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-interface ProjectCarouselProps {
-  projects: ProjectType[];
-  selectedServiceSlug?: string;
+interface ProjectCoverflowCarouselProps {
   carouselId?: string;
   onSwiper?: (swiper: SwiperType) => void;
+  projects: ProjectType[];
+  selectedServiceSlug?: string;
 }
 
-export const ProjectCarousel = (props: ProjectCarouselProps) => {
-  const t = useTranslations("ProjectCarousel");
+export const ProjectCoverflowCarousel = (
+  props: ProjectCoverflowCarouselProps,
+) => {
+  const t = useTranslations("ProjectCoverflowCarousel");
   const {
-    projects,
-    selectedServiceSlug,
     carouselId: propCarouselId,
     onSwiper,
+    projects,
+    selectedServiceSlug,
   } = props;
 
   const swiperRef = useRef<SwiperType | null>(null);
   const generatedCarouselId = useId();
   const carouselId = propCarouselId || generatedCarouselId;
 
-  // Handle Swiper resize and recalculation
   useEffect(() => {
     const handleResize = () => {
       if (swiperRef.current) {
-        // Force Swiper to recalculate its layout
         swiperRef.current.update();
         swiperRef.current.updateSize();
         swiperRef.current.updateSlides();
@@ -53,17 +52,15 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Memoize IDs to prevent unnecessary re-renders
   const elementIds = useMemo(
     () => ({
-      navigationNext: `project-carousel-${carouselId}-nav-next`,
-      navigationPrev: `project-carousel-${carouselId}-nav-prev`,
-      pagination: `project-carousel-${carouselId}-pagination`,
+      navigationNext: `project-coverflow-carousel-${carouselId}-nav-next`,
+      navigationPrev: `project-coverflow-carousel-${carouselId}-nav-prev`,
+      pagination: `project-coverflow-carousel-${carouselId}-pagination`,
     }),
     [carouselId],
   );
 
-  // Memoize Swiper configuration for better performance
   const swiperConfig = useMemo(
     () => ({
       breakpoints: {
@@ -101,7 +98,6 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
     [elementIds],
   );
 
-  // Handle Swiper initialization
   const handleSwiperInit = (swiper: SwiperType) => {
     swiperRef.current = swiper;
     if (onSwiper) {
@@ -109,7 +105,6 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
     }
   };
 
-  // Handle empty or invalid projects array
   if (!projects || projects.length === 0) {
     return (
       <div className={styles.singleProject}>
@@ -118,7 +113,6 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
     );
   }
 
-  // If there's only one project, just render it normally
   if (projects.length === 1) {
     return (
       <div className={styles.singleProject}>
@@ -131,7 +125,7 @@ export const ProjectCarousel = (props: ProjectCarouselProps) => {
   }
 
   return (
-    <div className={styles.projectCarousel}>
+    <div className={styles.projectCoverflowCarousel}>
       <Swiper
         {...swiperConfig}
         className={styles.swiper}

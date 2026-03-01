@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import styles from "./Skeleton.module.css";
 
-interface SkeletonProps {
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   height?: number;
   variant?: "block" | "line" | "media";
@@ -15,6 +15,7 @@ export const Skeleton = ({
   height,
   variant = "block",
   width,
+  ...props
 }: SkeletonProps) => {
   const style =
     width || height
@@ -36,14 +37,13 @@ export const Skeleton = ({
         className,
       )}
       role="presentation"
-      style={style}
+      style={{ ...style, ...props.style }}
     />
   );
 };
 
-interface SkeletonCardProps {
+interface SkeletonCardProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
-  lineCount?: number;
 }
 
 interface SkeletonCardTrackProps {
@@ -71,31 +71,8 @@ export const SkeletonCardTrack = ({
   </div>
 );
 
-export const SkeletonCard = ({
-  className,
-  lineCount = 2,
-}: SkeletonCardProps) => (
+export const SkeletonCard = ({ className, ...props }: SkeletonCardProps) => (
   <div className={clsx(styles.card, className)}>
-    <Skeleton className={styles.media} variant="media" />
-    <div className={styles.cardContent}>
-      <Skeleton className={styles.title} variant="line" />
-      {Array.from({ length: lineCount }).map((_, i) => (
-        <Skeleton
-          className={clsx(styles.descriptionLine, i === 0 && styles.lineWide)}
-          key={i}
-          variant="line"
-        />
-      ))}
-      <div className={styles.statsList}>
-        <div className={styles.stat}>
-          <Skeleton className={styles.statLabel} variant="line" />
-          <Skeleton className={styles.statValue} variant="line" />
-        </div>
-        <div className={styles.stat}>
-          <Skeleton className={styles.statLabel} variant="line" />
-          <Skeleton className={styles.statValue} variant="line" />
-        </div>
-      </div>
-    </div>
+    <Skeleton {...props} style={{ height: "100%", width: "100%" }} />
   </div>
 );

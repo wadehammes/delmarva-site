@@ -1,5 +1,5 @@
 import type { Page } from "src/contentful/getPages";
-import { SERVICES_PAGE_SLUG } from "src/utils/constants";
+import { MARKETS_PAGE_SLUG, SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { envUrl } from "src/utils/helpers";
 
 export interface BreadcrumbItem {
@@ -52,6 +52,28 @@ export function generateBreadcrumbs(
         "@type": "ListItem",
         item: serviceItem.url || `${baseUrl}/${slug}`,
         name: serviceItem.name,
+        position: 2,
+      });
+    }
+
+    return breadcrumbs;
+  }
+
+  if (slug.startsWith(`${MARKETS_PAGE_SLUG}/`)) {
+    breadcrumbs.push({
+      "@type": "ListItem",
+      item: `${baseUrl}/${MARKETS_PAGE_SLUG}`,
+      name: "Markets",
+      position: 1,
+    });
+
+    if (additionalItems && additionalItems.length > 0) {
+      const marketItem = additionalItems[0];
+
+      breadcrumbs.push({
+        "@type": "ListItem",
+        item: marketItem.url || `${baseUrl}/${slug}`,
+        name: marketItem.name,
         position: 2,
       });
     }

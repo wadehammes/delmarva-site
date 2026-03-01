@@ -95,7 +95,7 @@
 
 .cardTrack {
   display: flex;
-  gap: 24px;
+  gap: 32px;
   height: 100%;
   min-height: 320px;
   padding: 0 2rem;

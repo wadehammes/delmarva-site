@@ -1,0 +1,106 @@
+.marketAccordion {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  container-type: inline-size;
+
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 1fr;
+
+    .marketAccordionCarousel {
+      display: flex;
+      grid-column: 2;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.marketAccordionContent {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1;
+  gap: 2rem;
+  max-width: none;
+}
+
+.statsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+
+  > *:not(:first-child) {
+    padding-left: 1rem;
+  }
+
+  > *:not(:last-child) {
+    padding-right: 1rem;
+    border-right: 1px dashed var(--divider);
+  }
+}
+
+.statItem {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--divider);
+}
+
+.statDescription {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.statValue {
+  font-family: var(--font-family-numbers);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.marketAccordionCta {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+.marketAccordionCarousel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 80ch;
+  padding: 0.5rem 0;
+}
+
+.marketAccordionCarousel :global(.projectCarousel) {
+  width: 100%;
+  max-width: none;
+}
+
+.marketAccordionCarousel.singleCard {
+  align-items: center;
+  justify-content: center;
+  max-width: 350px;
+  margin: 0 auto;
+
+  @media (min-width: 1024px) {
+    max-width: 390px;
+  }
+}
+
+.marketAccordionCarousel :global(.projectCard) {
+  width: 100%;
+  max-width: none;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "@types/mapbox__point-geometry",
+  "version": "1.0.87",
+  "main": "index.d.ts",
+  "types": "index.d.ts"
+}

@@ -12,7 +12,7 @@ import type { ServiceType } from "src/contentful/getServices";
 import type { Locales } from "src/i18n/routing";
 import { getServiceAreasServed } from "src/utils/areasServed";
 import { generateBreadcrumbs } from "src/utils/breadcrumbs";
-import { SERVICES_PAGE_SLUG } from "src/utils/constants";
+import { MARKETS_PAGE_SLUG, SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { createMediaUrl, envUrl } from "src/utils/helpers";
 
 export interface SchemaGraphContext {
@@ -410,6 +410,71 @@ export async function generateServicePageSchemaGraph(
 
   if (serviceSchema) {
     graph.push(serviceSchema);
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": graph,
+  };
+}
+
+export interface GenerateMarketPageSchemaOptions {
+  market: {
+    marketTitle?: string;
+    metadataDescription?: string;
+    metadataTitle?: string;
+    socialImage?: { src: string } | null;
+    slug: string;
+  };
+  slug: string;
+  locale: Locales;
+  preview: boolean;
+}
+
+export async function generateMarketPageSchemaGraph(
+  options: GenerateMarketPageSchemaOptions,
+): Promise<SchemaGraphContext> {
+  const { market, slug, locale } = options;
+
+  const baseUrl = envUrl();
+  const canonicalUrl = `${baseUrl}/${MARKETS_PAGE_SLUG}/${market.slug}`;
+  const organizationId = `${baseUrl}#organization`;
+
+  const organizationSchema = createOrganizationSchema(baseUrl);
+
+  const title =
+    market.metadataTitle ??
+    `${market.marketTitle ?? "Market"} | Delmarva Site Development`;
+
+  const webpageSchema: WithContext<WebPage> = {
+    "@context": "https://schema.org",
+    "@id": `${canonicalUrl}#webpage`,
+    "@type": "WebPage",
+    description: market.metadataDescription ?? "",
+    name: title,
+    publisher: {
+      "@id": organizationId,
+    },
+    url: canonicalUrl,
+  };
+
+  if (market.socialImage) {
+    webpageSchema.image = createMediaUrl(market.socialImage.src);
+  }
+
+  const breadcrumbs = generateBreadcrumbs(null, slug, locale, [
+    { name: market.marketTitle ?? "Market", url: canonicalUrl },
+  ]);
+
+  const graph: Array<
+    | WithContext<LocalBusiness>
+    | WithContext<WebPage>
+    | WithContext<BreadcrumbList>
+  > = [organizationSchema, webpageSchema];
+
+  if (breadcrumbs.length > 0) {
+    const breadcrumbSchema = createBreadcrumbSchema(breadcrumbs, canonicalUrl);
+    graph.push(breadcrumbSchema);
   }
 
   return {
