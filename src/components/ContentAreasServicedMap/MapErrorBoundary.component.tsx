@@ -24,9 +24,7 @@ export class MapErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("[Map Error]", error);
-    }
+    console.error("[Map Error]", error.message, error.stack);
   }
 
   render() {

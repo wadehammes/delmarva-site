@@ -1,4 +1,3 @@
-import flatten from "lodash.flatten";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
@@ -81,17 +80,15 @@ export async function generateStaticParams(): Promise<PageParams[]> {
     }
   }
 
-  return flatten(
-    routing.locales.map((locale) =>
-      pages
-        .filter(
-          (page) => !EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(page?.slug ?? ""),
-        )
-        .map((page: PageType) => ({
-          locale,
-          slug: page?.slug ?? "",
-        })),
-    ),
+  return routing.locales.flatMap((locale) =>
+    pages
+      .filter(
+        (page) => !EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(page?.slug ?? ""),
+      )
+      .map((page: PageType) => ({
+        locale,
+        slug: page?.slug ?? "",
+      })),
   );
 }
 
