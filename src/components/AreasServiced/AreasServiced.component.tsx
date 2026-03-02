@@ -4,7 +4,7 @@ import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useReducer, useRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import clsx from "clsx";
-import type { ServiceType } from "src/contentful/getServices";
+import type { ServiceForMap } from "src/contentful/parseContentAreasServicedMap";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
 import { mergeFeaturesToSingleBoundary } from "src/utils/geometryUtils";
 import {
@@ -31,7 +31,7 @@ const FIT_BOUNDS_OPTIONS = {
 } as const;
 
 interface AreasServicedProps {
-  services: ServiceType[];
+  services: ServiceForMap[];
   className?: string;
   height?: string;
   center?: [number, number];
@@ -110,6 +110,14 @@ export const AreasServiced = (props: AreasServicedProps) => {
   const isLoading = state.status === "loading";
   const serviceAreasWithGeoJSON =
     state.status === "success" ? state.serviceAreasWithGeoJSON : [];
+  const servicesKey = useMemo(
+    () =>
+      services
+        .map((s) => s.id)
+        .sort()
+        .join(","),
+    [services],
+  );
 
   useEffect(() => {
     let isCancelled = false;
@@ -152,7 +160,7 @@ export const AreasServiced = (props: AreasServicedProps) => {
     return () => {
       isCancelled = true;
     };
-  }, [services]);
+  }, [servicesKey]);
 
   useEffect(() => {
     if (
@@ -181,7 +189,17 @@ export const AreasServiced = (props: AreasServicedProps) => {
     map.current.on("load", () => {
       if (!map.current) return;
 
-      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+      const navControl = new mapboxgl.NavigationControl();
+      map.current.addControl(navControl, "top-right");
+      const navEl = navControl._container;
+      if (navEl) {
+        const zoomIn = navEl.querySelector(".mapboxgl-ctrl-zoom-in");
+        const zoomOut = navEl.querySelector(".mapboxgl-ctrl-zoom-out");
+        const compass = navEl.querySelector(".mapboxgl-ctrl-compass");
+        if (zoomIn) zoomIn.setAttribute("aria-label", "Zoom in");
+        if (zoomOut) zoomOut.setAttribute("aria-label", "Zoom out");
+        if (compass) compass.setAttribute("aria-label", "Reset north");
+      }
 
       try {
         for (const serviceArea of serviceAreasWithGeoJSON) {
@@ -242,7 +260,10 @@ export const AreasServiced = (props: AreasServicedProps) => {
   }
 
   return (
-    <div className={clsx(styles.wrapper, className)}>
+    <section
+      aria-label="Service areas map"
+      className={clsx(styles.wrapper, className)}
+    >
       <div className={styles.container}>
         {isLoading && (
           <div className={styles.loadingOverlay}>
@@ -266,6 +287,6 @@ export const AreasServiced = (props: AreasServicedProps) => {
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 };

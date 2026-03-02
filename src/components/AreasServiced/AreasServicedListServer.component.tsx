@@ -15,29 +15,33 @@ interface AreasServicedListServerProps {
 export const AreasServicedListServer = async (
   props?: AreasServicedListServerProps,
 ) => {
-  const draft = await draftMode();
-  const locale = await getServerLocaleSafe(props?.locale);
+  try {
+    const draft = await draftMode();
+    const locale = await getServerLocaleSafe(props?.locale);
 
-  const services = await fetchServices({
-    locale,
-    preview: draft.isEnabled,
-  });
+    const services = await fetchServices({
+      locale,
+      preview: draft.isEnabled,
+    });
 
-  const serviceAreas = await parseServicesToServiceAreas(services);
+    const serviceAreas = await parseServicesToServiceAreas(services);
 
-  const sortedServiceAreas = serviceAreas
-    .map((area) => ({
-      ...area,
-      counties: [...area.counties].sort((a, b) =>
-        a.localeCompare(b, undefined, { sensitivity: "base" }),
-      ),
-    }))
-    .sort((a, b) => a.serviceName.localeCompare(b.serviceName));
+    const sortedServiceAreas = serviceAreas
+      .map((area) => ({
+        ...area,
+        counties: [...area.counties].sort((a, b) =>
+          a.localeCompare(b, undefined, { sensitivity: "base" }),
+        ),
+      }))
+      .sort((a, b) => a.serviceName.localeCompare(b.serviceName));
 
-  return (
-    <AreasServicedList
-      className={props?.className}
-      serviceAreas={sortedServiceAreas}
-    />
-  );
+    return (
+      <AreasServicedList
+        className={props?.className}
+        serviceAreas={sortedServiceAreas}
+      />
+    );
+  } catch {
+    return null;
+  }
 };

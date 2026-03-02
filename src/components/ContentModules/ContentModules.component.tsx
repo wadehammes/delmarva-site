@@ -3,8 +3,6 @@ import {
   AllMarketsListServer,
   AllServicesListServer,
   AreasServicedListServer,
-  AreasServicedServer,
-  AreasServicedTurnkeyServer,
   ContentRecentNewsList,
   FeaturedServices,
 } from "src/components/ContentModules/ContentModulesRegistry";
@@ -18,7 +16,7 @@ interface ContentModulesProps {
 }
 
 export const ContentModules = (props: ContentModulesProps) => {
-  const { contentLayout, fields, locale } = props;
+  const { fields, locale } = props;
 
   switch (fields.module) {
     case "Featured Services List": {
@@ -30,11 +28,6 @@ export const ContentModules = (props: ContentModulesProps) => {
     case "All Services List": {
       return <AllServicesListServer locale={locale} />;
     }
-    case "Areas Serviced Map": {
-      return (
-        <AreasServicedServer contentLayout={contentLayout} locale={locale} />
-      );
-    }
     case "Areas Serviced List": {
       return <AreasServicedListServer locale={locale} />;
     }
@@ -43,14 +36,6 @@ export const ContentModules = (props: ContentModulesProps) => {
     }
     case "All Markets List": {
       return <AllMarketsListServer locale={locale} />;
-    }
-    case "Areas Service Map - Turnkey Only": {
-      return (
-        <AreasServicedTurnkeyServer
-          contentLayout={contentLayout}
-          locale={locale}
-        />
-      );
     }
     default: {
       return null;

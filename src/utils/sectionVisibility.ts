@@ -8,7 +8,11 @@ export async function filterSectionsByStaleRecentNews(
   locale: Locales,
   preview: boolean,
 ): Promise<(SectionType | null)[]> {
-  const hasRecent = await hasRecentNews({ locale, preview });
-  if (hasRecent) return sections;
-  return sections.filter((s) => !sectionContainsRecentNewsList(s));
+  try {
+    const hasRecent = await hasRecentNews({ locale, preview });
+    if (hasRecent) return sections;
+    return sections.filter((s) => !sectionContainsRecentNewsList(s));
+  } catch {
+    return sections ?? [];
+  }
 }

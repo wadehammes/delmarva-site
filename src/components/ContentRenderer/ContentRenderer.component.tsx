@@ -1,4 +1,5 @@
 import {
+  ContentAreasServicedMap,
   ContentCard,
   ContentCarouselComponent,
   ContentCopyBlock,
@@ -18,6 +19,10 @@ import {
   type ContentRecentNewsEntry,
   parseContentRecentNews,
 } from "src/contentful/getContentRecentNews";
+import {
+  type ContentAreasServicedMapEntry,
+  parseContentAreasServicedMap,
+} from "src/contentful/parseContentAreasServicedMap";
 import type { ContentCardEntry } from "src/contentful/parseContentCard";
 import { parseContentCard } from "src/contentful/parseContentCard";
 import type { ContentCarouselEntry } from "src/contentful/parseContentCarousel";
@@ -72,7 +77,7 @@ interface ContentRendererProps {
 export const ContentRenderer = (props: ContentRendererProps) => {
   const { content, contentLayout, locale, searchParams } = props;
 
-  if (!content) {
+  if (!content?.sys?.contentType?.sys?.id) {
     return null;
   }
 
@@ -110,6 +115,17 @@ export const ContentRenderer = (props: ContentRendererProps) => {
           searchParams={searchParams}
         />
       );
+    }
+    case "contentAreasServicedMap": {
+      const parsedMap = parseContentAreasServicedMap(
+        content as ContentAreasServicedMapEntry,
+      );
+
+      if (!parsedMap) {
+        return null;
+      }
+
+      return <ContentAreasServicedMap fields={parsedMap} />;
     }
     case "contentModules": {
       const parsedModule = parseContentModule(content as ContentModuleEntry);

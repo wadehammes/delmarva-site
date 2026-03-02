@@ -1,8 +1,9 @@
 .marketHeaderSection [class*="sectionContent"] {
   grid-template-columns: 1fr;
+  gap: 4rem;
 
-  @media screen and (min-width: 1200px) {
-    grid-template-columns: 40% 60%;
+  @media screen and (min-width: 900px) {
+    grid-template-columns: 1fr 2fr;
   }
 }
 

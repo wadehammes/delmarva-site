@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
-import type { ServiceType } from "src/contentful/getServices";
+import type { ServiceForMap } from "src/contentful/parseContentAreasServicedMap";
 import { AreasServiced } from "./AreasServiced.component";
 
 // Mock mapbox-gl
@@ -79,14 +79,19 @@ jest.mock("src/utils/mapUtils", () => ({
   hexToRgba: jest.fn((_hex, alpha) => `rgba(255, 0, 0, ${alpha})`),
 }));
 
-const mockService: ServiceType = {
+const mockService: ServiceForMap = {
+  id: "test-id",
   serviceCountiesCsv: {
+    alt: "",
+    height: 0,
+    id: "asset-1",
     src: "https://example.com/counties.csv",
+    width: 0,
   },
   serviceCountiesMapColor: "Red",
   serviceName: "Test Service",
   slug: "test-service",
-} as ServiceType;
+};
 
 describe("AreasServiced", () => {
   const originalEnv = process.env;

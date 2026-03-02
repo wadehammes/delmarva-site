@@ -30,6 +30,8 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
     draft.isEnabled,
   );
 
+  const hasMarketPhotos = (marketPhotos ?? []).length > 0;
+
   return (
     <>
       <Section
@@ -38,7 +40,7 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
         section={{
           backgroundColor: "Black",
           contentGap: "More Gap",
-          contentLayout: "2-column",
+          contentLayout: hasMarketPhotos ? "2-column" : "Single Column",
           id: `market-${market.slug}-header`,
           sectionBackgroundStyle: "Microdot",
           sectionPadding: "Regular Padding",
@@ -56,10 +58,12 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
             <RichText document={market.description} />
           </div>
         </header>
-        <HeaderPhotoGallery assets={marketPhotos} autoplay />
+        {hasMarketPhotos && (
+          <HeaderPhotoGallery assets={marketPhotos ?? []} autoplay />
+        )}
       </Section>
-      {projects.length > 0 &&
-        (projects.length > 5 ? (
+      {(projects ?? []).length > 0 &&
+        ((projects ?? []).length > 5 ? (
           <Section
             className={styles.marketProjectsSection}
             id={`market-${market.slug}-projects`}
@@ -72,7 +76,7 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
               slug: market.slug,
             }}
           >
-            <ProjectsCarousel projects={projects} />
+            <ProjectsCarousel projects={projects ?? []} />
           </Section>
         ) : (
           <Section
@@ -86,7 +90,7 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
               slug: market.slug,
             }}
           >
-            {projects.map((project) => (
+            {(projects ?? []).map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </Section>

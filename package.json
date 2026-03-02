@@ -10,6 +10,7 @@
 	},
 	"scripts": {
 		"dev": "next dev -p 5656 --webpack",
+		"dev:debug": "NODE_OPTIONS='--inspect' next dev -p 5656 --webpack",
 		"build": "next build",
 		"build:analyze": "ANALYZE=true next build",
 		"start": "next start -p 5656",

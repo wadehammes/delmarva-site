@@ -8,7 +8,7 @@
 
 .plusIcon {
   color: currentColor;
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.15s ease-in-out;
   will-change: transform;
 }
 
@@ -36,7 +36,7 @@
   cursor: pointer;
   background: none;
   border: none;
-  transition: color 0.2s ease-in-out;
+  transition: color 0.15s ease-in-out;
 
   &:focus {
     outline: none;
@@ -46,7 +46,7 @@
     color: var(--colors-red);
 
     .accordionIcon {
-      animation: accordionIconSpin 0.35s ease-in-out;
+      animation: accordionIconSpin 0.25s ease-in-out;
     }
   }
 
@@ -98,7 +98,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   will-change: transform;
 
   @media (min-width: 600px) {

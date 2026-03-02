@@ -15,7 +15,6 @@ export function hasContentModule(
     | "All Services List"
     | "Featured Services List"
     | "Areas Serviced List"
-    | "Areas Serviced Map"
     | "Recent News List"
     | "Request a Proposal Form",
 ): boolean {

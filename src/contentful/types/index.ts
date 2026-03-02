@@ -1,4 +1,15 @@
 export type {
+  TypeContentAreasServicedMap,
+  TypeContentAreasServicedMapFields,
+  TypeContentAreasServicedMapSkeleton,
+  TypeContentAreasServicedMapWithAllLocalesAndWithoutLinkResolutionResponse,
+  TypeContentAreasServicedMapWithAllLocalesAndWithoutUnresolvableLinksResponse,
+  TypeContentAreasServicedMapWithAllLocalesResponse,
+  TypeContentAreasServicedMapWithoutLinkResolutionResponse,
+  TypeContentAreasServicedMapWithoutUnresolvableLinksResponse,
+} from "./TypeContentAreasServicedMap";
+export { isTypeContentAreasServicedMap } from "./TypeContentAreasServicedMap";
+export type {
   TypeContentCard,
   TypeContentCardFields,
   TypeContentCardSkeleton,
