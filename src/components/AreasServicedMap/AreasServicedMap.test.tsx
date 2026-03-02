@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
-import type { ServiceForMap } from "src/contentful/parseContentAreasServicedMap";
-import { AreasServiced } from "./AreasServiced.component";
+import type { ServiceType } from "src/contentful/getServices";
+import { AreasServicedMap } from "./AreasServicedMap.component";
 
 // Mock mapbox-gl
 jest.mock("mapbox-gl", () => ({
@@ -79,8 +79,14 @@ jest.mock("src/utils/mapUtils", () => ({
   hexToRgba: jest.fn((_hex, alpha) => `rgba(255, 0, 0, ${alpha})`),
 }));
 
-const mockService: ServiceForMap = {
+const mockService: ServiceType = {
+  description: {} as never,
+  enableIndexing: true,
   id: "test-id",
+  metaDescription: "",
+  metaImage: null,
+  metaTitle: "",
+  publishDate: "",
   serviceCountiesCsv: {
     alt: "",
     height: 0,
@@ -91,9 +97,10 @@ const mockService: ServiceForMap = {
   serviceCountiesMapColor: "Red",
   serviceName: "Test Service",
   slug: "test-service",
+  updatedAt: "",
 };
 
-describe("AreasServiced", () => {
+describe("AreasServicedMap", () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -110,9 +117,8 @@ describe("AreasServiced", () => {
   });
 
   it("renders loading state initially", async () => {
-    render(<AreasServiced services={[mockService]} />);
+    render(<AreasServicedMap services={[mockService]} />);
     expect(screen.getByText("Loading service areas...")).toBeInTheDocument();
-    // Wait for async operations to complete to avoid act warnings
     await waitFor(() => {
       expect(
         screen.queryByText("Loading service areas..."),
@@ -122,20 +128,18 @@ describe("AreasServiced", () => {
 
   it("renders error message when NEXT_PUBLIC_MAPBOX_API_TOKEN is missing", async () => {
     process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN = "";
-    render(<AreasServiced services={[mockService]} />);
+    render(<AreasServicedMap services={[mockService]} />);
     expect(
       screen.getByText(/Please set NEXT_PUBLIC_MAPBOX_API_TOKEN/i),
     ).toBeInTheDocument();
-    // Wait for async operations to complete to avoid act warnings
     await act(async () => {
-      // Wait for all microtasks to complete
       await Promise.resolve();
       await Promise.resolve();
     });
   });
 
   it("renders map container", async () => {
-    render(<AreasServiced services={[mockService]} />);
+    render(<AreasServicedMap services={[mockService]} />);
     await waitFor(() => {
       const mapContainer = document.querySelector('[class*="map"]');
       expect(mapContainer).toBeInTheDocument();
@@ -143,7 +147,7 @@ describe("AreasServiced", () => {
   });
 
   it("renders legend when service areas are loaded", async () => {
-    render(<AreasServiced services={[mockService]} />);
+    render(<AreasServicedMap services={[mockService]} />);
     await waitFor(() => {
       expect(screen.getByText("Test Service")).toBeInTheDocument();
     });
@@ -151,10 +155,9 @@ describe("AreasServiced", () => {
 
   it("applies custom className", async () => {
     const { container } = render(
-      <AreasServiced className="custom-class" services={[mockService]} />,
+      <AreasServicedMap className="custom-class" services={[mockService]} />,
     );
     expect(container.firstChild).toHaveClass("custom-class");
-    // Wait for async operations to complete to avoid act warnings
     await waitFor(() => {
       expect(
         screen.queryByText("Loading service areas..."),
@@ -163,12 +166,11 @@ describe("AreasServiced", () => {
   });
 
   it("uses custom height prop", async () => {
-    render(<AreasServiced height="500px" services={[mockService]} />);
+    render(<AreasServicedMap height="500px" services={[mockService]} />);
     const mapContainer = document.querySelector(
       '[class*="map"]',
     ) as HTMLElement;
     expect(mapContainer).toHaveStyle({ height: "500px" });
-    // Wait for async operations to complete to avoid act warnings
     await waitFor(() => {
       expect(
         screen.queryByText("Loading service areas..."),
@@ -177,7 +179,7 @@ describe("AreasServiced", () => {
   });
 
   it("handles empty services array", async () => {
-    render(<AreasServiced services={[]} />);
+    render(<AreasServicedMap services={[]} />);
     await waitFor(() => {
       const mapContainer = document.querySelector('[class*="map"]');
       expect(mapContainer).toBeInTheDocument();

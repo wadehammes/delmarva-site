@@ -30,7 +30,7 @@ import {
   createMarketMetadata,
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
-import { generateMarketPageSchemaGraph } from "src/utils/schema";
+import { generateMarketPageSchemaGraphSafe } from "src/utils/schema";
 
 export const revalidate = 604800;
 
@@ -160,7 +160,7 @@ async function Page({ params }: PageProps) {
       marketId: market.id,
       preview: draft.isEnabled,
     }),
-    generateMarketPageSchemaGraph({
+    generateMarketPageSchemaGraphSafe({
       locale: validLocale,
       market,
       preview: draft.isEnabled,

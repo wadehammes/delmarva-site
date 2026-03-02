@@ -73,7 +73,7 @@
   font-size: 1rem;
   color: var(--colors-gray);
   text-align: center;
-  background-color: var(--colors-black);
+  background-color: var(--colors-lightgray);
 }
 
 /* Loading overlay for zip code data */

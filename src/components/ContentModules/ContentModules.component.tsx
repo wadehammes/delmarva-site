@@ -1,9 +1,13 @@
 import "server-only";
+
+import { Suspense } from "react";
 import { AllProjectsListServer } from "src/components/AllProjectsList/AllProjectsListServer.component";
 import {
   AllMarketsListServer,
   AllServicesListServer,
   AreasServicedListServer,
+  AreasServicedMapServer,
+  AreasServicedMapTurnkeyServer,
   ContentRecentNewsList,
   FeaturedServices,
 } from "src/components/ContentModules/ContentModulesRegistry";
@@ -17,7 +21,7 @@ interface ContentModulesProps {
 }
 
 export const ContentModules = (props: ContentModulesProps) => {
-  const { fields, locale } = props;
+  const { contentLayout, fields, locale } = props;
 
   switch (fields.module) {
     case "Featured Services List": {
@@ -29,14 +33,31 @@ export const ContentModules = (props: ContentModulesProps) => {
     case "All Services List": {
       return <AllServicesListServer locale={locale} />;
     }
+    case "Areas Serviced Map": {
+      return (
+        <AreasServicedMapServer contentLayout={contentLayout} locale={locale} />
+      );
+    }
     case "Areas Serviced List": {
       return <AreasServicedListServer locale={locale} />;
     }
     case "All Projects": {
-      return <AllProjectsListServer locale={locale} />;
+      return (
+        <Suspense fallback={null}>
+          <AllProjectsListServer locale={locale} />
+        </Suspense>
+      );
     }
     case "All Markets List": {
       return <AllMarketsListServer locale={locale} />;
+    }
+    case "Areas Serviced Map - Turnkey Only": {
+      return (
+        <AreasServicedMapTurnkeyServer
+          contentLayout={contentLayout}
+          locale={locale}
+        />
+      );
     }
     default: {
       return null;

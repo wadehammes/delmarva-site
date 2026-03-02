@@ -1,9 +1,10 @@
 "use client";
 
 import mapboxgl from "mapbox-gl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import clsx from "clsx";
+import styles from "src/components/AreasServicedMap/AreasServicedMap.module.css";
 import type { ServiceForMap } from "src/contentful/parseContentAreasServicedMap";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
 import { mergeFeaturesToSingleBoundary } from "src/utils/geometryUtils";
@@ -20,7 +21,6 @@ import {
   parseServicesToServiceAreas,
   type ServiceArea,
 } from "src/utils/serviceAreaUtils";
-import styles from "./AreasServiced.module.css";
 
 const DEFAULT_CENTER: [number, number] = [-78, 39.5];
 const DEFAULT_ZOOM = 9.0;
@@ -30,7 +30,7 @@ const FIT_BOUNDS_OPTIONS = {
   padding: 5,
 } as const;
 
-interface AreasServicedProps {
+interface AreasServicedMapFromServicesProps {
   services: ServiceForMap[];
   className?: string;
   height?: string;
@@ -43,96 +43,29 @@ interface ServiceAreaWithGeoJSON extends ServiceArea {
   geojson: GeoJSONFeatureCollection;
 }
 
-function useServiceAreasData(services: ServiceForMap[]) {
-  const [state, setState] = useState<{
-    isLoading: boolean;
-    serviceAreas: ServiceAreaWithGeoJSON[];
-  }>({ isLoading: true, serviceAreas: [] });
+type AreasState =
+  | { status: "loading" }
+  | { status: "success"; serviceAreasWithGeoJSON: ServiceAreaWithGeoJSON[] };
 
-  const servicesKey = useMemo(
-    () =>
-      services
-        .map((s) => s.id)
-        .sort()
-        .join(","),
-    [services],
-  );
-
-  useEffect(() => {
-    let isCancelled = false;
-
-    const load = async () => {
-      setState((s) => ({ ...s, isLoading: true }));
-
-      const serviceAreas = await parseServicesToServiceAreas(services);
-      if (isCancelled) return;
-
-      if (serviceAreas.length === 0) {
-        setState({ isLoading: false, serviceAreas: [] });
-        return;
-      }
-
-      const withGeoJSON = await Promise.all(
-        serviceAreas.map(async (sa) => {
-          const geojson = await countiesToBoundaryLines(sa.counties);
-          return {
-            ...sa,
-            geojson: mergeFeaturesToSingleBoundary(geojson.features),
-          };
-        }),
-      );
-      if (isCancelled) return;
-
-      const valid = withGeoJSON.filter((sa) => sa.geojson.features.length > 0);
-      setState({ isLoading: false, serviceAreas: valid });
-    };
-
-    load();
-    return () => {
-      isCancelled = true;
-    };
-  }, [servicesKey]);
-
-  return state;
-}
-
-function setupMapNavigationAccessibility(map: mapboxgl.Map) {
-  const navControl = new mapboxgl.NavigationControl();
-  map.addControl(navControl, "top-right");
-  const navEl = navControl._container;
-  if (navEl) {
-    const zoomIn = navEl.querySelector(".mapboxgl-ctrl-zoom-in");
-    const zoomOut = navEl.querySelector(".mapboxgl-ctrl-zoom-out");
-    const compass = navEl.querySelector(".mapboxgl-ctrl-compass");
-    if (zoomIn) zoomIn.setAttribute("aria-label", "Zoom in");
-    if (zoomOut) zoomOut.setAttribute("aria-label", "Zoom out");
-    if (compass) compass.setAttribute("aria-label", "Reset north");
-  }
-}
-
-function addLayersAndFitBounds(
-  map: mapboxgl.Map,
-  serviceAreas: ServiceAreaWithGeoJSON[],
-  autoFitBounds: boolean,
-) {
-  for (const serviceArea of serviceAreas) {
-    try {
-      addServiceAreaLayers(map, serviceArea);
-    } catch (layerError) {
-      console.error(
-        `[Map] Error adding layers for ${serviceArea.serviceName}:`,
-        layerError,
-      );
-    }
-  }
-
-  const bounds = calculateBoundsFromServiceAreas(serviceAreas);
-  if (autoFitBounds && bounds && areBoundsValid(bounds)) {
-    try {
-      map.fitBounds(bounds, { ...FIT_BOUNDS_OPTIONS, duration: 0 });
-    } catch {
-      // Silently ignore bounds fitting errors
-    }
+function areasReducer(
+  _state: AreasState,
+  action:
+    | { type: "SUCCESS"; payload: ServiceAreaWithGeoJSON[] }
+    | { type: "EMPTY" }
+    | { type: "START" },
+): AreasState {
+  switch (action.type) {
+    case "START":
+      return { status: "loading" };
+    case "SUCCESS":
+      return {
+        serviceAreasWithGeoJSON: action.payload,
+        status: "success",
+      };
+    case "EMPTY":
+      return { serviceAreasWithGeoJSON: [], status: "success" };
+    default:
+      return _state;
   }
 }
 
@@ -157,7 +90,9 @@ const LegendItem = ({
   );
 };
 
-export const AreasServiced = (props: AreasServicedProps) => {
+export const AreasServicedMapFromServices = (
+  props: AreasServicedMapFromServicesProps,
+) => {
   const {
     services,
     className,
@@ -170,7 +105,56 @@ export const AreasServiced = (props: AreasServicedProps) => {
   const mapboxAccessToken = process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN;
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const { isLoading, serviceAreas } = useServiceAreasData(services);
+  const [state, dispatch] = useReducer(areasReducer, {
+    status: "loading",
+  });
+
+  const isLoading = state.status === "loading";
+  const serviceAreasWithGeoJSON =
+    state.status === "success" ? state.serviceAreasWithGeoJSON : [];
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadAllData = async () => {
+      dispatch({ type: "START" });
+
+      const serviceAreas = await parseServicesToServiceAreas(services);
+
+      if (isCancelled) return;
+
+      if (serviceAreas.length === 0) {
+        dispatch({ type: "EMPTY" });
+        return;
+      }
+
+      const withGeoJSON = await Promise.all(
+        serviceAreas.map(async (serviceArea) => {
+          const geojson = await countiesToBoundaryLines(serviceArea.counties);
+          const mergedGeoJSON = mergeFeaturesToSingleBoundary(geojson.features);
+
+          return {
+            ...serviceArea,
+            geojson: mergedGeoJSON,
+          };
+        }),
+      );
+
+      if (isCancelled) return;
+
+      const validServiceAreas = withGeoJSON.filter(
+        (sa) => sa.geojson.features.length > 0,
+      );
+
+      dispatch({ payload: validServiceAreas, type: "SUCCESS" });
+    };
+
+    loadAllData();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [services]);
 
   useEffect(() => {
     if (
@@ -178,7 +162,7 @@ export const AreasServiced = (props: AreasServicedProps) => {
       map.current ||
       !mapboxAccessToken ||
       isLoading ||
-      serviceAreas.length === 0
+      serviceAreasWithGeoJSON.length === 0
     ) {
       return;
     }
@@ -199,10 +183,31 @@ export const AreasServiced = (props: AreasServicedProps) => {
     map.current.on("load", () => {
       if (!map.current) return;
 
-      setupMapNavigationAccessibility(map.current);
+      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
       try {
-        addLayersAndFitBounds(map.current, serviceAreas, autoFitBounds);
+        for (const serviceArea of serviceAreasWithGeoJSON) {
+          try {
+            addServiceAreaLayers(map.current, serviceArea);
+          } catch (layerError) {
+            console.error(
+              `[Map] Error adding layers for ${serviceArea.serviceName}:`,
+              layerError,
+            );
+          }
+        }
+
+        const bounds = calculateBoundsFromServiceAreas(serviceAreasWithGeoJSON);
+        if (autoFitBounds && bounds && areBoundsValid(bounds)) {
+          try {
+            map.current.fitBounds(bounds, {
+              ...FIT_BOUNDS_OPTIONS,
+              duration: 0,
+            });
+          } catch {
+            // Silently ignore bounds fitting errors
+          }
+        }
       } catch (error) {
         console.error("[Map] Error adding boundary layers:", error);
       }
@@ -214,7 +219,14 @@ export const AreasServiced = (props: AreasServicedProps) => {
         map.current = null;
       }
     };
-  }, [mapboxAccessToken, center, zoom, isLoading, serviceAreas, autoFitBounds]);
+  }, [
+    mapboxAccessToken,
+    center,
+    zoom,
+    isLoading,
+    serviceAreasWithGeoJSON,
+    autoFitBounds,
+  ]);
 
   if (!mapboxAccessToken) {
     return (
@@ -232,10 +244,7 @@ export const AreasServiced = (props: AreasServicedProps) => {
   }
 
   return (
-    <section
-      aria-label="Service areas map"
-      className={clsx(styles.wrapper, className)}
-    >
+    <div className={clsx(styles.wrapper, className)}>
       <div className={styles.container}>
         {isLoading && (
           <div className={styles.loadingOverlay}>
@@ -249,9 +258,9 @@ export const AreasServiced = (props: AreasServicedProps) => {
           style={height ? { height } : undefined}
         />
       </div>
-      {serviceAreas.length > 0 && (
+      {serviceAreasWithGeoJSON.length > 0 && (
         <div className={styles.mapLegend}>
-          {serviceAreas.map((serviceArea) => (
+          {serviceAreasWithGeoJSON.map((serviceArea) => (
             <LegendItem
               key={serviceArea.serviceSlug}
               serviceArea={serviceArea}
@@ -259,6 +268,6 @@ export const AreasServiced = (props: AreasServicedProps) => {
           ))}
         </div>
       )}
-    </section>
+    </div>
   );
 };

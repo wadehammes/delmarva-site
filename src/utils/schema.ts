@@ -418,6 +418,67 @@ export async function generateServicePageSchemaGraph(
   };
 }
 
+export function createMinimalSchemaGraph(
+  canonicalUrl: string,
+): SchemaGraphContext {
+  const baseUrl = envUrl();
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      createOrganizationSchema(baseUrl),
+      {
+        "@context": "https://schema.org",
+        "@id": `${canonicalUrl}#webpage`,
+        "@type": "WebPage",
+        publisher: { "@id": `${baseUrl}#organization` },
+        url: canonicalUrl,
+      },
+    ],
+  };
+}
+
+export async function generateSchemaGraphSafe(
+  options: GenerateSchemaGraphOptions,
+): Promise<SchemaGraphContext> {
+  try {
+    return await generateSchemaGraph(options);
+  } catch (error) {
+    console.error("[Schema] generateSchemaGraph failed:", error);
+    const baseUrl = envUrl();
+    const canonicalUrl =
+      options.slug === "home" || options.slug === ""
+        ? baseUrl
+        : `${baseUrl}/${options.slug}`;
+    return createMinimalSchemaGraph(canonicalUrl);
+  }
+}
+
+export async function generateServicePageSchemaGraphSafe(
+  options: GenerateServicePageSchemaOptions,
+): Promise<SchemaGraphContext> {
+  try {
+    return await generateServicePageSchemaGraph(options);
+  } catch (error) {
+    console.error("[Schema] generateServicePageSchemaGraph failed:", error);
+    const baseUrl = envUrl();
+    const canonicalUrl = `${baseUrl}/${SERVICES_PAGE_SLUG}/${options.service.slug}`;
+    return createMinimalSchemaGraph(canonicalUrl);
+  }
+}
+
+export async function generateMarketPageSchemaGraphSafe(
+  options: GenerateMarketPageSchemaOptions,
+): Promise<SchemaGraphContext> {
+  try {
+    return await generateMarketPageSchemaGraph(options);
+  } catch (error) {
+    console.error("[Schema] generateMarketPageSchemaGraph failed:", error);
+    const baseUrl = envUrl();
+    const canonicalUrl = `${baseUrl}/${MARKETS_PAGE_SLUG}/${options.market.slug}`;
+    return createMinimalSchemaGraph(canonicalUrl);
+  }
+}
+
 export interface GenerateMarketPageSchemaOptions {
   market: {
     marketTitle?: string;

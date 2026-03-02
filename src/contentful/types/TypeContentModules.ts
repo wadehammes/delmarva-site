@@ -13,6 +13,8 @@ export interface TypeContentModulesFields {
     | "All Projects"
     | "All Services List"
     | "Areas Serviced List"
+    | "Areas Serviced Map - Turnkey Only"
+    | "Areas Serviced Map"
     | "Featured Services List"
     | "Recent News List"
   >;

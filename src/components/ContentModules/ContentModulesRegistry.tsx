@@ -25,6 +25,22 @@ export const AreasServicedListServer = dynamic(
   { ssr: true },
 );
 
+export const AreasServicedMapServer = dynamic(
+  () =>
+    import(
+      "src/components/AreasServicedMap/AreasServicedMapServer.component"
+    ).then((m) => ({ default: m.AreasServicedMapServer })),
+  { ssr: true },
+);
+
+export const AreasServicedMapTurnkeyServer = dynamic(
+  () =>
+    import(
+      "src/components/AreasServicedMap/AreasServicedMapTurnkeyServer.component"
+    ).then((m) => ({ default: m.AreasServicedMapTurnkeyServer })),
+  { ssr: true },
+);
+
 export const ContentRecentNewsList = dynamic(
   () =>
     import(

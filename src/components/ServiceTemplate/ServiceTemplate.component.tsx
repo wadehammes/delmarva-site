@@ -66,21 +66,23 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
           )}
         </div>
       </Section>
-      <Section
-        id={`service-${service.slug}-projects`}
-        section={{
-          backgroundColor: "Black",
-          contentLayout: "4-column",
-          id: `service-${service.slug}-projects`,
-          sectionEyebrow: t("projects"),
-          sectionPadding: "Regular Padding",
-          slug: service.slug,
-        }}
-      >
-        {(projects ?? []).map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </Section>
+      {projects.length > 0 ? (
+        <Section
+          id={`service-${service.slug}-projects`}
+          section={{
+            backgroundColor: "Black",
+            contentLayout: projects.length > 5 ? "4-column" : "3-column",
+            id: `service-${service.slug}-projects`,
+            sectionEyebrow: t("projects"),
+            sectionPadding: "Regular Padding",
+            slug: service.slug,
+          }}
+        >
+          {(projects ?? []).map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </Section>
+      ) : null}
       {filteredSections.map((section) => {
         if (!section) {
           return null;

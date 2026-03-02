@@ -30,7 +30,7 @@ import {
   createServiceMetadata,
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
-import { generateServicePageSchemaGraph } from "src/utils/schema";
+import { generateServicePageSchemaGraphSafe } from "src/utils/schema";
 
 export const revalidate = 604800;
 
@@ -166,7 +166,7 @@ async function Page({ params }: PageProps) {
       preview: draft.isEnabled,
       serviceSlug: service.slug,
     }),
-    generateServicePageSchemaGraph({
+    generateServicePageSchemaGraphSafe({
       locale: validLocale,
       preview: draft.isEnabled,
       service,
