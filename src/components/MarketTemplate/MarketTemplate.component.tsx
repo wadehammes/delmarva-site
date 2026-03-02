@@ -1,6 +1,7 @@
 import { draftMode } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { HeaderPhotoCarousel } from "src/components/HeaderPhotoCarousel/HeaderPhotoCarousel.component";
+import { Carousel } from "src/components/Carousel/Carousel.component";
+import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import styles from "src/components/MarketTemplate/MarketTemplate.module.css";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import { RichText } from "src/components/RichText/RichText.component";
@@ -56,7 +57,13 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
           </div>
         </header>
         <div className={styles.marketPhotos}>
-          <HeaderPhotoCarousel assets={marketPhotos ?? []} />
+          {(marketPhotos ?? []).length > 0 && (
+            <Carousel autoplay>
+              {(marketPhotos ?? []).map((media) => (
+                <ContentfulAssetRenderer asset={media} key={media.id} />
+              ))}
+            </Carousel>
+          )}
         </div>
       </Section>
       <Section
