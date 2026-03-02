@@ -1,4 +1,13 @@
+import "server-only";
 import dynamic from "next/dynamic";
+
+export const ContentAreasServicedMap = dynamic(
+  () =>
+    import(
+      "src/components/ContentAreasServicedMap/ContentAreasServicedMap.component"
+    ).then((m) => ({ default: m.ContentAreasServicedMap })),
+  { ssr: true },
+);
 
 export const ContentCard = dynamic(
   () =>
@@ -64,14 +73,6 @@ export const ContentMarquee = dynamic(
   { ssr: true },
 );
 
-export const ContentModules = dynamic(
-  () =>
-    import("src/components/ContentModules/ContentModules.component").then(
-      (m) => ({ default: m.ContentModules }),
-    ),
-  { ssr: true },
-);
-
 export const ContentRecentNews = dynamic(
   () =>
     import("src/components/ContentRecentNews/ContentRecentNews.component").then(
@@ -88,6 +89,14 @@ export const ContentTestimonial = dynamic(
   { ssr: true },
 );
 
+export const FormRenderer = dynamic(
+  () =>
+    import("src/components/FormRenderer/FormRenderer.component").then((m) => ({
+      default: m.FormRenderer,
+    })),
+  { ssr: true },
+);
+
 export const JoinOurTeam = dynamic(
   () =>
     import("src/components/JoinOurTeamForm/JoinOurTeamForm.component").then(
@@ -100,22 +109,6 @@ export const Stat = dynamic(
   () =>
     import("src/components/Stat/Stat.component").then((m) => ({
       default: m.Stat,
-    })),
-  { ssr: true },
-);
-
-export const AllProjectsList = dynamic(
-  () =>
-    import("src/components/AllProjectsList/AllProjectsList.component").then(
-      (m) => ({ default: m.AllProjectsList }),
-    ),
-  { ssr: true },
-);
-
-export const FormRenderer = dynamic(
-  () =>
-    import("src/components/FormRenderer/FormRenderer.component").then((m) => ({
-      default: m.FormRenderer,
     })),
   { ssr: true },
 );

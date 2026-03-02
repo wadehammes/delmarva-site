@@ -1,12 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
-import { Carousel } from "src/components/Carousel/Carousel.component";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import { SkeletonCardTrack } from "src/components/Skeleton/Skeleton.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { Swiper as SwiperType } from "swiper";
 import styles from "./ProjectsCarousel.module.css";
+
+const Carousel = dynamic(
+  () =>
+    import("src/components/Carousel/Carousel.component").then((m) => ({
+      default: m.Carousel,
+    })),
+  { ssr: false },
+);
 
 interface ProjectsCarouselProps {
   projectSlugFromServer?: string | null;

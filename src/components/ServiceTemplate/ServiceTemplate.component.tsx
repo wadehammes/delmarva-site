@@ -63,7 +63,7 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
         )}
       </Section>
       {projects.length > 0 &&
-        (projects.length > 5 ? (
+        (projects.length >= 6 ? (
           <Section
             className={styles.serviceProjectsSection}
             id={`service-${service.slug}-projects`}
