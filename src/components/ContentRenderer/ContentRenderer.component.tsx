@@ -1,8 +1,8 @@
 import "server-only";
+import { ContentAreasServicedMapClient } from "src/components/ContentAreasServicedMap/ContentAreasServicedMapClient.component";
 import { MapErrorBoundary } from "src/components/ContentAreasServicedMap/MapErrorBoundary.component";
 import { ContentModules } from "src/components/ContentModules/ContentModules.component";
 import {
-  ContentAreasServicedMap,
   ContentCard,
   ContentCarouselComponent,
   ContentCopyBlock,
@@ -129,7 +129,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
 
       return (
         <MapErrorBoundary>
-          <ContentAreasServicedMap fields={parsedMap} />
+          <ContentAreasServicedMapClient fields={parsedMap} />
         </MapErrorBoundary>
       );
     }

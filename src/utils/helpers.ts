@@ -87,6 +87,54 @@ export const isVideoUrl = (url: string): boolean => {
   return false;
 };
 
+export const isYouTubeUrl = (url: string): boolean => {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  return lower.includes("youtube.com") || lower.includes("youtu.be");
+};
+
+export const isVimeoUrl = (url: string): boolean => {
+  if (!url) return false;
+  return url.toLowerCase().includes("vimeo.com");
+};
+
+export const getYouTubeEmbedUrl = (url: string): string | null => {
+  const match = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+  );
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+};
+
+export const getVimeoEmbedUrl = (url: string): string | null => {
+  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  return match ? `https://player.vimeo.com/video/${match[1]}` : null;
+};
+
+export const isDirectVideoFile = (url: string): boolean => {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  const embedDomains = [
+    "youtube.com",
+    "youtu.be",
+    "vimeo.com",
+    "dailymotion.com",
+  ];
+  if (embedDomains.some((d) => lower.includes(d))) return false;
+  const videoExtensions = [
+    ".mp4",
+    ".webm",
+    ".ogg",
+    ".mov",
+    ".avi",
+    ".wmv",
+    ".flv",
+    ".mkv",
+  ];
+  if (videoExtensions.some((ext) => lower.includes(ext))) return true;
+  if (lower.includes("ctfassets.net")) return true;
+  return false;
+};
+
 export const isNonNullable = <T>(value: T): value is NonNullable<T> => {
   return value !== null && value !== undefined;
 };

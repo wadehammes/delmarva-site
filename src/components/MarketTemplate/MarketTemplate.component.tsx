@@ -2,6 +2,7 @@ import { draftMode } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
+import { HeaderMediaErrorBoundary } from "src/components/HeaderMediaErrorBoundary/HeaderMediaErrorBoundary.component";
 import styles from "src/components/MarketTemplate/MarketTemplate.module.css";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import { RichText } from "src/components/RichText/RichText.component";
@@ -58,11 +59,13 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
         </header>
         <div className={styles.marketPhotos}>
           {(marketPhotos ?? []).length > 0 && (
-            <Carousel autoplay>
-              {(marketPhotos ?? []).map((media) => (
-                <ContentfulAssetRenderer asset={media} key={media.id} />
-              ))}
-            </Carousel>
+            <HeaderMediaErrorBoundary>
+              <Carousel autoplay>
+                {(marketPhotos ?? []).map((media) => (
+                  <ContentfulAssetRenderer asset={media} key={media.id} />
+                ))}
+              </Carousel>
+            </HeaderMediaErrorBoundary>
           )}
         </div>
       </Section>

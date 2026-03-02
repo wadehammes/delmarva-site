@@ -2,6 +2,7 @@ import { draftMode } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
+import { HeaderMediaErrorBoundary } from "src/components/HeaderMediaErrorBoundary/HeaderMediaErrorBoundary.component";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import { Section } from "src/components/Section/Section.component";
@@ -59,11 +60,13 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
           </header>
           <div className={styles.servicePhotos}>
             {(servicePhotos ?? []).length > 0 && (
-              <Carousel autoplay>
-                {(servicePhotos ?? []).map((media) => (
-                  <ContentfulAssetRenderer asset={media} key={media.id} />
-                ))}
-              </Carousel>
+              <HeaderMediaErrorBoundary>
+                <Carousel autoplay>
+                  {(servicePhotos ?? []).map((media) => (
+                    <ContentfulAssetRenderer asset={media} key={media.id} />
+                  ))}
+                </Carousel>
+              </HeaderMediaErrorBoundary>
             )}
           </div>
         </Section>

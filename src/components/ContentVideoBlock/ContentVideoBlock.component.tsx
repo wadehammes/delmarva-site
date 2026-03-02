@@ -1,3 +1,5 @@
+"use client";
+
 import { VideoPlayer } from "src/components/VideoPlayer/VideoPlayer.component";
 import type { ContentVideoBlockType } from "src/contentful/parseContentVideoBlock";
 import { createMediaUrl } from "src/utils/helpers";
