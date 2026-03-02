@@ -1,28 +1,16 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import styles from "src/components/HeaderPhotoGallery/HeaderPhotoGallery.module.css";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
-import { usePathname } from "src/i18n/routing";
 
-const MediaGalleryCarousel = dynamic(
+const Carousel = dynamic(
   () =>
-    import(
-      "src/components/MediaGalleryCarousel/MediaGalleryCarousel.component"
-    ).then((m) => ({ default: m.MediaGalleryCarousel })),
-  {
-    loading: () => (
-      <div
-        aria-hidden
-        style={{
-          backgroundColor: "var(--colors-black)",
-          height: "100%",
-          width: "100%",
-        }}
-      />
-    ),
-    ssr: false,
-  },
+    import("src/components/Carousel/Carousel.component").then((m) => ({
+      default: m.Carousel,
+    })),
+  { ssr: false },
 );
 
 interface HeaderPhotoGalleryProps {
@@ -32,7 +20,6 @@ interface HeaderPhotoGalleryProps {
 
 export const HeaderPhotoGallery = (props: HeaderPhotoGalleryProps) => {
   const { assets, autoplay = false } = props;
-  const pathname = usePathname();
 
   if (!assets?.length) {
     return null;
@@ -40,12 +27,13 @@ export const HeaderPhotoGallery = (props: HeaderPhotoGalleryProps) => {
 
   return (
     <div className={styles.wrapper}>
-      <MediaGalleryCarousel
-        assets={assets}
-        autoplay={autoplay}
-        key={pathname}
-        variant="header"
-      />
+      <Carousel autoplay={autoplay} controlsSize="Small">
+        {assets.map((asset) => (
+          <div className={styles.slide} key={asset.id}>
+            <ContentfulAssetRenderer asset={asset} />
+          </div>
+        ))}
+      </Carousel>
     </div>
   );
 };

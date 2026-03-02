@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useId } from "react";
+import { Children, useId } from "react";
 import styles from "src/components/Carousel/Carousel.module.css";
 import type { Swiper as SwiperType } from "swiper";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
@@ -14,7 +14,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
 export interface CarouselProps {
-  children: React.ReactNode[];
+  children: React.ReactNode;
   className?: string;
   slideClassName?: string;
   showNavigation?: boolean;
@@ -64,13 +64,13 @@ export const Carousel = (props: CarouselProps) => {
   const navigationNextId = `${carouselId}-nav-next`;
   const paginationId = `${carouselId}-pagination`;
 
-  // If children is a single React element, just return it without carousel wrapper
-  if (children.length === 1) {
-    return <>{children[0]}</>;
+  const slides = Children.toArray(children);
+
+  if (slides.length === 1) {
+    return <>{slides[0]}</>;
   }
 
-  // Only show navigation and pagination if there are multiple slides
-  const hasMultipleSlides = children.length > 1;
+  const hasMultipleSlides = slides.length > 1;
 
   const navigationOptions =
     showNavigation && hasMultipleSlides
@@ -135,7 +135,7 @@ export const Carousel = (props: CarouselProps) => {
         slidesPerView={animation === "fade" ? 1 : slidesPerView}
         spaceBetween={animation === "fade" ? 0 : spaceBetween}
       >
-        {children.map((child, position) => (
+        {slides.map((child, position) => (
           <SwiperSlide
             className={clsx(styles.slide, slideClassName)}
             key={`slide-${position}`}
