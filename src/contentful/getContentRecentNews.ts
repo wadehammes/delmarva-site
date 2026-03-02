@@ -1,4 +1,5 @@
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import {
@@ -8,7 +9,6 @@ import {
   type TypeContentRecentNewsWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentRecentNews";
 import type { Locales } from "src/i18n/routing";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export interface ContentRecentNewsType {
   id: string;
@@ -103,19 +103,16 @@ async function fetchRecentNewsUncached({
   return allRecentNews;
 }
 
-const getCachedRecentNews = unstable_cache(
-  (locale: string) =>
-    fetchRecentNewsUncached({ locale: locale as Locales, preview: false }),
-  ["recent-news"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchRecentNews(
   opts: FetchRecentNewsOptions,
 ): Promise<ContentRecentNewsType[]> {
-  return opts.preview
-    ? fetchRecentNewsUncached(opts)
-    : getCachedRecentNews(opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.recentNews(locale, opts.preview);
+  return cached({
+    fn: () => fetchRecentNewsUncached({ locale, preview: opts.preview }),
+    key,
+    tags,
+  });
 }
 
 const oneYearAgoIso = () =>
@@ -146,17 +143,14 @@ async function hasRecentNewsUncached({
   return result.items.length > 0;
 }
 
-const getCachedHasRecentNews = unstable_cache(
-  (locale: string) =>
-    hasRecentNewsUncached({ locale: locale as Locales, preview: false }),
-  ["has-recent-news"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function hasRecentNews(
   opts: HasRecentNewsOptions,
 ): Promise<boolean> {
-  return opts.preview
-    ? hasRecentNewsUncached(opts)
-    : getCachedHasRecentNews(opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.hasRecentNews(locale, opts.preview);
+  return cached({
+    fn: () => hasRecentNewsUncached({ locale, preview: opts.preview }),
+    key,
+    tags,
+  });
 }

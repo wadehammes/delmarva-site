@@ -1,5 +1,6 @@
 import type { Document } from "@contentful/rich-text-types";
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
@@ -9,7 +10,6 @@ import {
   type TypeFooterSkeleton,
   type TypeFooterWithoutUnresolvableLinksResponse,
 } from "src/contentful/types";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export interface FooterType {
   id: string;
@@ -74,14 +74,11 @@ async function fetchFooterUncached({
   return parseFooter(footerResult.items[0]);
 }
 
-const getCachedFooter = unstable_cache(
-  (slug: string, locale: string) =>
-    fetchFooterUncached({ locale, preview: false, slug }),
-  ["footer"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
-export const fetchFooter = async (opts: FetchFooterOptions) =>
-  opts.preview
-    ? fetchFooterUncached(opts)
-    : getCachedFooter(opts.slug, opts.locale);
+export const fetchFooter = async (opts: FetchFooterOptions) => {
+  const { key, tags } = cacheKeys.footer(opts.slug, opts.locale, opts.preview);
+  return cached({
+    fn: () => fetchFooterUncached(opts),
+    key,
+    tags,
+  });
+};

@@ -1,4 +1,5 @@
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import {
   FALLBACK_PROJECT_MEDIA_ID,
@@ -19,7 +20,6 @@ import {
 import type { TypeMarketSkeleton } from "src/contentful/types";
 import type { TypeProjectSkeleton } from "src/contentful/types/TypeProject";
 import type { Locales } from "src/i18n/routing";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 function mediaWithFallback(
   project: ProjectType,
@@ -79,19 +79,16 @@ async function fetchMarketsUncached({
   return allMarkets;
 }
 
-const getCachedMarkets = unstable_cache(
-  (locale: string) =>
-    fetchMarketsUncached({ locale: locale as Locales, preview: false }),
-  ["markets"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchMarkets(
   opts: FetchMarketsOptions,
 ): Promise<MarketType[]> {
-  return opts.preview
-    ? fetchMarketsUncached(opts)
-    : getCachedMarkets(opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.markets(locale, opts.preview);
+  return cached({
+    fn: () => fetchMarketsUncached({ locale, preview: opts.preview }),
+    key,
+    tags,
+  });
 }
 
 interface FetchMarketOptions {
@@ -118,23 +115,21 @@ async function fetchMarketBySlugUncached({
   return entry ? parseContentfulMarket(entry) : null;
 }
 
-const getCachedMarketBySlug = unstable_cache(
-  (slug: string, locale: string) =>
-    fetchMarketBySlugUncached({
-      locale: locale as Locales,
-      preview: false,
-      slug,
-    }),
-  ["market"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchMarket(
   opts: FetchMarketOptions,
 ): Promise<MarketType | null> {
-  return opts.preview
-    ? fetchMarketBySlugUncached(opts)
-    : getCachedMarketBySlug(opts.slug, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.market(opts.slug, locale, opts.preview);
+  return cached({
+    fn: () =>
+      fetchMarketBySlugUncached({
+        locale,
+        preview: opts.preview,
+        slug: opts.slug,
+      }),
+    key,
+    tags,
+  });
 }
 
 interface FetchProjectsByMarketOptions {
@@ -202,23 +197,25 @@ async function fetchProjectsByMarketUncached({
   return allProjects;
 }
 
-const getCachedProjectsByMarket = unstable_cache(
-  (marketId: string, locale: string) =>
-    fetchProjectsByMarketUncached({
-      locale: locale as Locales,
-      marketId,
-      preview: false,
-    }),
-  ["projects-by-market"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchProjectsByMarket(
   opts: FetchProjectsByMarketOptions,
 ): Promise<ProjectType[]> {
-  return opts.preview
-    ? fetchProjectsByMarketUncached(opts)
-    : getCachedProjectsByMarket(opts.marketId, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.projectsByMarket(
+    opts.marketId,
+    locale,
+    opts.preview,
+  );
+  return cached({
+    fn: () =>
+      fetchProjectsByMarketUncached({
+        locale,
+        marketId: opts.marketId,
+        preview: opts.preview,
+      }),
+    key,
+    tags,
+  });
 }
 
 interface FetchMarketPhotosOptions {
@@ -278,21 +275,23 @@ async function fetchMarketPhotosUncached({
   return allPhotos;
 }
 
-const getCachedMarketPhotos = unstable_cache(
-  (marketId: string, locale: string) =>
-    fetchMarketPhotosUncached({
-      locale: locale as Locales,
-      marketId,
-      preview: false,
-    }),
-  ["market-photos"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchMarketPhotos(
   opts: FetchMarketPhotosOptions,
 ): Promise<ContentfulAsset[]> {
-  return opts.preview
-    ? fetchMarketPhotosUncached(opts)
-    : getCachedMarketPhotos(opts.marketId, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.marketPhotos(
+    opts.marketId,
+    locale,
+    opts.preview,
+  );
+  return cached({
+    fn: () =>
+      fetchMarketPhotosUncached({
+        locale,
+        marketId: opts.marketId,
+        preview: opts.preview,
+      }),
+    key,
+    tags,
+  });
 }
