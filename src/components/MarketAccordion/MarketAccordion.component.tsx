@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { gsap } from "gsap";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -9,32 +10,32 @@ import { ProjectCoverflowCarousel } from "src/components/ProjectCoverflowCarouse
 import { RichText } from "src/components/RichText/RichText.component";
 import { Stat } from "src/components/Stat/Stat.component";
 import type { ProjectType } from "src/contentful/getProjects";
-import type { ServiceType } from "src/contentful/getServices";
 import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
+import type { MarketType } from "src/contentful/parseMarket";
 import { useDOMCleanup } from "src/hooks/useIsBrowser";
 import type { Locales } from "src/i18n/routing";
-import { SERVICES_PAGE_SLUG } from "src/utils/constants";
+import { MARKETS_PAGE_SLUG } from "src/utils/constants";
 import { formatNumber } from "src/utils/numberHelpers";
-import styles from "./ServiceAccordion.module.css";
+import styles from "./MarketAccordion.module.css";
 
 const buttonText: Record<Locales, string> = {
-  en: "View Service",
-  es: "Ver Servicio",
+  en: "View Market",
+  es: "Ver Mercado",
 };
 
-interface ServiceAccordionStatsProps {
+interface MarketAccordionStatsProps {
   isAccordionOpen: boolean;
   stats: (ContentStatBlock | null)[] | undefined;
   statsGridRef: RefObject<HTMLDivElement | null>;
   statsRef: RefObject<HTMLDListElement | null>;
 }
 
-const ServiceAccordionStats = ({
+const MarketAccordionStats = ({
   isAccordionOpen,
   stats,
   statsGridRef,
   statsRef,
-}: ServiceAccordionStatsProps) => {
+}: MarketAccordionStatsProps) => {
   const numberOfStats = stats?.length;
 
   if (!numberOfStats) return null;
@@ -82,16 +83,16 @@ const ServiceAccordionStats = ({
   );
 };
 
-interface ServiceAccordionProps {
+interface MarketAccordionProps {
   defaultOpen?: boolean;
   locale: Locales;
+  market: MarketType;
   projects: ProjectType[];
-  service: ServiceType;
 }
 
-export const ServiceAccordion = (props: ServiceAccordionProps) => {
-  const { defaultOpen = false, service, locale, projects } = props;
-  const { serviceName, description, stats, slug } = service;
+export const MarketAccordion = (props: MarketAccordionProps) => {
+  const { defaultOpen = false, locale, market, projects } = props;
+  const { marketTitle, description, slug, stats } = market;
   const [isAccordionOpen, setIsAccordionOpen] = useState(defaultOpen);
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -103,7 +104,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const { isMounted, addCleanup, removeCleanup } = useDOMCleanup();
 
-  // GSAP cleanup function
   const cleanupGSAP = useCallback(() => {
     if (timelineRef.current) {
       timelineRef.current.kill();
@@ -111,15 +111,12 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     }
   }, []);
 
-  // Memoized animation setup
   const setupAnimation = useCallback(() => {
     const content = contentRef.current;
     if (!content || !isMounted()) return;
 
-    // Kill any existing timeline
     cleanupGSAP();
 
-    // Create a new timeline with optimized settings
     const tl = gsap.timeline({
       defaults: {
         duration: 0.3,
@@ -129,10 +126,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     });
     timelineRef.current = tl;
 
-    // Don't set initial hidden state - let CSS handle initial visibility
-    // This prevents issues during hot reload when accordion is open
-
-    // Animate elements in sequence with optimized properties
     tl.to(richTextRef.current, {
       duration: 0.2,
       ease: "power2.out",
@@ -199,7 +192,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       );
   }, [isMounted, cleanupGSAP]);
 
-  // Setup animation on mount
   useEffect(() => {
     setupAnimation();
     addCleanup(cleanupGSAP);
@@ -210,14 +202,12 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     };
   }, [setupAnimation, addCleanup, removeCleanup, cleanupGSAP]);
 
-  // Cleanup on locale change
   useEffect(() => {
     return () => {
       cleanupGSAP();
     };
   }, [cleanupGSAP]);
 
-  // Memoized accordion toggle handler
   const handleAccordionToggle = useCallback(
     (isOpen: boolean) => {
       setIsAccordionOpen(isOpen);
@@ -225,7 +215,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       if (!timelineRef.current || !isMounted()) return;
 
       if (isOpen) {
-        // Set initial hidden state when opening
         gsap.set(
           [
             richTextRef.current,
@@ -241,7 +230,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           },
         );
 
-        // Hide individual stat items initially
         if (statsRef.current) {
           gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
             force3D: true,
@@ -250,7 +238,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           });
         }
 
-        // Hide individual stat components in grid initially
         if (statsGridRef.current) {
           gsap.set(statsGridRef.current.querySelectorAll('[class*="stat"]'), {
             force3D: true,
@@ -259,14 +246,12 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           });
         }
 
-        // Add a small delay to let the accordion height animation start first
         gsap.delayedCall(0.1, () => {
           if (timelineRef.current && isMounted()) {
             timelineRef.current.play();
           }
         });
       } else {
-        // Reverse immediately when closing
         if (timelineRef.current) {
           timelineRef.current.reverse();
         }
@@ -280,24 +265,26 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       defaultOpen={defaultOpen}
       headerElement="h3"
       onToggle={handleAccordionToggle}
-      title={serviceName}
+      title={marketTitle ?? slug}
     >
-      <div className={styles.serviceAccordion} ref={contentRef}>
-        <div className={styles.serviceAccordionContent}>
-          <div ref={richTextRef}>
-            <RichText document={description} enlargeBoldText />
-          </div>
-          <ServiceAccordionStats
+      <div className={styles.marketAccordion} ref={contentRef}>
+        <div className={styles.marketAccordionContent}>
+          {description && (
+            <div ref={richTextRef}>
+              <RichText document={description} enlargeBoldText />
+            </div>
+          )}
+          <MarketAccordionStats
             isAccordionOpen={isAccordionOpen}
             stats={stats}
             statsGridRef={statsGridRef}
             statsRef={statsRef}
           />
-          <div className={styles.serviceAccordionCta} ref={ctaRef}>
+          <div className={styles.marketAccordionCta} ref={ctaRef}>
             <ButtonLink
               arrow="Right Arrow"
-              data-tracking-click="service-accordion-cta"
-              href={`/${SERVICES_PAGE_SLUG}/${slug}`}
+              data-tracking-click="market-accordion-cta"
+              href={`/${MARKETS_PAGE_SLUG}/${slug}`}
               label={buttonText[locale]}
               variant="secondary"
             >
@@ -305,11 +292,16 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
             </ButtonLink>
           </div>
         </div>
-        <div className={styles.serviceAccordionCarousel} ref={carouselRef}>
+        <div
+          className={clsx(
+            styles.marketAccordionCarousel,
+            projects.length === 1 && styles.singleCard,
+          )}
+          ref={carouselRef}
+        >
           <ProjectCoverflowCarousel
-            carouselId={`service-${slug}`}
+            carouselId={`market-${slug}`}
             projects={projects}
-            selectedServiceSlug={slug}
           />
         </div>
       </div>

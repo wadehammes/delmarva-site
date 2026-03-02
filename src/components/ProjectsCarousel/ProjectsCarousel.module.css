@@ -1,5 +1,6 @@
 .wrapper {
   position: relative;
+  width: 100%;
   min-height: 320px;
 }
 
@@ -17,6 +18,7 @@
 }
 
 .carousel {
+  width: 100%;
   min-height: 320px;
 
   :global(.swiper-wrapper) {
@@ -36,4 +38,27 @@
   flex: 1;
   min-width: 0;
   padding: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+.gridItem {
+  min-width: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

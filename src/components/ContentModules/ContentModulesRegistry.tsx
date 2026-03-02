@@ -1,5 +1,13 @@
 import dynamic from "next/dynamic";
 
+export const AllMarketsListServer = dynamic(
+  () =>
+    import("src/components/AllMarketsList/AllMarketsListServer.component").then(
+      (m) => ({ default: m.AllMarketsListServer }),
+    ),
+  { ssr: true },
+);
+
 export const AllServicesListServer = dynamic(
   () =>
     import(
@@ -21,6 +29,14 @@ export const AreasServicedServer = dynamic(
     import("src/components/AreasServiced/AreasServicedServer.component").then(
       (m) => ({ default: m.AreasServicedServer }),
     ),
+  { ssr: true },
+);
+
+export const AreasServicedTurnkeyServer = dynamic(
+  () =>
+    import(
+      "src/components/AreasServiced/AreasServicedTurnkeyServer.component"
+    ).then((m) => ({ default: m.AreasServicedTurnkeyServer })),
   { ssr: true },
 );
 

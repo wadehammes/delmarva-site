@@ -1,8 +1,10 @@
 import { AllProjectsListServer } from "src/components/AllProjectsList/AllProjectsListServer.component";
 import {
+  AllMarketsListServer,
   AllServicesListServer,
   AreasServicedListServer,
   AreasServicedServer,
+  AreasServicedTurnkeyServer,
   ContentRecentNewsList,
   FeaturedServices,
 } from "src/components/ContentModules/ContentModulesRegistry";
@@ -38,6 +40,17 @@ export const ContentModules = (props: ContentModulesProps) => {
     }
     case "All Projects": {
       return <AllProjectsListServer locale={locale} />;
+    }
+    case "All Markets List": {
+      return <AllMarketsListServer locale={locale} />;
+    }
+    case "Areas Service Map - Turnkey Only": {
+      return (
+        <AreasServicedTurnkeyServer
+          contentLayout={contentLayout}
+          locale={locale}
+        />
+      );
     }
     default: {
       return null;

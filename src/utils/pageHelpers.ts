@@ -255,3 +255,52 @@ export function createServiceMetadata(
     },
   };
 }
+
+/**
+ * Generates market metadata with common fields
+ */
+export function createMarketMetadata(
+  market: {
+    metadataDescription?: string;
+    metadataTitle?: string;
+    socialImage?: { src: string } | null;
+    enableIndexing?: boolean;
+    slug: string;
+    marketTitle?: string;
+  },
+  canonicalUrl: string,
+  options?: { pathPrefix?: string },
+): Metadata {
+  const pathPrefix = options?.pathPrefix ?? "";
+  const path = pathPrefix ? `${pathPrefix}/${market.slug}` : market.slug;
+  const baseUrl = envUrl();
+  const title = market.metadataTitle ?? market.marketTitle ?? "Market";
+  const description = market.metadataDescription ?? "";
+  const images = createMetadataImages(market.socialImage, title);
+  return {
+    alternates: {
+      canonical: new URL(canonicalUrl),
+      languages: buildAlternateLanguages(path, baseUrl),
+    },
+    description,
+    openGraph: {
+      description,
+      images,
+      siteName: SITE_NAME,
+      title,
+      type: "website",
+      url: canonicalUrl,
+    },
+    robots:
+      market.enableIndexing && process.env.ENVIRONMENT === "production"
+        ? "index, follow"
+        : "noindex, nofollow",
+    title,
+    twitter: {
+      card: "summary_large_image",
+      description,
+      images,
+      title,
+    },
+  };
+}

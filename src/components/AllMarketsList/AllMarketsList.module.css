@@ -1,0 +1,6 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1;
+  width: 100%;
+}

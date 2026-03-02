@@ -1,5 +1,5 @@
-.projectCarousel {
-  /* CSS Custom Properties with fallbacks */
+.projectCoverflowCarousel {
+  --project-carousel-gap: 1rem;
   --project-carousel-navigation-bg: rgba(255, 255, 255, 0.9);
   --project-carousel-navigation-color: var(--color-text, #1f1d1d);
   --project-carousel-navigation-hover-bg: rgba(255, 255, 255, 1);
@@ -8,21 +8,19 @@
   --project-carousel-pagination-bullet-color: var(--colors-white, #ffffff);
   --project-carousel-pagination-bullet-size: 0.25rem;
   --project-carousel-slide-height: 350px;
-  --project-carousel-gap: 1rem;
-
-  /* Layout */
   position: relative;
   display: flex;
   flex-direction: column;
+
   align-items: center;
   width: 100%;
   max-width: 100%;
   overflow: hidden;
 
   @media (min-width: 768px) {
+    --project-carousel-gap: 1.5rem;
     --project-carousel-navigation-size: 2.5rem;
     --project-carousel-slide-height: 400px;
-    --project-carousel-gap: 1.5rem;
     max-width: 600px;
   }
 
@@ -39,25 +37,18 @@
   justify-content: center;
   width: 100%;
   min-height: 200px;
-
-  p {
-    font-size: 1rem;
-    color: var(--color-text);
-    text-align: center;
-  }
+  text-align: left;
 }
 
 .swiper {
   width: 100%;
   padding: 0.5rem !important;
 
-  /* Ensure proper Swiper container styling */
   :global(.swiper-wrapper) {
     display: flex;
     align-items: center;
   }
 
-  /* Fallback styles for better cross-browser compatibility */
   :global(.swiper-slide) {
     flex-shrink: 0;
   }

@@ -3,7 +3,9 @@ export const FOOTER_ID = "global-footer";
 export const HOME_PAGE_SLUG = "home";
 export const TEST_PAGE_SLUG = "test-page";
 
+export const MARKETS_PAGE_SLUG = "markets";
 export const SERVICES_PAGE_SLUG = "what-we-deliver";
+export const TURNKEY_SERVICE_SLUG = "turn-key-development";
 
 export const EXCLUDED_PAGE_SLUGS_FROM_BUILD = [HOME_PAGE_SLUG];
 

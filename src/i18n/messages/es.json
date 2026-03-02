@@ -9,9 +9,10 @@
     "menuToggle": "Alternar menú de navegación"
   },
   "ProjectCard": {
+    "markets": "Mercados",
     "viewDetails": "Ver detalles de {name}"
   },
-  "ProjectCarousel": {
+  "ProjectCoverflowCarousel": {
     "nextProject": "Proyecto siguiente",
     "previousProject": "Proyecto anterior"
   },
@@ -21,7 +22,7 @@
     "shareCopied": "¡Copiado!",
     "shareProject": "Compartir Proyecto"
   },
-  "ServiceTemplate": {
+  "MarketTemplate":{"eyebrow":"Nuestros Mercados","projects":"Proyectos"},"ServiceTemplate": {
     "eyebrow": "Nuestros Servicios",
     "projects": "Proyectos"
   },

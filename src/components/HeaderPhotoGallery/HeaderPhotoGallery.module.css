@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: outline 0.2s ease;
+
+  &:hover {
+    outline: 1px solid var(--colors-white);
+    outline-offset: 2px;
+  }
+}

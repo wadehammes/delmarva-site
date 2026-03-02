@@ -28,6 +28,7 @@ export interface CarouselProps {
   spaceBetween?: number;
   breakpoints?: Record<number, Partial<SwiperProps>>;
   centeredSlides?: boolean;
+  centeredSlidesBounds?: boolean;
   onSlideChange?: (swiper: SwiperType) => void;
   onSwiper?: (swiper: SwiperType) => void;
   animation?: "slide" | "fade";
@@ -52,6 +53,7 @@ export const Carousel = (props: CarouselProps) => {
     spaceBetween = 30,
     breakpoints,
     centeredSlides = false,
+    centeredSlidesBounds = false,
     onSlideChange,
     onSwiper,
     animation = "slide",
@@ -109,6 +111,7 @@ export const Carousel = (props: CarouselProps) => {
         }
         breakpoints={breakpoints}
         centeredSlides={centeredSlides}
+        centeredSlidesBounds={centeredSlidesBounds}
         className={styles.swiper}
         effect={animation === "fade" ? "fade" : undefined}
         loop={loop}

@@ -668,3 +668,37 @@ input[type="checkbox"] {
 .toast-close:hover {
   opacity: 1;
 }
+
+@supports (view-transition-name: none) {
+  ::view-transition-old(media-gallery-fullscreen),
+  ::view-transition-new(media-gallery-fullscreen) {
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(media-gallery-fullscreen) {
+    animation-name: media-gallery-fade-out;
+  }
+
+  ::view-transition-new(media-gallery-fullscreen) {
+    animation-name: media-gallery-fade-in;
+  }
+}
+
+@keyframes media-gallery-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes media-gallery-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

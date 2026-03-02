@@ -3,6 +3,11 @@
 	"version": "0.0.0",
 	"packageManager": "pnpm@10.30.3",
 	"private": true,
+	"pnpm": {
+		"overrides": {
+			"@types/mapbox__point-geometry": "file:./patches/@types/mapbox__point-geometry"
+		}
+	},
 	"scripts": {
 		"dev": "next dev -p 5656 --webpack",
 		"build": "next build",
@@ -31,13 +36,13 @@
 		"@svgr/webpack": "^8.1.0",
 		"@tanstack/react-query": "^5.90.21",
 		"clsx": "^2.1.1",
-		"contentful": "^11.10.4",
+		"contentful": "^11.10.5",
 		"gsap": "^3.14.2",
 		"html-react-parser": "^5.2.17",
 		"jest-mock": "^30.2.0",
 		"jotai": "^2.18.0",
 		"lodash.flatten": "^4.4.0",
-		"mapbox-gl": "^3.18.1",
+		"mapbox-gl": "^3.19.0",
 		"next": "^16.1.6",
 		"next-intl": "^4.8.3",
 		"postcss-flexbugs-fixes": "^5.0.2",
@@ -65,7 +70,7 @@
 		"@testing-library/user-event": "^14.6.1",
 		"@types/jest": "^30.0.0",
 		"@types/lodash.flatten": "^4.4.9",
-		"@types/node": "^25.3.0",
+		"@types/node": "^25.3.2",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@types/react-google-recaptcha": "^2.1.9",
