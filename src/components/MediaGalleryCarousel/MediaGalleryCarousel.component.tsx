@@ -29,7 +29,10 @@ interface MediaGalleryCarouselProps {
 export const MediaGalleryCarousel = (props: MediaGalleryCarouselProps) => {
   const { assets, autoplay = false, variant = "default" } = props;
 
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width: 768px)", {
+    defaultValue: false,
+    initializeWithValue: false,
+  });
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);

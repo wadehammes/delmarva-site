@@ -1,5 +1,5 @@
+import { ContentAreasServicedMapClient } from "src/components/ContentAreasServicedMap/ContentAreasServicedMapClient.component";
 import {
-  ContentAreasServicedMap,
   ContentCard,
   ContentCarouselComponent,
   ContentCopyBlock,
@@ -125,7 +125,7 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentAreasServicedMap fields={parsedMap} />;
+      return <ContentAreasServicedMapClient fields={parsedMap} />;
     }
     case "contentModules": {
       const parsedModule = parseContentModule(content as ContentModuleEntry);
