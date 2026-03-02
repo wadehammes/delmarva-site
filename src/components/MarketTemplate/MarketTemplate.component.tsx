@@ -63,7 +63,7 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
         )}
       </Section>
       {(projects ?? []).length > 0 &&
-        ((projects ?? []).length > 5 ? (
+        ((projects ?? []).length >= 6 ? (
           <Section
             className={styles.marketProjectsSection}
             id={`market-${market.slug}-projects`}

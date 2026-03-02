@@ -1,3 +1,4 @@
+import "server-only";
 import { AllProjectsListServer } from "src/components/AllProjectsList/AllProjectsListServer.component";
 import {
   AllMarketsListServer,

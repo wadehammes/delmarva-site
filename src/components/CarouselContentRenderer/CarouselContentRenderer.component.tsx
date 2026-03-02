@@ -1,10 +1,12 @@
-import { ContentCopyBlock } from "src/components/ContentCopyBlock/ContentCopyBlock.component";
-import { ContentCopyMediaBlock } from "src/components/ContentCopyMediaBlock/ContentCopyMediaBlock.component";
-import { ContentHeroComponent } from "src/components/ContentHero/ContentHero.component";
-import { ContentImageBlock } from "src/components/ContentImageBlock/ContentImageBlock.component";
-import { ContentTestimonial } from "src/components/ContentTestimonial/ContentTestimonial.component";
-import { ContentVideoBlock } from "src/components/ContentVideoBlock/ContentVideoBlock.component";
-import { Stat } from "src/components/Stat/Stat.component";
+import {
+  ContentCopyBlock,
+  ContentCopyMediaBlock,
+  ContentHeroComponent,
+  ContentImageBlock,
+  ContentTestimonial,
+  ContentVideoBlock,
+  Stat,
+} from "src/components/CarouselContentRenderer/CarouselContentRendererRegistry";
 import {
   type ContentCopyMediaBlockEntry,
   parseContentCopyMediaBlock,

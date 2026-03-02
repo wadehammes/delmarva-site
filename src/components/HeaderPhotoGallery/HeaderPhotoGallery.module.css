@@ -1,15 +1,13 @@
 .wrapper {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 2rem;
+  align-self: stretch;
   width: 100%;
   min-width: 0;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
+  background-color: var(--colors-black);
   border-radius: 8px;
-  transition: outline 0.2s ease;
-
-  &:hover {
-    outline: 1px solid var(--colors-white);
-    outline-offset: 2px;
-  }
 }

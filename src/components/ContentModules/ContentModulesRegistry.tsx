@@ -1,3 +1,4 @@
+import "server-only";
 import dynamic from "next/dynamic";
 
 export const AllMarketsListServer = dynamic(

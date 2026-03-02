@@ -1,5 +1,8 @@
-import { ContentAreasServicedMapClient } from "src/components/ContentAreasServicedMap/ContentAreasServicedMapClient.component";
+import "server-only";
+import { MapErrorBoundary } from "src/components/ContentAreasServicedMap/MapErrorBoundary.component";
+import { ContentModules } from "src/components/ContentModules/ContentModules.component";
 import {
+  ContentAreasServicedMap,
   ContentCard,
   ContentCarouselComponent,
   ContentCopyBlock,
@@ -8,7 +11,6 @@ import {
   ContentHeroComponent,
   ContentImageBlock,
   ContentMarquee,
-  ContentModules,
   ContentRecentNews,
   ContentTestimonial,
   FormRenderer,
@@ -125,7 +127,11 @@ export const ContentRenderer = (props: ContentRendererProps) => {
         return null;
       }
 
-      return <ContentAreasServicedMapClient fields={parsedMap} />;
+      return (
+        <MapErrorBoundary>
+          <ContentAreasServicedMap fields={parsedMap} />
+        </MapErrorBoundary>
+      );
     }
     case "contentModules": {
       const parsedModule = parseContentModule(content as ContentModuleEntry);
