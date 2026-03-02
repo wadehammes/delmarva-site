@@ -1,6 +1,6 @@
 import { draftMode } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { HeaderPhotoGallery } from "src/components/HeaderPhotoGallery/HeaderPhotoGallery.component";
+import { HeaderPhotoCarousel } from "src/components/HeaderPhotoCarousel/HeaderPhotoCarousel.component";
 import styles from "src/components/MarketTemplate/MarketTemplate.module.css";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import { RichText } from "src/components/RichText/RichText.component";
@@ -29,8 +29,6 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
     draft.isEnabled,
   );
 
-  const hasMarketPhotos = (marketPhotos ?? []).length > 0;
-
   return (
     <>
       <Section
@@ -39,7 +37,7 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
         section={{
           backgroundColor: "Black",
           contentGap: "More Gap",
-          contentLayout: hasMarketPhotos ? "2-column" : "Single Column",
+          contentLayout: "2-column",
           id: `market-${market.slug}-header`,
           sectionBackgroundStyle: "Microdot",
           sectionPadding: "Regular Padding",
@@ -57,28 +55,25 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
             <RichText document={market.description} />
           </div>
         </header>
-        {hasMarketPhotos && (
-          <HeaderPhotoGallery assets={marketPhotos ?? []} autoplay />
-        )}
+        <div className={styles.marketPhotos}>
+          <HeaderPhotoCarousel assets={marketPhotos ?? []} />
+        </div>
       </Section>
-      {(projects ?? []).length > 0 && (
-        <Section
-          className={styles.marketProjectsSection}
-          id={`market-${market.slug}-projects`}
-          section={{
-            backgroundColor: "Black",
-            contentLayout: "4-column",
-            id: `market-${market.slug}-projects`,
-            sectionEyebrow: t("projects"),
-            sectionPadding: "Regular Padding",
-            slug: market.slug,
-          }}
-        >
-          {(projects ?? []).map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </Section>
-      )}
+      <Section
+        id={`market-${market.slug}-projects`}
+        section={{
+          backgroundColor: "Black",
+          contentLayout: "4-column",
+          id: `market-${market.slug}-projects`,
+          sectionEyebrow: t("projects"),
+          sectionPadding: "Regular Padding",
+          slug: market.slug,
+        }}
+      >
+        {(projects ?? []).map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
+      </Section>
       {filteredSections.map((section) => {
         if (!section) {
           return null;

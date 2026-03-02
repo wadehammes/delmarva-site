@@ -1,9 +1,12 @@
 .marketHeaderSection [class*="sectionContent"] {
   grid-template-columns: 1fr;
-  gap: 4rem;
 
-  @media screen and (min-width: 900px) {
-    grid-template-columns: 1fr 2fr;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: minmax(0, 30fr) minmax(0, 70fr);
   }
 }
 
@@ -45,6 +48,16 @@
 .marketHeaderDescription {
   line-height: 1.7;
   letter-spacing: 0.01em;
+}
+
+.marketPhotos {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .marketProjectsSection [class*="sectionContent"] {

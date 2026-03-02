@@ -67,7 +67,18 @@ export const Carousel = (props: CarouselProps) => {
   const slides = Children.toArray(children);
 
   if (slides.length === 1) {
-    return <>{slides[0]}</>;
+    return (
+      <div
+        className={clsx(
+          styles.carousel,
+          styles.controlsOverSlides,
+          styles.singleSlide,
+          className,
+        )}
+      >
+        <div className={clsx(styles.slide, slideClassName)}>{slides[0]}</div>
+      </div>
+    );
   }
 
   const hasMultipleSlides = slides.length > 1;
