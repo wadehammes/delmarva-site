@@ -1,6 +1,7 @@
 import { draftMode } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { HeaderPhotoCarousel } from "src/components/HeaderPhotoCarousel/HeaderPhotoCarousel.component";
+import { Carousel } from "src/components/Carousel/Carousel.component";
+import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import { Section } from "src/components/Section/Section.component";
@@ -21,10 +22,8 @@ interface ServiceTemplateProps {
 
 export const ServiceTemplate = async (props: ServiceTemplateProps) => {
   const { locale, service, servicePhotos, projects } = props;
-
   const t = await getTranslations("ServiceTemplate");
   const draft = await draftMode();
-
   const filteredSections = await filterSectionsByStaleRecentNews(
     service.sections ?? [],
     locale ?? "en",
@@ -57,11 +56,14 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
             <RichText document={service.description} />
           </div>
         </header>
-
         <div className={styles.servicePhotos}>
-          {servicePhotos.length > 0 ? (
-            <HeaderPhotoCarousel assets={servicePhotos ?? []} />
-          ) : null}
+          {(servicePhotos ?? []).length > 0 && (
+            <Carousel autoplay>
+              {(servicePhotos ?? []).map((media) => (
+                <ContentfulAssetRenderer asset={media} key={media.id} />
+              ))}
+            </Carousel>
+          )}
         </div>
       </Section>
       <Section
@@ -75,7 +77,7 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
           slug: service.slug,
         }}
       >
-        {projects.map((project) => (
+        {(projects ?? []).map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
       </Section>
