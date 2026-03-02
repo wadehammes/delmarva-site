@@ -1,4 +1,3 @@
-import flatten from "lodash.flatten";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
@@ -75,18 +74,16 @@ export async function generateStaticParams(): Promise<PageParams[]> {
     }
   }
 
-  return flatten(
-    routing.locales.map((locale) =>
-      services
-        .filter(
-          (service) =>
-            !EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(service?.slug ?? ""),
-        )
-        .map((service: ServiceType) => ({
-          locale,
-          slug: service?.slug ?? "",
-        })),
-    ),
+  return routing.locales.flatMap((locale) =>
+    services
+      .filter(
+        (service) =>
+          !EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(service?.slug ?? ""),
+      )
+      .map((service: ServiceType) => ({
+        locale,
+        slug: service?.slug ?? "",
+      })),
   );
 }
 
@@ -121,70 +118,79 @@ export async function generateMetadata({
   );
 }
 
-// The actual Page component.
 async function Page({ params }: PageProps) {
-  const { slug, locale } = await params;
+  try {
+    const { slug, locale } = await params;
 
-  const validLocale = await validateAndSetLocale(locale);
+    const validLocale = await validateAndSetLocale(locale);
 
-  if (!validLocale) {
-    return notFound();
+    if (!validLocale) {
+      return notFound();
+    }
+
+    const draft = await draftMode();
+
+    const [service, navigation, footer] = await Promise.all([
+      fetchService({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug,
+      }),
+      fetchNavigation({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: NAVIGATION_ID,
+      }),
+      fetchFooter({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: FOOTER_ID,
+      }),
+    ]);
+
+    if (!footer || !navigation || !service) {
+      return notFound();
+    }
+
+    const [servicePhotos, projects, schemaGraph] = await Promise.all([
+      fetchServicePhotos({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: service.slug,
+      }),
+      fetchProjectsByService({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        serviceSlug: service.slug,
+      }),
+      generateServicePageSchemaGraphSafe({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        service,
+        slug: `${SERVICES_PAGE_SLUG}/${service.slug}`,
+      }),
+    ]);
+
+    return (
+      <PageLayout footer={footer} navigation={navigation}>
+        <SchemaScript schema={schemaGraph} />
+        <ServiceTemplate
+          locale={validLocale}
+          projects={projects}
+          service={service}
+          servicePhotos={servicePhotos}
+        />
+      </PageLayout>
+    );
+  } catch (error) {
+    const { slug } = await params;
+    console.error(
+      `[what-we-deliver/[slug]] Render failed for slug "${slug}":`,
+      error instanceof Error ? error.message : String(error),
+      error instanceof Error ? error.stack : undefined,
+    );
+    throw error;
   }
-
-  const draft = await draftMode();
-
-  const [service, navigation, footer] = await Promise.all([
-    fetchService({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug,
-    }),
-    fetchNavigation({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: NAVIGATION_ID,
-    }),
-    fetchFooter({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: FOOTER_ID,
-    }),
-  ]);
-
-  if (!footer || !navigation || !service) {
-    return notFound();
-  }
-
-  const [servicePhotos, projects, schemaGraph] = await Promise.all([
-    fetchServicePhotos({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: service.slug,
-    }),
-    fetchProjectsByService({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      serviceSlug: service.slug,
-    }),
-    generateServicePageSchemaGraphSafe({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      service,
-      slug: `${SERVICES_PAGE_SLUG}/${service.slug}`,
-    }),
-  ]);
-
-  return (
-    <PageLayout footer={footer} navigation={navigation}>
-      <SchemaScript schema={schemaGraph} />
-      <ServiceTemplate
-        locale={validLocale}
-        projects={projects}
-        service={service}
-        servicePhotos={servicePhotos}
-      />
-    </PageLayout>
-  );
 }
 
 export default Page;

@@ -21,81 +21,90 @@ interface ServiceTemplateProps {
 }
 
 export const ServiceTemplate = async (props: ServiceTemplateProps) => {
-  const { locale, service, servicePhotos, projects } = props;
-  const t = await getTranslations("ServiceTemplate");
-  const draft = await draftMode();
-  const filteredSections = await filterSectionsByStaleRecentNews(
-    service.sections ?? [],
-    locale ?? "en",
-    draft.isEnabled,
-  );
+  try {
+    const { locale, service, servicePhotos, projects } = props;
+    const t = await getTranslations("ServiceTemplate");
+    const draft = await draftMode();
+    const filteredSections = await filterSectionsByStaleRecentNews(
+      service.sections ?? [],
+      locale ?? "en",
+      draft.isEnabled,
+    );
 
-  return (
-    <>
-      <Section
-        className={styles.serviceHeaderSection}
-        id={`service-${service.slug}-header`}
-        section={{
-          backgroundColor: "Black",
-          contentGap: "More Gap",
-          contentLayout: "2-column",
-          id: `service-${service.slug}-header`,
-          sectionBackgroundStyle: "Microdot",
-          sectionPadding: "Regular Padding",
-          slug: service.slug,
-        }}
-      >
-        <header className={styles.serviceHeader}>
-          <p className={styles.serviceHeaderEyebrow}>
-            <span className={styles.serviceHeaderEyebrowText}>
-              {t("eyebrow")}
-            </span>
-          </p>
-          <h1 className={styles.serviceHeaderTitle}>{service.serviceName}</h1>
-          <div className={styles.serviceHeaderDescription}>
-            <RichText document={service.description} />
-          </div>
-        </header>
-        <div className={styles.servicePhotos}>
-          {(servicePhotos ?? []).length > 0 && (
-            <Carousel autoplay>
-              {(servicePhotos ?? []).map((media) => (
-                <ContentfulAssetRenderer asset={media} key={media.id} />
-              ))}
-            </Carousel>
-          )}
-        </div>
-      </Section>
-      {projects.length > 0 ? (
+    return (
+      <>
         <Section
-          id={`service-${service.slug}-projects`}
+          className={styles.serviceHeaderSection}
+          id={`service-${service.slug}-header`}
           section={{
             backgroundColor: "Black",
-            contentLayout: projects.length > 5 ? "4-column" : "3-column",
-            id: `service-${service.slug}-projects`,
-            sectionEyebrow: t("projects"),
+            contentGap: "More Gap",
+            contentLayout: "2-column",
+            id: `service-${service.slug}-header`,
+            sectionBackgroundStyle: "Microdot",
             sectionPadding: "Regular Padding",
             slug: service.slug,
           }}
         >
-          {(projects ?? []).map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+          <header className={styles.serviceHeader}>
+            <p className={styles.serviceHeaderEyebrow}>
+              <span className={styles.serviceHeaderEyebrowText}>
+                {t("eyebrow")}
+              </span>
+            </p>
+            <h1 className={styles.serviceHeaderTitle}>{service.serviceName}</h1>
+            <div className={styles.serviceHeaderDescription}>
+              <RichText document={service.description} />
+            </div>
+          </header>
+          <div className={styles.servicePhotos}>
+            {(servicePhotos ?? []).length > 0 && (
+              <Carousel autoplay>
+                {(servicePhotos ?? []).map((media) => (
+                  <ContentfulAssetRenderer asset={media} key={media.id} />
+                ))}
+              </Carousel>
+            )}
+          </div>
         </Section>
-      ) : null}
-      {filteredSections.map((section) => {
-        if (!section) {
-          return null;
-        }
+        {projects.length > 0 ? (
+          <Section
+            id={`service-${service.slug}-projects`}
+            section={{
+              backgroundColor: "Black",
+              contentLayout: projects.length > 5 ? "4-column" : "3-column",
+              id: `service-${service.slug}-projects`,
+              sectionEyebrow: t("projects"),
+              sectionPadding: "Regular Padding",
+              slug: service.slug,
+            }}
+          >
+            {(projects ?? []).map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </Section>
+        ) : null}
+        {filteredSections.map((section) => {
+          if (!section) {
+            return null;
+          }
 
-        return (
-          <SectionRenderer
-            key={section.id}
-            locale={locale}
-            sections={[section]}
-          />
-        );
-      })}
-    </>
-  );
+          return (
+            <SectionRenderer
+              key={section.id}
+              locale={locale}
+              sections={[section]}
+            />
+          );
+        })}
+      </>
+    );
+  } catch (error) {
+    console.error(
+      `[ServiceTemplate] Render failed for service "${props.service?.slug}":`,
+      error instanceof Error ? error.message : String(error),
+      error instanceof Error ? error.stack : undefined,
+    );
+    throw error;
+  }
 };

@@ -1,4 +1,3 @@
-import flatten from "lodash.flatten";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
@@ -72,18 +71,16 @@ export async function generateStaticParams(): Promise<PageParams[]> {
     }
   }
 
-  return flatten(
-    routing.locales.map((locale) =>
-      (markets ?? [])
-        .filter(
-          (market) =>
-            !EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(market?.slug ?? ""),
-        )
-        .map((market: MarketType) => ({
-          locale,
-          slug: market?.slug ?? "",
-        })),
-    ),
+  return routing.locales.flatMap((locale) =>
+    (markets ?? [])
+      .filter(
+        (market) =>
+          !EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(market?.slug ?? ""),
+      )
+      .map((market: MarketType) => ({
+        locale,
+        slug: market?.slug ?? "",
+      })),
   );
 }
 
@@ -117,68 +114,78 @@ export async function generateMetadata({
 }
 
 async function Page({ params }: PageProps) {
-  const { slug, locale } = await params;
+  try {
+    const { slug, locale } = await params;
 
-  const validLocale = await validateAndSetLocale(locale);
+    const validLocale = await validateAndSetLocale(locale);
 
-  if (!validLocale) {
-    return notFound();
+    if (!validLocale) {
+      return notFound();
+    }
+
+    const draft = await draftMode();
+
+    const [market, navigation, footer] = await Promise.all([
+      fetchMarket({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug,
+      }),
+      fetchNavigation({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: NAVIGATION_ID,
+      }),
+      fetchFooter({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: FOOTER_ID,
+      }),
+    ]);
+
+    if (!footer || !navigation || !market) {
+      return notFound();
+    }
+
+    const [marketPhotos, projects, schemaGraph] = await Promise.all([
+      fetchMarketPhotos({
+        locale: validLocale,
+        marketId: market.id,
+        preview: draft.isEnabled,
+      }),
+      fetchProjectsByMarket({
+        locale: validLocale,
+        marketId: market.id,
+        preview: draft.isEnabled,
+      }),
+      generateMarketPageSchemaGraphSafe({
+        locale: validLocale,
+        market,
+        preview: draft.isEnabled,
+        slug: `${MARKETS_PAGE_SLUG}/${market.slug}`,
+      }),
+    ]);
+
+    return (
+      <PageLayout footer={footer} navigation={navigation}>
+        <SchemaScript schema={schemaGraph} />
+        <MarketTemplate
+          locale={validLocale}
+          market={market}
+          marketPhotos={marketPhotos}
+          projects={projects}
+        />
+      </PageLayout>
+    );
+  } catch (error) {
+    const { slug } = await params;
+    console.error(
+      `[markets/[slug]] Render failed for slug "${slug}":`,
+      error instanceof Error ? error.message : String(error),
+      error instanceof Error ? error.stack : undefined,
+    );
+    throw error;
   }
-
-  const draft = await draftMode();
-
-  const [market, navigation, footer] = await Promise.all([
-    fetchMarket({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug,
-    }),
-    fetchNavigation({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: NAVIGATION_ID,
-    }),
-    fetchFooter({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: FOOTER_ID,
-    }),
-  ]);
-
-  if (!footer || !navigation || !market) {
-    return notFound();
-  }
-
-  const [marketPhotos, projects, schemaGraph] = await Promise.all([
-    fetchMarketPhotos({
-      locale: validLocale,
-      marketId: market.id,
-      preview: draft.isEnabled,
-    }),
-    fetchProjectsByMarket({
-      locale: validLocale,
-      marketId: market.id,
-      preview: draft.isEnabled,
-    }),
-    generateMarketPageSchemaGraphSafe({
-      locale: validLocale,
-      market,
-      preview: draft.isEnabled,
-      slug: `${MARKETS_PAGE_SLUG}/${market.slug}`,
-    }),
-  ]);
-
-  return (
-    <PageLayout footer={footer} navigation={navigation}>
-      <SchemaScript schema={schemaGraph} />
-      <MarketTemplate
-        locale={validLocale}
-        market={market}
-        marketPhotos={marketPhotos}
-        projects={projects}
-      />
-    </PageLayout>
-  );
 }
 
 export default Page;

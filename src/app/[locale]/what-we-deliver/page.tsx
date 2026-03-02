@@ -62,51 +62,60 @@ export async function generateMetadata(
 }
 
 const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
-  const { locale } = await props.params;
+  try {
+    const { locale } = await props.params;
 
-  const validLocale = await validateAndSetLocale(locale);
+    const validLocale = await validateAndSetLocale(locale);
 
-  if (!validLocale) {
-    return notFound();
+    if (!validLocale) {
+      return notFound();
+    }
+
+    const draft = await draftMode();
+
+    const [page, navigation, footer] = await Promise.all([
+      fetchPage({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: "what-we-deliver",
+      }),
+      fetchNavigation({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: NAVIGATION_ID,
+      }),
+      fetchFooter({
+        locale: validLocale,
+        preview: draft.isEnabled,
+        slug: FOOTER_ID,
+      }),
+    ]);
+
+    if (!page || !navigation || !footer) {
+      return notFound();
+    }
+
+    const schemaGraph = await generatePageSchemaGraph(
+      page,
+      SERVICES_PAGE_SLUG,
+      validLocale,
+      draft.isEnabled,
+    );
+
+    return (
+      <PageLayout footer={footer} navigation={navigation} page={page}>
+        <SchemaScript schema={schemaGraph} />
+        <PageComponent fields={page} locale={validLocale} />
+      </PageLayout>
+    );
+  } catch (error) {
+    console.error(
+      "[what-we-deliver] Render failed:",
+      error instanceof Error ? error.message : String(error),
+      error instanceof Error ? error.stack : undefined,
+    );
+    throw error;
   }
-
-  const draft = await draftMode();
-
-  const [page, navigation, footer] = await Promise.all([
-    fetchPage({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: "what-we-deliver",
-    }),
-    fetchNavigation({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: NAVIGATION_ID,
-    }),
-    fetchFooter({
-      locale: validLocale,
-      preview: draft.isEnabled,
-      slug: FOOTER_ID,
-    }),
-  ]);
-
-  if (!page || !navigation || !footer) {
-    return notFound();
-  }
-
-  const schemaGraph = await generatePageSchemaGraph(
-    page,
-    SERVICES_PAGE_SLUG,
-    validLocale,
-    draft.isEnabled,
-  );
-
-  return (
-    <PageLayout footer={footer} navigation={navigation} page={page}>
-      <SchemaScript schema={schemaGraph} />
-      <PageComponent fields={page} locale={validLocale} />
-    </PageLayout>
-  );
 };
 
 export default WhatWeDeliverPage;
