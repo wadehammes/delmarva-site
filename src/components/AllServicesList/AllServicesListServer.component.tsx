@@ -13,29 +13,33 @@ interface AllServicesListServerProps {
 export const AllServicesListServer = async (
   props?: AllServicesListServerProps,
 ) => {
-  const draft = await draftMode();
-  const locale = await getServerLocaleSafe(props?.locale);
+  try {
+    const draft = await draftMode();
+    const locale = await getServerLocaleSafe(props?.locale);
 
-  const services = await fetchServices({
-    locale,
-    preview: draft.isEnabled,
-  });
+    const services = await fetchServices({
+      locale,
+      preview: draft.isEnabled,
+    });
 
-  const servicesWithProjects = await Promise.all(
-    services.map(async (service) => {
-      const projects = await fetchProjectsByService({
-        locale: locale as Locales,
-        preview: draft.isEnabled,
-        serviceSlug: service.slug,
-      });
-      return { projects, service };
-    }),
-  );
+    const servicesWithProjects = await Promise.all(
+      services.map(async (service) => {
+        const projects = await fetchProjectsByService({
+          locale: locale as Locales,
+          preview: draft.isEnabled,
+          serviceSlug: service.slug,
+        });
+        return { projects, service };
+      }),
+    );
 
-  return (
-    <AllServicesList
-      locale={locale}
-      servicesWithProjects={servicesWithProjects}
-    />
-  );
+    return (
+      <AllServicesList
+        locale={locale}
+        servicesWithProjects={servicesWithProjects}
+      />
+    );
+  } catch {
+    return null;
+  }
 };

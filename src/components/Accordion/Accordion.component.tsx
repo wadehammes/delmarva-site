@@ -57,7 +57,7 @@ export const Accordion = ({
   useEffect(() => {
     if (contentRef.current) {
       gsap.to(contentRef.current, {
-        duration: 0.3,
+        duration: 0.2,
         ease: "power2.out",
         force3D: true, // Force hardware acceleration
         height: isOpen ? "auto" : 0,

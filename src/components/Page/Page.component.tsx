@@ -16,7 +16,7 @@ export const PageComponent = async (props: PageComponentProps) => {
   const { sections } = fields;
   const draft = await draftMode();
   const filteredSections = await filterSectionsByStaleRecentNews(
-    sections,
+    sections ?? [],
     (locale as Locales) ?? "en",
     draft.isEnabled,
   );

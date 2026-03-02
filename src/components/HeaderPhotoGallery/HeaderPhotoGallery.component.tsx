@@ -10,6 +10,10 @@ interface HeaderPhotoGalleryProps {
 export const HeaderPhotoGallery = (props: HeaderPhotoGalleryProps) => {
   const { assets, autoplay = false } = props;
 
+  if (!assets?.length) {
+    return null;
+  }
+
   return (
     <div className={styles.wrapper}>
       <MediaGalleryCarousel

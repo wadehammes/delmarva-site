@@ -1,5 +1,13 @@
 import dynamic from "next/dynamic";
 
+export const ContentAreasServicedMap = dynamic(
+  () =>
+    import(
+      "src/components/ContentAreasServicedMap/ContentAreasServicedMap.component"
+    ).then((m) => ({ default: m.ContentAreasServicedMap })),
+  { ssr: true },
+);
+
 export const ContentCard = dynamic(
   () =>
     import("src/components/ContentCard/ContentCard.component").then((m) => ({

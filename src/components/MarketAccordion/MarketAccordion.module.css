@@ -1,17 +1,27 @@
 .marketAccordion {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 0;
   container-type: inline-size;
+
+  .marketAccordionCarousel {
+    order: -1;
+  }
 
   @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    .marketAccordionContent {
+      grid-column: 1;
+    }
 
     .marketAccordionCarousel {
       display: flex;
       grid-column: 2;
       align-items: center;
       justify-content: center;
+      order: unset;
     }
   }
 }
@@ -19,9 +29,13 @@
 .marketAccordionContent {
   display: flex;
   flex-direction: column;
-  grid-column: 1;
   gap: 2rem;
   max-width: none;
+  padding-bottom: 2rem;
+
+  @media (min-width: 900px) {
+    padding-bottom: 0;
+  }
 }
 
 .statsList {

@@ -42,12 +42,14 @@ export const ProjectsCarousel = ({
       <div className={styles.grid}>
         {projects.map((project) => (
           <div className={styles.gridItem} key={project.id}>
-            <ProjectCard
-              project={project}
-              projectSlugFromServer={projectSlugFromServer}
-              selectedServiceSlug={selectedServiceSlug}
-              syncUrlOnOpen={syncUrlOnOpen}
-            />
+            <div className={styles.cardStretch}>
+              <ProjectCard
+                project={project}
+                projectSlugFromServer={projectSlugFromServer}
+                selectedServiceSlug={selectedServiceSlug}
+                syncUrlOnOpen={syncUrlOnOpen}
+              />
+            </div>
           </div>
         ))}
       </div>
@@ -85,12 +87,14 @@ export const ProjectsCarousel = ({
       >
         {projects.map((project) => (
           <div className={styles.slideInner} key={project.id}>
-            <ProjectCard
-              project={project}
-              projectSlugFromServer={projectSlugFromServer}
-              selectedServiceSlug={selectedServiceSlug}
-              syncUrlOnOpen={syncUrlOnOpen}
-            />
+            <div className={styles.cardStretch}>
+              <ProjectCard
+                project={project}
+                projectSlugFromServer={projectSlugFromServer}
+                selectedServiceSlug={selectedServiceSlug}
+                syncUrlOnOpen={syncUrlOnOpen}
+              />
+            </div>
           </div>
         ))}
       </Carousel>

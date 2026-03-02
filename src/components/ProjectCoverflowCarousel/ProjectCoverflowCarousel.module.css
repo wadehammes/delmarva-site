@@ -7,7 +7,7 @@
   --project-carousel-pagination-bullet-active-color: var(--colors-red, #e01e2d);
   --project-carousel-pagination-bullet-color: var(--colors-white, #ffffff);
   --project-carousel-pagination-bullet-size: 0.25rem;
-  --project-carousel-slide-height: 350px;
+  --project-carousel-slide-height: 420px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
   @media (min-width: 768px) {
     --project-carousel-gap: 1.5rem;
     --project-carousel-navigation-size: 2.5rem;
-    --project-carousel-slide-height: 400px;
+    --project-carousel-slide-height: 480px;
     max-width: 600px;
   }
 
@@ -62,8 +62,12 @@
   transition: all 0.3s ease;
 
   > * {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     width: 100%;
     min-width: 0;
+    min-height: 0;
   }
 
   &:global(.swiper-slide-visible) {

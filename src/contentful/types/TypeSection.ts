@@ -5,6 +5,7 @@ import type {
   EntrySkeletonType,
   LocaleCode,
 } from "contentful";
+import type { TypeContentAreasServicedMapSkeleton } from "./TypeContentAreasServicedMap";
 import type { TypeContentCardSkeleton } from "./TypeContentCard";
 import type { TypeContentCarouselSkeleton } from "./TypeContentCarousel";
 import type { TypeContentCopyMediaBlockSkeleton } from "./TypeContentCopyMediaBlock";
@@ -30,6 +31,7 @@ export interface TypeSectionFields {
   sectionHeader?: EntryFieldTypes.RichText;
   content?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<
+      | TypeContentAreasServicedMapSkeleton
       | TypeContentCardSkeleton
       | TypeContentCarouselSkeleton
       | TypeContentCopyMediaBlockSkeleton

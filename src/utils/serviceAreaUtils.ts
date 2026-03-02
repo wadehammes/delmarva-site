@@ -1,4 +1,5 @@
-import type { ServiceType } from "src/contentful/getServices";
+import type { ServiceCountiesMapColor } from "src/contentful/getServices";
+import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
 import { mapServiceColorToCss } from "src/utils/colorMapper";
 import { parseCountiesFromCsv } from "src/utils/csvParser";
 
@@ -9,12 +10,19 @@ export interface ServiceArea {
   serviceSlug: string;
 }
 
+export interface ServiceWithCsvFields {
+  serviceCountiesCsv?: ContentfulAsset | null;
+  serviceCountiesMapColor?: ServiceCountiesMapColor | null;
+  serviceName: string;
+  slug: string;
+}
+
 /**
- * Converts a ServiceType to a ServiceArea if it has valid CSV data
+ * Converts a service with CSV fields to a ServiceArea if it has valid CSV data
  * Returns null if service should be excluded (no CSV or invalid file type)
  */
 export async function parseServiceToServiceArea(
-  service: ServiceType,
+  service: ServiceWithCsvFields,
 ): Promise<ServiceArea | null> {
   // Validate CSV file exists and is actually a CSV
   const counties = await parseCountiesFromCsv(service.serviceCountiesCsv);
@@ -41,7 +49,7 @@ export async function parseServiceToServiceArea(
  * Only includes services with valid CSV files
  */
 export async function parseServicesToServiceAreas(
-  services: ServiceType[],
+  services: ServiceWithCsvFields[],
 ): Promise<ServiceArea[]> {
   const serviceAreaPromises = services.map(parseServiceToServiceArea);
   const serviceAreas = await Promise.all(serviceAreaPromises);

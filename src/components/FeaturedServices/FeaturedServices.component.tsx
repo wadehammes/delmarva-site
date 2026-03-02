@@ -10,35 +10,39 @@ interface FeaturedServicesProps {
 }
 
 export const FeaturedServices = async (props?: FeaturedServicesProps) => {
-  const draft = await draftMode();
-  const locale = await getServerLocaleSafe(props?.locale);
+  try {
+    const draft = await draftMode();
+    const locale = await getServerLocaleSafe(props?.locale);
 
-  const services = await fetchFeaturedServices({
-    locale,
-    preview: draft.isEnabled,
-  });
+    const services = await fetchFeaturedServices({
+      locale,
+      preview: draft.isEnabled,
+    });
 
-  const servicesWithProjects = await Promise.all(
-    services.map(async (service) => {
-      const projects = await fetchProjectsByService({
-        locale: locale as Locales,
-        preview: draft.isEnabled,
-        serviceSlug: service.slug,
-      });
-      return { projects, service };
-    }),
-  );
+    const servicesWithProjects = await Promise.all(
+      services.map(async (service) => {
+        const projects = await fetchProjectsByService({
+          locale: locale as Locales,
+          preview: draft.isEnabled,
+          serviceSlug: service.slug,
+        });
+        return { projects, service };
+      }),
+    );
 
-  return (
-    <>
-      {servicesWithProjects.map(({ service, projects }) => (
-        <ServiceAccordion
-          key={service.id}
-          locale={locale}
-          projects={projects}
-          service={service}
-        />
-      ))}
-    </>
-  );
+    return (
+      <>
+        {servicesWithProjects.map(({ service, projects }) => (
+          <ServiceAccordion
+            key={service.id}
+            locale={locale}
+            projects={projects}
+            service={service}
+          />
+        ))}
+      </>
+    );
+  } catch {
+    return null;
+  }
 };

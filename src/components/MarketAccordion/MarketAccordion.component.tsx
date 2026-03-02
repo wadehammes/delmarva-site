@@ -119,7 +119,7 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
 
     const tl = gsap.timeline({
       defaults: {
-        duration: 0.3,
+        duration: 0.18,
         ease: "power1.out",
       },
       paused: true,
@@ -127,7 +127,7 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
     timelineRef.current = tl;
 
     tl.to(richTextRef.current, {
-      duration: 0.2,
+      duration: 0.15,
       ease: "power2.out",
       force3D: true,
       opacity: 1,
@@ -136,59 +136,59 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
       .to(
         [statsRef.current, statsGridRef.current].filter(Boolean),
         {
-          duration: 0.35,
+          duration: 0.2,
           ease: "power2.out",
           force3D: true,
           opacity: 1,
           y: 0,
         },
-        "-=0.2",
+        "-=0.12",
       )
       .to(
         statsRef.current?.querySelectorAll(`.${styles.statItem}`) || [],
         {
-          duration: 0.3,
+          duration: 0.18,
           ease: "power2.out",
           force3D: true,
           opacity: 1,
-          stagger: 0.08,
+          stagger: 0.05,
           y: 0,
         },
-        "-=0.15",
+        "-=0.1",
       )
       .to(
         statsGridRef.current?.querySelectorAll('[class*="stat"]') || [],
         {
-          duration: 0.3,
+          duration: 0.18,
           ease: "power2.out",
           force3D: true,
           opacity: 1,
-          stagger: 0.08,
+          stagger: 0.05,
           y: 0,
         },
-        "-=0.15",
+        "-=0.1",
       )
       .to(
         ctaRef.current,
         {
-          duration: 0.35,
+          duration: 0.2,
           ease: "power2.out",
           force3D: true,
           opacity: 1,
           y: 0,
         },
-        "-=0.1",
+        "-=0.08",
       )
       .to(
         carouselRef.current,
         {
-          duration: 0.4,
+          duration: 0.22,
           ease: "power2.out",
           force3D: true,
           opacity: 1,
           y: 0,
         },
-        "-=0.1",
+        "-=0.08",
       );
   }, [isMounted, cleanupGSAP]);
 
@@ -246,7 +246,7 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
           });
         }
 
-        gsap.delayedCall(0.1, () => {
+        gsap.delayedCall(0.05, () => {
           if (timelineRef.current && isMounted()) {
             timelineRef.current.play();
           }

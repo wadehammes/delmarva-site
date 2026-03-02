@@ -11,25 +11,29 @@ interface ContentRecentNewsListProps {
 export const ContentRecentNewsList = async (
   props?: ContentRecentNewsListProps,
 ) => {
-  const locale = await getServerLocaleSafe(props?.locale);
-  const draft = await draftMode();
+  try {
+    const locale = await getServerLocaleSafe(props?.locale);
+    const draft = await draftMode();
 
-  const recentNews = await fetchRecentNews({
-    locale,
-    preview: draft.isEnabled,
-  });
+    const recentNews = await fetchRecentNews({
+      locale,
+      preview: draft.isEnabled,
+    });
 
-  if (recentNews.length === 0) {
+    if (recentNews.length === 0) {
+      return null;
+    }
+
+    return (
+      <ul className={styles.contentRecentNewsList}>
+        {recentNews.map((news) => (
+          <li className={styles.newsItem} key={news.id}>
+            <ContentRecentNews locale={locale} recentNews={news} />
+          </li>
+        ))}
+      </ul>
+    );
+  } catch {
     return null;
   }
-
-  return (
-    <ul className={styles.contentRecentNewsList}>
-      {recentNews.map((news) => (
-        <li className={styles.newsItem} key={news.id}>
-          <ContentRecentNews locale={locale} recentNews={news} />
-        </li>
-      ))}
-    </ul>
-  );
 };

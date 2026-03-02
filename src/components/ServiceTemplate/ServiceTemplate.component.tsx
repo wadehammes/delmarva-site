@@ -30,6 +30,8 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
     draft.isEnabled,
   );
 
+  const hasServicePhotos = servicePhotos.length > 0;
+
   return (
     <>
       <Section
@@ -38,7 +40,7 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
         section={{
           backgroundColor: "Black",
           contentGap: "More Gap",
-          contentLayout: "2-column",
+          contentLayout: hasServicePhotos ? "2-column" : "Single Column",
           id: `service-${service.slug}-header`,
           sectionBackgroundStyle: "Microdot",
           sectionPadding: "Regular Padding",
@@ -56,7 +58,9 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
             <RichText document={service.description} />
           </div>
         </header>
-        <HeaderPhotoGallery assets={servicePhotos} autoplay />
+        {hasServicePhotos && (
+          <HeaderPhotoGallery assets={servicePhotos} autoplay />
+        )}
       </Section>
       {projects.length > 0 &&
         (projects.length > 5 ? (

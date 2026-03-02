@@ -1,24 +1,9 @@
 import type { Document as RichTextDocument } from "@contentful/rich-text-types";
-import type { ContentRecentNewsEntry } from "src/contentful/getContentRecentNews";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
 } from "src/contentful/helpers";
-import type { ContentCardEntry } from "src/contentful/parseContentCard";
-import type { ContentCarouselEntry } from "src/contentful/parseContentCarousel";
-import type { ContentCopyMediaBlockEntry } from "src/contentful/parseContentCopyMediaBlock";
-import type { ContentGridEntry } from "src/contentful/parseContentGrid";
-import type { ContentHeroEntry } from "src/contentful/parseContentHero";
-import type { ContentImageBlockEntry } from "src/contentful/parseContentImageBlock";
-import type { ContentMarqueeEntry } from "src/contentful/parseContentMarquee";
-import type { ContentModuleEntry } from "src/contentful/parseContentModules";
-import type { ContentStatBlockEntry } from "src/contentful/parseContentStatBlock";
-import type { ContentTestimonialEntry } from "src/contentful/parseContentTestimonial";
-import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
-import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
-import type { FormEntry } from "src/contentful/parseForm";
-import type { FormJoinOurTeamEntry } from "src/contentful/parseFormJoinOurTeam";
 import {
   isTypeSection,
   type TypeSectionFields,
@@ -54,23 +39,9 @@ type SectionMobileContentLayout = ExtractSymbolType<
   NonNullable<TypeSectionFields["mobileContentLayout"]>
 >;
 
-export type ContentEntries =
-  | CopyBlockEntry
-  | ContentCarouselEntry
-  | ContentHeroEntry
-  | ContentModuleEntry
-  | ContentGridEntry
-  | ContentStatBlockEntry
-  | ContentVideoBlockEntry
-  | ContentImageBlockEntry
-  | ContentCopyMediaBlockEntry
-  | ContentTestimonialEntry
-  | ContentRecentNewsEntry
-  | FormJoinOurTeamEntry
-  | ContentCardEntry
-  | ContentMarqueeEntry
-  | FormEntry
-  | undefined;
+export type ContentEntries = NonNullable<
+  TypeSectionWithoutUnresolvableLinksResponse["fields"]["content"]
+>[number];
 
 export interface SectionType {
   id: string;
