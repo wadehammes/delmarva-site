@@ -9,7 +9,7 @@ interface LinkProps extends Omit<ComponentProps<"a">, "popover"> {
 }
 
 export const Link = ({ children, ...props }: LinkProps) => {
-  const { href, className, ...rest } = props;
+  const { href, className, onClick: onClickProp, ...rest } = props;
   const RouterLink = routing.Link;
 
   const fireHashChange = useCallback(
@@ -25,18 +25,24 @@ export const Link = ({ children, ...props }: LinkProps) => {
           element.scrollIntoView({ behavior: "smooth" });
         }
 
-        // Update hash for browser history
         window.location.hash = target;
       }
     },
     [href],
   );
 
+  const handleClick = href.startsWith("#")
+    ? (e: React.MouseEvent<HTMLAnchorElement>) => {
+        fireHashChange(e);
+        onClickProp?.(e);
+      }
+    : undefined;
+
   return (
     <RouterLink
       className={className}
       href={href}
-      onClick={fireHashChange}
+      {...(handleClick && { onClick: handleClick })}
       {...rest}
     >
       {children}
