@@ -66,21 +66,23 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
           )}
         </div>
       </Section>
-      <Section
-        id={`market-${market.slug}-projects`}
-        section={{
-          backgroundColor: "Black",
-          contentLayout: "4-column",
-          id: `market-${market.slug}-projects`,
-          sectionEyebrow: t("projects"),
-          sectionPadding: "Regular Padding",
-          slug: market.slug,
-        }}
-      >
-        {(projects ?? []).map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </Section>
+      {projects.length > 0 ? (
+        <Section
+          id={`market-${market.slug}-projects`}
+          section={{
+            backgroundColor: "Black",
+            contentLayout: projects.length > 5 ? "4-column" : "3-column",
+            id: `market-${market.slug}-projects`,
+            sectionEyebrow: t("projects"),
+            sectionPadding: "Regular Padding",
+            slug: market.slug,
+          }}
+        >
+          {(projects ?? []).map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </Section>
+      ) : null}
       {filteredSections.map((section) => {
         if (!section) {
           return null;

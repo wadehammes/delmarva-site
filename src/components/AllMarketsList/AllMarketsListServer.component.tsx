@@ -11,29 +11,34 @@ interface AllMarketsListServerProps {
 export const AllMarketsListServer = async (
   props?: AllMarketsListServerProps,
 ) => {
-  const draft = await draftMode();
-  const locale = await getServerLocaleSafe(props?.locale);
+  try {
+    const draft = await draftMode();
+    const locale = await getServerLocaleSafe(props?.locale);
 
-  const markets = await fetchMarkets({
-    locale: locale as Locales,
-    preview: draft.isEnabled,
-  });
+    const markets = await fetchMarkets({
+      locale: locale as Locales,
+      preview: draft.isEnabled,
+    });
 
-  const marketsWithProjects = await Promise.all(
-    markets.map(async (market) => {
-      const projects = await fetchProjectsByMarket({
-        locale: locale as Locales,
-        marketId: market.id,
-        preview: draft.isEnabled,
-      });
-      return { market, projects };
-    }),
-  );
+    const marketsWithProjects = await Promise.all(
+      markets.map(async (market) => {
+        const projects = await fetchProjectsByMarket({
+          locale: locale as Locales,
+          marketId: market.id,
+          preview: draft.isEnabled,
+        });
+        return { market, projects };
+      }),
+    );
 
-  return (
-    <AllMarketsList
-      locale={locale as Locales}
-      marketsWithProjects={marketsWithProjects}
-    />
-  );
+    return (
+      <AllMarketsList
+        locale={locale as Locales}
+        marketsWithProjects={marketsWithProjects}
+      />
+    );
+  } catch (error) {
+    console.error("[AllMarketsListServer] Failed to load:", error);
+    return null;
+  }
 };

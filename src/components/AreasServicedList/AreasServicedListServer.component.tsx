@@ -41,7 +41,8 @@ export const AreasServicedListServer = async (
         serviceAreas={sortedServiceAreas}
       />
     );
-  } catch {
+  } catch (error) {
+    console.error("[AreasServicedListServer] Failed to load:", error);
     return null;
   }
 };

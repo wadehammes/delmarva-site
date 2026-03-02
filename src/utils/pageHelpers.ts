@@ -99,23 +99,31 @@ export async function generatePageSchemaGraph(
   preview: boolean,
   additionalBreadcrumbItems?: Array<{ name: string; url?: string }>,
 ): Promise<Awaited<ReturnType<typeof generateSchemaGraph>>> {
-  const serviceData = await getServiceDataForSchema(page, locale, preview);
+  try {
+    const serviceData = await getServiceDataForSchema(page, locale, preview);
 
-  const options: GenerateSchemaGraphOptions = {
-    additionalBreadcrumbItems,
-    locale,
-    organizationAreasServed: serviceData?.organizationAreasServed,
-    page,
-    preview,
-    services: serviceData
-      ? hasServiceListModule(page)
-        ? serviceData.services
-        : undefined
-      : undefined,
-    slug,
-  };
+    const options: GenerateSchemaGraphOptions = {
+      additionalBreadcrumbItems,
+      locale,
+      organizationAreasServed: serviceData?.organizationAreasServed,
+      page,
+      preview,
+      services: serviceData
+        ? hasServiceListModule(page)
+          ? serviceData.services
+          : undefined
+        : undefined,
+      slug,
+    };
 
-  return generateSchemaGraph(options);
+    return generateSchemaGraph(options);
+  } catch (error) {
+    console.error("[PageHelpers] generatePageSchemaGraph failed:", error);
+    const { createMinimalSchemaGraph } = await import("src/utils/schema");
+    const baseUrl = envUrl();
+    const canonicalUrl = slug ? `${baseUrl}/${slug}` : baseUrl;
+    return createMinimalSchemaGraph(canonicalUrl);
+  }
 }
 
 /**
