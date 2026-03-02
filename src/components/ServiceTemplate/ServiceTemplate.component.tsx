@@ -2,7 +2,6 @@ import { draftMode } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { HeaderPhotoGallery } from "src/components/HeaderPhotoGallery/HeaderPhotoGallery.component";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
-import { ProjectsCarousel } from "src/components/ProjectsCarousel/ProjectsCarousel.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import { Section } from "src/components/Section/Section.component";
 import { SectionRenderer } from "src/components/SectionRenderer/SectionRenderer.component";
@@ -30,7 +29,7 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
     draft.isEnabled,
   );
 
-  const hasServicePhotos = servicePhotos.length > 0;
+  const hasServicePhotos = (servicePhotos ?? []).length > 0;
 
   return (
     <>
@@ -59,49 +58,31 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
           </div>
         </header>
         {hasServicePhotos && (
-          <HeaderPhotoGallery assets={servicePhotos} autoplay />
+          <HeaderPhotoGallery assets={servicePhotos ?? []} autoplay />
         )}
       </Section>
-      {projects.length > 0 &&
-        (projects.length >= 6 ? (
-          <Section
-            className={styles.serviceProjectsSection}
-            id={`service-${service.slug}-projects`}
-            section={{
-              backgroundColor: "Black",
-              contentLayout: "Full Width",
-              id: `service-${service.slug}-projects`,
-              sectionEyebrow: t("projects"),
-              sectionPadding: "Regular Padding",
-              slug: service.slug,
-            }}
-          >
-            <ProjectsCarousel
-              projects={projects}
+      {(projects ?? []).length > 0 && (
+        <Section
+          className={styles.serviceProjectsSection}
+          id={`service-${service.slug}-projects`}
+          section={{
+            backgroundColor: "Black",
+            contentLayout: "4-column",
+            id: `service-${service.slug}-projects`,
+            sectionEyebrow: t("projects"),
+            sectionPadding: "Regular Padding",
+            slug: service.slug,
+          }}
+        >
+          {(projects ?? []).map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
               selectedServiceSlug={service.slug ?? undefined}
             />
-          </Section>
-        ) : (
-          <Section
-            id={`service-${service.slug}-projects`}
-            section={{
-              backgroundColor: "Black",
-              contentLayout: "3-column",
-              id: `service-${service.slug}-projects`,
-              sectionEyebrow: t("projects"),
-              sectionPadding: "Regular Padding",
-              slug: service.slug,
-            }}
-          >
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                selectedServiceSlug={service.slug ?? undefined}
-              />
-            ))}
-          </Section>
-        ))}
+          ))}
+        </Section>
+      )}
       {filteredSections.map((section) => {
         if (!section) {
           return null;

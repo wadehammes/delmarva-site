@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 import { HeaderPhotoGallery } from "src/components/HeaderPhotoGallery/HeaderPhotoGallery.component";
 import styles from "src/components/MarketTemplate/MarketTemplate.module.css";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
-import { ProjectsCarousel } from "src/components/ProjectsCarousel/ProjectsCarousel.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import { Section } from "src/components/Section/Section.component";
 import { SectionRenderer } from "src/components/SectionRenderer/SectionRenderer.component";
@@ -62,39 +61,24 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
           <HeaderPhotoGallery assets={marketPhotos ?? []} autoplay />
         )}
       </Section>
-      {(projects ?? []).length > 0 &&
-        ((projects ?? []).length >= 6 ? (
-          <Section
-            className={styles.marketProjectsSection}
-            id={`market-${market.slug}-projects`}
-            section={{
-              backgroundColor: "Black",
-              contentLayout: "Full Width",
-              id: `market-${market.slug}-projects`,
-              sectionEyebrow: t("projects"),
-              sectionPadding: "Regular Padding",
-              slug: market.slug,
-            }}
-          >
-            <ProjectsCarousel projects={projects ?? []} />
-          </Section>
-        ) : (
-          <Section
-            id={`market-${market.slug}-projects`}
-            section={{
-              backgroundColor: "Black",
-              contentLayout: "3-column",
-              id: `market-${market.slug}-projects`,
-              sectionEyebrow: t("projects"),
-              sectionPadding: "Regular Padding",
-              slug: market.slug,
-            }}
-          >
-            {(projects ?? []).map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </Section>
-        ))}
+      {(projects ?? []).length > 0 && (
+        <Section
+          className={styles.marketProjectsSection}
+          id={`market-${market.slug}-projects`}
+          section={{
+            backgroundColor: "Black",
+            contentLayout: "4-column",
+            id: `market-${market.slug}-projects`,
+            sectionEyebrow: t("projects"),
+            sectionPadding: "Regular Padding",
+            slug: market.slug,
+          }}
+        >
+          {(projects ?? []).map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </Section>
+      )}
       {filteredSections.map((section) => {
         if (!section) {
           return null;
