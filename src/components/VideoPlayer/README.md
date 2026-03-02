@@ -1,6 +1,6 @@
 # VideoPlayer Component
 
-A React component that renders videos using the `react-player` library. Supports YouTube, Vimeo, and local video files with a simplified, focused API.
+A React component that renders videos using `youtube-video-element`, `vimeo-video-element`, and native `<video>`. Supports YouTube, Vimeo, and local video files.
 
 ## Features
 
@@ -97,7 +97,7 @@ The component uses CSS modules and follows mobile-first responsive design princi
 
 ## Browser Support
 
-The component relies on `react-player` which supports:
+The component uses:
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - Mobile browsers (iOS Safari, Chrome Mobile)
 - Internet Explorer 11+ (with polyfills)

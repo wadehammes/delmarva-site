@@ -32,7 +32,6 @@ const nextConfig: NextConfig = withNextIntl({
       "swiper",
       "gsap",
       "react-intersection-observer",
-      "react-player",
     ],
   },
 

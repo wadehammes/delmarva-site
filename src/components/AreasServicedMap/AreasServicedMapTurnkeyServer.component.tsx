@@ -2,7 +2,7 @@ import { draftMode } from "next/headers";
 import { fetchServices } from "src/contentful/getServices";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import { TURNKEY_SERVICE_SLUG } from "src/utils/constants";
-import { AreasServicedMap } from "./AreasServicedMap.component";
+import { AreasServicedMapClient } from "./AreasServicedMapClient.component";
 
 interface AreasServicedMapTurnkeyServerProps {
   className?: string;
@@ -35,7 +35,7 @@ export const AreasServicedMapTurnkeyServer = async (
     }
 
     return (
-      <AreasServicedMap
+      <AreasServicedMapClient
         autoFitBounds={props?.autoFitBounds}
         center={props?.center}
         className={props?.className}

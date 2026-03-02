@@ -1,7 +1,7 @@
 import { draftMode } from "next/headers";
 import { fetchServices } from "src/contentful/getServices";
 import { getServerLocaleSafe } from "src/hooks/useServerLocale";
-import { AreasServicedMap } from "./AreasServicedMap.component";
+import { AreasServicedMapClient } from "./AreasServicedMapClient.component";
 
 interface AreasServicedMapServerProps {
   className?: string;
@@ -29,7 +29,7 @@ export const AreasServicedMapServer = async (
     });
 
     return (
-      <AreasServicedMap
+      <AreasServicedMapClient
         autoFitBounds={props?.autoFitBounds}
         center={props?.center}
         className={props?.className}
