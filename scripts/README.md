@@ -16,7 +16,6 @@ The `update_main_readme.js` script automatically scans the project for README.md
 
 ### Usage
 
-#### Manual Execution
 ```bash
 # Run the script manually
 pnpm update-readme
@@ -24,14 +23,6 @@ pnpm update-readme
 # Or run directly
 node scripts/update_main_readme.js
 ```
-
-#### Automatic Git Hook (Recommended)
-```bash
-# Set up automatic execution on commit
-pnpm setup-hooks
-```
-
-After setup, the script will automatically run when you commit README.md files and update the main README.md accordingly.
 
 ### How It Works
 
@@ -66,22 +57,6 @@ The script adds a section like this to the main README.md:
 - Ensure Node.js is installed
 - Check file permissions: `chmod +x scripts/update_main_readme.js`
 
-#### Git Hook Not Working
-- Verify the hook is executable: `ls -la .git/hooks/pre-commit`
-- Re-run setup: `pnpm setup-hooks`
-
 #### README.md Not Updated
 - Check if README.md files exist in subdirectories
-- Verify the script has write permissions to the main README.md
-
-### Disabling the Git Hook
-
-To temporarily disable the automatic hook:
-```bash
-chmod -x .git/hooks/pre-commit
-```
-
-To re-enable:
-```bash
-chmod +x .git/hooks/pre-commit
-``` 
+- Verify the script has write permissions to the main README.md 

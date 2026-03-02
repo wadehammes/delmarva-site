@@ -11,8 +11,8 @@
 	"scripts": {
 		"dev": "next dev -p 5656 --webpack",
 		"dev:debug": "NODE_OPTIONS='--inspect' next dev -p 5656 --webpack",
-		"build": "next build",
-		"build:analyze": "ANALYZE=true next build",
+		"build": "next build --webpack",
+		"build:analyze": "ANALYZE=true next build --webpack",
 		"start": "next start -p 5656",
 		"export": "next export",
 		"tsc:ci": "tsc --strict",
@@ -22,8 +22,7 @@
 		"lint:write": "biome check --write",
 		"test:ci": "jest --passWithNoTests",
 		"types:contentful": "export $(cat .env.local | sed '/^#/d; s/[$\"]//g'); cf-content-types-generator -s $CONTENTFUL_SPACE_ID -t $CONTENTFUL_CMA_TOKEN -o src/contentful/types -X -r -g && biome format --write src/contentful/types",
-		"update-readme": "node scripts/update_main_readme.js",
-		"setup-hooks": "bash scripts/setup-git-hooks.sh"
+		"update-readme": "node scripts/update_main_readme.js"
 	},
 	"dependencies": {
 		"@contentful/rich-text-plain-text-renderer": "^17.1.6",

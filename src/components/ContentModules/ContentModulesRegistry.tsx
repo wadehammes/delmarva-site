@@ -19,7 +19,7 @@ export const AllServicesListServer = dynamic(
 export const AreasServicedListServer = dynamic(
   () =>
     import(
-      "src/components/AreasServiced/AreasServicedListServer.component"
+      "src/components/AreasServicedList/AreasServicedListServer.component"
     ).then((m) => ({ default: m.AreasServicedListServer })),
   { ssr: true },
 );
