@@ -38,9 +38,13 @@
 }
 
 .copy {
+  display: flex;
+  flex: 1;
+  flex-flow: column wrap;
   padding: clamp(1.25rem, 2vw, 2rem);
 
   h3 {
+    flex: 1;
     font-size: clamp(1.25rem, 3vw, 1.75rem);
   }
 

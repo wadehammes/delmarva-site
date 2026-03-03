@@ -39,15 +39,16 @@ const nextConfig: NextConfig = withNextIntl({
   async headers() {
     try {
       const isProduction = process.env.NODE_ENV === "production";
+      const htmlCacheControl = isProduction
+        ? "public, max-age=2592000, stale-while-revalidate=86400"
+        : "public, max-age=0, must-revalidate";
 
       return [
         {
           headers: [
             {
               key: "Cache-Control",
-              value: isProduction
-                ? "public, max-age=3600, stale-while-revalidate=86400"
-                : "public, max-age=0, must-revalidate",
+              value: htmlCacheControl,
             },
             ...securityHeaders,
           ],
@@ -57,9 +58,7 @@ const nextConfig: NextConfig = withNextIntl({
           headers: [
             {
               key: "Cache-Control",
-              value: isProduction
-                ? "public, max-age=3600, stale-while-revalidate=86400"
-                : "public, max-age=0, must-revalidate",
+              value: htmlCacheControl,
             },
             ...securityHeaders,
           ],

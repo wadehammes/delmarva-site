@@ -31,7 +31,7 @@ import {
 } from "src/utils/pageHelpers";
 import { generateMarketPageSchemaGraphSafe } from "src/utils/schema";
 
-export const revalidate = 604800;
+export const revalidate = 2592000;
 
 interface PageParams {
   slug: string;

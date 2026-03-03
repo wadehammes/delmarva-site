@@ -1,3 +1,5 @@
+export const REVALIDATE_SECONDS = 2592000;
+
 export const NAVIGATION_ID = "global-navigation";
 export const FOOTER_ID = "global-footer";
 export const HOME_PAGE_SLUG = "home";

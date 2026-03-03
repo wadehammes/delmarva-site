@@ -1,4 +1,5 @@
 import type { Document } from "@contentful/rich-text-types";
+import { unstable_cache } from "next/cache";
 import { contentfulClient } from "src/contentful/client";
 import type {
   ContentfulTypeCheck,
@@ -24,6 +25,7 @@ import {
   type TypeServiceWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeService";
 import type { Locales } from "src/i18n/routing";
+import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export type ServiceCountiesMapColor = ExtractSymbolType<
   NonNullable<TypeServiceFields["serviceCountiesMapColor"]>
@@ -113,12 +115,11 @@ interface FetchServicesOptions {
   locale?: Locales;
 }
 
-export async function fetchServices({
+async function fetchServicesUncached({
   preview,
   locale = "en",
 }: FetchServicesOptions): Promise<ServiceType[]> {
   const contentful = contentfulClient({ preview });
-
   const limit = 100;
   let total = 0;
   let skip = 0;
@@ -160,6 +161,21 @@ export async function fetchServices({
   return allServices;
 }
 
+const getCachedServices = unstable_cache(
+  (locale: string) =>
+    fetchServicesUncached({ locale: locale as Locales, preview: false }),
+  ["services"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchServices(
+  opts: FetchServicesOptions,
+): Promise<ServiceType[]> {
+  return opts.preview
+    ? fetchServicesUncached(opts)
+    : getCachedServices(opts.locale ?? "en");
+}
+
 // A function to fetch a single service.
 // Optionally uses the Contentful content preview.
 interface FetchServiceOptions {
@@ -168,13 +184,12 @@ interface FetchServiceOptions {
   locale?: Locales;
 }
 
-export async function fetchService({
+async function fetchServiceUncached({
   slug,
   preview,
   locale = "en",
 }: FetchServiceOptions): Promise<ServiceType | null> {
   const contentful = contentfulClient({ preview });
-
   const serviceResult =
     await contentful.withoutUnresolvableLinks.getEntries<TypeServiceSkeleton>({
       content_type: "service",
@@ -182,8 +197,26 @@ export async function fetchService({
       include: 10,
       locale,
     });
-
   return parseContentfulService(serviceResult.items[0]);
+}
+
+const getCachedService = unstable_cache(
+  (slug: string, locale: string) =>
+    fetchServiceUncached({
+      locale: locale as Locales,
+      preview: false,
+      slug,
+    }),
+  ["service"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchService(
+  opts: FetchServiceOptions,
+): Promise<ServiceType | null> {
+  return opts.preview
+    ? fetchServiceUncached(opts)
+    : getCachedService(opts.slug, opts.locale ?? "en");
 }
 
 interface FetchFeaturedServicesOptions {
@@ -191,12 +224,11 @@ interface FetchFeaturedServicesOptions {
   locale?: Locales;
 }
 
-export async function fetchFeaturedServices({
+async function fetchFeaturedServicesUncached({
   preview,
   locale = "en",
 }: FetchFeaturedServicesOptions): Promise<ServiceType[]> {
   const contentful = contentfulClient({ preview });
-
   const featuredServices =
     await contentful.withoutUnresolvableLinks.getEntries<TypeServiceSkeleton>({
       content_type: "service",
@@ -205,10 +237,27 @@ export async function fetchFeaturedServices({
       locale,
       order: ["fields.featuredServicePosition"],
     });
-
   return featuredServices.items
     .map(parseContentfulService)
     .filter((service): service is ServiceType => service !== null);
+}
+
+const getCachedFeaturedServices = unstable_cache(
+  (locale: string) =>
+    fetchFeaturedServicesUncached({
+      locale: locale as Locales,
+      preview: false,
+    }),
+  ["featured-services"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchFeaturedServices(
+  opts: FetchFeaturedServicesOptions,
+): Promise<ServiceType[]> {
+  return opts.preview
+    ? fetchFeaturedServicesUncached(opts)
+    : getCachedFeaturedServices(opts.locale ?? "en");
 }
 
 // A function to fetch all photos from projects tagged with a specific service.
@@ -218,13 +267,12 @@ interface FetchServicePhotosOptions {
   locale?: Locales;
 }
 
-export async function fetchServicePhotos({
+async function fetchServicePhotosUncached({
   slug,
   preview,
   locale = "en",
 }: FetchServicePhotosOptions): Promise<ContentfulAsset[]> {
   const contentful = contentfulClient({ preview });
-
   const limit = 100;
   let total = 0;
   let skip = 0;
@@ -270,4 +318,23 @@ export async function fetchServicePhotos({
   } while (skip < total);
 
   return allPhotos;
+}
+
+const getCachedServicePhotos = unstable_cache(
+  (slug: string, locale: string) =>
+    fetchServicePhotosUncached({
+      locale: locale as Locales,
+      preview: false,
+      slug,
+    }),
+  ["service-photos"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchServicePhotos(
+  opts: FetchServicePhotosOptions,
+): Promise<ContentfulAsset[]> {
+  return opts.preview
+    ? fetchServicePhotosUncached(opts)
+    : getCachedServicePhotos(opts.slug, opts.locale ?? "en");
 }

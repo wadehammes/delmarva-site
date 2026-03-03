@@ -20,7 +20,7 @@
 		"lint:ci": "biome ci --reporter=github",
 		"lint:fix": "biome check --fix",
 		"lint:write": "biome check --write",
-		"test:ci": "jest --passWithNoTests",
+		"test:ci": "jest --passWithNoTests --runInBand",
 		"types:contentful": "export $(cat .env.local | sed '/^#/d; s/[$\"]//g'); cf-content-types-generator -s $CONTENTFUL_SPACE_ID -t $CONTENTFUL_CMA_TOKEN -o src/contentful/types -X -r -g && biome format --write src/contentful/types",
 		"update-readme": "node scripts/update_main_readme.js"
 	},

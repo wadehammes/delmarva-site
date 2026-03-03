@@ -13,7 +13,7 @@
 }
 
 .copyBlock {
-  flex: 1;
+  flex: 1.15;
   order: 2;
   opacity: 0;
   transform: translateY(1rem);

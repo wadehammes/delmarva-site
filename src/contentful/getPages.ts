@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { contentfulClient } from "src/contentful/client";
 import { type FooterType, parseFooter } from "src/contentful/getFooter";
 import {
@@ -20,6 +21,7 @@ import {
   type TypePageWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypePage";
 import type { Locales } from "src/i18n/routing";
+import { REVALIDATE_SECONDS } from "src/utils/constants";
 import { createInternalLink } from "src/utils/urlHelpers";
 
 export type PageEntry = TypePageWithoutUnresolvableLinksResponse;
@@ -113,12 +115,11 @@ interface FetchPagesOptions {
   locale?: Locales;
 }
 
-export async function fetchPages({
+async function fetchPagesUncached({
   preview,
   locale = "en",
 }: FetchPagesOptions): Promise<Page[]> {
   const contentful = contentfulClient({ preview });
-
   const limit = 10;
   let total = 0;
   let skip = 0;
@@ -156,6 +157,19 @@ export async function fetchPages({
   return allPages;
 }
 
+const getCachedPages = unstable_cache(
+  (locale: string) =>
+    fetchPagesUncached({ locale: locale as Locales, preview: false }),
+  ["pages"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchPages(opts: FetchPagesOptions): Promise<Page[]> {
+  return opts.preview
+    ? fetchPagesUncached(opts)
+    : getCachedPages(opts.locale ?? "en");
+}
+
 // A function to fetch a single page by its slug.
 // Optionally uses the Contentful content preview.
 interface FetchPageOptions {
@@ -164,13 +178,12 @@ interface FetchPageOptions {
   locale?: string;
 }
 
-export async function fetchPage({
+async function fetchPageUncached({
   slug,
   preview,
   locale = "en",
 }: FetchPageOptions): Promise<Page | null> {
   const contentful = contentfulClient({ preview });
-
   const pagesResult =
     await contentful.withoutUnresolvableLinks.getEntries<TypePageSkeleton>({
       content_type: "page",
@@ -178,6 +191,22 @@ export async function fetchPage({
       include: 10,
       locale,
     });
-
   return parseContentfulPage(pagesResult.items[0]);
+}
+
+const getCachedPage = unstable_cache(
+  (slug: string, locale: string) =>
+    fetchPageUncached({
+      locale: locale as Locales,
+      preview: false,
+      slug,
+    }),
+  ["page"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchPage(opts: FetchPageOptions): Promise<Page | null> {
+  return opts.preview
+    ? fetchPageUncached(opts)
+    : getCachedPage(opts.slug, opts.locale ?? "en");
 }

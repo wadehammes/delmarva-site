@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { contentfulClient } from "src/contentful/client";
 import {
   FALLBACK_PROJECT_MEDIA_ID,
@@ -18,6 +19,7 @@ import {
 import type { TypeMarketSkeleton } from "src/contentful/types";
 import type { TypeProjectSkeleton } from "src/contentful/types/TypeProject";
 import type { Locales } from "src/i18n/routing";
+import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 function mediaWithFallback(
   project: ProjectType,
@@ -33,12 +35,11 @@ interface FetchMarketsOptions {
   locale?: Locales;
 }
 
-export async function fetchMarkets({
+async function fetchMarketsUncached({
   preview,
   locale = "en",
 }: FetchMarketsOptions): Promise<MarketType[]> {
   const contentful = contentfulClient({ preview });
-
   const limit = 100;
   let total = 0;
   let skip = 0;
@@ -78,19 +79,62 @@ export async function fetchMarkets({
   return allMarkets;
 }
 
+const getCachedMarkets = unstable_cache(
+  (locale: string) =>
+    fetchMarketsUncached({ locale: locale as Locales, preview: false }),
+  ["markets"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchMarkets(
+  opts: FetchMarketsOptions,
+): Promise<MarketType[]> {
+  return opts.preview
+    ? fetchMarketsUncached(opts)
+    : getCachedMarkets(opts.locale ?? "en");
+}
+
 interface FetchMarketOptions {
   slug: string;
   preview: boolean;
   locale?: Locales;
 }
 
-export async function fetchMarket({
+async function fetchMarketBySlugUncached({
   slug,
   preview,
   locale = "en",
 }: FetchMarketOptions): Promise<MarketType | null> {
-  const markets = await fetchMarkets({ locale, preview });
-  return markets.find((m) => m.slug === slug) ?? null;
+  const contentful = contentfulClient({ preview });
+  const result =
+    await contentful.withoutUnresolvableLinks.getEntries<TypeMarketSkeleton>({
+      content_type: "market",
+      "fields.slug": slug,
+      include: 10,
+      limit: 1,
+      locale,
+    });
+  const entry = result.items[0];
+  return entry ? parseContentfulMarket(entry) : null;
+}
+
+const getCachedMarketBySlug = unstable_cache(
+  (slug: string, locale: string) =>
+    fetchMarketBySlugUncached({
+      locale: locale as Locales,
+      preview: false,
+      slug,
+    }),
+  ["market"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchMarket(
+  opts: FetchMarketOptions,
+): Promise<MarketType | null> {
+  return opts.preview
+    ? fetchMarketBySlugUncached(opts)
+    : getCachedMarketBySlug(opts.slug, opts.locale ?? "en");
 }
 
 interface FetchProjectsByMarketOptions {
@@ -99,7 +143,7 @@ interface FetchProjectsByMarketOptions {
   locale?: Locales;
 }
 
-export async function fetchProjectsByMarket({
+async function fetchProjectsByMarketUncached({
   marketId,
   preview,
   locale = "en",
@@ -158,19 +202,37 @@ export async function fetchProjectsByMarket({
   return allProjects;
 }
 
+const getCachedProjectsByMarket = unstable_cache(
+  (marketId: string, locale: string) =>
+    fetchProjectsByMarketUncached({
+      locale: locale as Locales,
+      marketId,
+      preview: false,
+    }),
+  ["projects-by-market"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchProjectsByMarket(
+  opts: FetchProjectsByMarketOptions,
+): Promise<ProjectType[]> {
+  return opts.preview
+    ? fetchProjectsByMarketUncached(opts)
+    : getCachedProjectsByMarket(opts.marketId, opts.locale ?? "en");
+}
+
 interface FetchMarketPhotosOptions {
   marketId: string;
   preview: boolean;
   locale?: Locales;
 }
 
-export async function fetchMarketPhotos({
+async function fetchMarketPhotosUncached({
   marketId,
   preview,
   locale = "en",
 }: FetchMarketPhotosOptions): Promise<ContentfulAsset[]> {
   const contentful = contentfulClient({ preview });
-
   const limit = 100;
   let total = 0;
   let skip = 0;
@@ -214,4 +276,23 @@ export async function fetchMarketPhotos({
   } while (skip < total);
 
   return allPhotos;
+}
+
+const getCachedMarketPhotos = unstable_cache(
+  (marketId: string, locale: string) =>
+    fetchMarketPhotosUncached({
+      locale: locale as Locales,
+      marketId,
+      preview: false,
+    }),
+  ["market-photos"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchMarketPhotos(
+  opts: FetchMarketPhotosOptions,
+): Promise<ContentfulAsset[]> {
+  return opts.preview
+    ? fetchMarketPhotosUncached(opts)
+    : getCachedMarketPhotos(opts.marketId, opts.locale ?? "en");
 }
