@@ -16,8 +16,7 @@ import {
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
 
-export const revalidate = 604800;
-export const dynamic = "force-static";
+export const revalidate = 2592000;
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

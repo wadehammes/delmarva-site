@@ -6,6 +6,10 @@ import {
 
 const mockGetEntries = jest.fn();
 
+jest.mock("next/cache", () => ({
+  unstable_cache: (fn: () => Promise<unknown>) => fn,
+}));
+
 jest.mock("src/contentful/client", () => ({
   contentfulClient: () => ({
     withoutUnresolvableLinks: {

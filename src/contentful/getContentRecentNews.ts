@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { contentfulClient } from "src/contentful/client";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import {
@@ -7,6 +8,7 @@ import {
   type TypeContentRecentNewsWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentRecentNews";
 import type { Locales } from "src/i18n/routing";
+import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export interface ContentRecentNewsType {
   id: string;
@@ -49,12 +51,11 @@ interface FetchRecentNewsOptions {
   locale?: Locales;
 }
 
-export async function fetchRecentNews({
+async function fetchRecentNewsUncached({
   preview,
   locale = "en",
 }: FetchRecentNewsOptions): Promise<ContentRecentNewsType[]> {
   const contentful = contentfulClient({ preview });
-
   const limit = 100;
   let total = 0;
   let skip = 0;
@@ -102,6 +103,21 @@ export async function fetchRecentNews({
   return allRecentNews;
 }
 
+const getCachedRecentNews = unstable_cache(
+  (locale: string) =>
+    fetchRecentNewsUncached({ locale: locale as Locales, preview: false }),
+  ["recent-news"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function fetchRecentNews(
+  opts: FetchRecentNewsOptions,
+): Promise<ContentRecentNewsType[]> {
+  return opts.preview
+    ? fetchRecentNewsUncached(opts)
+    : getCachedRecentNews(opts.locale ?? "en");
+}
+
 const oneYearAgoIso = () =>
   `${
     new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split(".")[0]
@@ -112,7 +128,7 @@ interface HasRecentNewsOptions {
   preview: boolean;
 }
 
-export async function hasRecentNews({
+async function hasRecentNewsUncached({
   locale = "en",
   preview,
 }: HasRecentNewsOptions): Promise<boolean> {
@@ -128,4 +144,19 @@ export async function hasRecentNews({
       },
     );
   return result.items.length > 0;
+}
+
+const getCachedHasRecentNews = unstable_cache(
+  (locale: string) =>
+    hasRecentNewsUncached({ locale: locale as Locales, preview: false }),
+  ["has-recent-news"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
+export async function hasRecentNews(
+  opts: HasRecentNewsOptions,
+): Promise<boolean> {
+  return opts.preview
+    ? hasRecentNewsUncached(opts)
+    : getCachedHasRecentNews(opts.locale ?? "en");
 }
