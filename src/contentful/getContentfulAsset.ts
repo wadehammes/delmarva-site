@@ -1,11 +1,11 @@
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import {
   type ContentfulAsset,
   parseContentfulAsset,
 } from "src/contentful/parseContentfulAsset";
 import type { Locales } from "src/i18n/routing";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export const FALLBACK_PROJECT_MEDIA_ID = "1DRrYhrBzLGZhWW3BahZjY";
 
@@ -27,22 +27,15 @@ async function getContentfulAssetUncached(
   }
 }
 
-const getCachedAsset = unstable_cache(
-  (assetId: string, locale: string) =>
-    getContentfulAssetUncached(assetId, {
-      locale: locale as Locales,
-      preview: false,
-    }),
-  ["asset"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function getContentfulAsset(
   assetId: string,
   opts: GetContentfulAssetOptions = {},
 ): Promise<ContentfulAsset | null> {
   const { preview = false, locale = "en" } = opts;
-  return preview
-    ? getContentfulAssetUncached(assetId, opts)
-    : getCachedAsset(assetId, locale as string);
+  const { key, tags } = cacheKeys.asset(assetId, locale, preview);
+  return cached({
+    fn: () => getContentfulAssetUncached(assetId, { locale, preview }),
+    key,
+    tags,
+  });
 }

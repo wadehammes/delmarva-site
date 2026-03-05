@@ -1,5 +1,6 @@
 import type { Document } from "@contentful/rich-text-types";
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import type {
   ContentfulTypeCheck,
@@ -25,7 +26,6 @@ import {
   type TypeServiceWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeService";
 import type { Locales } from "src/i18n/routing";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export type ServiceCountiesMapColor = ExtractSymbolType<
   NonNullable<TypeServiceFields["serviceCountiesMapColor"]>
@@ -161,23 +161,18 @@ async function fetchServicesUncached({
   return allServices;
 }
 
-const getCachedServices = unstable_cache(
-  (locale: string) =>
-    fetchServicesUncached({ locale: locale as Locales, preview: false }),
-  ["services"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchServices(
   opts: FetchServicesOptions,
 ): Promise<ServiceType[]> {
-  return opts.preview
-    ? fetchServicesUncached(opts)
-    : getCachedServices(opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.services(locale, opts.preview);
+  return cached({
+    fn: () => fetchServicesUncached({ locale, preview: opts.preview }),
+    key,
+    tags,
+  });
 }
 
-// A function to fetch a single service.
-// Optionally uses the Contentful content preview.
 interface FetchServiceOptions {
   slug: string;
   preview: boolean;
@@ -200,23 +195,21 @@ async function fetchServiceUncached({
   return parseContentfulService(serviceResult.items[0]);
 }
 
-const getCachedService = unstable_cache(
-  (slug: string, locale: string) =>
-    fetchServiceUncached({
-      locale: locale as Locales,
-      preview: false,
-      slug,
-    }),
-  ["service"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchService(
   opts: FetchServiceOptions,
 ): Promise<ServiceType | null> {
-  return opts.preview
-    ? fetchServiceUncached(opts)
-    : getCachedService(opts.slug, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.service(opts.slug, locale, opts.preview);
+  return cached({
+    fn: () =>
+      fetchServiceUncached({
+        locale,
+        preview: opts.preview,
+        slug: opts.slug,
+      }),
+    key,
+    tags,
+  });
 }
 
 interface FetchFeaturedServicesOptions {
@@ -242,25 +235,18 @@ async function fetchFeaturedServicesUncached({
     .filter((service): service is ServiceType => service !== null);
 }
 
-const getCachedFeaturedServices = unstable_cache(
-  (locale: string) =>
-    fetchFeaturedServicesUncached({
-      locale: locale as Locales,
-      preview: false,
-    }),
-  ["featured-services"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchFeaturedServices(
   opts: FetchFeaturedServicesOptions,
 ): Promise<ServiceType[]> {
-  return opts.preview
-    ? fetchFeaturedServicesUncached(opts)
-    : getCachedFeaturedServices(opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.featuredServices(locale, opts.preview);
+  return cached({
+    fn: () => fetchFeaturedServicesUncached({ locale, preview: opts.preview }),
+    key,
+    tags,
+  });
 }
 
-// A function to fetch all photos from projects tagged with a specific service.
 interface FetchServicePhotosOptions {
   slug: string;
   preview: boolean;
@@ -320,21 +306,23 @@ async function fetchServicePhotosUncached({
   return allPhotos;
 }
 
-const getCachedServicePhotos = unstable_cache(
-  (slug: string, locale: string) =>
-    fetchServicePhotosUncached({
-      locale: locale as Locales,
-      preview: false,
-      slug,
-    }),
-  ["service-photos"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchServicePhotos(
   opts: FetchServicePhotosOptions,
 ): Promise<ContentfulAsset[]> {
-  return opts.preview
-    ? fetchServicePhotosUncached(opts)
-    : getCachedServicePhotos(opts.slug, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.servicePhotos(
+    opts.slug,
+    locale,
+    opts.preview,
+  );
+  return cached({
+    fn: () =>
+      fetchServicePhotosUncached({
+        locale,
+        preview: opts.preview,
+        slug: opts.slug,
+      }),
+    key,
+    tags,
+  });
 }

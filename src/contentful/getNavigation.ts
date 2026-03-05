@@ -1,4 +1,5 @@
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import type { ContentfulTypeCheck } from "src/contentful/helpers";
 import { type CtaType, parseContentfulCta } from "src/contentful/parseCta";
@@ -8,7 +9,6 @@ import {
   type TypeNavigationSkeleton,
   type TypeNavigationWithoutUnresolvableLinksResponse,
 } from "src/contentful/types";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export interface NavigationType {
   id: string;
@@ -64,14 +64,15 @@ async function fetchNavigationUncached({
   return parseNavigation(navigationResult.items[0]);
 }
 
-const getCachedNavigation = unstable_cache(
-  (slug: string, locale: string) =>
-    fetchNavigationUncached({ locale, preview: false, slug }),
-  ["navigation"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
-export const fetchNavigation = async (opts: FetchNavigationOptions) =>
-  opts.preview
-    ? fetchNavigationUncached(opts)
-    : getCachedNavigation(opts.slug, opts.locale);
+export const fetchNavigation = async (opts: FetchNavigationOptions) => {
+  const { key, tags } = cacheKeys.navigation(
+    opts.slug,
+    opts.locale,
+    opts.preview,
+  );
+  return cached({
+    fn: () => fetchNavigationUncached(opts),
+    key,
+    tags,
+  });
+};

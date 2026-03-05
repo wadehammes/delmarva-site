@@ -1,6 +1,7 @@
 import type { Document } from "@contentful/rich-text-types";
 import type { EntryFields } from "contentful";
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import {
   FALLBACK_PROJECT_MEDIA_ID,
@@ -30,7 +31,6 @@ import {
   type TypeProjectWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeProject";
 import type { Locales } from "src/i18n/routing";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 
 export type ProjectEntry = TypeProjectWithoutUnresolvableLinksResponse;
 
@@ -164,19 +164,16 @@ async function fetchProjectsUncached({
   return allProjects;
 }
 
-const getCachedProjects = unstable_cache(
-  (locale: string) =>
-    fetchProjectsUncached({ locale: locale as Locales, preview: false }),
-  ["projects"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchProjects(
   opts: FetchProjectsOptions,
 ): Promise<ProjectType[]> {
-  return opts.preview
-    ? fetchProjectsUncached(opts)
-    : getCachedProjects(opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.projects(locale, opts.preview);
+  return cached({
+    fn: () => fetchProjectsUncached({ locale, preview: opts.preview }),
+    key,
+    tags,
+  });
 }
 
 // A function to fetch a single project by its slug.
@@ -215,23 +212,21 @@ async function fetchProjectUncached({
   };
 }
 
-const getCachedProject = unstable_cache(
-  (slug: string, locale: string) =>
-    fetchProjectUncached({
-      locale: locale as Locales,
-      preview: false,
-      slug,
-    }),
-  ["project"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchProject(
   opts: FetchProjectOptions,
 ): Promise<ProjectType | null> {
-  return opts.preview
-    ? fetchProjectUncached(opts)
-    : getCachedProject(opts.slug, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.project(opts.slug, locale, opts.preview);
+  return cached({
+    fn: () =>
+      fetchProjectUncached({
+        locale,
+        preview: opts.preview,
+        slug: opts.slug,
+      }),
+    key,
+    tags,
+  });
 }
 
 // A function to fetch all pages.
@@ -301,21 +296,23 @@ async function fetchProjectsByServiceUncached({
   return allProjects;
 }
 
-const getCachedProjectsByService = unstable_cache(
-  (serviceSlug: string, locale: string) =>
-    fetchProjectsByServiceUncached({
-      locale: locale as Locales,
-      preview: false,
-      serviceSlug,
-    }),
-  ["projects-by-service"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchProjectsByService(
   opts: FetchProjectsByServiceOptions,
 ): Promise<ProjectType[]> {
-  return opts.preview
-    ? fetchProjectsByServiceUncached(opts)
-    : getCachedProjectsByService(opts.serviceSlug, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.projectsByService(
+    opts.serviceSlug,
+    locale,
+    opts.preview,
+  );
+  return cached({
+    fn: () =>
+      fetchProjectsByServiceUncached({
+        locale,
+        preview: opts.preview,
+        serviceSlug: opts.serviceSlug,
+      }),
+    key,
+    tags,
+  });
 }

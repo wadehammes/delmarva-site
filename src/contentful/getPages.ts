@@ -1,4 +1,5 @@
-import { unstable_cache } from "next/cache";
+import { cached } from "src/contentful/cache";
+import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
 import { type FooterType, parseFooter } from "src/contentful/getFooter";
 import {
@@ -21,7 +22,6 @@ import {
   type TypePageWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypePage";
 import type { Locales } from "src/i18n/routing";
-import { REVALIDATE_SECONDS } from "src/utils/constants";
 import { createInternalLink } from "src/utils/urlHelpers";
 
 export type PageEntry = TypePageWithoutUnresolvableLinksResponse;
@@ -157,17 +157,14 @@ async function fetchPagesUncached({
   return allPages;
 }
 
-const getCachedPages = unstable_cache(
-  (locale: string) =>
-    fetchPagesUncached({ locale: locale as Locales, preview: false }),
-  ["pages"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchPages(opts: FetchPagesOptions): Promise<Page[]> {
-  return opts.preview
-    ? fetchPagesUncached(opts)
-    : getCachedPages(opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.pages(locale, opts.preview);
+  return cached({
+    fn: () => fetchPagesUncached({ locale, preview: opts.preview }),
+    key,
+    tags,
+  });
 }
 
 // A function to fetch a single page by its slug.
@@ -194,19 +191,17 @@ async function fetchPageUncached({
   return parseContentfulPage(pagesResult.items[0]);
 }
 
-const getCachedPage = unstable_cache(
-  (slug: string, locale: string) =>
-    fetchPageUncached({
-      locale: locale as Locales,
-      preview: false,
-      slug,
-    }),
-  ["page"],
-  { revalidate: REVALIDATE_SECONDS },
-);
-
 export async function fetchPage(opts: FetchPageOptions): Promise<Page | null> {
-  return opts.preview
-    ? fetchPageUncached(opts)
-    : getCachedPage(opts.slug, opts.locale ?? "en");
+  const locale = opts.locale ?? "en";
+  const { key, tags } = cacheKeys.page(opts.slug, locale, opts.preview);
+  return cached({
+    fn: () =>
+      fetchPageUncached({
+        locale,
+        preview: opts.preview,
+        slug: opts.slug,
+      }),
+    key,
+    tags,
+  });
 }
