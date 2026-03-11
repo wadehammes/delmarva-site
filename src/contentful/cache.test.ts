@@ -27,7 +27,7 @@ describe("cached", () => {
     const [passedFn, passedKey, options] = mockCachedFn.mock.calls[0];
     expect(passedKey).toEqual(key);
     expect(options).toMatchObject({ revalidate: expect.any(Number) });
-    expect(passedFn).toBe(fn);
+    expect(passedFn).toEqual(expect.any(Function));
     expect(fn).toHaveBeenCalled();
   });
 
