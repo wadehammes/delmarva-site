@@ -29,10 +29,11 @@ export type TypeContentMarquee<
 export function isTypeContentMarquee<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentMarquee<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentMarquee";
+>(entry: unknown): entry is TypeContentMarquee<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentMarquee";
 }
 
 export type TypeContentMarqueeWithoutLinkResolutionResponse =

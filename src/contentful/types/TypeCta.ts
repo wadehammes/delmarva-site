@@ -25,10 +25,11 @@ export type TypeCta<
 export function isTypeCta<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeCta<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "cta";
+>(entry: unknown): entry is TypeCta<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "cta";
 }
 
 export type TypeCtaWithoutLinkResolutionResponse =

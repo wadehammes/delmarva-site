@@ -44,10 +44,11 @@ export type TypeService<
 export function isTypeService<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeService<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "service";
+>(entry: unknown): entry is TypeService<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "service";
 }
 
 export type TypeServiceWithoutLinkResolutionResponse =

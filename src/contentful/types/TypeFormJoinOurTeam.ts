@@ -26,10 +26,11 @@ export type TypeFormJoinOurTeam<
 export function isTypeFormJoinOurTeam<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeFormJoinOurTeam<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "formJoinOurTeam";
+>(entry: unknown): entry is TypeFormJoinOurTeam<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "formJoinOurTeam";
 }
 
 export type TypeFormJoinOurTeamWithoutLinkResolutionResponse =

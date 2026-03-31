@@ -38,10 +38,11 @@ export type TypeContentImageBlock<
 export function isTypeContentImageBlock<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentImageBlock<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentImageBlock";
+>(entry: unknown): entry is TypeContentImageBlock<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentImageBlock";
 }
 
 export type TypeContentImageBlockWithoutLinkResolutionResponse =

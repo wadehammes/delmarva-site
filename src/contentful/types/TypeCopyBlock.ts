@@ -33,10 +33,11 @@ export type TypeCopyBlock<
 export function isTypeCopyBlock<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeCopyBlock<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "copyBlock";
+>(entry: unknown): entry is TypeCopyBlock<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "copyBlock";
 }
 
 export type TypeCopyBlockWithoutLinkResolutionResponse =

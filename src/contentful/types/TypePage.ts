@@ -34,10 +34,11 @@ export type TypePage<
 export function isTypePage<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypePage<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "page";
+>(entry: unknown): entry is TypePage<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "page";
 }
 
 export type TypePageWithoutLinkResolutionResponse =

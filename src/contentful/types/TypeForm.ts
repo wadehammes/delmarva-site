@@ -24,10 +24,11 @@ export type TypeForm<
 export function isTypeForm<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeForm<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "form";
+>(entry: unknown): entry is TypeForm<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "form";
 }
 
 export type TypeFormWithoutLinkResolutionResponse =

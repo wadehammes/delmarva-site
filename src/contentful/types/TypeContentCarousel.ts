@@ -38,10 +38,11 @@ export type TypeContentCarousel<
 export function isTypeContentCarousel<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentCarousel<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentCarousel";
+>(entry: unknown): entry is TypeContentCarousel<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentCarousel";
 }
 
 export type TypeContentCarouselWithoutLinkResolutionResponse =

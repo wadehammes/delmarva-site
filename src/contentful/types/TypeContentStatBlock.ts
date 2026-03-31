@@ -28,10 +28,11 @@ export type TypeContentStatBlock<
 export function isTypeContentStatBlock<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentStatBlock<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentStatBlock";
+>(entry: unknown): entry is TypeContentStatBlock<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentStatBlock";
 }
 
 export type TypeContentStatBlockWithoutLinkResolutionResponse =
