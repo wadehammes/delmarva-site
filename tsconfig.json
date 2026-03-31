@@ -7,6 +7,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "6.0",
     "importHelpers": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
@@ -42,9 +43,7 @@
     "src/@types/**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".jest/setupTests.ts",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".jest/setupTests.ts"
   ],
   "exclude": [
     "node_modules",

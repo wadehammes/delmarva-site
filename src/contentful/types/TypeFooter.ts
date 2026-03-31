@@ -30,10 +30,11 @@ export type TypeFooter<
 export function isTypeFooter<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeFooter<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "footer";
+>(entry: unknown): entry is TypeFooter<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "footer";
 }
 
 export type TypeFooterWithoutLinkResolutionResponse =

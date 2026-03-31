@@ -40,10 +40,11 @@ export type TypeContentHero<
 export function isTypeContentHero<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentHero<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentHero";
+>(entry: unknown): entry is TypeContentHero<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentHero";
 }
 
 export type TypeContentHeroWithoutLinkResolutionResponse =

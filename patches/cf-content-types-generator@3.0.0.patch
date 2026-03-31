@@ -1,0 +1,17 @@
+diff --git a/package.json b/package.json
+index f9623a7749e5bb3214557474c2bd011aaddbf5a6..e10513aed23908ddadc6a911ba6963515c440828 100644
+--- a/package.json
++++ b/package.json
+@@ -23,8 +23,10 @@
+   },
+   "packageManager": "pnpm@9.15.9",
+   "oclif": {
+-    "default": ".",
+-    "commands": "./lib/commands"
++    "commands": {
++      "strategy": "single",
++      "target": "./lib/commands/index.js"
++    }
+   },
+   "repository": {
+     "type": "git",

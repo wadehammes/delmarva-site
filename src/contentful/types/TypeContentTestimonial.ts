@@ -27,10 +27,11 @@ export type TypeContentTestimonial<
 export function isTypeContentTestimonial<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentTestimonial<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentTestimonial";
+>(entry: unknown): entry is TypeContentTestimonial<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentTestimonial";
 }
 
 export type TypeContentTestimonialWithoutLinkResolutionResponse =

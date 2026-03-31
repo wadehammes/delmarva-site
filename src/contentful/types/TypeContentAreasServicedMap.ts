@@ -26,10 +26,11 @@ export type TypeContentAreasServicedMap<
 export function isTypeContentAreasServicedMap<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentAreasServicedMap<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentAreasServicedMap";
+>(entry: unknown): entry is TypeContentAreasServicedMap<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentAreasServicedMap";
 }
 
 export type TypeContentAreasServicedMapWithoutLinkResolutionResponse =

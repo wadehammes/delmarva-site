@@ -40,10 +40,11 @@ export type TypeProject<
 export function isTypeProject<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeProject<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "project";
+>(entry: unknown): entry is TypeProject<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "project";
 }
 
 export type TypeProjectWithoutLinkResolutionResponse =

@@ -35,10 +35,11 @@ export type TypeContentVideoBlock<
 export function isTypeContentVideoBlock<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentVideoBlock<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentVideoBlock";
+>(entry: unknown): entry is TypeContentVideoBlock<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentVideoBlock";
 }
 
 export type TypeContentVideoBlockWithoutLinkResolutionResponse =

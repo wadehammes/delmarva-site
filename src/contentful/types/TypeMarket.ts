@@ -34,10 +34,11 @@ export type TypeMarket<
 export function isTypeMarket<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeMarket<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "market";
+>(entry: unknown): entry is TypeMarket<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "market";
 }
 
 export type TypeMarketWithoutLinkResolutionResponse =

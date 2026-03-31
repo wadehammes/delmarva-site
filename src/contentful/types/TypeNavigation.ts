@@ -26,10 +26,11 @@ export type TypeNavigation<
 export function isTypeNavigation<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeNavigation<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "navigation";
+>(entry: unknown): entry is TypeNavigation<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "navigation";
 }
 
 export type TypeNavigationWithoutLinkResolutionResponse =

@@ -35,10 +35,11 @@ export type TypeContentCopyMediaBlock<
 export function isTypeContentCopyMediaBlock<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentCopyMediaBlock<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentCopyMediaBlock";
+>(entry: unknown): entry is TypeContentCopyMediaBlock<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentCopyMediaBlock";
 }
 
 export type TypeContentCopyMediaBlockWithoutLinkResolutionResponse =

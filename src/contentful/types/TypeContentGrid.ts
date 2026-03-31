@@ -37,10 +37,11 @@ export type TypeContentGrid<
 export function isTypeContentGrid<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode,
->(
-  entry: Entry<EntrySkeletonType, Modifiers, Locales>,
-): entry is TypeContentGrid<Modifiers, Locales> {
-  return entry.sys.contentType.sys.id === "contentGrid";
+>(entry: unknown): entry is TypeContentGrid<Modifiers, Locales> {
+  const candidate = entry as {
+    sys?: { contentType?: { sys?: { id?: string } } };
+  };
+  return candidate.sys?.contentType?.sys?.id === "contentGrid";
 }
 
 export type TypeContentGridWithoutLinkResolutionResponse =
