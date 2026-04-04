@@ -7,11 +7,6 @@ settings:
 overrides:
   '@types/mapbox__point-geometry': file:./patches/@types/mapbox__point-geometry
 
-patchedDependencies:
-  cf-content-types-generator@3.0.0:
-    hash: a385465e76d0e4bcd654e92f74d086840ddcf145ab045620599130e547596230
-    path: patches/cf-content-types-generator@3.0.0.patch
-
 importers:
 
   .:
@@ -142,7 +137,7 @@ importers:
         version: 1.1.5
       cf-content-types-generator:
         specifier: ^3.0.0
-        version: 3.0.0(patch_hash=a385465e76d0e4bcd654e92f74d086840ddcf145ab045620599130e547596230)
+        version: 3.0.0
       csstype:
         specifier: ^3.2.3
         version: 3.2.3
@@ -9151,7 +9146,7 @@ snapshots:
 
   caniuse-lite@1.0.30001780: {}
 
-  cf-content-types-generator@3.0.0(patch_hash=a385465e76d0e4bcd654e92f74d086840ddcf145ab045620599130e547596230):
+  cf-content-types-generator@3.0.0:
     dependencies:
       '@oclif/core': 4.10.3
       '@oclif/plugin-help': 6.2.41
