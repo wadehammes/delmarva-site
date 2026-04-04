@@ -6,9 +6,6 @@
 	"pnpm": {
 		"overrides": {
 			"@types/mapbox__point-geometry": "file:./patches/@types/mapbox__point-geometry"
-		},
-		"patchedDependencies": {
-			"cf-content-types-generator@3.0.0": "patches/cf-content-types-generator@3.0.0.patch"
 		}
 	},
 	"scripts": {
