@@ -13,7 +13,8 @@ import type { Locales } from "src/i18n/routing";
 import { getServiceAreasServed } from "src/utils/areasServed";
 import { generateBreadcrumbs } from "src/utils/breadcrumbs";
 import { MARKETS_PAGE_SLUG, SERVICES_PAGE_SLUG } from "src/utils/constants";
-import { createMediaUrl, envUrl } from "src/utils/helpers";
+import { envUrl } from "src/utils/env.helpers";
+import { createMediaUrl } from "src/utils/urlHelpers";
 
 export interface SchemaGraphContext {
   "@context": "https://schema.org";

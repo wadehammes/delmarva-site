@@ -1,6 +1,6 @@
 import type { Page } from "src/contentful/getPages";
 import { MARKETS_PAGE_SLUG, SERVICES_PAGE_SLUG } from "src/utils/constants";
-import { envUrl } from "src/utils/helpers";
+import { envUrl } from "src/utils/env.helpers";
 
 export interface BreadcrumbItem {
   "@type": "ListItem";

@@ -5,7 +5,7 @@ import { getFileExtension } from "src/utils/emailHelpers";
  * Validates that a Contentful asset is a CSV file
  */
 export function isCsvFile(asset: ContentfulAsset | null | undefined): boolean {
-  if (!asset || !asset.src) {
+  if (!asset?.src) {
     return false;
   }
 

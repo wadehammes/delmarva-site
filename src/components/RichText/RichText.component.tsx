@@ -14,7 +14,8 @@ import type { ElementType, HTMLAttributes } from "react";
 import { Link } from "src/components/Link/Link.component";
 import styles from "src/components/RichText/RichText.module.css";
 import { parseContentfulAsset } from "src/contentful/parseContentfulAsset";
-import { createMediaUrl, replaceNbsp } from "src/utils/helpers";
+import { replaceNbsp } from "src/utils/string.helpers";
+import { createMediaUrl } from "src/utils/urlHelpers";
 
 interface RichTextProps extends HTMLAttributes<HTMLDivElement> {
   as?: ElementType;

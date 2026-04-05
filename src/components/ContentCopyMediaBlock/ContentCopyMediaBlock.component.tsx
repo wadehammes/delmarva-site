@@ -8,6 +8,10 @@ import { MediaRenderer } from "src/components/MediaRenderer/MediaRenderer.compon
 import type { ContentCopyMediaBlock as ContentCopyMediaBlockType } from "src/contentful/parseContentCopyMediaBlock";
 import type { ContentImageBlockEntry } from "src/contentful/parseContentImageBlock";
 import type { ContentVideoBlockEntry } from "src/contentful/parseContentVideoBlock";
+import {
+  isTypeContentImageBlock,
+  isTypeContentVideoBlock,
+} from "src/contentful/types";
 import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import { createBackgroundColor } from "src/styles/utils";
 import styles from "./ContentCopyMediaBlock.module.css";
@@ -22,7 +26,7 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
 
   const { ref, inView } = useOptimizedInView();
   const hasVideo = (media ?? []).some(
-    (item) => item?.sys?.contentType?.sys?.id === "contentVideoBlock",
+    (item) => item != null && isTypeContentVideoBlock(item),
   );
 
   return (
@@ -52,13 +56,10 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
         <Carousel animation="fade" spaceBetween={0}>
           {(media ?? [])
             .filter((item) => item != null)
-            .filter((item) => {
-              const contentType = item.sys.contentType.sys.id;
-              return (
-                contentType === "contentImageBlock" ||
-                contentType === "contentVideoBlock"
-              );
-            })
+            .filter(
+              (item) =>
+                isTypeContentImageBlock(item) || isTypeContentVideoBlock(item),
+            )
             .map((item) => (
               <MediaRenderer
                 key={item.sys.id}

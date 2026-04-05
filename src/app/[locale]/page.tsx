@@ -9,7 +9,7 @@ import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
 import { routing } from "src/i18n/routing";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
-import { envUrl } from "src/utils/helpers";
+import { envUrl } from "src/utils/env.helpers";
 import {
   createPageMetadata,
   generatePageSchemaGraph,

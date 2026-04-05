@@ -6,7 +6,7 @@ import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { Environments } from "src/interfaces/common.interfaces";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
-import { envUrl } from "src/utils/helpers";
+import { envUrl } from "src/utils/env.helpers";
 import { validateAndSetLocale } from "src/utils/pageHelpers";
 
 export const dynamic = "force-dynamic";

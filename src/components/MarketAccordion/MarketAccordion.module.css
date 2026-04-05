@@ -1,31 +1,3 @@
-.marketAccordion {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  container-type: inline-size;
-
-  .marketAccordionCarousel {
-    order: -1;
-  }
-
-  @media (min-width: 900px) {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-
-    .marketAccordionContent {
-      grid-column: 1;
-    }
-
-    .marketAccordionCarousel {
-      display: flex;
-      grid-column: 2;
-      align-items: center;
-      justify-content: center;
-      order: unset;
-    }
-  }
-}
-
 .marketAccordionContent {
   display: flex;
   flex-direction: column;
@@ -117,4 +89,32 @@
 .marketAccordionCarousel :global(.projectCard) {
   width: 100%;
   max-width: none;
+}
+
+.marketAccordion {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  container-type: inline-size;
+
+  .marketAccordionCarousel {
+    order: -1;
+  }
+
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    .marketAccordionContent {
+      grid-column: 1;
+    }
+
+    .marketAccordionCarousel {
+      display: flex;
+      grid-column: 2;
+      align-items: center;
+      justify-content: center;
+      order: unset;
+    }
+  }
 }

@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import type { Page } from "src/contentful/getPages";
 import { fetchServices } from "src/contentful/getServices";
 import type { SectionType } from "src/contentful/parseSections";
+import { isTypeContentVideoBlock } from "src/contentful/types";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { aggregateAreasServedFromServices } from "src/utils/areasServed";
@@ -10,9 +11,10 @@ import {
   hasAreasServicedListModule,
   hasServiceListModule,
 } from "src/utils/contentModules";
-import { createMediaUrl, envUrl, isContentType } from "src/utils/helpers";
+import { envUrl } from "src/utils/env.helpers";
 import type { GenerateSchemaGraphOptions } from "src/utils/schema";
 import { generateSchemaGraph } from "src/utils/schema";
+import { createMediaUrl } from "src/utils/urlHelpers";
 
 const SITE_NAME = "Delmarva Site Development";
 
@@ -155,7 +157,7 @@ export function pageHasVideoBlock(entity: {
 }): boolean {
   for (const section of entity.sections ?? []) {
     for (const content of section?.content ?? []) {
-      if (isContentType(content, "contentVideoBlock")) return true;
+      if (isTypeContentVideoBlock(content)) return true;
     }
   }
   return false;

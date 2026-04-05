@@ -1,4 +1,9 @@
-import { createInternalLink, isUrl, parseCtaUrl } from "./urlHelpers";
+import {
+  createInternalLink,
+  createMediaUrl,
+  isUrl,
+  parseCtaUrl,
+} from "./urlHelpers";
 
 // Mock types for testing
 const mockPage = {
@@ -55,6 +60,41 @@ const mockCtaWithNoLinks = {
 };
 
 describe("urlHelpers", () => {
+  describe("createMediaUrl", () => {
+    it("should return empty string for empty input", () => {
+      expect(createMediaUrl("")).toBe("");
+      expect(createMediaUrl(null as unknown as string)).toBe("");
+      expect(createMediaUrl(undefined as unknown as string)).toBe("");
+    });
+
+    it("should return URL as-is for https, and convert http to https", () => {
+      expect(createMediaUrl("https://example.com/image.jpg")).toBe(
+        "https://example.com/image.jpg",
+      );
+      expect(createMediaUrl("http://example.com/image.jpg")).toBe(
+        "https://example.com/image.jpg",
+      );
+    });
+
+    it("should add https protocol for URLs starting with //", () => {
+      expect(createMediaUrl("//example.com/image.jpg")).toBe(
+        "https://example.com/image.jpg",
+      );
+      expect(createMediaUrl("//cdn.example.com/assets/image.png")).toBe(
+        "https://cdn.example.com/assets/image.png",
+      );
+    });
+
+    it("should add https protocol for URLs without protocol", () => {
+      expect(createMediaUrl("example.com/image.jpg")).toBe(
+        "https://example.com/image.jpg",
+      );
+      expect(createMediaUrl("cdn.example.com/assets/image.png")).toBe(
+        "https://cdn.example.com/assets/image.png",
+      );
+    });
+  });
+
   describe("isUrl", () => {
     it("should return true for valid URLs", () => {
       expect(isUrl("https://example.com")).toBe(true);

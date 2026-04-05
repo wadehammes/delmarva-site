@@ -34,6 +34,15 @@ import {
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { parseCopyBlock } from "src/contentful/parseCopyBlock";
 import type { ContentEntries } from "src/contentful/parseSections";
+import {
+  isTypeContentCopyMediaBlock,
+  isTypeContentHero,
+  isTypeContentImageBlock,
+  isTypeContentStatBlock,
+  isTypeContentTestimonial,
+  isTypeContentVideoBlock,
+  isTypeCopyBlock,
+} from "src/contentful/types";
 
 interface CarouselContentRendererProps {
   content: ContentEntries;
@@ -48,83 +57,85 @@ export const CarouselContentRenderer = (
     return null;
   }
 
-  const contentType = content.sys.contentType.sys.id;
+  if (isTypeCopyBlock(content)) {
+    const parsedCopyBlock = parseCopyBlock(content as CopyBlockEntry);
 
-  switch (contentType) {
-    case "copyBlock": {
-      const parsedCopyBlock = parseCopyBlock(content as CopyBlockEntry);
-
-      if (!parsedCopyBlock) {
-        return null;
-      }
-
-      return <ContentCopyBlock fields={parsedCopyBlock} />;
-    }
-    case "contentHero": {
-      const parsedHero = parseContentHero(content as ContentHeroEntry);
-
-      if (!parsedHero) {
-        return null;
-      }
-
-      return <ContentHeroComponent fields={parsedHero} />;
-    }
-    case "contentStatBlock": {
-      const parsedStatBlock = parseContentStatBlock(
-        content as ContentStatBlockEntry,
-      );
-
-      if (!parsedStatBlock) {
-        return null;
-      }
-
-      return <Stat stat={parsedStatBlock} />;
-    }
-    case "contentCopyMediaBlock": {
-      const parsedCopyMediaBlock = parseContentCopyMediaBlock(
-        content as ContentCopyMediaBlockEntry,
-      );
-
-      if (!parsedCopyMediaBlock) {
-        return null;
-      }
-
-      return <ContentCopyMediaBlock fields={parsedCopyMediaBlock} />;
-    }
-    case "contentImageBlock": {
-      const parsedImageBlock = parseContentImageBlock(
-        content as ContentImageBlockEntry,
-      );
-
-      if (!parsedImageBlock) {
-        return null;
-      }
-
-      return <ContentImageBlock fields={parsedImageBlock} />;
-    }
-    case "contentTestimonial": {
-      const parsedTestimonial = parseContentTestimonial(
-        content as ContentTestimonialEntry,
-      );
-
-      if (!parsedTestimonial) {
-        return null;
-      }
-
-      return <ContentTestimonial testimonial={parsedTestimonial} />;
-    }
-    case "contentVideoBlock": {
-      const parsedVideoBlock = parseContentfulVideoBlock(
-        content as ContentVideoBlockEntry,
-      );
-
-      if (!parsedVideoBlock) {
-        return null;
-      }
-
-      return <ContentVideoBlock fields={parsedVideoBlock} />;
-    }
-    default:
+    if (!parsedCopyBlock) {
       return null;
+    }
+
+    return <ContentCopyBlock fields={parsedCopyBlock} />;
   }
+
+  if (isTypeContentHero(content)) {
+    const parsedHero = parseContentHero(content as ContentHeroEntry);
+
+    if (!parsedHero) {
+      return null;
+    }
+
+    return <ContentHeroComponent fields={parsedHero} />;
+  }
+
+  if (isTypeContentStatBlock(content)) {
+    const parsedStatBlock = parseContentStatBlock(
+      content as ContentStatBlockEntry,
+    );
+
+    if (!parsedStatBlock) {
+      return null;
+    }
+
+    return <Stat stat={parsedStatBlock} />;
+  }
+
+  if (isTypeContentCopyMediaBlock(content)) {
+    const parsedCopyMediaBlock = parseContentCopyMediaBlock(
+      content as ContentCopyMediaBlockEntry,
+    );
+
+    if (!parsedCopyMediaBlock) {
+      return null;
+    }
+
+    return <ContentCopyMediaBlock fields={parsedCopyMediaBlock} />;
+  }
+
+  if (isTypeContentImageBlock(content)) {
+    const parsedImageBlock = parseContentImageBlock(
+      content as ContentImageBlockEntry,
+    );
+
+    if (!parsedImageBlock) {
+      return null;
+    }
+
+    return <ContentImageBlock fields={parsedImageBlock} />;
+  }
+
+  if (isTypeContentTestimonial(content)) {
+    const parsedTestimonial = parseContentTestimonial(
+      content as ContentTestimonialEntry,
+    );
+
+    if (!parsedTestimonial) {
+      return null;
+    }
+
+    return <ContentTestimonial testimonial={parsedTestimonial} />;
+  }
+
+  if (isTypeContentVideoBlock(content)) {
+    const parsedVideoBlock = parseContentfulVideoBlock(
+      content as ContentVideoBlockEntry,
+    );
+
+    if (!parsedVideoBlock) {
+      return null;
+    }
+
+    return <ContentVideoBlock fields={parsedVideoBlock} />;
+  }
+
+  return null;
 };

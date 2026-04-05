@@ -49,6 +49,14 @@
 }
 
 .navItem {
+  text-decoration: none;
+
+  &.active {
+    color: var(--colors-red);
+  }
+}
+
+.navItem {
   display: flex;
   align-items: center;
 
@@ -223,14 +231,6 @@
   color: var(--colors-text);
 
   &:hover > .menu {
-    color: var(--colors-red);
-  }
-}
-
-.navItem {
-  text-decoration: none;
-
-  &.active {
     color: var(--colors-red);
   }
 }

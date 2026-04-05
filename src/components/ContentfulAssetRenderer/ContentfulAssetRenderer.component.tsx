@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { VideoPlayer } from "src/components/VideoPlayer/VideoPlayer.component";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
-import { isVideoUrl } from "src/utils/helpers";
+import { isVideoUrl } from "src/utils/videoUrl.helpers";
 
 const MAX_IMAGE_DIMENSION = 1920;
 const IMAGE_QUALITY = 80;

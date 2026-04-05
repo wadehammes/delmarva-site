@@ -1,7 +1,6 @@
 import type { Page } from "src/contentful/getPages";
-import type { ContentModuleEntry } from "src/contentful/parseContentModules";
 import type { SectionType } from "src/contentful/parseSections";
-import { isContentType } from "src/utils/helpers";
+import { isTypeContentModules } from "src/contentful/types";
 
 /**
  * Checks if a page contains a specific ContentModule type
@@ -28,15 +27,11 @@ export function hasContentModule(
     }
 
     for (const contentEntry of section.content) {
-      if (isContentType(contentEntry, "contentModules")) {
-        const moduleEntry = contentEntry as ContentModuleEntry;
-        if (
-          moduleEntry &&
-          "fields" in moduleEntry &&
-          moduleEntry.fields?.module === moduleType
-        ) {
-          return true;
-        }
+      if (
+        isTypeContentModules(contentEntry) &&
+        contentEntry.fields?.module === moduleType
+      ) {
+        return true;
       }
     }
   }
@@ -49,15 +44,11 @@ export function sectionContainsRecentNewsList(
 ): boolean {
   if (!section?.content?.length) return false;
   for (const contentEntry of section.content) {
-    if (isContentType(contentEntry, "contentModules")) {
-      const moduleEntry = contentEntry as ContentModuleEntry;
-      if (
-        moduleEntry &&
-        "fields" in moduleEntry &&
-        moduleEntry.fields?.module === "Recent News List"
-      ) {
-        return true;
-      }
+    if (
+      isTypeContentModules(contentEntry) &&
+      contentEntry.fields?.module === "Recent News List"
+    ) {
+      return true;
     }
   }
   return false;

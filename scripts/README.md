@@ -38,7 +38,10 @@ The script can be customized by modifying these constants in `update_main_readme
 
 ```javascript
 const EXCLUDED_DIRS = ['node_modules', '.git', '.next', 'dist', 'build', 'coverage'];
+const EXCLUDED_FROM_MAIN_README = new Set(['docs/handbook/README.md']);
 ```
+
+Paths in `EXCLUDED_FROM_MAIN_README` are still discovered for logging but are omitted from the **Component Documentation** link list (the handbook is linked from the root README already).
 
 ### Output Format
 

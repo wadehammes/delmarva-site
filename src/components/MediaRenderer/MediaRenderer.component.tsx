@@ -10,6 +10,10 @@ import {
   type ContentVideoBlockEntry,
   parseContentfulVideoBlock,
 } from "src/contentful/parseContentVideoBlock";
+import {
+  isTypeContentImageBlock,
+  isTypeContentVideoBlock,
+} from "src/contentful/types";
 
 interface MediaRendererProps {
   media: ContentImageBlockEntry | ContentVideoBlockEntry | null | undefined;
@@ -22,31 +26,29 @@ export const MediaRenderer = (props: MediaRendererProps) => {
     return null;
   }
 
-  switch (media.sys.contentType.sys.id) {
-    case "contentImageBlock": {
-      const parsedImageBlock = parseContentImageBlock(
-        media as ContentImageBlockEntry,
-      );
+  if (isTypeContentImageBlock(media)) {
+    const parsedImageBlock = parseContentImageBlock(
+      media as ContentImageBlockEntry,
+    );
 
-      if (!parsedImageBlock) {
-        return null;
-      }
-
-      return <ContentImageBlock fields={parsedImageBlock} />;
-    }
-    case "contentVideoBlock": {
-      const parsedVideoBlock = parseContentfulVideoBlock(
-        media as ContentVideoBlockEntry,
-      );
-
-      if (!parsedVideoBlock) {
-        return null;
-      }
-
-      return <ContentVideoBlock fields={parsedVideoBlock} />;
-    }
-    default: {
+    if (!parsedImageBlock) {
       return null;
     }
+
+    return <ContentImageBlock fields={parsedImageBlock} />;
   }
+
+  if (isTypeContentVideoBlock(media)) {
+    const parsedVideoBlock = parseContentfulVideoBlock(
+      media as ContentVideoBlockEntry,
+    );
+
+    if (!parsedVideoBlock) {
+      return null;
+    }
+
+    return <ContentVideoBlock fields={parsedVideoBlock} />;
+  }
+
+  return null;
 };

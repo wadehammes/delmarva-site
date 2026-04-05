@@ -24,7 +24,7 @@ import {
   SERVICES_PAGE_SLUG,
   TEST_PAGE_SLUG,
 } from "src/utils/constants";
-import { envUrl } from "src/utils/helpers";
+import { envUrl } from "src/utils/env.helpers";
 import {
   createServiceMetadata,
   validateAndSetLocale,

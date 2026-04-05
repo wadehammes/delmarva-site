@@ -11,9 +11,9 @@ import {
   getMimeType,
   getNotificationTo,
 } from "src/utils/emailHelpers";
-import { isNonNullable } from "src/utils/helpers";
 import { verifyRecaptchaToken } from "src/utils/recaptcha";
 import { isSpam } from "src/utils/spamDetection";
+import { isNonNullable } from "src/utils/value.helpers";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
