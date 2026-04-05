@@ -43,7 +43,9 @@
     "src/@types/**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".jest/setupTests.ts"
+    ".jest/setupTests.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

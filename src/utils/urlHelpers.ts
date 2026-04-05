@@ -1,6 +1,26 @@
 import type { Page, PageForNavigation } from "src/contentful/getPages";
 import type { Cta } from "src/contentful/parseCta";
 
+export const createMediaUrl = (src: string) => {
+  if (!src) {
+    return "";
+  }
+
+  if (src.startsWith("https://")) {
+    return src;
+  }
+
+  if (src.startsWith("http://")) {
+    return src.replace(/^http:\/\//i, "https://");
+  }
+
+  if (src.startsWith("//")) {
+    return `https:${src}`;
+  }
+
+  return `https://${src}`;
+};
+
 export const isUrl = (url: string) => {
   try {
     new URL(url);

@@ -5,10 +5,8 @@ import { RichText } from "src/components/RichText/RichText.component";
 import styles from "src/components/Section/Section.module.css";
 import { SectionEyebrow } from "src/components/Section/SectionEyebrow.component";
 import type { SectionType } from "src/contentful/parseSections";
-import {
-  hasRichTextMeaningfulContent,
-  isReactNodeEmptyArray,
-} from "src/utils/helpers";
+import { isReactNodeEmptyArray } from "src/utils/react.helpers";
+import { hasRichTextMeaningfulContent } from "src/utils/richText.helpers";
 
 interface SectionProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;

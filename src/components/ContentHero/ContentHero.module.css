@@ -18,22 +18,11 @@
   &.heroContentLeft {
     justify-content: flex-start;
     text-align: left;
-
-    .heroContent.showHeaderStyledBorder h1::after {
-      left: 0;
-      transform: none;
-    }
   }
 
   &.heroContentRight {
     justify-content: flex-end;
     text-align: right;
-
-    .heroContent.showHeaderStyledBorder h1::after {
-      right: 0;
-      left: auto;
-      transform: none;
-    }
   }
 
   &.heroFullScreen {
@@ -119,6 +108,17 @@
     background-color: var(--colors-red);
     transform: translateX(-50%);
   }
+}
+
+.hero.heroContentLeft .heroContent.showHeaderStyledBorder h1::after {
+  left: 0;
+  transform: none;
+}
+
+.hero.heroContentRight .heroContent.showHeaderStyledBorder h1::after {
+  right: 0;
+  left: auto;
+  transform: none;
 }
 
 .ctaContainer {

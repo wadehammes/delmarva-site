@@ -1,5 +1,5 @@
 import type { Asset, AssetLink } from "contentful";
-import { createMediaUrl } from "src/utils/helpers";
+import { createMediaUrl } from "src/utils/urlHelpers";
 
 const CONTENTFUL_IMAGES_HOST = "images.ctfassets.net";
 

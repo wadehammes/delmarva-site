@@ -21,6 +21,22 @@
   }
 }
 
+.accordionIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s ease-in-out;
+  will-change: transform;
+
+  @media (min-width: 600px) {
+    width: 64px;
+    height: 64px;
+  }
+}
+
 .accordionButton {
   display: flex;
   gap: 1rem;
@@ -89,22 +105,6 @@
 
 .accordionTitle {
   flex: 1;
-}
-
-.accordionIcon {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  transition: transform 0.2s ease-in-out;
-  will-change: transform;
-
-  @media (min-width: 600px) {
-    width: 64px;
-    height: 64px;
-  }
 }
 
 .accordionContent {

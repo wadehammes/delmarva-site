@@ -3,19 +3,13 @@
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import styles from "src/components/VideoPlayer/VideoPlayer.module.css";
-import { isDirectVideoFile, isVimeoUrl, isYouTubeUrl } from "src/utils/helpers";
-
-function getYouTubeEmbedUrl(url: string): string | null {
-  const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
-  );
-  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
-}
-
-function getVimeoEmbedUrl(url: string): string | null {
-  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  return match ? `https://player.vimeo.com/video/${match[1]}` : null;
-}
+import {
+  getVimeoEmbedUrl,
+  getYouTubeEmbedUrl,
+  isDirectVideoFile,
+  isVimeoUrl,
+  isYouTubeUrl,
+} from "src/utils/videoUrl.helpers";
 
 interface VideoPlayerProps {
   autoPlay?: boolean;

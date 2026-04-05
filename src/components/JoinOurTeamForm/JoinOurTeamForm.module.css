@@ -103,15 +103,6 @@
       0 1px 0 var(--colors-red);
   }
 
-  &.selectHasError .selectChevron {
-    color: var(--colors-red);
-  }
-
-  &:focus-within .selectChevron,
-  &:hover .selectChevron {
-    color: var(--colors-black);
-  }
-
   .selectChevron {
     position: absolute;
     top: 50%;
@@ -121,6 +112,15 @@
     pointer-events: none;
     transform: translateY(-50%);
     transition: all 0.2s ease-in-out;
+  }
+
+  &.selectHasError .selectChevron {
+    color: var(--colors-red);
+  }
+
+  &:focus-within .selectChevron,
+  &:hover .selectChevron {
+    color: var(--colors-black);
   }
 
   .select {

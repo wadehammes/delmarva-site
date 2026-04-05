@@ -126,15 +126,22 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
     });
     timelineRef.current = tl;
 
-    tl.to(richTextRef.current, {
-      duration: 0.15,
-      ease: "power2.out",
-      force3D: true,
-      opacity: 1,
-      y: 0,
-    })
-      .to(
-        [statsRef.current, statsGridRef.current].filter(Boolean),
+    if (richTextRef.current) {
+      tl.to(richTextRef.current, {
+        duration: 0.15,
+        ease: "power2.out",
+        force3D: true,
+        opacity: 1,
+        y: 0,
+      });
+    }
+
+    const statsContainers = [statsRef.current, statsGridRef.current].filter(
+      (el): el is HTMLDivElement | HTMLDListElement => el != null,
+    );
+    if (statsContainers.length > 0) {
+      tl.to(
+        statsContainers,
         {
           duration: 0.2,
           ease: "power2.out",
@@ -143,9 +150,15 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
           y: 0,
         },
         "-=0.12",
-      )
-      .to(
-        statsRef.current?.querySelectorAll(`.${styles.statItem}`) || [],
+      );
+    }
+
+    const listStatEls = statsRef.current?.querySelectorAll(
+      `.${styles.statItem}`,
+    );
+    if (listStatEls && listStatEls.length > 0) {
+      tl.to(
+        listStatEls,
         {
           duration: 0.18,
           ease: "power2.out",
@@ -155,9 +168,14 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
           y: 0,
         },
         "-=0.1",
-      )
-      .to(
-        statsGridRef.current?.querySelectorAll('[class*="stat"]') || [],
+      );
+    }
+
+    const gridStatEls =
+      statsGridRef.current?.querySelectorAll('[class*="stat"]');
+    if (gridStatEls && gridStatEls.length > 0) {
+      tl.to(
+        gridStatEls,
         {
           duration: 0.18,
           ease: "power2.out",
@@ -167,8 +185,11 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
           y: 0,
         },
         "-=0.1",
-      )
-      .to(
+      );
+    }
+
+    if (ctaRef.current) {
+      tl.to(
         ctaRef.current,
         {
           duration: 0.2,
@@ -178,8 +199,11 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
           y: 0,
         },
         "-=0.08",
-      )
-      .to(
+      );
+    }
+
+    if (carouselRef.current) {
+      tl.to(
         carouselRef.current,
         {
           duration: 0.22,
@@ -190,6 +214,7 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
         },
         "-=0.08",
       );
+    }
   }, [isMounted, cleanupGSAP]);
 
   useEffect(() => {
@@ -222,7 +247,7 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
             statsGridRef.current,
             ctaRef.current,
             carouselRef.current,
-          ],
+          ].filter((el): el is HTMLDivElement | HTMLDListElement => el != null),
           {
             force3D: true,
             opacity: 0,

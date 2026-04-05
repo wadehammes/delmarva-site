@@ -1,0 +1,14 @@
+---
+description: Read the Delmarva Site Handbook before substantive work; keep docs/handbook in sync when you change behavior or conventions
+alwaysApply: true
+---
+
+# Delmarva Site Handbook
+
+Before **substantive** changes (features, refactors, CMS/Contentful work, cross-cutting patterns, CI/env, analytics, or multi-file work), read **`docs/handbook/README.md`** and the **chapter** that matches the task—e.g. `architecture.md`, `conventions.md`, `contentful.md`, `components.md`, `patterns.md`, `platform.md`, `integrations.md`, `distribution.md`, `source-layout.md`. Use **`docs/handbook/llms.md`** for a compact task→chapter map.
+
+Align with those docs.
+
+**Keep the handbook in sync:** If your change affects how the app works, how to run or deploy it, or how humans/agents should implement features (stack, Contentful, components, CI, env, integrations, etc.), update the matching **`docs/handbook/*.md`** in the same change when reasonable—or in an immediate follow-up—so the handbook stays the source of truth.
+
+**Narrow** edits (typos, single obvious lines) that do not change behavior or documented expectations do not require reading the full handbook first.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { isBrowser } from "src/utils/helpers";
+import { isBrowser } from "src/utils/browser.helpers";
 
 export const useHash = () => {
   const [hash, setHash] = useState<string>(() => {

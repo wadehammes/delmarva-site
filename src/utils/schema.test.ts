@@ -15,7 +15,8 @@ import {
 jest.mock("@contentful/rich-text-plain-text-renderer");
 jest.mock("src/utils/areasServed");
 jest.mock("src/utils/breadcrumbs");
-jest.mock("src/utils/helpers");
+jest.mock("src/utils/env.helpers");
+jest.mock("src/utils/urlHelpers");
 
 const mockDocumentToPlainTextString =
   documentToPlainTextString as jest.MockedFunction<
@@ -23,7 +24,8 @@ const mockDocumentToPlainTextString =
   >;
 const { getServiceAreasServed } = require("src/utils/areasServed");
 const { generateBreadcrumbs } = require("src/utils/breadcrumbs");
-const { createMediaUrl, envUrl } = require("src/utils/helpers");
+const { envUrl } = require("src/utils/env.helpers");
+const { createMediaUrl } = require("src/utils/urlHelpers");
 
 const mockGetServiceAreasServed = getServiceAreasServed as jest.MockedFunction<
   typeof getServiceAreasServed

@@ -9,7 +9,8 @@ import { HeroVideo } from "src/components/ContentHero/HeroVideo.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
 import { createBackgroundColor } from "src/styles/utils";
-import { createMediaUrl, isVideoUrl } from "src/utils/helpers";
+import { createMediaUrl } from "src/utils/urlHelpers";
+import { isVideoUrl } from "src/utils/videoUrl.helpers";
 import styles from "./ServiceHero.module.css";
 
 interface ServiceHeroProps {

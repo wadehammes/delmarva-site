@@ -68,6 +68,23 @@ import {
   parseFormJoinOurTeam,
 } from "src/contentful/parseFormJoinOurTeam";
 import type { ContentEntries } from "src/contentful/parseSections";
+import {
+  isTypeContentAreasServicedMap,
+  isTypeContentCard,
+  isTypeContentCarousel,
+  isTypeContentCopyMediaBlock,
+  isTypeContentGrid,
+  isTypeContentHero,
+  isTypeContentImageBlock,
+  isTypeContentMarquee,
+  isTypeContentModules,
+  isTypeContentRecentNews,
+  isTypeContentStatBlock,
+  isTypeContentTestimonial,
+  isTypeCopyBlock,
+  isTypeForm,
+  isTypeFormJoinOurTeam,
+} from "src/contentful/types";
 
 interface ContentRendererProps {
   content: ContentEntries;
@@ -79,190 +96,197 @@ interface ContentRendererProps {
 export const ContentRenderer = (props: ContentRendererProps) => {
   const { content, contentLayout, locale, searchParams } = props;
 
-  if (!content?.sys?.contentType?.sys?.id) {
+  if (!content) {
     return null;
   }
 
-  const contentType = content.sys.contentType.sys.id;
+  if (isTypeCopyBlock(content)) {
+    const parsedCopyBlock = parseCopyBlock(content as CopyBlockEntry);
 
-  switch (contentType) {
-    case "copyBlock": {
-      const parsedCopyBlock = parseCopyBlock(content as CopyBlockEntry);
-
-      if (!parsedCopyBlock) {
-        return null;
-      }
-
-      return <ContentCopyBlock fields={parsedCopyBlock} />;
+    if (!parsedCopyBlock) {
+      return null;
     }
-    case "contentHero": {
-      const parsedHero = parseContentHero(content as ContentHeroEntry);
 
-      if (!parsedHero) {
-        return null;
-      }
+    return <ContentCopyBlock fields={parsedCopyBlock} />;
+  }
 
-      return <ContentHeroComponent fields={parsedHero} />;
+  if (isTypeContentHero(content)) {
+    const parsedHero = parseContentHero(content as ContentHeroEntry);
+
+    if (!parsedHero) {
+      return null;
     }
-    case "contentMarquee": {
-      const parsedMarquee = parseContentMarquee(content as ContentMarqueeEntry);
 
-      if (!parsedMarquee) {
-        return null;
-      }
+    return <ContentHeroComponent fields={parsedHero} />;
+  }
 
-      return (
-        <ContentMarquee
-          entries={parsedMarquee.items ?? []}
-          searchParams={searchParams}
-        />
-      );
+  if (isTypeContentMarquee(content)) {
+    const parsedMarquee = parseContentMarquee(content as ContentMarqueeEntry);
+
+    if (!parsedMarquee) {
+      return null;
     }
-    case "contentAreasServicedMap": {
-      const parsedMap = parseContentAreasServicedMap(
-        content as ContentAreasServicedMapEntry,
-      );
 
-      if (!parsedMap) {
-        return null;
-      }
+    return (
+      <ContentMarquee
+        entries={parsedMarquee.items ?? []}
+        searchParams={searchParams}
+      />
+    );
+  }
 
-      return (
-        <MapErrorBoundary>
-          <ContentAreasServicedMapClient fields={parsedMap} />
-        </MapErrorBoundary>
-      );
+  if (isTypeContentAreasServicedMap(content)) {
+    const parsedMap = parseContentAreasServicedMap(
+      content as ContentAreasServicedMapEntry,
+    );
+
+    if (!parsedMap) {
+      return null;
     }
-    case "contentModules": {
-      const parsedModule = parseContentModule(content as ContentModuleEntry);
 
-      if (!parsedModule) {
-        return null;
-      }
+    return (
+      <MapErrorBoundary>
+        <ContentAreasServicedMapClient fields={parsedMap} />
+      </MapErrorBoundary>
+    );
+  }
 
-      return (
-        <MapErrorBoundary>
-          <ContentModules
-            contentLayout={contentLayout}
-            fields={parsedModule}
-            locale={locale}
-            searchParams={searchParams}
-          />
-        </MapErrorBoundary>
-      );
+  if (isTypeContentModules(content)) {
+    const parsedModule = parseContentModule(content as ContentModuleEntry);
+
+    if (!parsedModule) {
+      return null;
     }
-    case "contentGrid": {
-      const parsedGrid = parseContentGrid(content as ContentGridEntry);
 
-      if (!parsedGrid) {
-        return null;
-      }
-
-      return (
-        <ContentGrid
-          fields={parsedGrid}
+    return (
+      <MapErrorBoundary>
+        <ContentModules
+          contentLayout={contentLayout}
+          fields={parsedModule}
           locale={locale}
           searchParams={searchParams}
         />
-      );
-    }
-    case "contentStatBlock": {
-      const parsedStatBlock = parseContentStatBlock(
-        content as ContentStatBlockEntry,
-      );
+      </MapErrorBoundary>
+    );
+  }
 
-      if (!parsedStatBlock) {
-        return null;
-      }
+  if (isTypeContentGrid(content)) {
+    const parsedGrid = parseContentGrid(content as ContentGridEntry);
 
-      return <Stat stat={parsedStatBlock} />;
-    }
-    case "contentCarousel": {
-      const parsedCarousel = parseContentCarousel(
-        content as ContentCarouselEntry,
-      );
-
-      if (!parsedCarousel) {
-        return null;
-      }
-
-      return <ContentCarouselComponent carousel={parsedCarousel} />;
-    }
-    case "contentCard": {
-      const parsedCard = parseContentCard(content as ContentCardEntry);
-
-      if (!parsedCard) {
-        return null;
-      }
-
-      return <ContentCard card={parsedCard} />;
-    }
-    case "contentCopyMediaBlock": {
-      const parsedCopyMediaBlock = parseContentCopyMediaBlock(
-        content as ContentCopyMediaBlockEntry,
-      );
-
-      if (!parsedCopyMediaBlock) {
-        return null;
-      }
-
-      return <ContentCopyMediaBlock fields={parsedCopyMediaBlock} />;
-    }
-    case "contentImageBlock": {
-      const parsedImageBlock = parseContentImageBlock(
-        content as ContentImageBlockEntry,
-      );
-
-      if (!parsedImageBlock) {
-        return null;
-      }
-
-      return <ContentImageBlock fields={parsedImageBlock} />;
-    }
-    case "contentTestimonial": {
-      const parsedTestimonial = parseContentTestimonial(
-        content as ContentTestimonialEntry,
-      );
-
-      if (!parsedTestimonial) {
-        return null;
-      }
-
-      return <ContentTestimonial testimonial={parsedTestimonial} />;
-    }
-    case "contentRecentNews": {
-      const parsedRecentNews = parseContentRecentNews(
-        content as ContentRecentNewsEntry,
-      );
-
-      if (!parsedRecentNews) {
-        return null;
-      }
-
-      return (
-        <ContentRecentNews locale={locale} recentNews={parsedRecentNews} />
-      );
-    }
-    case "formJoinOurTeam": {
-      const parsedForm = parseFormJoinOurTeam(content as FormJoinOurTeamEntry);
-
-      if (!parsedForm) {
-        return null;
-      }
-
-      return <JoinOurTeam fields={parsedForm} />;
-    }
-    case "form": {
-      const parsedForm = parseContentfulForm(content as FormEntry);
-
-      if (!parsedForm) {
-        return null;
-      }
-
-      return <FormRenderer fields={parsedForm} />;
-    }
-    default: {
+    if (!parsedGrid) {
       return null;
     }
+
+    return (
+      <ContentGrid
+        fields={parsedGrid}
+        locale={locale}
+        searchParams={searchParams}
+      />
+    );
   }
+
+  if (isTypeContentStatBlock(content)) {
+    const parsedStatBlock = parseContentStatBlock(
+      content as ContentStatBlockEntry,
+    );
+
+    if (!parsedStatBlock) {
+      return null;
+    }
+
+    return <Stat stat={parsedStatBlock} />;
+  }
+
+  if (isTypeContentCarousel(content)) {
+    const parsedCarousel = parseContentCarousel(
+      content as ContentCarouselEntry,
+    );
+
+    if (!parsedCarousel) {
+      return null;
+    }
+
+    return <ContentCarouselComponent carousel={parsedCarousel} />;
+  }
+
+  if (isTypeContentCard(content)) {
+    const parsedCard = parseContentCard(content as ContentCardEntry);
+
+    if (!parsedCard) {
+      return null;
+    }
+
+    return <ContentCard card={parsedCard} />;
+  }
+
+  if (isTypeContentCopyMediaBlock(content)) {
+    const parsedCopyMediaBlock = parseContentCopyMediaBlock(
+      content as ContentCopyMediaBlockEntry,
+    );
+
+    if (!parsedCopyMediaBlock) {
+      return null;
+    }
+
+    return <ContentCopyMediaBlock fields={parsedCopyMediaBlock} />;
+  }
+
+  if (isTypeContentImageBlock(content)) {
+    const parsedImageBlock = parseContentImageBlock(
+      content as ContentImageBlockEntry,
+    );
+
+    if (!parsedImageBlock) {
+      return null;
+    }
+
+    return <ContentImageBlock fields={parsedImageBlock} />;
+  }
+
+  if (isTypeContentTestimonial(content)) {
+    const parsedTestimonial = parseContentTestimonial(
+      content as ContentTestimonialEntry,
+    );
+
+    if (!parsedTestimonial) {
+      return null;
+    }
+
+    return <ContentTestimonial testimonial={parsedTestimonial} />;
+  }
+
+  if (isTypeContentRecentNews(content)) {
+    const parsedRecentNews = parseContentRecentNews(
+      content as ContentRecentNewsEntry,
+    );
+
+    if (!parsedRecentNews) {
+      return null;
+    }
+
+    return <ContentRecentNews locale={locale} recentNews={parsedRecentNews} />;
+  }
+
+  if (isTypeFormJoinOurTeam(content)) {
+    const parsedForm = parseFormJoinOurTeam(content as FormJoinOurTeamEntry);
+
+    if (!parsedForm) {
+      return null;
+    }
+
+    return <JoinOurTeam fields={parsedForm} />;
+  }
+
+  if (isTypeForm(content)) {
+    const parsedForm = parseContentfulForm(content as FormEntry);
+
+    if (!parsedForm) {
+      return null;
+    }
+
+    return <FormRenderer fields={parsedForm} />;
+  }
+
+  return null;
 };

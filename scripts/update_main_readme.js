@@ -8,6 +8,7 @@ const { execSync } = require('child_process');
 const MAIN_README_PATH = path.join(__dirname, '..', 'README.md');
 const PROJECT_ROOT = path.join(__dirname, '..');
 const EXCLUDED_DIRS = ['node_modules', '.git', '.next', 'dist', 'build', 'coverage'];
+const EXCLUDED_FROM_MAIN_README = new Set(['docs/handbook/README.md']);
 
 /**
  * Find all README.md files in the project (excluding main README and excluded directories)
@@ -86,6 +87,9 @@ function readMainReadme() {
  * Update main README.md with component documentation links
  */
 function updateMainReadme(readmeFiles) {
+  const linkedReadmes = readmeFiles.filter(
+    (file) => !EXCLUDED_FROM_MAIN_README.has(file.relativePath),
+  );
   const currentContent = readMainReadme();
   
   // Find the end of the current content to append new section
@@ -116,7 +120,7 @@ function updateMainReadme(readmeFiles) {
     const afterDocSection = afterSection.slice(sectionEndIndex);
     
     // Generate documentation links
-    const docLinks = readmeFiles.map(file => {
+    const docLinks = linkedReadmes.map(file => {
       const title = extractTitle(file.path);
       const relativePath = file.relativePath;
       return `- [${title}](${relativePath})`;
@@ -131,7 +135,7 @@ function updateMainReadme(readmeFiles) {
     ].join('\n');
   } else {
     // Add new documentation section at the end
-    const docLinks = readmeFiles.map(file => {
+    const docLinks = linkedReadmes.map(file => {
       const title = extractTitle(file.path);
       const relativePath = file.relativePath;
       return `- [${title}](${relativePath})`;

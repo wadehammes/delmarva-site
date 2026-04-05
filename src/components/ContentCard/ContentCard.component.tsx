@@ -7,7 +7,7 @@ import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentCardType } from "src/contentful/parseContentCard";
 import { useModal } from "src/hooks/useModal";
 import { createCardBackgroundColor } from "src/styles/utils";
-import { createMediaUrl } from "src/utils/helpers";
+import { createMediaUrl } from "src/utils/urlHelpers";
 import styles from "./ContentCard.module.css";
 
 interface ContentCardProps {

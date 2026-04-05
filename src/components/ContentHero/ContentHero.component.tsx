@@ -7,7 +7,8 @@ import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentHero as ContentHeroType } from "src/contentful/parseContentHero";
 import { createBackgroundColor } from "src/styles/utils";
-import { createMediaUrl, isVideoUrl } from "src/utils/helpers";
+import { createMediaUrl } from "src/utils/urlHelpers";
+import { isVideoUrl } from "src/utils/videoUrl.helpers";
 
 interface ContentHeroComponentProps {
   fields: ContentHeroType | null;

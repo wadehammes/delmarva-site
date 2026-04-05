@@ -1,4 +1,4 @@
-import { envUrl } from "src/utils/helpers";
+import { envUrl } from "src/utils/env.helpers";
 
 export const getEmailBaseUrl = () => envUrl();
 

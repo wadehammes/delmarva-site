@@ -9,6 +9,7 @@ import styles from "src/components/Navigation/Navigation.module.css";
 import { usePage } from "src/components/PageLayout/PageProvider";
 import type { NavigationType } from "src/contentful/getNavigation";
 import type { Page } from "src/contentful/getPages";
+import { isTypeContentHero } from "src/contentful/types";
 import { useDOMCleanup, useIsBrowser } from "src/hooks/useIsBrowser";
 import { Link, usePathname } from "src/i18n/routing";
 import Menu from "src/icons/Menu.svg";
@@ -150,7 +151,7 @@ export const Navigation = (props: NavigationProps) => {
 
     const firstContent = currentSection.content[0];
 
-    return firstContent?.sys?.contentType?.sys?.id === "contentHero";
+    return firstContent != null && isTypeContentHero(firstContent);
   };
 
   // Show background if we're not currently on a hero section
