@@ -26,7 +26,9 @@ describe("cached", () => {
     expect(mockCachedFn).toHaveBeenCalledTimes(1);
     const [passedFn, passedKey, options] = mockCachedFn.mock.calls[0];
     expect(passedKey).toEqual(key);
-    expect(options).toMatchObject({ revalidate: expect.any(Number) });
+    expect(options).toMatchObject({
+      revalidate: expect.any(Number),
+    });
     expect(passedFn).toEqual(expect.any(Function));
     expect(fn).toHaveBeenCalled();
   });
@@ -56,10 +58,10 @@ describe("cached", () => {
     expect(options).not.toHaveProperty("tags");
   });
 
-  it("uses custom revalidateSeconds when provided", async () => {
+  it("uses custom revalidate when provided", async () => {
     const key = ["contentful", "test"];
     const fn = jest.fn().mockResolvedValue(undefined);
-    await cached({ fn, key, revalidateSeconds: 60 });
+    await cached({ fn, key, revalidate: 60 });
     const [, , options] = mockCachedFn.mock.calls[0];
     expect(options).toEqual({ revalidate: 60 });
   });

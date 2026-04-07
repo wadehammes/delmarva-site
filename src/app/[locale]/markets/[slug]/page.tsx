@@ -31,7 +31,8 @@ import {
 } from "src/utils/pageHelpers";
 import { generateMarketPageSchemaGraphSafe } from "src/utils/schema";
 
-export const revalidate = 2592000;
+export const revalidate =
+  process.env.ENVIRONMENT === "production" ? false : 60 * 60 * 24;
 
 interface PageParams {
   slug: string;

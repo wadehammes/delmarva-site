@@ -12,7 +12,11 @@ Localized routes live under **`src/app/[locale]/`**. Typical page flow:
 4. **Parallel fetches** with Contentful getters (`fetchPage`, `fetchNavigation`, `fetchFooter`, route-specific data).
 5. Render **PageLayout** and **PageComponent** (which contains **SectionRenderer**) with parsed data.
 
-Use **`export const revalidate = …`** on routes to control ISR-style static caching where set (values vary by page).
+On routes that share the default ISR window, use an **inline** segment config (Next.js cannot resolve imported identifiers for `revalidate`):
+
+`export const revalidate = process.env.ENVIRONMENT === "production" ? false : 60 * 60 * 24`
+
+**`false`** when **`ENVIRONMENT === "production"`** (cache until redeploy / on-demand), else **one day**. **`APP_REVALIDATE`** in [revalidate.ts](../../src/utils/revalidate.ts) matches this for **`cached()`** and other non-route code—keep them in sync. Pages that need different behavior (e.g. **`revalidate = 0`**) set that explicitly.
 
 **Refresh content**: [refresh-content/page.tsx](../../src/app/[locale]/refresh-content/page.tsx) is **`force-dynamic`** and **`noindex`**. In **production**, it **`notFound()`** unless **`searchParams.token`** matches **`REFRESH_CONTENT_ACCESS_TOKEN`**. [DeployPage.component.tsx](../../src/components/DeployPage/DeployPage.component.tsx) triggers **Vercel deploy hooks** (redeploy) to pick up new CMS content—not in-app `revalidatePath`/`revalidateTag`.
 

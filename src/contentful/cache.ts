@@ -1,24 +1,22 @@
 import { unstable_cache } from "next/cache";
-import {
-  CONTENTFUL_CACHE_REVALIDATE_SECONDS,
-  sanitizeForCache,
-} from "src/contentful/cacheUtils";
+import { sanitizeForCache } from "src/contentful/cacheUtils";
+import { APP_REVALIDATE } from "src/utils/revalidate";
 
 interface CachedOptions<T> {
   key: string[];
   fn: () => Promise<T>;
-  revalidateSeconds?: number;
+  revalidate?: number | false;
   tags?: string[];
 }
 
-export function cached<T>({
+export const cached = <T>({
   key,
   fn,
-  revalidateSeconds = CONTENTFUL_CACHE_REVALIDATE_SECONDS,
+  revalidate = APP_REVALIDATE,
   tags,
-}: CachedOptions<T>): Promise<T> {
+}: CachedOptions<T>): Promise<T> => {
   return unstable_cache(() => fn().then(sanitizeForCache), key, {
-    revalidate: revalidateSeconds,
+    revalidate,
     ...(tags?.length ? { tags } : {}),
   })();
-}
+};

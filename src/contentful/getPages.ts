@@ -120,7 +120,7 @@ async function fetchPagesUncached({
   locale = "en",
 }: FetchPagesOptions): Promise<Page[]> {
   const contentful = contentfulClient({ preview });
-  const limit = 10;
+  const limit = 500;
   let total = 0;
   let skip = 0;
   const seenIds = new Set<string>();

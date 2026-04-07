@@ -17,6 +17,7 @@ Each type module exports an **`isType…(entry)`** guard (e.g. **`isTypeContentH
 
 - **Examples**: [getPages.ts](../../src/contentful/getPages.ts) (`fetchPage`, etc.), [getNavigation.ts](../../src/contentful/getNavigation.ts), [getFooter.ts](../../src/contentful/getFooter.ts), [getServices.ts](../../src/contentful/getServices.ts), [getProjects.ts](../../src/contentful/getProjects.ts), [getMarkets.ts](../../src/contentful/getMarkets.ts).
 - **Preview**: Pass `preview: true` when **draft mode** is enabled so unpublished content loads.
+- **Caching**: List-style fetches use **`cached`** ([cache.ts](../../src/contentful/cache.ts)) with **`APP_REVALIDATE`** from [revalidate.ts](../../src/utils/revalidate.ts) (same window as route **`revalidate`**, which must stay an inline expression in page files—see [patterns.md](./patterns.md)). Full page lists in **getPages** paginate with **`limit` 500** per request.
 
 ## Parsers
 

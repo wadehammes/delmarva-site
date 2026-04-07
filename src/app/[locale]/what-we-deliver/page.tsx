@@ -20,7 +20,8 @@ import {
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
 
-export const revalidate = 2592000;
+export const revalidate =
+  process.env.ENVIRONMENT === "production" ? false : 60 * 60 * 24;
 
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
