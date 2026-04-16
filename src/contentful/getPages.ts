@@ -1,6 +1,7 @@
 import { cached } from "src/contentful/cache";
 import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
+import { CONTENTFUL_BATCH_LIMIT } from "src/contentful/contentfulPagination";
 import { type FooterType, parseFooter } from "src/contentful/getFooter";
 import {
   type NavigationType,
@@ -120,7 +121,7 @@ async function fetchPagesUncached({
   locale = "en",
 }: FetchPagesOptions): Promise<Page[]> {
   const contentful = contentfulClient({ preview });
-  const limit = 10;
+  const limit = CONTENTFUL_BATCH_LIMIT;
   let total = 0;
   let skip = 0;
   const seenIds = new Set<string>();

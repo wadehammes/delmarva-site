@@ -2,6 +2,7 @@ import type { Document } from "@contentful/rich-text-types";
 import { cached } from "src/contentful/cache";
 import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
+import { CONTENTFUL_BATCH_LIMIT } from "src/contentful/contentfulPagination";
 import type {
   ContentfulTypeCheck,
   ExtractSymbolType,
@@ -120,7 +121,7 @@ async function fetchServicesUncached({
   locale = "en",
 }: FetchServicesOptions): Promise<ServiceType[]> {
   const contentful = contentfulClient({ preview });
-  const limit = 100;
+  const limit = CONTENTFUL_BATCH_LIMIT;
   let total = 0;
   let skip = 0;
   const seenIds = new Set<string>();
@@ -259,7 +260,7 @@ async function fetchServicePhotosUncached({
   locale = "en",
 }: FetchServicePhotosOptions): Promise<ContentfulAsset[]> {
   const contentful = contentfulClient({ preview });
-  const limit = 100;
+  const limit = CONTENTFUL_BATCH_LIMIT;
   let total = 0;
   let skip = 0;
   const seenIds = new Set<string>();

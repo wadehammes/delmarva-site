@@ -1,6 +1,7 @@
 import { cached } from "src/contentful/cache";
 import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
+import { CONTENTFUL_BATCH_LIMIT } from "src/contentful/contentfulPagination";
 import {
   FALLBACK_PROJECT_MEDIA_ID,
   getContentfulAsset,
@@ -40,7 +41,7 @@ async function fetchMarketsUncached({
   locale = "en",
 }: FetchMarketsOptions): Promise<MarketType[]> {
   const contentful = contentfulClient({ preview });
-  const limit = 100;
+  const limit = CONTENTFUL_BATCH_LIMIT;
   let total = 0;
   let skip = 0;
   const seenIds = new Set<string>();
@@ -149,7 +150,7 @@ async function fetchProjectsByMarketUncached({
     preview,
   });
 
-  const limit = 100;
+  const limit = CONTENTFUL_BATCH_LIMIT;
   let total = 0;
   let skip = 0;
   const seenIds = new Set<string>();
@@ -230,7 +231,7 @@ async function fetchMarketPhotosUncached({
   locale = "en",
 }: FetchMarketPhotosOptions): Promise<ContentfulAsset[]> {
   const contentful = contentfulClient({ preview });
-  const limit = 100;
+  const limit = CONTENTFUL_BATCH_LIMIT;
   let total = 0;
   let skip = 0;
   const seenIds = new Set<string>();
