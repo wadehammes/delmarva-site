@@ -17,6 +17,7 @@ Each type module exports an **`isType…(entry)`** guard (e.g. **`isTypeContentH
 
 - **Examples**: [getPages.ts](../../src/contentful/getPages.ts) (`fetchPage`, etc.), [getNavigation.ts](../../src/contentful/getNavigation.ts), [getFooter.ts](../../src/contentful/getFooter.ts), [getServices.ts](../../src/contentful/getServices.ts), [getProjects.ts](../../src/contentful/getProjects.ts), [getMarkets.ts](../../src/contentful/getMarkets.ts).
 - **Preview**: Pass `preview: true` when **draft mode** is enabled so unpublished content loads.
+- **Pagination**: List fetches use **`CONTENTFUL_BATCH_LIMIT`** (500) from [contentfulPagination.ts](../../src/contentful/contentfulPagination.ts) per `getEntries` page. Single-entry queries keep **`limit: 1`** where appropriate.
 
 ## Parsers
 
