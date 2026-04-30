@@ -19,17 +19,13 @@ export const StyledTextArea = forwardRef(
     const fallbackId = useId();
     const stableId = name ? `textarea-${name}` : fallbackId;
 
-    // Use react-aria with stable ID to prevent hydration mismatches
-    // Only disable the specific ARIA attributes that cause random ID generation
     const { labelProps, inputProps } = useTextField(
       {
         ...restProps,
         "aria-describedby": undefined,
-        // Only disable the ARIA attributes that generate random IDs
-        // Keep other accessibility features intact
-        "aria-labelledby": undefined,
         id: stableId,
         inputElementType: "textarea",
+        label,
       },
       inputRef,
     );

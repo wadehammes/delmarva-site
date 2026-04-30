@@ -100,6 +100,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
         name="name"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledInput
+            aria-label={t("labels.fullName")}
             hasError={errors.name}
             label={`${t("labels.fullName")} *`}
             name={name}
@@ -117,6 +118,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
         name="email"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledInput
+            aria-label={t("labels.email")}
             hasError={errors.email}
             label={`${t("labels.email")} *`}
             name={name}
@@ -137,6 +139,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
         name="phone"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledInput
+            aria-label={t("labels.phone")}
             hasError={errors.phone}
             label={t("labels.phone")}
             name={name}
@@ -154,6 +157,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
         name="message"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledTextArea
+            aria-label={t("labels.message")}
             hasError={errors.message}
             label={t("labels.message")}
             name={name}
@@ -189,6 +193,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
           name="website"
           render={({ field: { onChange, value, name, ref } }) => (
             <input
+              aria-label="Leave this field empty"
               autoComplete="off"
               id="website"
               name={name}

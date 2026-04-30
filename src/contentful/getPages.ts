@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { cached } from "src/contentful/cache";
 import { cacheKeys } from "src/contentful/cacheKeys";
 import { contentfulClient } from "src/contentful/client";
@@ -158,15 +159,17 @@ async function fetchPagesUncached({
   return allPages;
 }
 
-export async function fetchPages(opts: FetchPagesOptions): Promise<Page[]> {
-  const locale = opts.locale ?? "en";
-  const { key, tags } = cacheKeys.pages(locale, opts.preview);
-  return cached({
-    fn: () => fetchPagesUncached({ locale, preview: opts.preview }),
-    key,
-    tags,
-  });
-}
+export const fetchPages = cache(
+  async (opts: FetchPagesOptions): Promise<Page[]> => {
+    const locale = opts.locale ?? "en";
+    const { key, tags } = cacheKeys.pages(locale, opts.preview);
+    return cached({
+      fn: () => fetchPagesUncached({ locale, preview: opts.preview }),
+      key,
+      tags,
+    });
+  },
+);
 
 // A function to fetch a single page by its slug.
 // Optionally uses the Contentful content preview.
@@ -192,17 +195,19 @@ async function fetchPageUncached({
   return parseContentfulPage(pagesResult.items[0]);
 }
 
-export async function fetchPage(opts: FetchPageOptions): Promise<Page | null> {
-  const locale = opts.locale ?? "en";
-  const { key, tags } = cacheKeys.page(opts.slug, locale, opts.preview);
-  return cached({
-    fn: () =>
-      fetchPageUncached({
-        locale,
-        preview: opts.preview,
-        slug: opts.slug,
-      }),
-    key,
-    tags,
-  });
-}
+export const fetchPage = cache(
+  async (opts: FetchPageOptions): Promise<Page | null> => {
+    const locale = opts.locale ?? "en";
+    const { key, tags } = cacheKeys.page(opts.slug, locale, opts.preview);
+    return cached({
+      fn: () =>
+        fetchPageUncached({
+          locale,
+          preview: opts.preview,
+          slug: opts.slug,
+        }),
+      key,
+      tags,
+    });
+  },
+);
