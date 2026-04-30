@@ -104,6 +104,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         name="companyName"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledInput
+            aria-label={t("labels.companyName")}
             hasError={errors.companyName}
             label={`${t("labels.companyName")} *`}
             name={name}
@@ -121,6 +122,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         name="name"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledInput
+            aria-label={t("labels.fullName")}
             hasError={errors.name}
             label={`${t("labels.fullName")} *`}
             name={name}
@@ -138,6 +140,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         name="email"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledInput
+            aria-label={t("labels.email")}
             hasError={errors.email}
             label={`${t("labels.email")} *`}
             name={name}
@@ -158,6 +161,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         name="phone"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledInput
+            aria-label={t("labels.phone")}
             hasError={errors.phone}
             label={t("labels.phone")}
             name={name}
@@ -175,6 +179,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         name="projectDetails"
         render={({ field: { onChange, value, name, ref } }) => (
           <StyledTextArea
+            aria-label={t("labels.projectDetails")}
             hasError={errors.projectDetails}
             label={t("labels.projectDetails")}
             name={name}
@@ -209,6 +214,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
           name="website"
           render={({ field: { onChange, value, name, ref } }) => (
             <input
+              aria-label="Leave this field empty"
               autoComplete="off"
               id="website"
               name={name}
