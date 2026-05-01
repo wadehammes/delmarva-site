@@ -73,11 +73,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
   if (useNativeVideo) {
     return (
       <div className={clsx(styles.container)} data-video-player>
-        <div
-          className={clsx(styles.player, {
-            [styles.rounded]: rounded,
-          })}
-        >
+        <div className={styles.player}>
           <video
             autoPlay={shouldPlay}
             controls={controls}
@@ -113,11 +109,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
 
     return (
       <div className={clsx(styles.container)} data-video-player>
-        <div
-          className={clsx(styles.player, {
-            [styles.rounded]: rounded,
-          })}
-        >
+        <div className={styles.player}>
           <iframe
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -136,11 +128,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
 
   return (
     <div className={clsx(styles.container)} data-video-player>
-      <div
-        className={clsx(styles.player, {
-          [styles.rounded]: rounded,
-        })}
-      >
+      <div className={styles.player}>
         <video
           controls={controls}
           loop
