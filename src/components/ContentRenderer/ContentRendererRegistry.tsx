@@ -57,6 +57,14 @@ export const ContentImageBlock = dynamic(
   { ssr: true },
 );
 
+export const ContentVideoBlock = dynamic(
+  () =>
+    import("src/components/ContentVideoBlock/ContentVideoBlock.component").then(
+      (m) => ({ default: m.ContentVideoBlock }),
+    ),
+  { ssr: true },
+);
+
 export const ContentMarquee = dynamic(
   () =>
     import("src/components/ContentMarquee/ContentMarquee.component").then(

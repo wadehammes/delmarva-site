@@ -13,6 +13,7 @@ import {
   ContentMarquee,
   ContentRecentNews,
   ContentTestimonial,
+  ContentVideoBlock,
   FormRenderer,
   JoinOurTeam,
   Stat,
@@ -59,6 +60,10 @@ import {
   type ContentTestimonialEntry,
   parseContentTestimonial,
 } from "src/contentful/parseContentTestimonial";
+import {
+  type ContentVideoBlockEntry,
+  parseContentfulVideoBlock,
+} from "src/contentful/parseContentVideoBlock";
 import type { CopyBlockEntry } from "src/contentful/parseCopyBlock";
 import { parseCopyBlock } from "src/contentful/parseCopyBlock";
 import type { FormEntry } from "src/contentful/parseForm";
@@ -81,6 +86,7 @@ import {
   isTypeContentRecentNews,
   isTypeContentStatBlock,
   isTypeContentTestimonial,
+  isTypeContentVideoBlock,
   isTypeCopyBlock,
   isTypeForm,
   isTypeFormJoinOurTeam,
@@ -242,6 +248,18 @@ export const ContentRenderer = (props: ContentRendererProps) => {
     }
 
     return <ContentImageBlock fields={parsedImageBlock} />;
+  }
+
+  if (isTypeContentVideoBlock(content)) {
+    const parsedVideoBlock = parseContentfulVideoBlock(
+      content as ContentVideoBlockEntry,
+    );
+
+    if (!parsedVideoBlock) {
+      return null;
+    }
+
+    return <ContentVideoBlock fields={parsedVideoBlock} />;
   }
 
   if (isTypeContentTestimonial(content)) {

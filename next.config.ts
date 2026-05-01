@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import type { RuleSetRule } from "webpack";
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -63,16 +64,6 @@ const nextConfig: NextConfig = withNextIntl({
             ...securityHeaders,
           ],
           source: "/:path*",
-        },
-        // Static assets caching
-        {
-          headers: [
-            {
-              key: "Cache-Control",
-              value: "public, max-age=31536000, immutable",
-            },
-          ],
-          source: "/_next/static/(.*)",
         },
         {
           headers: [
@@ -185,8 +176,9 @@ const nextConfig: NextConfig = withNextIntl({
         config.resolve.symlinks = true;
       }
 
-      const fileLoaderRule = config.module.rules.find((rule) =>
-        rule.test?.test?.(".svg"),
+      const fileLoaderRule = config.module.rules.find(
+        (rule: RuleSetRule) =>
+          rule.test instanceof RegExp && rule.test.test(".svg"),
       );
 
       if (fileLoaderRule) {
