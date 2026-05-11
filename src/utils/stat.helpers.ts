@@ -1,4 +1,4 @@
-import { formatNumber, type NumberFormatType } from "./numberHelpers";
+import { formatNumber, type NumberFormatType } from "src/utils/numberHelpers";
 
 export type { NumberFormatType };
 
@@ -8,9 +8,6 @@ export interface ParsedValue {
   numDigits: number;
 }
 
-/**
- * Parse formatted value to extract numeric part, suffix, and digit count
- */
 export const parseFormattedValue = (
   value: number,
   type: NumberFormatType,
@@ -45,9 +42,6 @@ export const parseFormattedValue = (
   };
 };
 
-/**
- * Generate initial value with proper padding to match final width
- */
 export const getInitialValue = (
   value: number,
   type: NumberFormatType,
@@ -73,9 +67,6 @@ export const getInitialValue = (
   return formattedValue.replace(/\d/g, "0");
 };
 
-/**
- * Format animated value with proper padding and suffix
- */
 export const formatAnimatedValue = (
   decorator: "None" | "Plus Sign",
   currentValue: number,
@@ -96,4 +87,41 @@ export const formatAnimatedValue = (
   }
 
   return paddedValue;
+};
+
+export type TickerSegment =
+  | { kind: "digit"; digitValue: number; digitIndex: number }
+  | { kind: "static"; char: string };
+
+export const parseTickerSegments = (
+  decorator: "None" | "Plus Sign",
+  numericValue: number,
+  numDigits: number,
+  suffix: string,
+  type: NumberFormatType,
+): TickerSegment[] => {
+  const segments: TickerSegment[] = [];
+
+  if (type === "Currency") {
+    segments.push({ char: "$", kind: "static" });
+  }
+
+  const paddedStr = numericValue.toString().padStart(numDigits, "0");
+  paddedStr.split("").forEach((ch, i) => {
+    segments.push({
+      digitIndex: i,
+      digitValue: Number.parseInt(ch, 10),
+      kind: "digit",
+    });
+  });
+
+  for (const ch of suffix) {
+    segments.push({ char: ch, kind: "static" });
+  }
+
+  if (decorator === "Plus Sign") {
+    segments.push({ char: "+", kind: "static" });
+  }
+
+  return segments;
 };

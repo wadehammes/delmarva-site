@@ -70,3 +70,41 @@
     }
   }
 }
+
+.ticker {
+  display: inline-flex;
+  align-items: flex-end;
+  line-height: inherit;
+}
+
+.tickerStatic {
+  display: inline-block;
+}
+
+.digitSlot {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.digitStrip {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
+  transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.digitCell {
+  display: block;
+  height: 1em;
+  line-height: 1;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .digitStrip {
+    transition: none;
+  }
+}

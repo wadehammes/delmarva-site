@@ -12,3 +12,5 @@ Align with those docs.
 **Keep the handbook in sync:** If your change affects how the app works, how to run or deploy it, or how humans/agents should implement features (stack, Contentful, components, CI, env, integrations, etc.), update the matching **`docs/handbook/*.md`** in the same change when reasonable—or in an immediate follow-up—so the handbook stays the source of truth.
 
 **Narrow** edits (typos, single obvious lines) that do not change behavior or documented expectations do not require reading the full handbook first.
+
+**Comments:** Only comment non-obvious behavior, workarounds, or domain rules. Never restate what the code shows: no JSDoc on self-evident functions, no inline explanations of standard CSS/JS features, no section-header banners.

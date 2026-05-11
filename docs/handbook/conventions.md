@@ -55,6 +55,12 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 
 Add comments only for non-obvious behavior, workarounds, or domain rules. Prefer clear names and small functions.
 
+**Never** add comments that restate what the code already shows. Specifically:
+- No JSDoc/block comments on functions or components whose name and types make the purpose obvious.
+- No inline comments explaining standard language features, CSS properties, or library APIs.
+- No section-header banners or decorative dividers.
+- No prose restating what a property value or expression already says (e.g. `/* hides overflow */` above `overflow: hidden`).
+
 ## React Query
 
 - Keep **`useMutation`** in dedicated files under **`src/hooks/mutations/`** rather than inlined in large components. **Mutation hooks** should stay thin: wire **`useMutation`** to **`api`** methods from [src/api/urls.ts](../../src/api/urls.ts). Handle side effects (toasts, navigation) at the call site when possible.
