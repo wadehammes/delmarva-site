@@ -1,37 +1,24 @@
 import { screen } from "src/tests/testUtils";
 import { StatPO } from "./Stat.po";
 
-// Mock GSAP to avoid issues in test environment
-jest.mock("gsap", () => ({
-  gsap: {
-    registerPlugin: jest.fn(),
-    timeline: jest.fn(() => ({
-      kill: jest.fn(),
-      to: jest.fn().mockReturnThis(),
-    })),
-  },
-}));
-
-jest.mock("gsap/ScrollTrigger", () => ({
-  ScrollTrigger: {},
-}));
+// The Stat component no longer uses GSAP — it drives animation via CSS
+// transform transitions triggered by requestAnimationFrame. No mock needed.
 
 describe("Stat", () => {
   let po: StatPO;
 
   beforeEach(() => {
-    jest.clearAllMocks();
     po = new StatPO();
   });
 
-  it("renders with initial value of 0K for numerical (1000)", () => {
+  it("renders the correct accessible label for numerical (1000 → 1K)", () => {
     po.render();
 
-    expect(screen.getByText("0K")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "1K" })).toBeInTheDocument();
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
-  it("renders with initial value of $0K for currency (1000)", () => {
+  it("renders the correct accessible label for currency (1000 → $1K)", () => {
     po.render({
       stat: {
         id: "stat-currency",
@@ -41,11 +28,11 @@ describe("Stat", () => {
       },
     });
 
-    expect(screen.getByText("$0K")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "$1K" })).toBeInTheDocument();
     expect(screen.getByText("Revenue")).toBeInTheDocument();
   });
 
-  it("renders with initial value of 0% for percentage (95)", () => {
+  it("renders the correct accessible label for percentage (95 → 95%)", () => {
     po.render({
       stat: {
         id: "stat-pct",
@@ -55,11 +42,11 @@ describe("Stat", () => {
       },
     });
 
-    expect(screen.getByText("0%")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "95%" })).toBeInTheDocument();
     expect(screen.getByText("Success rate")).toBeInTheDocument();
   });
 
-  it("renders with initial value of 0 for single digit numerical (7)", () => {
+  it("renders the correct accessible label for single-digit numerical (7)", () => {
     po.render({
       stat: {
         id: "stat-7",
@@ -69,11 +56,11 @@ describe("Stat", () => {
       },
     });
 
-    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "7" })).toBeInTheDocument();
     expect(screen.getByText("Count")).toBeInTheDocument();
   });
 
-  it("renders with initial value of 0M for large numerical (7000000)", () => {
+  it("renders the correct accessible label for large numerical (7000000 → 7M)", () => {
     po.render({
       stat: {
         id: "stat-m",
@@ -83,11 +70,11 @@ describe("Stat", () => {
       },
     });
 
-    expect(screen.getByText("0M")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "7M" })).toBeInTheDocument();
     expect(screen.getByText("Users")).toBeInTheDocument();
   });
 
-  it("renders with initial value of 00 for small numerical (15)", () => {
+  it("renders the correct accessible label for two-digit numerical (15)", () => {
     po.render({
       stat: {
         id: "stat-15",
@@ -97,14 +84,16 @@ describe("Stat", () => {
       },
     });
 
-    expect(screen.getByText("00")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "15" })).toBeInTheDocument();
     expect(screen.getByText("Items")).toBeInTheDocument();
   });
 
-  it("applies custom className", () => {
+  it("applies custom className to the stat container", () => {
     po.render({ className: "custom-class" });
 
-    const statElement = screen.getByText("0K").closest("div");
-    expect(statElement).toHaveClass("custom-class");
+    const statContainer = screen
+      .getByRole("img", { name: "1K" })
+      .closest("div");
+    expect(statContainer).toHaveClass("custom-class");
   });
 });
