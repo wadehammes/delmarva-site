@@ -1,0 +1,31 @@
+# Add 'javascript` label to any change in the src folder
+javascript:
+  - src/**/*
+  - scripts/**/*
+  - public/**/*
+  - .tool-versions
+  - docs/**/*
+  - AGENTS.md
+
+documentation:
+  - docs/**/*
+  - AGENTS.md
+  - README.md
+
+configuration:
+  - next.config.js
+  - next-env.d.ts
+  - postcss.config.js
+  - biome.json
+  - jest.config.js
+  - tsconfig.json
+  - vercel.json
+  - i18next.config.js
+  - .browserslistrc
+
+# Add `dependencies` label to any changes to package.json or pnpm-lock.yaml
+dependencies:
+  - .tool-versions
+  - package.json
+  - pnpm-lock.yaml
+  - pnpm-workspace.yaml
