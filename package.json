@@ -1,7 +1,7 @@
 {
 	"name": "delmarva-site",
 	"version": "0.0.0",
-	"packageManager": "pnpm@10.33.1",
+	"packageManager": "pnpm@10.33.3",
 	"private": true,
 	"pnpm": {
 		"overrides": {
@@ -39,7 +39,7 @@
 		"jotai": "^2.20.0",
 		"mapbox-gl": "^3.23.1",
 		"next": "^16.2.6",
-		"next-intl": "^4.11.2",
+		"next-intl": "^4.12.0",
 		"react": "^19.2.6",
 		"react-aria": "^3.48.0",
 		"react-dom": "^19.2.6",
@@ -63,7 +63,7 @@
 		"@testing-library/react": "^16.3.2",
 		"@testing-library/user-event": "^14.6.1",
 		"@types/jest": "^30.0.0",
-		"@types/node": "^25.6.2",
+		"@types/node": "^25.7.0",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@types/react-google-recaptcha": "^2.1.9",
@@ -74,7 +74,7 @@
 		"jest-environment-jsdom": "^30.4.1",
 		"jest-mock": "^30.4.1",
 		"postcss-flexbugs-fixes": "^5.0.2",
-		"postcss-preset-env": "^11.2.1",
+		"postcss-preset-env": "^11.3.0",
 		"react-is": "^19.2.6",
 		"ts-jest": "^29.4.9",
 		"ts-node": "^10.9.2",
