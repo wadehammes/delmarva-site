@@ -33,7 +33,8 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 
 - **CSS Modules** next to components (`*.module.css`).
 - **Mobile-first**: base styles for small screens; use `min-width` media queries for larger breakpoints.
-- **Alphabetize** properties within a rule where practical; **nest** selectors (`&:hover`, `& .child`) without excessive depth.
+- **Nest** selectors and media queries inside their parent rule (`&:hover`, `@media (min-width: …)`) rather than repeating the selector at the top level. Keep nesting depth reasonable.
+- **Alphabetize** properties within a rule where practical.
 - Prefer **flex/grid `gap`** over `margin-top` for spacing between siblings when layout allows.
 - Use **design tokens** from global CSS variables where the codebase already does (see existing modules and [src/styles/](../../src/styles/)).
 

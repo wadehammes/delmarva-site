@@ -1,8 +1,9 @@
 "use client";
 
 import clsx from "clsx";
-import { Children, useId } from "react";
+import { Children, useId, useState } from "react";
 import styles from "src/components/Carousel/Carousel.module.css";
+import { Skeleton } from "src/components/Skeleton/Skeleton.component";
 import type { Swiper as SwiperType } from "swiper";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, type SwiperProps, SwiperSlide } from "swiper/react";
@@ -14,6 +15,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
 export interface CarouselProps {
+  showSkeleton?: boolean;
   children: React.ReactNode;
   className?: string;
   slideClassName?: string;
@@ -57,7 +59,10 @@ export const Carousel = (props: CarouselProps) => {
     onSlideChange,
     onSwiper,
     animation = "slide",
+    showSkeleton = false,
   } = props;
+
+  const [isReady, setIsReady] = useState(!showSkeleton);
 
   const carouselId = useId();
   const navigationPrevId = `${carouselId}-nav-prev`;
@@ -110,6 +115,16 @@ export const Carousel = (props: CarouselProps) => {
         className,
       )}
     >
+      {showSkeleton && (
+        <div
+          aria-hidden
+          className={styles.skeleton}
+          data-ready={isReady}
+          role="presentation"
+        >
+          <Skeleton className={styles.skeletonMedia} variant="media" />
+        </div>
+      )}
       <Swiper
         autoplay={
           autoplay
@@ -139,8 +154,10 @@ export const Carousel = (props: CarouselProps) => {
         onSlideChange={onSlideChange}
         onSwiper={(swiperInstance) => {
           onSwiper?.(swiperInstance);
-          // Ensure measurements are correct after layout settles
-          requestAnimationFrame(() => swiperInstance.update());
+          requestAnimationFrame(() => {
+            swiperInstance.update();
+            if (showSkeleton) setIsReady(true);
+          });
         }}
         pagination={paginationOptions}
         slidesPerView={animation === "fade" ? 1 : slidesPerView}

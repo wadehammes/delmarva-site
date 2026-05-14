@@ -32,6 +32,7 @@ A lightweight and flexible carousel component built with Swiper library, featuri
 | `breakpoints` | `Record<number, Partial<SwiperProps>>` | Optional | Responsive breakpoints configuration |
 | `onSlideChange` | `(swiper: SwiperType) => void` | Optional | Callback when slide changes |
 | `onSwiper` | `(swiper: SwiperType) => void` | Optional | Callback when Swiper instance is created |
+| `showSkeleton` | `boolean` | `false` | Show a shimmer skeleton overlay until Swiper initialises |
 
 ## Content Containment
 
@@ -211,4 +212,4 @@ The component uses CSS custom properties for easy theming:
 - Lazy loading support through Swiper's built-in lazy loading
 - Efficient re-rendering with React hooks
 - Minimal bundle size with selective Swiper module imports
-- Skeleton loading state prevents layout shift during SSR 
+- Skeleton loading state prevents layout shift during SSR
