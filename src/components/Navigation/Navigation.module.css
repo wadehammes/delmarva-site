@@ -21,13 +21,13 @@
   }
 
   &.transparent {
-    background-color: rgba(0, 0, 0, 0.075);
+    background-color: rgb(0 0 0 / 7.5%);
     border: none;
     backdrop-filter: blur(15px);
   }
 
   &.withBackground {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgb(0 0 0 / 25%);
     border: none;
     backdrop-filter: blur(15px);
   }
@@ -43,27 +43,24 @@
   margin: 0;
   list-style: none;
 
-  @media screen and (min-width: 1100px) {
+  @media screen and (width >= 1100px) {
     display: flex;
-  }
-}
-
-.navItem {
-  text-decoration: none;
-
-  &.active {
-    color: var(--colors-red);
   }
 }
 
 .navItem {
   display: flex;
   align-items: center;
+  text-decoration: none;
+
+  &.active {
+    color: var(--colors-red);
+  }
 
   > a {
-    padding: 0 0 0.5rem 0;
+    padding: 0 0 0.5rem;
     font-size: 0.875rem;
-    color: var(--colors-text);
+    color: var(--color-text);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     text-decoration: none;
@@ -73,7 +70,7 @@
 
     &:hover,
     &.active {
-      color: var(--colors-text);
+      color: var(--color-text);
       border-bottom-color: var(--colors-red);
     }
   }
@@ -91,7 +88,7 @@
     height: auto;
   }
 
-  @media screen and (min-width: 1100px) {
+  @media screen and (width >= 1100px) {
     flex: 1;
     justify-content: center;
   }
@@ -103,7 +100,7 @@
   align-items: center;
   justify-content: flex-end;
 
-  @media screen and (min-width: 1100px) {
+  @media screen and (width >= 1100px) {
     display: flex;
   }
 }
@@ -120,7 +117,7 @@
 
   > a {
     line-height: 1.25;
-    color: var(--colors-text);
+    color: var(--color-text);
     text-decoration: none;
 
     &:hover {
@@ -131,14 +128,14 @@
   .mobileNavCta,
   .mobileNavCta:hover,
   .mobileNavCta:focus {
-    color: var(--colors-text);
+    color: var(--color-text);
   }
 }
 
 .desktopNavigation {
   display: none;
 
-  @media screen and (min-width: 1100px) {
+  @media screen and (width >= 1100px) {
     display: flex;
     flex: 1;
   }
@@ -146,6 +143,7 @@
 
 .mobileNav {
   --dot-bg: var(--color-bg);
+
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -158,9 +156,9 @@
   height: 100vh;
   padding: 2rem;
   font-size: 3rem;
-  color: var(--colors-text);
+  color: var(--color-text);
 
-  @media (min-width: 1100px) {
+  @media (width >= 1100px) {
     display: none;
   }
 
@@ -196,7 +194,7 @@
   flex: 1;
   justify-content: flex-end;
 
-  @media screen and (min-width: 1100px) {
+  @media screen and (width >= 1100px) {
     display: none;
   }
 }
@@ -205,7 +203,7 @@
   display: block;
   padding: 0;
   margin: 0;
-  color: var(--colors-text);
+  color: var(--color-text);
   appearance: none;
   cursor: pointer;
   background: none;
@@ -228,7 +226,7 @@
 }
 
 .withBackground .mobileNavToggle {
-  color: var(--colors-text);
+  color: var(--color-text);
 
   &:hover > .menu {
     color: var(--colors-red);
@@ -240,7 +238,7 @@
   top: 1.45rem;
   left: 2.45rem;
   display: block;
-  color: var(--colors-text);
+  color: var(--color-text);
 
   > svg {
     width: 10rem;

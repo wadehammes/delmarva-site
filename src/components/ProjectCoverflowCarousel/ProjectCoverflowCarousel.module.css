@@ -1,30 +1,31 @@
 .projectCoverflowCarousel {
   --project-carousel-gap: 1rem;
-  --project-carousel-navigation-bg: rgba(255, 255, 255, 0.9);
+  --project-carousel-navigation-bg: rgb(255 255 255 / 90%);
   --project-carousel-navigation-color: var(--color-text, #1f1d1d);
-  --project-carousel-navigation-hover-bg: rgba(255, 255, 255, 1);
+  --project-carousel-navigation-hover-bg: rgb(255 255 255 / 100%);
   --project-carousel-navigation-size: 2rem;
   --project-carousel-pagination-bullet-active-color: var(--colors-red, #e01e2d);
-  --project-carousel-pagination-bullet-color: var(--colors-white, #ffffff);
+  --project-carousel-pagination-bullet-color: var(--colors-white, #fff);
   --project-carousel-pagination-bullet-size: 0.25rem;
   --project-carousel-slide-height: 420px;
+
   position: relative;
   display: flex;
   flex-direction: column;
-
   align-items: center;
   width: 100%;
   max-width: 100%;
   overflow: hidden;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     --project-carousel-gap: 1.5rem;
     --project-carousel-navigation-size: 2.5rem;
     --project-carousel-slide-height: 480px;
+
     max-width: 600px;
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     max-width: 800px;
   }
 }
@@ -70,18 +71,6 @@
     min-height: 0;
   }
 
-  &:global(.swiper-slide-visible) {
-    z-index: 1;
-    opacity: 0.7;
-    filter: grayscale(100%);
-    transition: all 0.3s ease;
-  }
-
-  &:global(.swiper-slide-visible):hover {
-    opacity: 1;
-    filter: grayscale(0);
-  }
-
   &:global(.swiper-slide-active),
   &:global(.swiper-slide-fully-visible) {
     z-index: 2;
@@ -102,17 +91,29 @@
     transform: translateX(-10%) scale(0.9);
   }
 
-  @media (min-width: 768px) {
+  &:global(.swiper-slide-visible) {
+    z-index: 1;
+    opacity: 0.7;
+    filter: grayscale(100%);
+    transition: all 0.3s ease;
+  }
+
+  &:global(.swiper-slide-visible):hover {
+    opacity: 1;
+    filter: grayscale(0);
+  }
+
+  @media (width >= 768px) {
     width: calc(100vw - 4rem) !important;
     max-width: 350px;
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     width: calc(100vw - 6rem) !important;
     max-width: 390px;
   }
 
-  @media (min-width: 1200px) {
+  @media (width >= 1200px) {
     width: 390px !important;
   }
 }
@@ -129,11 +130,11 @@
   margin: 1rem auto 0;
   pointer-events: auto;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     max-width: 350px;
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     max-width: 390px;
   }
 }

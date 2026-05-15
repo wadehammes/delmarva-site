@@ -1,0 +1,82 @@
+:root {
+  /* Colors */
+  --colors-black: #1f1d1d;
+  --colors-gray: #aaa;
+  --colors-silver: #ddd;
+  --colors-white: #fff;
+  --colors-red: #e01e2d;
+  --colors-lightgray: #f0f0f0;
+  --colors-orange: #f60;
+
+  /* Semantic color tokens (default: dark) */
+  --color-text: var(--colors-white);
+  --color-bg: var(--colors-black);
+  --color-white-bg: var(--colors-white);
+  --card-bg: color-mix(in sRGB, var(--colors-black) 95%, var(--colors-white));
+  --divider: rgb(255 255 255 / 15%);
+
+  /* Spacing */
+  --default-padding: 2rem;
+  --gap: 2rem;
+  --gap-md: var(--gap, 2rem);
+  --gap-lg: var(--gap-md, var(--gap, 2rem));
+  --padding-less: 1rem;
+  --padding-more: 6rem;
+  --padding-no: 0;
+  --padding-no-bottom: 0;
+  --padding-no-top: 0;
+  --padding-regular: 2rem;
+
+  /* Layout */
+  --container-width: 1440px;
+
+  /* Grid */
+  --grid-columns: 24;
+  --grid-gap: 0;
+  --grid-padding: 2rem;
+
+  /* Typography */
+  --font-family-body:
+    europa, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  --font-family-heading:
+    stolzl, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  --font-family-numbers:
+    regulator-nova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  /* Component API props — set initial here so the linter knows they exist;
+     callers override them via inline style or a parent selector */
+  --dot-bg: initial;
+  --image-max-width: initial;
+  --image-max-width-mobile: initial;
+  --desktop-columns: initial;
+
+  /* Viewport height — updated by JS for iOS browser chrome handling */
+  --vh: 1vh;
+
+  @media (width >= 600px) {
+    --padding-more: 8rem;
+    --padding-regular: 4rem;
+  }
+
+  @media (width >= 900px) {
+    --grid-padding: 0;
+  }
+}
+
+/* Theme overrides — controlled by usePreferredTheme hook */
+[data-theme="light"] {
+  --divider: rgb(0 0 0 / 15%);
+  --color-bg: var(--colors-white);
+  --color-text: var(--colors-black);
+  --card-bg: color-mix(in sRGB, var(--colors-white) 80%, var(--colors-black));
+}
+
+[data-theme="dark"] {
+  --divider: rgb(255 255 255 / 15%);
+  --color-bg: var(--colors-black);
+  --color-text: var(--colors-white);
+  --card-bg: color-mix(in sRGB, var(--colors-black) 92%, var(--colors-white));
+}

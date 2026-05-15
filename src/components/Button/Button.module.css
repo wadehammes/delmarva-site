@@ -7,7 +7,7 @@
   padding: 1rem 1.75rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--colors-text);
+  color: var(--color-text);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -33,23 +33,23 @@
   }
 
   &.outline {
-    color: var(--colors-text);
+    color: var(--color-text);
     background-color: transparent;
-    border-color: var(--colors-text);
+    border-color: var(--color-text);
 
     &:hover {
-      color: var(--colors-text);
+      color: var(--color-text);
       background-color: var(--colors-black);
     }
   }
 
   &.secondary {
-    color: var(--colors-text);
+    color: var(--color-text);
     background-color: var(--color-bg);
     border-color: var(--colors-red);
 
     &:hover {
-      color: var(--colors-text);
+      color: var(--color-text);
       background-color: var(--colors-red);
     }
   }

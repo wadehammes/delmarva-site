@@ -21,7 +21,7 @@
   width: 100%;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .formSubmitContainer {
     flex-flow: row nowrap;
     justify-content: space-between;

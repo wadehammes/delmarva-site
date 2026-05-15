@@ -37,6 +37,7 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 - **Alphabetize** properties within a rule where practical.
 - Prefer **flex/grid `gap`** over `margin-top` for spacing between siblings when layout allows.
 - Use **design tokens** from global CSS variables where the codebase already does (see existing modules and [src/styles/](../../src/styles/)).
+- All custom properties (`--*`) live in **[`src/styles/variables.css`](../../src/styles/variables.css)** — the single source of truth for design tokens, spacing, grid, and font stacks. Theme overrides (`[data-theme]`) also live there. Do not redeclare custom properties in `globals.css`; `@import "./variables.css"` pulls them in at the top.
 
 ## Testing
 

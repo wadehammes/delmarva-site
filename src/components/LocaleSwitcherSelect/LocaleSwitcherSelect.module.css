@@ -52,7 +52,7 @@
   &:focus-within {
     border-color: var(--color-text);
 
-    @media (prefers-contrast: high) {
+    @media (prefers-contrast: more) {
       border-width: 3px;
     }
   }

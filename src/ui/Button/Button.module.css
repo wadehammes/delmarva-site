@@ -6,7 +6,7 @@
   border: 0;
 
   &:focus {
-    outline-color: 0;
+    outline-color: transparent;
   }
 
   &:hover {

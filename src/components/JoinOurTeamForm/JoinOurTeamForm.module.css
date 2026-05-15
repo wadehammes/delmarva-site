@@ -3,11 +3,11 @@
   gap: 2rem;
   container-type: inline-size;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (width >= 768px) {
     grid-template-columns: 1fr 1fr;
   }
 
-  @media screen and (min-width: 900px) {
+  @media screen and (width >= 900px) {
     grid-template-columns: 40fr 60fr;
     gap: 4rem;
   }
@@ -29,7 +29,7 @@
   gap: 2rem 1rem;
   width: 100%;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (width >= 768px) {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -50,11 +50,11 @@
     line-height: 1.25;
     color: var(--colors-white);
     text-align: left;
+  }
 
-    &:has(+ .fieldDescription[data-required="true"])::after {
-      color: var(--colors-red);
-      content: " *";
-    }
+  .label:has(+ .fieldDescription[data-required="true"])::after {
+    color: var(--colors-red);
+    content: " *";
   }
 
   .fieldDescription {
@@ -83,22 +83,22 @@
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: color-mix(in srgb, var(--colors-gray) 5%, white);
+    background-color: color-mix(in sRGB, var(--colors-gray) 5%, white);
     border-color: var(--colors-gray);
   }
 
   &:focus-within:not(.selectHasError) {
     color: var(--colors-black);
     outline: 0;
-    background-color: color-mix(in srgb, var(--colors-gray) 25%, white);
+    background-color: color-mix(in sRGB, var(--colors-gray) 25%, white);
     border-color: var(--colors-gray);
   }
 
   &.selectHasError {
-    background-color: color-mix(in srgb, var(--colors-red) 20%, white);
+    background-color: color-mix(in sRGB, var(--colors-red) 20%, white);
     border-color: var(--colors-red);
     box-shadow:
-      inset 0 1px 2px rgba(0, 0, 0, 0.25),
+      inset 0 1px 2px rgb(0 0 0 / 25%),
       0 -1px 1px var(--colors-red),
       0 1px 0 var(--colors-red);
   }
@@ -181,15 +181,15 @@
   &:focus-within:not(.fileInputHasError) {
     color: var(--colors-black);
     outline: 0;
-    background-color: color-mix(in srgb, var(--colors-gray) 25%, white);
+    background-color: color-mix(in sRGB, var(--colors-gray) 25%, white);
     border-color: var(--colors-gray);
   }
 
   &.fileInputHasError {
-    background-color: color-mix(in srgb, var(--colors-red) 20%, white);
+    background-color: color-mix(in sRGB, var(--colors-red) 20%, white);
     border-color: var(--colors-red);
     box-shadow:
-      inset 0 1px 2px rgba(0, 0, 0, 0.25),
+      inset 0 1px 2px rgb(0 0 0 / 25%),
       0 -1px 1px var(--colors-red),
       0 1px 0 var(--colors-red);
   }
@@ -223,17 +223,17 @@
       background-color: var(--colors-red);
       border: none;
       border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
       transition: all 0.2s ease-in-out;
 
       &:active {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
         transform: translateY(0);
       }
 
       &:hover {
-        background-color: color-mix(in srgb, var(--colors-red) 80%, black);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        background-color: color-mix(in sRGB, var(--colors-red) 80%, black);
+        box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
         transform: translateY(-1px);
       }
     }
@@ -249,17 +249,17 @@
       background-color: var(--colors-red);
       border: none;
       border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
       transition: all 0.2s ease-in-out;
 
       &:active {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
         transform: translateY(0);
       }
 
       &:hover {
-        background-color: color-mix(in srgb, var(--colors-red) 80%, black);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        background-color: color-mix(in sRGB, var(--colors-red) 80%, black);
+        box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
         transform: translateY(-1px);
       }
     }
@@ -282,7 +282,7 @@
   gap: 1rem;
   width: 100%;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (width >= 768px) {
     grid-template-columns: 2fr 1fr 1fr;
   }
 }
@@ -309,7 +309,7 @@
     transition: all 0.2s ease-in-out;
 
     &:hover {
-      background-color: color-mix(in srgb, var(--colors-red) 10%, white);
+      background-color: color-mix(in sRGB, var(--colors-red) 10%, white);
       border-color: var(--colors-red);
     }
 
@@ -352,7 +352,7 @@
   align-items: center;
   width: 100%;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (width >= 768px) {
     flex-flow: row nowrap;
     justify-content: space-between;
   }
@@ -363,7 +363,7 @@
     color: var(--colors-red);
     text-align: center;
 
-    @media screen and (min-width: 768px) {
+    @media screen and (width >= 768px) {
       text-align: left;
     }
   }

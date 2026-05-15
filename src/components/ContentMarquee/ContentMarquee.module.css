@@ -10,7 +10,7 @@
   list-style: none;
   animation: scroll 30s linear infinite;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     gap: 6vw;
     max-height: 10rem;
   }
@@ -47,6 +47,7 @@
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(calc(-100% - 5rem));
   }

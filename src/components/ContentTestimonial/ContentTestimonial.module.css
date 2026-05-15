@@ -15,7 +15,7 @@
   text-align: center;
   transform: translateY(-10px);
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     margin-bottom: -100px;
     font-size: 10em;
     transform: translateY(-20px);
