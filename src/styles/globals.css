@@ -1,4 +1,5 @@
 @import url("https://use.typekit.net/now7rdc.css");
+@import url("./variables.css");
 
 *,
 *::before,
@@ -109,7 +110,7 @@ body {
   background: var(--color-bg);
   transition: background 0.2s ease-in-out;
 
-  @media (min-width: 600px) {
+  @media (width >= 600px) {
     font-size: 16px;
   }
 
@@ -145,7 +146,7 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   padding: var(--default-padding);
-  color: var(--colors-text);
+  color: var(--color-text);
   text-align: left;
   background-color: var(--colors-red);
   border-radius: 20px;
@@ -154,12 +155,13 @@ body {
 .microdotBg {
   --dot-mix: 80%;
   --dot-color: color-mix(
-    in srgb,
+    in sRGB,
     var(--dot-bg) var(--dot-mix),
     var(--colors-white)
   );
   --dot-size: 1px;
   --dot-space: 5px;
+
   background:
     linear-gradient(
       90deg,
@@ -226,7 +228,7 @@ video {
   overflow: hidden;
   white-space: nowrap;
   border: 0;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
 }
 
 strong,
@@ -261,7 +263,7 @@ b {
   padding: 0 var(--default-padding);
   margin: 0 auto;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     padding: 0 4rem;
   }
 }
@@ -288,7 +290,7 @@ h6,
   font-family: var(--font-family-heading);
   font-weight: 700;
   line-height: 1.2;
-  color: var(--colors-text);
+  color: var(--color-text);
   text-wrap: balance;
 }
 
@@ -314,16 +316,11 @@ p {
   font-family: var(--font-family-body);
   font-size: clamp(1.075em, 3vw, 1.25em);
   line-height: 1.5;
-  color: var(--colors-text);
+  color: var(--color-text);
 }
 
 i {
   font-style: italic;
-}
-
-strong,
-b {
-  font-weight: 700;
 }
 
 .logo-container {
@@ -354,7 +351,7 @@ b {
   max-width: 140ch;
   padding-bottom: var(--default-padding);
   margin: auto;
-  color: var(--colors-text);
+  color: var(--color-text);
   text-align: center;
 
   h1 {
@@ -362,7 +359,7 @@ b {
     line-height: 1.1;
   }
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     padding-bottom: 4rem;
   }
 }
@@ -443,7 +440,7 @@ input[type="checkbox"] {
 }
 
 .light {
-  color: var(--colors-text);
+  color: var(--color-text);
   background-color: var(--colors-black);
 }
 
@@ -469,12 +466,12 @@ input[type="checkbox"] {
   align-items: center;
   width: 100%;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (width >= 768px) {
     grid-template-columns: repeat(var(--columns-md, var(--columns, 1)), 1fr);
     gap: var(--gap-md, var(--gap, 4rem));
   }
 
-  @media screen and (min-width: 1024px) {
+  @media screen and (width >= 1024px) {
     grid-template-columns: repeat(
         var(--columns-lg, var(--columns-md, var(--columns, 1))),
         1fr
@@ -482,7 +479,7 @@ input[type="checkbox"] {
     gap: var(--gap-lg, var(--gap-md, var(--gap, 4rem)));
   }
 
-  @media screen and (min-width: 1440px) {
+  @media screen and (width >= 1440px) {
     grid-template-columns: repeat(
         var(
           --columns-xl,
@@ -496,7 +493,7 @@ input[type="checkbox"] {
   &.contained:not(.singleColumn) {
     padding: 0 var(--default-padding);
 
-    @media screen and (min-width: 900px) {
+    @media screen and (width >= 900px) {
       grid-column: 3 / -3;
     }
   }
@@ -506,7 +503,7 @@ input[type="checkbox"] {
     &.right {
       grid-column: 1 / -1;
 
-      @media screen and (min-width: 900px) {
+      @media screen and (width >= 900px) {
         grid-column: 3 / -1;
       }
     }
@@ -514,7 +511,7 @@ input[type="checkbox"] {
     &.left {
       grid-column: 1 / -1;
 
-      @media screen and (min-width: 900px) {
+      @media screen and (width >= 900px) {
         grid-column: 1 / 2;
       }
     }
@@ -541,81 +538,12 @@ input[type="checkbox"] {
   }
 }
 
-/* Theme rules - controlled by usePreferredTheme hook */
-[data-theme="light"] {
-  --divider: rgba(0, 0, 0, 0.15);
-  --color-bg: var(--colors-white);
-  --color-text: var(--colors-black);
-  --card-bg: color-mix(in srgb, var(--colors-white) 80%, var(--colors-black));
-}
-
-[data-theme="dark"] {
-  --divider: rgba(255, 255, 255, 0.15);
-  --color-bg: var(--colors-black);
-  --color-text: var(--colors-white);
-  --card-bg: color-mix(in srgb, var(--colors-black) 92%, var(--colors-white));
-}
-
-:root {
-  --colors-black: #1f1d1d;
-  --colors-gray: #aaaaaa;
-  --colors-silver: #dddddd;
-  --colors-white: #ffffff;
-  --colors-red: #e01e2d;
-  --colors-lightgray: #f0f0f0;
-  --color-text: var(--colors-white);
-  --color-bg: var(--colors-black);
-  --color-white-bg: var(--colors-white);
-  --colors-orange: #ff6600;
-  --card-bg: color-mix(in srgb, var(--colors-black) 95%, var(--colors-white));
-  --divider: rgba(255, 255, 255, 0.15);
-  --default-padding: 2rem;
-  --gap: 2rem;
-  --gap-md: var(--gap, 2rem);
-  --gap-lg: var(--gap-md, var(--gap, 2rem));
-  --container-width: 1440px;
-
-  --padding-less: 1rem;
-  --padding-more: 6rem;
-  --padding-no: 0;
-  --padding-regular: 2rem;
-  --padding-no-top: 0;
-  --padding-no-bottom: 0;
-
-  /* Grid System Variables */
-  --grid-columns: 24;
-  --grid-gap: 0;
-  --grid-padding: 2rem;
-
-  /* Font Variables */
-  --font-family-numbers:
-    regulator-nova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-family-heading:
-    stolzl, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
-  --font-family-body:
-    europa, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
-
-  /* Viewport height for iOS browser chrome handling */
-  --vh: 1vh;
-
-  @media (min-width: 600px) {
-    --padding-more: 8rem;
-    --padding-regular: 4rem;
-  }
-
-  @media (min-width: 900px) {
-    --grid-padding: 0;
-  }
-}
-
 /* Sonner toast – green success theme */
 .toaster {
   --toast-bg: #c8e6d1;
   --toast-border: #2d6a4f;
   --toast-text: #1b4332;
+
   padding: 1rem;
 }
 
@@ -633,7 +561,7 @@ input[type="checkbox"] {
   background-color: var(--toast-bg);
   border: 1px solid var(--toast-border);
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(27, 67, 50, 0.2);
+  box-shadow: 0 4px 16px rgb(27 67 50 / 20%);
 }
 
 .toast[data-type="success"] {

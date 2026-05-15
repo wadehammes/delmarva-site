@@ -8,7 +8,7 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgb(0 0 0 / 50%);
   opacity: 0;
   backdrop-filter: blur(4px);
   transform: translateZ(0);
@@ -26,16 +26,16 @@
   background-color: var(--colors-white);
   border-radius: 12px;
   box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    0 20px 25px -5px rgb(0 0 0 / 10%),
+    0 10px 10px -5px rgb(0 0 0 / 4%);
   transform: translateZ(0);
   will-change: transform, opacity;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     max-width: 85vw;
   }
 
-  @media (min-width: 1280px) {
+  @media (width >= 1280px) {
     max-width: 75vw;
   }
 
@@ -47,7 +47,7 @@
 .modalSmall {
   max-width: 90vw;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     max-width: 45vw;
   }
 }
@@ -55,11 +55,11 @@
 .modalMedium {
   max-width: 90vw;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     max-width: 80vw;
   }
 
-  @media (min-width: 1280px) {
+  @media (width >= 1280px) {
     max-width: 70vw;
   }
 }
@@ -67,7 +67,7 @@
 .modalLarge {
   max-width: 90vw;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     max-width: 80vw;
   }
 }
@@ -93,7 +93,7 @@
   height: 2.5rem;
   color: var(--colors-black);
   cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgb(0 0 0 / 5%);
   border: none;
   border-radius: 1000px;
   transform: rotate(45deg);
@@ -132,7 +132,7 @@
   padding-right: 3rem;
   background-color: var(--colors-white);
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     padding: 2rem;
   }
 }
@@ -150,7 +150,7 @@
   padding: 1rem;
   border-top: 1px solid var(--divider);
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     padding: 2rem;
   }
 }

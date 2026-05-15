@@ -1,5 +1,6 @@
 .wrapper {
   --bleed: 28px;
+
   position: relative;
   width: calc(100% + var(--bleed) * 2);
   min-height: 320px;
@@ -7,15 +8,15 @@
   margin-inline: calc(var(--bleed) * -1);
   overflow: hidden;
 
-  @media (min-width: 600px) {
+  @media (width >= 600px) {
     --bleed: 48px;
   }
 
-  @media (min-width: 900px) {
+  @media (width >= 900px) {
     --bleed: 60px;
   }
 
-  @media (min-width: 1200px) {
+  @media (width >= 1200px) {
     --bleed: 70px;
   }
 }
@@ -36,6 +37,7 @@
 .carousel {
   /* !important overrides the Carousel base component's overflow: hidden */
   width: 100%;
+
   /* !important overrides the Carousel base component's overflow: hidden */
   min-height: 320px;
   overflow: visible !important;
@@ -75,11 +77,11 @@
   gap: 2rem;
   width: 100%;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     grid-template-columns: repeat(3, 1fr);
   }
 }

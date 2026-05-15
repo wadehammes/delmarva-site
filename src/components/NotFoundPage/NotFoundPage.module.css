@@ -7,8 +7,8 @@
   justify-content: center;
   height: 100%;
   padding: var(--default-padding);
-  color: var(--colors-text);
+  color: var(--color-text);
   text-align: center;
-  background-color: var(--colors-dark-blue);
+  background-color: var(--colors-black);
   border-bottom: 1px solid var(--colors-black);
 }

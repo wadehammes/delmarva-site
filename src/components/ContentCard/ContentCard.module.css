@@ -3,7 +3,7 @@
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  color: var(--text-color);
+  color: var(--color-text);
   background-color: var(--card-bg);
   border: 1px solid transparent;
   border-radius: 20px;
@@ -15,14 +15,13 @@
 
   &.interactive {
     cursor: pointer;
-
     transition:
       transform 0.2s ease,
       box-shadow 0.2s ease;
 
     &:hover {
       border-color: var(--colors-red);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
       transform: translateY(-2px);
     }
 
