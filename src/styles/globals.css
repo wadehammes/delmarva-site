@@ -1,5 +1,5 @@
-@import url("https://use.typekit.net/now7rdc.css");
 @import url("./variables.css");
+@import url("./vendor-layered.css");
 
 *,
 *::before,

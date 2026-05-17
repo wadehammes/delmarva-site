@@ -1,0 +1,6 @@
+@import url("swiper/css") layer(vendor);
+@import url("swiper/css/effect-coverflow") layer(vendor);
+@import url("swiper/css/effect-fade") layer(vendor);
+@import url("swiper/css/navigation") layer(vendor);
+@import url("swiper/css/pagination") layer(vendor);
+@import url("mapbox-gl/dist/mapbox-gl.css") layer(vendor);

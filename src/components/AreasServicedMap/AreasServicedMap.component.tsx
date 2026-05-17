@@ -1,9 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useReducer, useRef } from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import clsx from "clsx";
 import type { ServiceType } from "src/contentful/getServices";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
 import { mergeFeaturesToSingleBoundary } from "src/utils/geometryUtils";

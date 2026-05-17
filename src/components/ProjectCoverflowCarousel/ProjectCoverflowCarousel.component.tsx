@@ -10,11 +10,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper/types";
 import styles from "./ProjectCoverflowCarousel.module.css";
 
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-
 interface ProjectCoverflowCarouselProps {
   carouselId?: string;
   onSwiper?: (swiper: SwiperType) => void;

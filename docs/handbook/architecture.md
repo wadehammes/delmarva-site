@@ -9,14 +9,14 @@ Map of the Delmarva site: technologies, where code lives, and how a request move
 - **CMS**: Contentful. Generated types in `src/contentful/types/`; getters and parsers in `src/contentful/`.
 - **i18n**: **next-intl** with routing in [src/i18n/routing.ts](../../src/i18n/routing.ts), messages in [src/i18n/messages/](../../src/i18n/messages/), and server config in [src/i18n/request.ts](../../src/i18n/request.ts).
 - **Client data**: TanStack **React Query** in [src/app/providers.tsx](../../src/app/providers.tsx); form mutations in [src/hooks/mutations/](../../src/hooks/mutations/).
-- **Styling**: **CSS Modules** (`.module.css`) plus global styles in [src/styles/globals.css](../../src/styles/globals.css).
+- **Styling**: **CSS Modules** (`.module.css`) plus **`src/styles/globals.css`** (includes **`vendor-layered.css`** — see [conventions](conventions.md#css)). Adobe Fonts load via `<link>` in **`[locale]/layout.tsx`**.
 - **Tooling**: pnpm, Biome (lint/format), Jest.
 
 ## Directory map
 
 ### `src/app/`
 
-- **`[locale]/layout.tsx`** — Root layout for localized routes: `html` `lang`, optional **Google Tag Manager** ([`GoogleTagManager`](https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries#google-tag-manager)), draft-mode banner, **NextIntlClientProvider**, and **Providers** (React Query, locale, toaster). Preconnects for Mapbox (when configured), Contentful images, YouTube.
+- **`[locale]/layout.tsx`** — Root layout for localized routes: **`globals.css`**; Adobe Fonts (**Typekit**) via `<link rel="preconnect">` / `<link rel="stylesheet">` in `<head>`; sets `html` `lang`; optional **Google Tag Manager** ([`GoogleTagManager`](https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries#google-tag-manager)), draft-mode banner, **NextIntlClientProvider**, and **Providers** (React Query, locale, toaster). Preconnects for Mapbox (when configured), Contentful images, YouTube.
 - **`[locale]/page.tsx`** — Home: fetches page, navigation, footer from Contentful, renders **PageLayout** with **PageComponent** (and **SchemaScript** for JSON-LD where used).
 - **`[locale]/[slug]/page.tsx`**, **`[locale]/what-we-deliver/`**, **`[locale]/markets/[slug]/page.tsx`** — Other static routes; each follows the same general pattern (validate locale, `draftMode()`, fetch Contentful, render).
 - **`[locale]/refresh-content/page.tsx`** — On-demand revalidation flow (protected by env token).

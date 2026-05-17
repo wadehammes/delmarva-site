@@ -52,6 +52,12 @@ export default async function RootLayout({
         <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID} />
       )}
       <head>
+        <link
+          crossOrigin="anonymous"
+          href="https://use.typekit.net"
+          rel="preconnect"
+        />
+        <link href="https://use.typekit.net/now7rdc.css" rel="stylesheet" />
         {process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN ? (
           <link
             crossOrigin="anonymous"

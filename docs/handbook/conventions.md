@@ -38,6 +38,8 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 - Prefer **flex/grid `gap`** over `margin-top` for spacing between siblings when layout allows.
 - Use **design tokens** from global CSS variables where the codebase already does (see existing modules and [src/styles/](../../src/styles/)).
 - All custom properties (`--*`) live in **[`src/styles/variables.css`](../../src/styles/variables.css)** — the single source of truth for design tokens, spacing, grid, and font stacks. Theme overrides (`[data-theme]`) also live there. Do not redeclare custom properties in `globals.css`; `@import "./variables.css"` pulls them in at the top.
+- **Adobe Fonts (Typekit)** load from **`<link rel="stylesheet">`** and **`<link rel="preconnect">`** on **`use.typekit.net`** in **[`src/app/[locale]/layout.tsx`](../../src/app/[locale]/layout.tsx)** (inside `<head>`), not via an `@import` in CSS—so **`@font-face`** is unaffected by webpack or layered `@import`s.
+- **Cascade layers**: Swiper and Mapbox use **`layer(vendor)`** in **[`src/styles/vendor-layered.css`](../../src/styles/vendor-layered.css)**, pulled in from **`globals.css`**. App CSS and CSS Modules stay **unlayered** so they normally win over those vendor rules without extra specificity or per-component stylesheet imports.
 
 ## Testing
 

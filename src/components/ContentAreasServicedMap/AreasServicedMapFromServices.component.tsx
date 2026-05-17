@@ -1,9 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useReducer, useRef } from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import clsx from "clsx";
 import styles from "src/components/AreasServicedMap/AreasServicedMap.module.css";
 import type { ServiceForMap } from "src/contentful/parseContentAreasServicedMap";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
