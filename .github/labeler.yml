@@ -5,11 +5,11 @@ javascript:
   - public/**/*
   - .tool-versions
   - docs/**/*
-  - AGENTS.md
+  - CLAUDE.md
 
 documentation:
   - docs/**/*
-  - AGENTS.md
+  - CLAUDE.md
   - README.md
 
 configuration:
