@@ -91,14 +91,25 @@
     transform: translateX(-10%) scale(0.9);
   }
 
-  &:global(.swiper-slide-visible) {
+  /* Side/peek slides that are visible but not active: exclude .swiper-slide-active
+     (same element gets both classes—later rules were overriding “active” styling)
+     and .swiper-slide-prev/next (those use stronger dimming above). */
+  &:global(.swiper-slide-visible):not(
+      :global(.swiper-slide-active),
+      :global(.swiper-slide-prev),
+      :global(.swiper-slide-next)
+    ) {
     z-index: 1;
     opacity: 0.7;
     filter: grayscale(100%);
     transition: all 0.3s ease;
   }
 
-  &:global(.swiper-slide-visible):hover {
+  &:global(.swiper-slide-visible):not(
+      :global(.swiper-slide-active),
+      :global(.swiper-slide-prev),
+      :global(.swiper-slide-next)
+    ):hover {
     opacity: 1;
     filter: grayscale(0);
   }
