@@ -2,7 +2,7 @@ import { draftMode } from "next/headers";
 import { Suspense } from "react";
 import { AllProjectsListWithUrl } from "src/components/AllProjectsList/AllProjectsListWithUrl.component";
 import { fetchProjects } from "src/contentful/getProjects";
-import { getServerLocaleSafe } from "src/utils/serverLocale.helpers";
+import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 
 export const AllProjectsListServer = async (props?: { locale?: string }) => {
   try {

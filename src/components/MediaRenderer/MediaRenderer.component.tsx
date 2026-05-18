@@ -47,9 +47,7 @@ export const MediaRenderer = (props: MediaRendererProps) => {
       return null;
     }
 
-    return (
-      <ContentVideoBlock disableEntryReveal={true} fields={parsedVideoBlock} />
-    );
+    return <ContentVideoBlock fields={parsedVideoBlock} />;
   }
 
   return null;

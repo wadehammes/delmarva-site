@@ -1,19 +1,28 @@
-import { useState } from "react";
-import { useOnInView } from "react-intersection-observer";
-import {
-  type OptimizedInViewOptions,
-  resolveInViewOptions,
-} from "src/utils/inView.helpers";
+import { useInView } from "react-intersection-observer";
 
-export type { OptimizedInViewOptions } from "src/utils/inView.helpers";
+interface UseOptimizedInViewOptions {
+  threshold?: number;
+  rootMargin?: string;
+  triggerOnce?: boolean;
+  delay?: number;
+}
 
-export const useOptimizedInView = (options: OptimizedInViewOptions = {}) => {
-  const [inView, setInView] = useState(false);
-  const ioOptions = resolveInViewOptions(options);
+/**
+ * Optimized intersection observer hook for better scroll performance
+ * Uses conservative defaults to reduce layout thrashing and improve FPS
+ */
+export const useOptimizedInView = (options: UseOptimizedInViewOptions = {}) => {
+  const {
+    threshold = 0.25,
+    rootMargin = "50px 0px",
+    triggerOnce = true,
+    delay = 0,
+  } = options;
 
-  const ref = useOnInView((visible) => {
-    setInView(visible);
-  }, ioOptions);
-
-  return { inView, ref };
+  return useInView({
+    delay,
+    rootMargin,
+    threshold,
+    triggerOnce,
+  });
 };

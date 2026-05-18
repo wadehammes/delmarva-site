@@ -93,7 +93,6 @@ interface MarketAccordionProps {
 export const MarketAccordion = (props: MarketAccordionProps) => {
   const { defaultOpen = false, locale, market, projects } = props;
   const { marketTitle, description, slug, stats } = market;
-
   const [isAccordionOpen, setIsAccordionOpen] = useState(defaultOpen);
 
   const contentRef = useRef<HTMLDivElement>(null);

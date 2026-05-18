@@ -92,7 +92,6 @@ interface ServiceAccordionProps {
 export const ServiceAccordion = (props: ServiceAccordionProps) => {
   const { defaultOpen = false, service, locale, projects } = props;
   const { serviceName, description, stats, slug } = service;
-
   const [isAccordionOpen, setIsAccordionOpen] = useState(defaultOpen);
 
   const contentRef = useRef<HTMLDivElement>(null);
