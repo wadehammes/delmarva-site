@@ -19,9 +19,10 @@
 		"lint": "biome check",
 		"lint:ci": "biome ci --reporter=github",
 		"lint:fix": "biome check --fix",
-		"lint:write": "biome check --write",
+		"lint:check": "biome check --changed --since origin/main --no-errors-on-unmatched --verbose --write --diagnostic-level=error",
 		"lint:css": "stylelint \"**/*.css\"",
 		"lint:css:fix": "stylelint \"**/*.css\" --fix",
+		"lint:all": "pnpm lint:check && pnpm lint:css:fix",
 		"test:ci": "jest --passWithNoTests --runInBand",
 		"types:contentful": "export $(cat .env.local | sed '/^#/d; s/[$\"]//g'); cf-content-types-generator -s $CONTENTFUL_SPACE_ID -t $CONTENTFUL_CMA_TOKEN -o src/contentful/types -r -g && biome format --write src/contentful/types",
 		"update-readme": "node scripts/update_main_readme.js"

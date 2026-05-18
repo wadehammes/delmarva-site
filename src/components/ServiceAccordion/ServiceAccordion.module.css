@@ -93,10 +93,6 @@
   gap: 1rem;
   container-type: inline-size;
 
-  .serviceAccordionCarousel {
-    order: -1;
-  }
-
   @media (width >= 900px) {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
@@ -110,7 +106,6 @@
       grid-column: 2;
       align-items: center;
       justify-content: center;
-      order: unset;
     }
   }
 }
