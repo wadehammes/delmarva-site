@@ -121,7 +121,6 @@ body {
 
 html {
   height: stretch;
-  scroll-behavior: smooth;
 }
 
 body {
@@ -630,5 +629,30 @@ input[type="checkbox"] {
 
   to {
     opacity: 0;
+  }
+}
+
+@keyframes contentViewRevealTimeline {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .contentViewReveal {
+      animation-duration: auto;
+      animation-fill-mode: both;
+      animation-name: contentViewRevealTimeline;
+      animation-timing-function: ease-out;
+      animation-timeline: view(block);
+      animation-range: entry 0% entry 120%;
+    }
   }
 }

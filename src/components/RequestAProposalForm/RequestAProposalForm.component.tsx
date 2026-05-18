@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -10,6 +11,7 @@ import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import type { FormType } from "src/contentful/parseForm";
 import { useSendRequestAProposalFormMutation } from "src/hooks/mutations/useSendRequestAProposalForm.mutation";
+import { useEntryReveal } from "src/hooks/useEntryReveal";
 import {
   EMAIL_VALIDATION_REGEX,
   PHONE_NUMBER_VALIDATION_REGEX,
@@ -49,6 +51,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
 
   const t = useTranslations("RequestAProposalForm");
 
+  const { ref: revealRef, revealClassName } = useEntryReveal();
   const reCaptcha = useRef<ReCAPTCHA>(null);
 
   const {
@@ -98,7 +101,11 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={clsx(styles.form, revealClassName)}
+      onSubmit={handleSubmit(onSubmit)}
+      ref={revealRef}
+    >
       <Controller
         control={control}
         name="companyName"

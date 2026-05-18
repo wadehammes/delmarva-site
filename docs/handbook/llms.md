@@ -17,6 +17,7 @@ Use this page to choose **which markdown file to read first**. It mirrors the ha
 | GTM, data layer / `trackEvent` | [integrations.md](integrations.md) |
 | RSS helpers, sitemap output, `robots`, OG/Twitter metadata | [distribution.md](distribution.md) |
 | Jotai atoms, `src/utils` map, `src/lib`, constants | [source-layout.md](source-layout.md) |
+| Custom hooks (`src/hooks`), intersection / entry-reveal, hook-related CSS placement | [conventions.md](conventions.md), [source-layout.md](source-layout.md), [src/hooks/README.md](../../src/hooks/README.md) |
 
 ## Outside this folder
 

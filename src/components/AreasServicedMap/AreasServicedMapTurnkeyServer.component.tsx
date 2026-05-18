@@ -1,7 +1,7 @@
 import { draftMode } from "next/headers";
 import { fetchServices } from "src/contentful/getServices";
-import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import { TURNKEY_SERVICE_SLUG } from "src/utils/constants";
+import { getServerLocaleSafe } from "src/utils/serverLocale.helpers";
 import { AreasServicedMapClient } from "./AreasServicedMapClient.component";
 
 interface AreasServicedMapTurnkeyServerProps {

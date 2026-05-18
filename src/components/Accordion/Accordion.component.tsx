@@ -3,9 +3,10 @@
 import clsx from "clsx";
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
+import { useOnInView } from "react-intersection-observer";
 import styles from "src/components/Accordion/Accordion.module.css";
-import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import PlusIcon from "src/icons/plus.svg";
+import { resolveInViewOptions } from "src/utils/inView.helpers";
 
 interface AccordionProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface AccordionProps {
   "data-tracking-click"?: string;
   defaultOpen?: boolean;
   headerElement?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div";
+  isInView?: boolean;
   onToggle?: (isOpen: boolean) => void;
   title: string;
 }
@@ -27,6 +29,7 @@ export const Accordion = ({
   "data-tracking-click": dataTrackingClick,
   defaultOpen = false,
   headerElement = "h3",
+  isInView,
   onToggle,
   title,
 }: AccordionProps) => {
@@ -38,8 +41,20 @@ export const Accordion = ({
   const accordionId = `accordion-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
   const contentId = `accordion-content-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
 
-  // Intersection observer for fade-in animation
-  const { ref: inViewRef } = useOptimizedInView();
+  const controlledFade = isInView !== undefined;
+
+  const accordionFadeRef = useOnInView(
+    (visible, entry) => {
+      if (controlledFade) {
+        return;
+      }
+      const root = entry.target;
+      if (root instanceof HTMLElement) {
+        root.classList.toggle(styles.fadeIn, visible);
+      }
+    },
+    { ...resolveInViewOptions(), skip: controlledFade },
+  );
 
   const toggleAccordion = () => {
     const newIsOpen = !isOpen;
@@ -71,10 +86,10 @@ export const Accordion = ({
     <div
       className={clsx(styles.accordion, className, {
         [styles.active]: isOpen,
-        [styles.fadeIn]: true,
+        ...(controlledFade ? { [styles.fadeIn]: !!isInView } : {}),
       })}
       data-tracking-click={dataTrackingClick}
-      ref={inViewRef}
+      ref={controlledFade ? undefined : accordionFadeRef}
     >
       <HeaderComponent className={styles.accordionHeader}>
         <button
