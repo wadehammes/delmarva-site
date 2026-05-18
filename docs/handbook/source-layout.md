@@ -13,8 +13,8 @@ Quick map of **`src/`** when you know the task (“add a schema helper”, “fi
 | Area | Examples |
 |------|----------|
 | **Pages / SEO** | [pageHelpers.ts](../../src/utils/pageHelpers.ts), [schema.ts](../../src/utils/schema.ts) |
-| **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`) |
-| **Strings / React / Rich Text** | [string.helpers.ts](../../src/utils/string.helpers.ts), [react.helpers.ts](../../src/utils/react.helpers.ts), [richText.helpers.ts](../../src/utils/richText.helpers.ts) |
+| **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`), [serverLocale.helpers.ts](../../src/utils/serverLocale.helpers.ts) (`getServerLocaleSafe`) |
+| **Strings / React / Rich Text** | [string.helpers.ts](../../src/utils/string.helpers.ts), [react.helpers.ts](../../src/utils/react.helpers.ts) (`mergeRefs`, `isReactNodeEmptyArray`), [inView.helpers.ts](../../src/utils/inView.helpers.ts) (`resolveInViewOptions`), [richText.helpers.ts](../../src/utils/richText.helpers.ts) |
 | **Video URLs** | [videoUrl.helpers.ts](../../src/utils/videoUrl.helpers.ts) (embed detection, `isVideoUrl`, …) |
 | **Other** | [browser.helpers.ts](../../src/utils/browser.helpers.ts), [value.helpers.ts](../../src/utils/value.helpers.ts) (`isNonNullable`), [contentModules.ts](../../src/utils/contentModules.ts) (**`isTypeContentModules`**), [areasServed.ts](../../src/utils/areasServed.ts) |
 
@@ -32,7 +32,7 @@ Getters, parsers, cache helpers, and **generated** `types/` — see [contentful.
 
 ## `src/styles/`
 
-Global CSS and design tokens consumed by the root layout and components.
+Global CSS, design tokens, and **occasional shared CSS Modules** (e.g. **`entryReveal.module.css`**) consumed by hooks or multiple components — not component-colocated modules.
 
 ## `src/tests/`
 

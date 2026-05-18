@@ -1,7 +1,7 @@
 import { draftMode } from "next/headers";
 import { ContentRecentNews } from "src/components/ContentRecentNews/ContentRecentNews.component";
 import { fetchRecentNews } from "src/contentful/getContentRecentNews";
-import { getServerLocaleSafe } from "src/hooks/useServerLocale";
+import { getServerLocaleSafe } from "src/utils/serverLocale.helpers";
 import styles from "./ContentRecentNewsList.module.css";
 
 interface ContentRecentNewsListProps {

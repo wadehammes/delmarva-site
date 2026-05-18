@@ -1,7 +1,10 @@
+"use client";
+
 import clsx from "clsx";
 import Image from "next/image";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentImageBlockType } from "src/contentful/parseContentImageBlock";
+import { useEntryReveal } from "src/hooks/useEntryReveal";
 import styles from "./ContentImageBlock.module.css";
 
 interface ContentImageBlockProps {
@@ -10,6 +13,7 @@ interface ContentImageBlockProps {
 
 export const ContentImageBlock = (props: ContentImageBlockProps) => {
   const { fields } = props;
+  const { ref, revealClassName } = useEntryReveal();
 
   if (!fields) {
     return null;
@@ -24,7 +28,7 @@ export const ContentImageBlock = (props: ContentImageBlockProps) => {
   } = fields;
 
   return (
-    <figure className={styles.imageWrapper}>
+    <figure className={clsx(styles.imageWrapper, revealClassName)} ref={ref}>
       <Image
         alt={image?.alt ?? ""}
         className={clsx({

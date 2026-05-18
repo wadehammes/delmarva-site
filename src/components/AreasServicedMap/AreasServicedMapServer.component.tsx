@@ -1,6 +1,6 @@
 import { draftMode } from "next/headers";
 import { fetchServices } from "src/contentful/getServices";
-import { getServerLocaleSafe } from "src/hooks/useServerLocale";
+import { getServerLocaleSafe } from "src/utils/serverLocale.helpers";
 import { AreasServicedMapClient } from "./AreasServicedMapClient.component";
 
 interface AreasServicedMapServerProps {
