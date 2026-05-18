@@ -12,7 +12,6 @@ import {
   isTypeContentImageBlock,
   isTypeContentVideoBlock,
 } from "src/contentful/types";
-import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import { createBackgroundColor } from "src/styles/utils";
 import styles from "./ContentCopyMediaBlock.module.css";
 
@@ -24,7 +23,6 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   const { fields } = props;
   const { copy, media, mediaPlacement, mediaBackgroundStyle } = fields;
 
-  const { ref, inView } = useOptimizedInView();
   const hasVideo = (media ?? []).some(
     (item) => item != null && isTypeContentVideoBlock(item),
   );
@@ -32,11 +30,9 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   return (
     <div
       className={clsx(styles.contentCopyMediaBlock, {
-        [styles.inView]: inView,
         [styles.mediaLeft]: mediaPlacement === "Left",
         [styles.hasVideo]: hasVideo,
       })}
-      ref={ref}
     >
       <div className={styles.copyBlock}>
         <CopyBlock fields={copy ?? null} />
