@@ -1,7 +1,7 @@
 import { draftMode } from "next/headers";
 import { fetchMarkets, fetchProjectsByMarket } from "src/contentful/getMarkets";
+import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import type { Locales } from "src/i18n/routing";
-import { getServerLocaleSafe } from "src/utils/serverLocale.helpers";
 import { AllMarketsList } from "./AllMarketsList.component";
 
 interface AllMarketsListServerProps {

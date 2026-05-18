@@ -5,7 +5,6 @@ import Image from "next/image";
 import { ContentCardModal } from "src/components/ContentCardModal/ContentCardModal.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentCardType } from "src/contentful/parseContentCard";
-import { useEntryReveal } from "src/hooks/useEntryReveal";
 import { useModal } from "src/hooks/useModal";
 import { createCardBackgroundColor } from "src/styles/utils";
 import { createMediaUrl } from "src/utils/urlHelpers";
@@ -18,7 +17,6 @@ interface ContentCardProps {
 export const ContentCard = (props: ContentCardProps) => {
   const { card } = props;
   const { isOpen, open, close } = useModal();
-  const { ref: revealRef, revealClassName } = useEntryReveal();
 
   if (!card) {
     return null;
@@ -74,16 +72,10 @@ export const ContentCard = (props: ContentCardProps) => {
       {isInteractive ? (
         <button
           aria-label="View details"
-          className={clsx(
-            styles.contentCard,
-            revealClassName,
-            styles.interactive,
-            {
-              microdotBg: cardMicrodotBg,
-            },
-          )}
+          className={clsx(styles.contentCard, styles.interactive, {
+            microdotBg: cardMicrodotBg,
+          })}
           onClick={open}
-          ref={revealRef}
           style={cardStyles}
           type="button"
         >
@@ -91,10 +83,9 @@ export const ContentCard = (props: ContentCardProps) => {
         </button>
       ) : (
         <div
-          className={clsx(styles.contentCard, revealClassName, {
+          className={clsx(styles.contentCard, {
             microdotBg: cardMicrodotBg,
           })}
-          ref={revealRef}
           style={cardStyles}
         >
           {cardContent}

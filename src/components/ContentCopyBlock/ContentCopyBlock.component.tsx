@@ -1,17 +1,15 @@
 "use client";
 
 import clsx from "clsx";
-import { forwardRef, type Ref, useMemo } from "react";
+import { forwardRef, type Ref } from "react";
 import { useObjectRef } from "react-aria";
 import styles from "src/components/ContentCopyBlock/ContentCopyBlock.module.css";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
 import { StaticMapImage } from "src/components/StaticMapImage/StaticMapImage.component";
 import type { CopyBlock } from "src/contentful/parseCopyBlock";
-import { useEntryReveal } from "src/hooks/useEntryReveal";
 import { Alignment } from "src/interfaces/common.interfaces";
 import { isValidProjectLocation } from "src/utils/mapUtils";
-import { mergeRefs } from "src/utils/react.helpers";
 
 interface ContentCopyBlockProps {
   fields: CopyBlock | null;
@@ -23,11 +21,6 @@ export const ContentCopyBlock = forwardRef<
 >((props, ref: Ref<HTMLDivElement>) => {
   const { fields } = props;
   const divRef = useObjectRef(ref);
-  const { ref: revealRef, revealClassName } = useEntryReveal();
-  const mergedRef = useMemo(
-    () => mergeRefs<HTMLDivElement>(divRef, revealRef as Ref<HTMLDivElement>),
-    [divRef, revealRef],
-  );
 
   if (!fields) {
     return null;
@@ -63,14 +56,14 @@ export const ContentCopyBlock = forwardRef<
 
   return (
     <div
-      className={clsx(styles.copyBlock, revealClassName, {
+      className={clsx(styles.copyBlock, {
         [styles.mobileAlignLeft]: fields.mobileAlignment === Alignment.Left,
         [styles.mobileAlignRight]: fields.mobileAlignment === Alignment.Right,
         [styles.desktopAlignLeft]: fields.alignment === Alignment.Left,
         [styles.desktopAlignRight]: fields.alignment === Alignment.Right,
       })}
       id={slug || id}
-      ref={mergedRef}
+      ref={divRef}
     >
       {copyEyebrow ? (
         <div className={styles.copyEyebrow}>

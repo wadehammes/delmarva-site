@@ -14,7 +14,6 @@ import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import type { FormJoinOurTeamType } from "src/contentful/parseFormJoinOurTeam";
 import { useSendJoinOurTeamFormMutation } from "src/hooks/mutations/useSendJoinOurTeamForm.mutation";
-import { useEntryReveal } from "src/hooks/useEntryReveal";
 import ChevronDown from "src/icons/Chevron.svg";
 import { US_STATES_MAP } from "src/utils/constants";
 import {
@@ -65,7 +64,6 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
   const { fields } = props;
   const t = useTranslations("JoinOurTeamForm");
 
-  const { ref: revealRef, revealClassName } = useEntryReveal();
   const reCaptcha = useRef<ReCAPTCHA>(null);
 
   const {
@@ -153,7 +151,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
   const { description, formSubmitSuccessMessage } = fields;
 
   return (
-    <div className={clsx(styles.container, revealClassName)} ref={revealRef}>
+    <div className={styles.container}>
       {description ? <RichText document={description} /> : null}
 
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

@@ -5,7 +5,6 @@ import { useEffect, useMemo, useReducer, useRef } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import clsx from "clsx";
 import type { ServiceType } from "src/contentful/getServices";
-import { useEntryReveal } from "src/hooks/useEntryReveal";
 import { countiesToBoundaryLines } from "src/utils/countyUtils";
 import { mergeFeaturesToSingleBoundary } from "src/utils/geometryUtils";
 import {
@@ -107,7 +106,6 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
   const [state, dispatch] = useReducer(areasReducer, {
     status: "loading",
   });
-  const { ref: revealRef, revealClassName } = useEntryReveal();
 
   const isLoading = state.status === "loading";
   const serviceAreasWithGeoJSON =
@@ -230,10 +228,7 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
 
   if (!mapboxAccessToken) {
     return (
-      <div
-        className={clsx(styles.wrapper, className, revealClassName)}
-        ref={revealRef}
-      >
+      <div className={clsx(styles.wrapper, className)}>
         <div className={styles.container}>
           <div className={styles.map} style={height ? { height } : undefined}>
             <p>
@@ -247,17 +242,14 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
   }
 
   return (
-    <div
-      className={clsx(styles.wrapper, className, revealClassName)}
-      ref={revealRef}
-    >
+    <div className={clsx(styles.wrapper, className)}>
       <div className={styles.container}>
-        {isLoading ? (
+        {isLoading && (
           <div className={styles.loadingOverlay}>
             <div className={styles.loadingSpinner} />
             <p>Loading service areas...</p>
           </div>
-        ) : null}
+        )}
         <div
           className={styles.map}
           ref={mapContainer}

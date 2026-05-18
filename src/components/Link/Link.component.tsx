@@ -8,43 +8,25 @@ interface LinkProps extends Omit<ComponentProps<"a">, "popover"> {
   href: string;
 }
 
-const scrollBehaviorFromPreference = (): ScrollBehavior =>
-  typeof globalThis.matchMedia === "function" &&
-  globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ? "auto"
-    : "smooth";
-
 export const Link = ({ children, ...props }: LinkProps) => {
   const { href, className, onClick: onClickProp, ...rest } = props;
   const RouterLink = routing.Link;
 
   const fireHashChange = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (!href.startsWith("#")) {
-        return;
+      if (href.startsWith("#")) {
+        e.preventDefault();
+
+        const target = href.replace("#", "");
+
+        const element = document.getElementById(target);
+
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+
+        window.location.hash = target;
       }
-
-      e.preventDefault();
-
-      const fragment = decodeURIComponent(href.slice(1));
-      if (!fragment) {
-        return;
-      }
-
-      const element = document.getElementById(fragment);
-
-      if (element) {
-        element.scrollIntoView({
-          behavior: scrollBehaviorFromPreference(),
-          block: "start",
-        });
-      }
-
-      const url = new URL(globalThis.location.href);
-      url.hash = href;
-
-      globalThis.history.replaceState(null, "", url.toString());
-      globalThis.dispatchEvent(new HashChangeEvent("hashchange"));
     },
     [href],
   );

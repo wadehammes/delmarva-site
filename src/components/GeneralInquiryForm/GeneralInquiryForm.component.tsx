@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -11,7 +10,6 @@ import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import type { FormType } from "src/contentful/parseForm";
 import { useSendGeneralInquiryFormMutation } from "src/hooks/mutations/useSendGeneralInquiryForm.mutation";
-import { useEntryReveal } from "src/hooks/useEntryReveal";
 import {
   EMAIL_VALIDATION_REGEX,
   PHONE_NUMBER_VALIDATION_REGEX,
@@ -50,7 +48,6 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
   const t = useTranslations("GeneralInquiryForm");
 
   const reCaptcha = useRef<ReCAPTCHA>(null);
-  const { ref: revealRef, revealClassName } = useEntryReveal();
 
   const {
     handleSubmit,
@@ -97,11 +94,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
   };
 
   return (
-    <form
-      className={clsx(styles.form, revealClassName)}
-      onSubmit={handleSubmit(onSubmit)}
-      ref={revealRef}
-    >
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <Controller
         control={control}
         name="name"

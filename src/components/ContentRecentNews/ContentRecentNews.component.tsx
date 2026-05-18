@@ -1,7 +1,7 @@
 import type { ContentRecentNewsType } from "src/contentful/getContentRecentNews";
+import { getServerLocaleSafe } from "src/hooks/useServerLocale";
 import type { Locales } from "src/i18n/routing";
 import { Link } from "src/i18n/routing";
-import { getServerLocaleSafe } from "src/utils/serverLocale.helpers";
 import styles from "./ContentRecentNews.module.css";
 
 const learnMoreText: Record<Locales, string> = {

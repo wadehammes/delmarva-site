@@ -31,8 +31,7 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 
 ## CSS
 
-- **CSS Modules** next to components (`*.module.css`), or under **`src/styles/`** when a stylesheet is shared across multiple imports (including styles driven from hooks).
-- **Hooks** (**`src/hooks/`**): never add **`*.module.css`** there; attach shared visuals under **`src/styles/`** or a component’s module instead.
+- **CSS Modules** next to components (`*.module.css`).
 - **Mobile-first**: base styles for small screens; use `min-width` media queries for larger breakpoints.
 - **Nest** selectors and media queries inside their parent rule (`&:hover`, `@media (min-width: …)`) rather than repeating the selector at the top level. Keep nesting depth reasonable.
 - **Alphabetize** properties within a rule where practical.
