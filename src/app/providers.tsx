@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Component, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { LocaleProvider } from "src/components/LocaleProvider/LocaleProvider.component";
-import { usePreferredTheme } from "src/hooks/usePreferredTheme";
 import type { Locales } from "src/i18n/routing";
 
 interface ErrorBoundaryState {
@@ -95,9 +94,6 @@ interface ProvidersProps {
 }
 
 function ProvidersContent({ children, locale }: ProvidersProps) {
-  // Initialize theme preference
-  usePreferredTheme();
-
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>

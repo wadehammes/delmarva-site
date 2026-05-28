@@ -44,7 +44,3 @@ Hook for managing URL hash state.
 ### useIsBrowser
 
 Hook to detect if code is running in the browser environment.
-
-### usePreferredTheme
-
-Hook for managing user's preferred theme (light/dark). 

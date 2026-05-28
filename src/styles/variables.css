@@ -8,12 +8,84 @@
   --colors-lightgray: #f0f0f0;
   --colors-orange: #f60;
 
-  /* Semantic color tokens (default: dark) */
+  /* Semantic color tokens (dark-only site) */
   --color-text: var(--colors-white);
   --color-bg: var(--colors-black);
-  --color-white-bg: var(--colors-white);
-  --card-bg: color-mix(in sRGB, var(--colors-black) 95%, var(--colors-white));
+  --color-surface-bg: var(--colors-white);
+  --color-surface-text: var(--colors-black);
+  --color-white-bg: var(--color-surface-bg);
+  --card-bg: color-mix(in sRGB, var(--color-bg) 95%, var(--color-surface-bg));
   --divider: rgb(255 255 255 / 15%);
+  --divider-on-surface: rgb(0 0 0 / 10%);
+
+  /* Overlays & translucency */
+  --overlay-backdrop: rgb(0 0 0 / 50%);
+  --overlay-dark: rgb(0 0 0 / 70%);
+  --overlay-bg-90: color-mix(in sRGB, var(--color-bg) 90%, transparent);
+  --overlay-nav-scrim: color-mix(in sRGB, var(--color-bg) 7.5%, transparent);
+  --overlay-nav-scrim-solid: color-mix(
+    in sRGB,
+    var(--color-bg) 25%,
+    transparent
+  );
+  --overlay-surface-hover: rgb(0 0 0 / 5%);
+  --overlay-text-hover: rgb(255 255 255 / 10%);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgb(0 0 0 / 10%);
+  --shadow-md: 0 4px 8px rgb(0 0 0 / 15%);
+  --shadow-card: 0 4px 12px rgb(0 0 0 / 10%);
+  --shadow-map: 0 2px 4px rgb(0 0 0 / 30%);
+  --shadow-inset: inset 0 1px 2px rgb(0 0 0 / 25%);
+  --shadow-input-inset: inset 0 1px 2px rgb(0 0 0 / 19%);
+  --shadow-modal:
+    0 20px 25px -5px rgb(0 0 0 / 10%), 0 10px 10px -5px rgb(0 0 0 / 4%);
+
+  /* Skeleton */
+  --color-skeleton-base: color-mix(
+    in sRGB,
+    var(--color-bg) 85%,
+    var(--color-surface-bg)
+  );
+  --color-skeleton-shimmer: rgb(255 255 255 / 5%);
+  --color-skeleton-border: rgb(255 255 255 / 8%);
+
+  /* Status / feedback */
+  --color-success-border: #2d6a4f;
+  --color-success-accent: #1b4332;
+  --color-success-bg: color-mix(
+    in sRGB,
+    var(--color-bg) 92%,
+    var(--color-surface-bg)
+  );
+  --color-success-shadow: rgb(27 67 50 / 20%);
+
+  /* Form field states */
+  --color-input-hover-bg: color-mix(
+    in sRGB,
+    var(--colors-gray) 5%,
+    var(--color-surface-bg)
+  );
+  --color-input-focus-bg: color-mix(
+    in sRGB,
+    var(--colors-gray) 25%,
+    var(--color-surface-bg)
+  );
+  --color-input-focus-accent-bg: color-mix(
+    in sRGB,
+    var(--colors-orange) 25%,
+    var(--color-surface-bg)
+  );
+  --color-input-error-bg: color-mix(
+    in sRGB,
+    var(--colors-red) 20%,
+    var(--color-surface-bg)
+  );
+  --color-input-checkbox-hover-bg: color-mix(
+    in sRGB,
+    var(--colors-red) 10%,
+    var(--color-surface-bg)
+  );
 
   /* Spacing */
   --default-padding: 2rem;
@@ -64,19 +136,4 @@
   @media (width >= 900px) {
     --grid-padding: 0;
   }
-}
-
-/* Theme overrides — controlled by usePreferredTheme hook */
-[data-theme="light"] {
-  --divider: rgb(0 0 0 / 15%);
-  --color-bg: var(--colors-white);
-  --color-text: var(--colors-black);
-  --card-bg: color-mix(in sRGB, var(--colors-white) 80%, var(--colors-black));
-}
-
-[data-theme="dark"] {
-  --divider: rgb(255 255 255 / 15%);
-  --color-bg: var(--colors-black);
-  --color-text: var(--colors-white);
-  --card-bg: color-mix(in sRGB, var(--colors-black) 92%, var(--colors-white));
 }

@@ -48,9 +48,9 @@ export const Section = async (props: SectionProps) => {
   ): string => {
     switch (color) {
       case "White":
-        return "var(--colors-white)";
+        return "var(--color-surface-bg)";
       case "Black":
-        return "var(--colors-black)";
+        return "var(--color-bg)";
       case "Red":
         return "var(--colors-red)";
       case "Silver":

@@ -1,11 +1,15 @@
 .projectCoverflowCarousel {
   --project-carousel-gap: 1rem;
-  --project-carousel-navigation-bg: rgb(255 255 255 / 90%);
-  --project-carousel-navigation-color: var(--color-text, #1f1d1d);
-  --project-carousel-navigation-hover-bg: rgb(255 255 255 / 100%);
+  --project-carousel-navigation-bg: color-mix(
+    in sRGB,
+    var(--color-surface-bg) 90%,
+    transparent
+  );
+  --project-carousel-navigation-color: var(--color-surface-text);
+  --project-carousel-navigation-hover-bg: var(--color-surface-bg);
   --project-carousel-navigation-size: 2rem;
-  --project-carousel-pagination-bullet-active-color: var(--colors-red, #e01e2d);
-  --project-carousel-pagination-bullet-color: var(--colors-white, #fff);
+  --project-carousel-pagination-bullet-active-color: var(--colors-red);
+  --project-carousel-pagination-bullet-color: var(--color-text);
   --project-carousel-pagination-bullet-size: 0.25rem;
   --project-carousel-slide-height: 420px;
 

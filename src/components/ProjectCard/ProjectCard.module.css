@@ -6,7 +6,7 @@
   overflow: hidden;
   appearance: none;
   cursor: pointer;
-  background-color: var(--colors-white);
+  background-color: var(--color-surface-bg);
   border: none;
   border-radius: 10px;
   transition:
@@ -34,7 +34,7 @@
 
   h3 {
     font-size: 1rem;
-    color: var(--colors-black);
+    color: var(--color-surface-text);
   }
 
   p {
@@ -45,7 +45,7 @@
     -webkit-line-clamp: 3;
     font-size: 0.875rem;
     line-height: 1.4;
-    color: var(--colors-black);
+    color: var(--color-surface-text);
   }
 }
 
@@ -85,18 +85,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 0;
-  border-bottom: 1px dashed rgb(0 0 0 / 10%);
+  border-bottom: 1px dashed var(--divider-on-surface);
 }
 
 .statDescription {
   font-size: 0.875rem;
   line-height: 1.2;
-  color: var(--colors-black);
+  color: var(--color-surface-text);
   text-align: left;
 }
 
 .statValue {
   font-family: var(--font-family-numbers);
   font-size: 0.875rem;
-  color: var(--colors-black);
+  color: var(--color-surface-text);
 }

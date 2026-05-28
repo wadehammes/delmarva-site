@@ -11,11 +11,11 @@ export const createBackgroundColor = (color: SectionBackgroundColor) => {
     case "Red":
       return "var(--colors-red)";
     case "Black":
-      return "var(--colors-black)";
+      return "var(--color-bg)";
     case "Silver":
       return "var(--colors-silver)";
     case "White":
-      return "var(--colors-white)";
+      return "var(--color-surface-bg)";
     default:
       return "var(--color-bg)";
   }
@@ -28,9 +28,9 @@ export const createCardBackgroundColor = (
     case "Red":
       return "var(--colors-red)";
     case "Black":
-      return "var(--colors-black)";
+      return "var(--color-bg)";
     case "White":
-      return "var(--colors-white)";
+      return "var(--color-surface-bg)";
     default:
       return "var(--card-bg)";
   }

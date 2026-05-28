@@ -1,5 +1,5 @@
 .footer {
-  --footer-bg: color-mix(in sRGB, var(--color-bg) 98%, var(--colors-white));
+  --footer-bg: color-mix(in sRGB, var(--color-bg) 98%, var(--color-surface-bg));
 
   position: relative;
   display: grid;

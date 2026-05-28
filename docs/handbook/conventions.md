@@ -37,7 +37,13 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 - **Alphabetize** properties within a rule where practical.
 - Prefer **flex/grid `gap`** over `margin-top` for spacing between siblings when layout allows.
 - Use **design tokens** from global CSS variables where the codebase already does (see existing modules and [src/styles/](../../src/styles/)).
-- All custom properties (`--*`) live in **[`src/styles/variables.css`](../../src/styles/variables.css)** — the single source of truth for design tokens, spacing, grid, and font stacks. Theme overrides (`[data-theme]`) also live there. Do not redeclare custom properties in `globals.css`; `@import "./variables.css"` pulls them in at the top.
+- All custom properties (`--*`) live in **[`src/styles/variables.css`](../../src/styles/variables.css)** — the single source of truth for design tokens, spacing, grid, and font stacks. The site is **dark-only** (`data-theme="dark"` on `<html>` in the root layout). Do not redeclare custom properties in `globals.css`; `@import "./variables.css"` pulls them in at the top.
+- **Semantic color tokens** (prefer these in component CSS over raw palette values):
+  - `--color-text` / `--color-bg` — default page text and background
+  - `--color-surface-bg` / `--color-surface-text` — light surfaces (modals, cards, form fields)
+  - `--card-bg`, `--divider`, `--divider-on-surface` — elevated surfaces and borders
+  - `--overlay-*`, `--shadow-*`, `--color-input-*`, `--color-skeleton-*`, `--color-success-*` — overlays, shadows, form states, skeletons, and toasts
+  - Palette tokens (`--colors-red`, `--colors-gray`, etc.) — brand accents and CMS section backgrounds only
 
 ## Testing
 
