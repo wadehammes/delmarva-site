@@ -5,8 +5,8 @@
     var(--color-surface-bg) 90%,
     transparent
   );
-  --project-carousel-navigation-color: var(--color-surface-text);
-  --project-carousel-navigation-hover-bg: var(--color-surface-bg);
+  --project-carousel-navigation-color: var(--color-text);
+  --project-carousel-navigation-hover-color: var(--colors-red);
   --project-carousel-navigation-size: 2rem;
   --project-carousel-pagination-bullet-active-color: var(--colors-red);
   --project-carousel-pagination-bullet-color: var(--color-text);
@@ -168,7 +168,7 @@
   transition: all 0.2s ease;
 
   &:hover {
-    color: var(--project-carousel-navigation-hover-bg);
+    color: var(--project-carousel-navigation-hover-color);
     transform: scale(1.1);
   }
 
