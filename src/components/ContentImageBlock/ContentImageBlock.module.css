@@ -45,8 +45,8 @@
     left: 1rem;
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
-    color: var(--colors-white);
-    background: rgb(0 0 0 / 70%);
+    color: var(--color-text);
+    background: var(--overlay-dark);
     border-radius: 0.25rem;
 
     &.captionAbove {

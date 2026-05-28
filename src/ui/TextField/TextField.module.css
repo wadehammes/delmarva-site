@@ -1,7 +1,7 @@
 .input {
   width: 100%;
   font-size: 16px;
-  color: var(--colors-black);
+  color: var(--color-surface-text);
   appearance: none;
   background: transparent;
   border: 0;

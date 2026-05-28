@@ -56,7 +56,7 @@ Client **QueryClientProvider**, **LocaleProvider**, **Sonner** toaster, and a cl
 
 ### `src/hooks/`
 
-Custom hooks (modal, theme, scroll, mutations). See [src/hooks/README.md](../../src/hooks/README.md).
+Custom hooks (modal, scroll, mutations). See [src/hooks/README.md](../../src/hooks/README.md).
 
 ### `src/api/`
 

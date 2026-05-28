@@ -47,7 +47,7 @@ export default async function RootLayout({
   const draft = await draftMode();
 
   return (
-    <html lang={locale}>
+    <html data-theme="dark" lang={locale}>
       {process.env.GOOGLE_TAG_MANAGER_ID && (
         <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID} />
       )}

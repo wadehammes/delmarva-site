@@ -8,7 +8,7 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(0 0 0 / 50%);
+  background-color: var(--overlay-backdrop);
   opacity: 0;
   backdrop-filter: blur(4px);
   transform: translateZ(0);
@@ -23,11 +23,9 @@
   max-width: 90vw;
   max-height: calc(var(--vh, 1vh) * 90);
   overflow: hidden;
-  background-color: var(--colors-white);
+  background-color: var(--color-surface-bg);
   border-radius: 12px;
-  box-shadow:
-    0 20px 25px -5px rgb(0 0 0 / 10%),
-    0 10px 10px -5px rgb(0 0 0 / 4%);
+  box-shadow: var(--shadow-modal);
   transform: translateZ(0);
   will-change: transform, opacity;
 
@@ -91,9 +89,9 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  color: var(--colors-black);
+  color: var(--color-surface-text);
   cursor: pointer;
-  background-color: rgb(0 0 0 / 5%);
+  background-color: var(--overlay-surface-hover);
   border: none;
   border-radius: 1000px;
   transform: rotate(45deg);
@@ -130,7 +128,7 @@
   gap: 1rem;
   padding: 1rem;
   padding-right: 3rem;
-  background-color: var(--colors-white);
+  background-color: var(--color-surface-bg);
 
   @media (width >= 768px) {
     padding: 2rem;

@@ -43,7 +43,7 @@
 
   :global(.swiper-pagination-fraction) {
     flex: 1;
-    color: var(--colors-black);
+    color: var(--color-surface-text);
   }
 }
 
@@ -65,11 +65,11 @@
   gap: 0.75rem;
   align-items: center;
   pointer-events: auto;
-  background-color: var(--colors-white);
+  background-color: var(--color-surface-bg);
   border-radius: 1000px;
 
   &:hover {
-    outline: 1px solid var(--colors-white);
+    outline: 1px solid var(--color-surface-bg);
     outline-offset: 2px;
   }
 
@@ -94,13 +94,13 @@
   width: 45px;
   height: 45px;
   font-size: 1.25rem;
-  color: var(--colors-black);
+  color: var(--color-surface-text);
   cursor: pointer;
   border-radius: 1000px;
   transition: all 0.2s ease;
 
   &:hover {
-    color: var(--colors-white);
+    color: var(--color-text);
     background-color: var(--colors-red);
   }
 }
@@ -118,5 +118,5 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--colors-black);
+  color: var(--color-surface-text);
 }

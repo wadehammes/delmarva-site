@@ -251,10 +251,24 @@
 
   &.blueprintBg {
     background-image:
-      linear-gradient(rgb(255 255 255 / 2.5%) 2px, transparent 2px),
-      linear-gradient(90deg, rgb(255 255 255 / 5%) 2px, transparent 2px),
-      linear-gradient(rgb(255 255 255 / 3%) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(255 255 255 / 3%) 1px, transparent 1px);
+      linear-gradient(
+        color-mix(in sRGB, var(--color-text) 2.5%, transparent) 2px,
+        transparent 2px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in sRGB, var(--color-text) 5%, transparent) 2px,
+        transparent 2px
+      ),
+      linear-gradient(
+        color-mix(in sRGB, var(--color-text) 3%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in sRGB, var(--color-text) 3%, transparent) 1px,
+        transparent 1px
+      );
     background-position:
       -2px -2px,
       -2px -2px,
@@ -265,14 +279,18 @@
       100px 100px,
       20px 20px,
       20px 20px;
-    border-top: 1px solid rgb(255 255 255 / 1%);
+    border-top: 1px solid color-mix(in sRGB, var(--color-text) 1%, transparent);
   }
 
   &.overlap > .sectionContent {
     padding: 2rem;
     margin-top: -8rem;
     color: var(--color-text);
-    background-color: color-mix(in srgb, var(--color-bg) 80%, #000);
+    background-color: color-mix(
+      in sRGB,
+      var(--color-bg) 80%,
+      var(--colors-black)
+    );
     border-radius: 10px;
   }
 
@@ -350,20 +368,19 @@
   }
 
   &.whiteBg {
-    --color-text: var(--colors-black);
+    --color-text: var(--color-surface-text);
 
-    background-color: var(--colors-white);
+    background-color: var(--color-surface-bg);
   }
 
   &.blackBg {
-    --color-text: var(--colors-white);
     --dot-size: 1px;
     --dot-space: 6px;
 
-    background-color: var(--colors-black);
+    background-color: var(--color-bg);
     background-image: radial-gradient(
       circle at center,
-      rgb(255 255 255 / 5.5%) var(--dot-size),
+      color-mix(in sRGB, var(--color-text) 5.5%, transparent) var(--dot-size),
       transparent var(--dot-size)
     );
     background-position: center;
@@ -375,14 +392,12 @@
   }
 
   &.silverBg {
-    --color-text: var(--colors-black);
+    --color-text: var(--color-surface-text);
 
     background-color: var(--colors-silver);
   }
 
   &.redBg {
-    --color-text: var(--colors-white);
-
     background-color: var(--colors-red);
   }
 

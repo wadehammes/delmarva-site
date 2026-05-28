@@ -48,7 +48,7 @@
     font-size: 1rem;
     font-weight: 300;
     line-height: 1.25;
-    color: var(--colors-white);
+    color: var(--color-text);
     text-align: left;
   }
 
@@ -75,30 +75,30 @@
   min-width: 25ch;
   min-height: auto;
   padding-right: 2.25rem;
-  color: var(--colors-black);
+  color: var(--color-surface-text);
   cursor: pointer;
-  background-color: white;
-  border: 1px solid var(--colors-white);
+  background-color: var(--color-surface-bg);
+  border: 1px solid var(--color-surface-bg);
   border-radius: 10px;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: color-mix(in sRGB, var(--colors-gray) 5%, white);
+    background-color: var(--color-input-hover-bg);
     border-color: var(--colors-gray);
   }
 
   &:focus-within:not(.selectHasError) {
-    color: var(--colors-black);
+    color: var(--color-surface-text);
     outline: 0;
-    background-color: color-mix(in sRGB, var(--colors-gray) 25%, white);
+    background-color: var(--color-input-focus-bg);
     border-color: var(--colors-gray);
   }
 
   &.selectHasError {
-    background-color: color-mix(in sRGB, var(--colors-red) 20%, white);
+    background-color: var(--color-input-error-bg);
     border-color: var(--colors-red);
     box-shadow:
-      inset 0 1px 2px rgb(0 0 0 / 25%),
+      var(--shadow-inset),
       0 -1px 1px var(--colors-red),
       0 1px 0 var(--colors-red);
   }
@@ -108,7 +108,7 @@
     top: 50%;
     right: 0.75rem;
     z-index: 0;
-    color: var(--colors-black);
+    color: var(--color-surface-text);
     pointer-events: none;
     transform: translateY(-50%);
     transition: all 0.2s ease-in-out;
@@ -120,7 +120,7 @@
 
   &:focus-within .selectChevron,
   &:hover .selectChevron {
-    color: var(--colors-black);
+    color: var(--color-surface-text);
   }
 
   .select {
@@ -128,7 +128,7 @@
     padding: 1.25rem 0 1.25rem 1.25rem;
     font-family: inherit;
     font-size: 16px;
-    color: var(--colors-black);
+    color: var(--color-surface-text);
     appearance: none;
     cursor: pointer;
     background: transparent;
@@ -144,8 +144,8 @@
 
     option {
       padding: 0.5rem;
-      color: var(--colors-black);
-      background-color: white;
+      color: var(--color-surface-text);
+      background-color: var(--color-surface-bg);
     }
   }
 
@@ -168,9 +168,9 @@
   min-width: 25ch;
   min-height: auto;
   padding: 1.25rem;
-  color: var(--colors-black);
-  background-color: white;
-  border: 1px solid var(--colors-white);
+  color: var(--color-surface-text);
+  background-color: var(--color-surface-bg);
+  border: 1px solid var(--color-surface-bg);
   border-radius: 10px;
   transition: all 0.2s ease-in-out;
 
@@ -179,17 +179,17 @@
   }
 
   &:focus-within:not(.fileInputHasError) {
-    color: var(--colors-black);
+    color: var(--color-surface-text);
     outline: 0;
-    background-color: color-mix(in sRGB, var(--colors-gray) 25%, white);
+    background-color: var(--color-input-focus-bg);
     border-color: var(--colors-gray);
   }
 
   &.fileInputHasError {
-    background-color: color-mix(in sRGB, var(--colors-red) 20%, white);
+    background-color: var(--color-input-error-bg);
     border-color: var(--colors-red);
     box-shadow:
-      inset 0 1px 2px rgb(0 0 0 / 25%),
+      var(--shadow-inset),
       0 -1px 1px var(--colors-red),
       0 1px 0 var(--colors-red);
   }
@@ -203,7 +203,7 @@
     width: 100%;
     font-family: inherit;
     font-size: 16px;
-    color: var(--colors-black);
+    color: var(--color-surface-text);
     cursor: pointer;
     background: transparent;
     border: 0;
@@ -218,22 +218,26 @@
       font-family: inherit;
       font-size: 14px;
       font-weight: 500;
-      color: var(--colors-white);
+      color: var(--color-text);
       cursor: pointer;
       background-color: var(--colors-red);
       border: none;
       border-radius: 5px;
-      box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+      box-shadow: var(--shadow-sm);
       transition: all 0.2s ease-in-out;
 
       &:active {
-        box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+        box-shadow: var(--shadow-sm);
         transform: translateY(0);
       }
 
       &:hover {
-        background-color: color-mix(in sRGB, var(--colors-red) 80%, black);
-        box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
+        background-color: color-mix(
+          in sRGB,
+          var(--colors-red) 80%,
+          var(--color-bg)
+        );
+        box-shadow: var(--shadow-md);
         transform: translateY(-1px);
       }
     }
@@ -244,22 +248,26 @@
       font-family: inherit;
       font-size: 14px;
       font-weight: 500;
-      color: var(--colors-white);
+      color: var(--color-text);
       cursor: pointer;
       background-color: var(--colors-red);
       border: none;
       border-radius: 5px;
-      box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+      box-shadow: var(--shadow-sm);
       transition: all 0.2s ease-in-out;
 
       &:active {
-        box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+        box-shadow: var(--shadow-sm);
         transform: translateY(0);
       }
 
       &:hover {
-        background-color: color-mix(in sRGB, var(--colors-red) 80%, black);
-        box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
+        background-color: color-mix(
+          in sRGB,
+          var(--colors-red) 80%,
+          var(--color-bg)
+        );
+        box-shadow: var(--shadow-md);
         transform: translateY(-1px);
       }
     }
@@ -303,13 +311,13 @@
     margin-top: 0.25rem;
     appearance: none;
     cursor: pointer;
-    background-color: white;
+    background-color: var(--color-surface-bg);
     border: 2px solid var(--colors-gray);
     border-radius: 4px;
     transition: all 0.2s ease-in-out;
 
     &:hover {
-      background-color: color-mix(in sRGB, var(--colors-red) 10%, white);
+      background-color: var(--color-input-checkbox-hover-bg);
       border-color: var(--colors-red);
     }
 
@@ -325,7 +333,7 @@
       font-size: 14px;
       font-weight: bold;
       line-height: 1;
-      color: white;
+      color: var(--color-text);
       content: "✓";
       transform: translate(-50%, -50%);
     }
@@ -339,7 +347,7 @@
   .checkboxLabel {
     font-size: 1rem;
     line-height: 1.25;
-    color: var(--colors-white);
+    color: var(--color-text);
     cursor: pointer;
     user-select: none;
   }

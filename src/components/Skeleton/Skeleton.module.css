@@ -1,6 +1,6 @@
 .block {
-  --skeleton-base: #2a2a2a;
-  --skeleton-shimmer: rgb(255 255 255 / 5%);
+  --skeleton-base: var(--color-skeleton-base);
+  --skeleton-shimmer: var(--color-skeleton-shimmer);
 
   background: linear-gradient(
     90deg,
@@ -38,7 +38,7 @@
 }
 
 .card {
-  --skeleton-card-bg: #2a2a2a;
+  --skeleton-card-bg: var(--color-skeleton-base);
 
   display: flex;
   flex-direction: column;
@@ -47,7 +47,7 @@
   max-height: 365px;
   overflow: hidden;
   background-color: var(--skeleton-card-bg);
-  border: 1px solid rgb(255 255 255 / 8%);
+  border: 1px solid var(--color-skeleton-border);
   border-radius: 10px;
 
   @media (width >= 600px) {
@@ -78,7 +78,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 0;
-  border-bottom: 1px dashed rgb(255 255 255 / 15%);
+  border-bottom: 1px dashed var(--divider);
 }
 
 .stat:last-child {

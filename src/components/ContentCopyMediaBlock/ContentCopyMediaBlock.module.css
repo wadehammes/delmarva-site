@@ -48,7 +48,11 @@
 
   &.blackBg {
     padding: 1rem;
-    background-color: color-mix(in sRGB, var(--colors-black) 80%, black);
+    background-color: color-mix(
+      in sRGB,
+      var(--color-bg) 80%,
+      var(--colors-black)
+    );
   }
 
   &.microdotBg {

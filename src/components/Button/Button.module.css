@@ -39,7 +39,7 @@
 
     &:hover {
       color: var(--color-text);
-      background-color: var(--colors-black);
+      background-color: var(--color-bg);
     }
   }
 

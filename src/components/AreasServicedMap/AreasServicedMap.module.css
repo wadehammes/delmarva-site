@@ -14,9 +14,7 @@
   min-height: 0;
   overflow: hidden;
   border-radius: 8px;
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 10%),
-    0 2px 4px -1px rgb(0 0 0 / 6%);
+  box-shadow: var(--shadow-card);
 }
 
 .map {
@@ -27,34 +25,26 @@
   /* Mapbox attribution styling */
   :global(.mapboxgl-ctrl-attrib) {
     font-size: 10px;
-    color: var(--colors-white);
-    background-color: rgb(
-      31 29 29 /
-      90%
-    ); /* Using --colors-black with transparency */
-
+    color: var(--color-text);
+    background-color: var(--overlay-bg-90);
     border-radius: 4px;
     backdrop-filter: blur(4px);
   }
 
   /* Mapbox control styling */
   :global(.mapboxgl-ctrl-group) {
-    background-color: rgb(
-      31 29 29 /
-      90%
-    ); /* Using --colors-black with transparency */
-
+    background-color: var(--overlay-bg-90);
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+    box-shadow: var(--shadow-map);
     backdrop-filter: blur(4px);
 
     :global(button) {
-      color: var(--colors-white);
+      color: var(--color-text);
       background-color: transparent;
       border: none;
 
       &:hover {
-        background-color: rgb(255 255 255 / 10%);
+        background-color: var(--overlay-text-hover);
       }
     }
   }
@@ -69,7 +59,7 @@
   font-size: 1rem;
   color: var(--colors-gray);
   text-align: center;
-  background-color: var(--colors-lightgray);
+  background-color: var(--card-bg);
 }
 
 /* Loading overlay for zip code data */
@@ -81,11 +71,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgb(
-    31 29 29 /
-    90%
-  ); /* Using --colors-black with transparency */
-
+  background-color: var(--overlay-bg-90);
   backdrop-filter: blur(2px);
 
   .loadingSpinner {
@@ -101,7 +87,7 @@
   p {
     margin: 0;
     font-size: 0.9rem;
-    color: var(--colors-white);
+    color: var(--color-text);
   }
 }
 
@@ -142,7 +128,7 @@
     .mapLegendLabel {
       font-size: 0.875rem;
       line-height: 1.5;
-      color: var(--colors-white);
+      color: var(--color-text);
     }
   }
 
