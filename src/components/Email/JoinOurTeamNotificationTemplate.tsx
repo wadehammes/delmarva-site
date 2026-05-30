@@ -1,12 +1,21 @@
-import type { ReactNode } from "react";
 import { Heading, Section, Text } from "react-email";
 import { getEmailBaseUrl } from "src/lib/emailConstants";
 import { EmailContactLinks } from "./EmailContactLinks";
+import { EmailDivider } from "./EmailDivider";
+import { EmailDocumentField } from "./EmailDocumentField";
+import { EmailFieldBlock } from "./EmailFieldBlock";
 import { EmailFooter } from "./EmailFooter";
 import { EmailHeader } from "./EmailHeader";
+import { EmailHighlightedField } from "./EmailHighlightedField";
 import { EmailLayout } from "./EmailLayout";
 import { EmailQuickActions } from "./EmailQuickActions";
+import { EmailSection } from "./EmailSection";
 import { emailClasses } from "./emailClasses";
+import {
+  EMAIL_NO_COVER_LETTER,
+  EMAIL_NO_MESSAGE,
+  EMAIL_NO_RESUME,
+} from "./emailDocumentConstants";
 import { joinOurTeamNotificationPreviewProps } from "./emailPreviewProps";
 
 interface JoinOurTeamNotificationTemplateProps {
@@ -24,11 +33,6 @@ interface JoinOurTeamNotificationTemplateProps {
   coverLetter: string;
   resume: string;
 }
-
-const FILE_ATTACHED = "File attached";
-const NO_COVER_LETTER = "No cover letter provided.";
-const NO_RESUME = "No resume provided.";
-const NO_MESSAGE = "No message provided.";
 
 const hasAddress = (address: string) =>
   address && address !== "No address provided.";
@@ -53,31 +57,6 @@ const formatAddress = (
   return line2 ? `${address}, ${line2}` : address;
 };
 
-function DocumentSection({
-  emptyLabel,
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-  emptyLabel: string;
-}): ReactNode {
-  return (
-    <>
-      <Text className={emailClasses.label}>{label}</Text>
-      {value === FILE_ATTACHED ? (
-        <Text className={emailClasses.textBlockLast}>
-          <span className={emailClasses.success}>Attached to this email</span>
-        </Text>
-      ) : value === emptyLabel ? (
-        <Text className={emailClasses.muted}>Not provided</Text>
-      ) : (
-        <Text className={emailClasses.textBlockLast}>{value}</Text>
-      )}
-    </>
-  );
-}
-
 export const JoinOurTeamNotificationTemplate = ({
   baseUrl = getEmailBaseUrl(),
   name,
@@ -93,11 +72,10 @@ export const JoinOurTeamNotificationTemplate = ({
   coverLetter,
   resume,
 }: JoinOurTeamNotificationTemplateProps) => {
-  const addressLine = formatAddress(address, city, state, zipCode);
-  const locationOnly =
-    hasCityState(city, state) && !addressLine ? `${city}, ${state}` : null;
-  const locationLine = addressLine ?? locationOnly;
-  const showAbout = briefDescription && briefDescription !== NO_MESSAGE;
+  const locationLine =
+    formatAddress(address, city, state, zipCode) ??
+    (hasCityState(city, state) ? `${city}, ${state}` : null);
+  const showAbout = briefDescription && briefDescription !== EMAIL_NO_MESSAGE;
 
   return (
     <EmailLayout
@@ -110,42 +88,45 @@ export const JoinOurTeamNotificationTemplate = ({
       </Heading>
 
       <Section className={emailClasses.content}>
-        <Text className={emailClasses.labelFirst}>Applicant</Text>
-        <Text className={emailClasses.applicantLead}>
-          {name} · {position}
-        </Text>
-        <EmailContactLinks
-          className={emailClasses.applicantContact}
-          email={email}
-          phone={phone}
-        />
-        {locationLine && (
-          <Text className={emailClasses.applicantDetail}>{locationLine}</Text>
-        )}
+        <EmailSection first label="Applicant">
+          <Text className={emailClasses.applicantLead}>
+            {name} · {position}
+          </Text>
+          <EmailContactLinks
+            className={emailClasses.applicantContact}
+            email={email}
+            phone={phone}
+          />
+          {locationLine && (
+            <Text className={emailClasses.applicantDetail}>{locationLine}</Text>
+          )}
+        </EmailSection>
 
         {workEligibility && (
           <>
-            <Text className={emailClasses.eligibilityLabel}>
-              Work eligibility
-            </Text>
-            <Text className={emailClasses.eligibilityValue}>
-              {workEligibility}
-            </Text>
+            <EmailDivider />
+            <EmailHighlightedField
+              label="Work eligibility"
+              value={workEligibility}
+            />
           </>
         )}
 
         {showAbout && (
           <>
-            <Text className={emailClasses.label}>About</Text>
-            <Text className={emailClasses.textBlockLast}>
-              {briefDescription}
-            </Text>
+            <EmailDivider />
+            <EmailFieldBlock label="About">{briefDescription}</EmailFieldBlock>
           </>
         )}
 
-        <DocumentSection emptyLabel={NO_RESUME} label="Resume" value={resume} />
-        <DocumentSection
-          emptyLabel={NO_COVER_LETTER}
+        <EmailDivider />
+        <EmailDocumentField
+          emptyLabel={EMAIL_NO_RESUME}
+          label="Resume"
+          value={resume}
+        />
+        <EmailDocumentField
+          emptyLabel={EMAIL_NO_COVER_LETTER}
           label="Cover letter"
           value={coverLetter}
         />

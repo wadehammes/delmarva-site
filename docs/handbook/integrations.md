@@ -29,7 +29,7 @@ Imagery and styles must stay within **`images.remotePatterns`** and CSP **`conne
 
 Transactional email uses **React Email 6** (`react-email`) and the **Resend** API.
 
-- **Templates**: [`src/components/Email/`](../../src/components/Email/) — shared layout, Tailwind theme ([`emailTheme.ts`](../../src/components/Email/emailTheme.ts)), preview sample data ([`emailPreviewProps.ts`](../../src/components/Email/emailPreviewProps.ts)).
+- **Templates**: [`src/components/Email/`](../../src/components/Email/) — see [Email README](../../src/components/Email/README.md) for template and shared-component index; Tailwind theme ([`emailTheme.ts`](../../src/components/Email/emailTheme.ts)), preview sample data ([`emailPreviewProps.ts`](../../src/components/Email/emailPreviewProps.ts)).
 - **Rendering**: [`src/lib/emailRenderer.tsx`](../../src/lib/emailRenderer.tsx) returns `{ html, text }` via `render()` and `render(..., { plainText: true })`.
 - **Routes**: [`src/app/api/resend/`](../../src/app/api/resend/) (Join Our Team, General Inquiry, Request a Proposal).
 - **Local workflow**: `pnpm email:dev` (preview + client compatibility hints), `pnpm email:export` (static HTML to `out/emails/`, runs in CI), `pnpm email:resend:setup` (optional send from preview UI). See **[src/lib/README.md](../../src/lib/README.md)**.

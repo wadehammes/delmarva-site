@@ -149,6 +149,8 @@ Open **http://localhost:3030** and pick a template from the sidebar. Sample data
 
 Optional assets for preview-only: [`src/components/Email/static/`](../components/Email/static/).
 
+**Shared components** (built on React Email primitives): `EmailSection`, `EmailFieldBlock`, `EmailHighlightedField`, `EmailDocumentField`, `EmailDivider`, `EmailQuickActions`, `EmailContactLinks` — see [`src/components/Email/README.md`](../components/Email/README.md).
+
 ### Email logo and branding
 
 All templates use a shared header (logo) and footer. The logo URL is built from `getEmailAssetBaseUrl()` + `EMAIL_LOGO_PATH` (PNG for email client compatibility). When **ENVIRONMENT=local** (e.g. in `.env.local`), you can set `EMAIL_ASSET_BASE_URL=https://www.delmarvasite.com` so the logo loads from your live site instead of localhost (email clients can’t load images from localhost). In Preview and Production, `getEmailAssetBaseUrl()` returns the normal site URL and this override is ignored.

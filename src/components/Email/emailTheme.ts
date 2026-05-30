@@ -3,6 +3,8 @@ import type { TailwindConfig } from "react-email";
 /** Delmarva brand colors for transactional email (also used in Tailwind theme). */
 export const emailBrand = {
   bg: "#1f1d1d",
+  /** Lighter than surface; used for dashed dividers between sections. */
+  divider: "#404040",
   muted: "#9ca3af",
   /** Matches site `--colors-red` */
   red: "#e01e2d",
