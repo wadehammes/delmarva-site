@@ -49,3 +49,67 @@ export const fetchResponse = async <T>(
 
   return res.json();
 };
+
+export const isNetworkFetchError = (error: unknown): boolean => {
+  return (
+    error instanceof TypeError &&
+    (error.message === "Failed to fetch" ||
+      error.message.includes("NetworkError") ||
+      error.message.includes("Load failed"))
+  );
+};
+
+const extractFormApiErrorMessage = (data: {
+  error?: { message?: string } | string;
+  message?: string;
+}): string | undefined => {
+  if (typeof data.error === "object" && data.error?.message) {
+    return data.error.message;
+  }
+  if (typeof data.error === "string" && data.error.length > 0) {
+    return data.error;
+  }
+  if (typeof data.message === "string" && data.message !== "success") {
+    return data.message;
+  }
+  return undefined;
+};
+
+const hasFormApiError = (error: unknown): boolean => {
+  if (error == null) {
+    return false;
+  }
+  if (typeof error === "string") {
+    return error.length > 0;
+  }
+  if (typeof error === "object") {
+    return Object.keys(error).length > 0;
+  }
+  return Boolean(error);
+};
+
+export const assertFormApiOk = async (
+  response: Response,
+  fallbackMessage: string,
+) => {
+  let data: { error?: { message?: string } | string; message?: string } = {};
+  try {
+    data = await response.json();
+  } catch {
+    // non-JSON body (e.g. HTML error page)
+  }
+
+  const apiMessage = extractFormApiErrorMessage(data);
+
+  if (!response.ok) {
+    throw new Error(
+      apiMessage ?? `${fallbackMessage} (HTTP ${response.status})`,
+    );
+  }
+
+  if (hasFormApiError(data.error)) {
+    throw new Error(apiMessage ?? fallbackMessage);
+  }
+
+  return data;
+};

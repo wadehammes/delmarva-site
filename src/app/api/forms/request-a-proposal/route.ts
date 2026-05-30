@@ -1,13 +1,13 @@
 import { Resend } from "resend";
 import type { RequestAProposalInputs } from "src/components/RequestAProposalForm/RequestAProposalForm.component";
 import { renderRequestAProposalNotificationEmail } from "src/lib/emailRenderer";
-import { getNotificationTo } from "src/utils/emailHelpers";
+import { sendResendFormEmail } from "src/lib/resendFormEmail";
+import { resolveResendBcc } from "src/utils/emailHelpers";
+import { FORM_FALLBACK_NOTIFICATION_TO } from "src/utils/formRoute.helpers";
 import { verifyRecaptchaToken } from "src/utils/recaptcha";
 import { isSpam } from "src/utils/spamDetection";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-const fallbackNotificationTo = "w@dehammes.com";
 
 export async function POST(request: Request) {
   const res: RequestAProposalInputs = await request.json();
@@ -64,9 +64,7 @@ export async function POST(request: Request) {
 
   const toAddresses = res.emailsToSendNotification?.length
     ? res.emailsToSendNotification
-    : [fallbackNotificationTo];
-
-  const to = getNotificationTo(toAddresses);
+    : [FORM_FALLBACK_NOTIFICATION_TO];
 
   try {
     const notificationEmail = await renderRequestAProposalNotificationEmail({
@@ -77,22 +75,35 @@ export async function POST(request: Request) {
       projectDetails,
     });
 
-    const data = await resend.emails.send({
-      bcc: res.emailsToBcc,
-      from: "Delmarva Site Development <mail@delmarvasite.net>",
-      html: notificationEmail.html,
-      replyTo: `${name} <${email}>`,
-      subject: `Request for Proposal: ${companyName} — ${name}`,
-      text: notificationEmail.text,
-      to,
-    });
+    const data = await sendResendFormEmail(
+      resend,
+      {
+        bcc: resolveResendBcc(res.emailsToBcc),
+        from: "Delmarva Site Development <mail@delmarvasite.net>",
+        html: notificationEmail.html,
+        replyTo: `${name} <${email}>`,
+        subject: `Request for Proposal: ${companyName} — ${name}`,
+        text: notificationEmail.text,
+      },
+      toAddresses,
+    );
 
     if (data.error) {
-      return Response.json({ error: data.error });
+      console.error("Request a proposal send failed:", data.error);
+      return Response.json({ error: data.error }, { status: 502 });
     }
 
     return Response.json(data);
   } catch (error) {
-    return Response.json({ error });
+    console.error("Request a proposal form error:", error);
+    return Response.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error sending email",
+      },
+      { status: 500 },
+    );
   }
 }

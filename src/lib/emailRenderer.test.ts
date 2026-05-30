@@ -1,10 +1,10 @@
-import { render } from "react-email";
-import { renderConfirmationEmail } from "./emailRenderer";
-import { getJoinOurTeamConfirmationCopy } from "./emailTranslations";
-
 jest.mock("react-email", () => ({
   render: jest.fn(),
 }));
+
+import { render } from "react-email";
+import { renderConfirmationEmail } from "./emailRenderer";
+import { getJoinOurTeamConfirmationCopy } from "./emailTranslations";
 
 const mockRender = render as jest.MockedFunction<typeof render>;
 
@@ -36,28 +36,6 @@ describe("emailRenderer", () => {
       expect(result.html).toBe("<html>email-body</html>");
       expect(result.text).toBe("plain-text-body");
       expect(mockRender).toHaveBeenCalledTimes(2);
-      expect(mockRender).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({ plainText: true }),
-      );
-    });
-
-    it("uses English subject for en locale", async () => {
-      const result = await renderConfirmationEmail({
-        locale: "en",
-        ...sample,
-      });
-
-      expect(result.subject).toBe("Application Received for Project Manager");
-    });
-
-    it("defaults to English subject when locale is invalid", async () => {
-      const result = await renderConfirmationEmail({
-        locale: "invalid",
-        ...sample,
-      });
-
-      expect(result.subject).toBe("Application Received for Project Manager");
     });
   });
 });

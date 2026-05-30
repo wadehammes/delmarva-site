@@ -50,4 +50,4 @@ pnpm test:ci -- src/lib/emailTranslations.test.ts src/lib/emailRenderer.test.ts
 
 **Tests:** [`emailTranslations.test.ts`](../../lib/emailTranslations.test.ts) covers locale parsing and `en`/`es` copy (including message-key parity). [`emailRenderer.test.ts`](../../lib/emailRenderer.test.ts) verifies confirmation subjects and the html + plain-text render path (with `react-email` mocked in Jest).
 
-See [`src/lib/README.md`](../../lib/README.md) for Resend env and logo URL behavior.
+See [`src/lib/README.md`](../../lib/README.md) for form routes, Resend env, test recipients, and logo URL behavior.

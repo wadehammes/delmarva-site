@@ -48,7 +48,7 @@ If you add client-side **`useQuery`**, put it in a dedicated hook file under **`
 ## Forms
 
 - **react-hook-form** for local form state; **reCAPTCHA** where required (see env in [next.config.ts](../../next.config.ts)).
-- **Submit** via **mutation hooks** → **`api.*`** → Resend (or other) **Route Handlers** under **`src/app/api/resend/`**.
+- **Submit** via **mutation hooks** → **`api.*`** → **Route Handlers** under **`src/app/api/forms/`** (general inquiry, request a proposal, careers application). Join Our Team posts to **`/api/forms/careers-application`** (multipart when files are attached, JSON otherwise); shared handler logic lives in [submitCareersApplication.ts](../../src/lib/submitCareersApplication.ts). Legacy **`/api/resend/*`** URLs redirect to **`/api/forms/*`**. Use **`RECAPTCHA_BYPASS_LOCAL=true`** in **`.env.local` only** (requires **`ENVIRONMENT=local`**). Never add it to Vercel staging/production env.
 
 ## Jotai (client UI)
 

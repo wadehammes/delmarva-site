@@ -38,9 +38,9 @@ Notable groups (see **`env`** in config for the full set):
 - **Contentful** — space id, delivery/preview keys, preview secret, CMA token for codegen
 - **ENVIRONMENT** — used for redirects and environment-specific behavior
 - **Analytics** — **`GOOGLE_TAG_MANAGER_ID`** (used in [layout.tsx](../../src/app/[locale]/layout.tsx)). **`GA_MEASUREMENT_ID`** is listed in **`next.config` `env`** but not referenced under **`src/`** directly today (typically wired through GTM).
-- **Email** — Resend keys and dev recipient
+- **Email** — **`RESEND_API_KEY`**, **`RESEND_TEST_RECIPIENTS`** (local/staging form routing), legacy **`RESEND_DEV_TO_EMAIL`**
 - **Maps** — **`MAPBOX_API_TOKEN`** (server: boundaries API, [zipCodeUtils.ts](../../src/utils/zipCodeUtils.ts), etc.); client map components use **`NEXT_PUBLIC_MAPBOX_API_TOKEN`** (see layout preconnect and map components). Only **`MAPBOX_API_TOKEN`** is listed under **`next.config` `env`**; the public token must still be set in the environment for client bundles.
-- **reCAPTCHA** — **`RECAPTCHA_SITE_KEY`** in **`next.config` `env`** for the widget; server verification uses **`RECAPTCHA_SECRET_KEY`** in [recaptcha.ts](../../src/utils/recaptcha.ts) (set in deployment env; not duplicated in the `env` block today).
+- **reCAPTCHA** — **`RECAPTCHA_SITE_KEY`** in **`next.config` `env`** for the widget; server verification uses **`RECAPTCHA_SECRET_KEY`** in [recaptcha.ts](../../src/utils/recaptcha.ts) (set in deployment env; not duplicated in the `env` block today). **`RECAPTCHA_BYPASS_LOCAL`** belongs in **`.env.local` only** (with **`ENVIRONMENT=local`**). Value must be `true` (no extra quotes in the Vercel UI—enter `true`, not `"true"`). Do **not** set it on Vercel; if present on staging/production it is ignored because `ENVIRONMENT` is not `local`.
 
 Local workflow: link the Vercel project and **`npx vercel env pull`** as described in the root [README.md](../../README.md).
 
@@ -49,6 +49,8 @@ Local workflow: link the Vercel project and **`npx vercel env pull`** as describ
 **[next.config.ts](../../next.config.ts)** defines **`securityHeaders`** (CSP, HSTS, `X-Frame-Options`, etc.) and attaches them via **`headers()`** alongside cache rules.
 
 If you add a new third-party script or API origin, update the **Content Security Policy** string in the same file so production does not block required resources.
+
+**Local dev:** `Strict-Transport-Security` is only sent when `ENVIRONMENT` or `NODE_ENV` is `production`. If form submits still fail with “Failed to fetch” after HSTS was previously cached for `localhost`, clear it in Chrome at `chrome://net-internals/#hsts` (Delete domain security policies → `localhost`).
 
 ## Draft mode
 

@@ -1,198 +1,87 @@
-# Resend Email Templates
+# `src/lib` — email, forms, and site utilities
 
-This directory contains the email template system for the Delmarva site, built on top of Resend's template functionality.
+Server-side helpers used by API routes, sitemap/RSS, and analytics. Transactional email is **React Email 6** components rendered at send time—not Resend dashboard templates or `{{variable}}` placeholders.
 
-## Overview
+## Transactional email
 
-The template system provides:
-- **Professional HTML email templates** with responsive design
-- **Template variable replacement** for dynamic content
-- **Programmatic template management** via the Resend API
-- **Consistent branding** across all emails
+| File | Role |
+|------|------|
+| [`emailRenderer.tsx`](./emailRenderer.tsx) | `render()` → `{ html, text, subject? }` for each template |
+| [`emailTranslations.ts`](./emailTranslations.ts) | Join Our Team confirmation copy (`en` / `es`) |
+| [`resendFormEmail.ts`](./resendFormEmail.ts) | `sendResendFormEmail()` — wraps Resend + test-recipient routing |
+| [`submitCareersApplication.ts`](./submitCareersApplication.ts) | Join Our Team: reCAPTCHA, spam checks, render, send |
 
-## Templates
+**Templates** live under [`src/components/Email/`](../components/Email/) — see [`src/components/Email/README.md`](../components/Email/README.md) for the file list and shared layout components.
 
-### 1. Join Our Team Notification Template
-- **Name**: `join-our-team-notification`
-- **Purpose**: Sent to Delmarva team when someone applies for a job
-- **Variables**: All form fields including name, email, position, etc.
+**Form routes** under [`src/app/api/forms/`](../app/api/forms/):
 
-### 2. Join Our Team Confirmation Template
-- **Name**: `join-our-team-confirmation`
-- **Purpose**: Sent to applicants confirming their application was received
-- **Variables**: name, position
+- `careers-application` → `submitCareersApplication` (multipart with files, JSON without)
+- `general-inquiry`, `request-a-proposal` → render + `sendResendFormEmail` in-route
 
-## Usage
+Legacy **`/api/resend/*`** URLs redirect to **`/api/forms/*`** ([`next.config.ts`](../../next.config.ts)).
 
-### Setting Up Templates
-
-1. **First time setup**:
-   ```bash
-   pnpm run setup-resend-templates
-   ```
-
-2. **Manual setup via Resend Dashboard**:
-   - Go to [Resend Templates](https://resend.com/templates)
-   - Create templates with the names above
-   - Copy the HTML/text content from the template files
-
-### Using Templates in Code
-
-```typescript
-import { JOIN_OUR_TEAM_TEMPLATE } from 'src/lib/resendTemplates';
-import { replaceTemplateVariablesInObject } from 'src/lib/templateUtils';
-
-// Replace variables in template
-const emailContent = replaceTemplateVariablesInObject(
-  JOIN_OUR_TEAM_TEMPLATE,
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    position: 'Frontend Developer',
-    // ... other variables
-  }
-);
-
-// Send email with processed template
-await resend.emails.send({
-  from: 'Delmarva <hello@delmarvasite.com>',
-  to: 'team@delmarvasite.com',
-  subject: emailContent.subject,
-  html: emailContent.html,
-  text: emailContent.text,
-});
-```
-
-### Template Management Functions
-
-```typescript
-import { createTemplate, getTemplate, listTemplates, deleteTemplate } from 'src/lib/resendTemplates';
-
-// Create a new template
-await createTemplate(templateData);
-
-// Get a template by name
-const template = await getTemplate('template-name');
-
-// List all templates
-const templates = await listTemplates();
-
-// Delete a template
-await deleteTemplate('template-id');
-```
-
-## Template Variables
-
-All templates use the `{{variableName}}` syntax for dynamic content:
-
-- `{{name}}` - Applicant's full name
-- `{{email}}` - Applicant's email address
-- `{{phone}}` - Phone number
-- `{{position}}` - Job position applied for
-- `{{briefDescription}}` - Application message
-- `{{workEligibility}}` - Work eligibility status
-- `{{address}}`, `{{city}}`, `{{state}}`, `{{zipCode}}` - Address information
-- `{{coverLetter}}` - Cover letter content
-- `{{resume}}` - Resume information
-
-## Customization
-
-### Adding New Templates
-
-1. Create a new template object in `resendTemplates.ts`:
-   ```typescript
-   export const NEW_TEMPLATE: EmailTemplate = {
-     name: "template-name",
-     subject: "Email Subject - {{variable}}",
-     html: `<!DOCTYPE html>...`,
-     text: `Plain text version...`
-   };
-   ```
-
-2. Add it to the setup script in `scripts/setup-resend-templates.js`
-
-3. Use it in your email sending logic
-
-### Modifying Existing Templates
-
-1. Update the template content in `resendTemplates.ts`
-2. Re-run the setup script to update the template in Resend
-3. Or manually update via the Resend dashboard
-
-## Best Practices
-
-- **Mobile-first design**: All templates are responsive
-- **Accessibility**: Include both HTML and text versions
-- **Branding consistency**: Use consistent colors, fonts, and styling
-- **Variable validation**: Always check that required variables are provided
-- **Error handling**: Gracefully handle missing template variables
-
-### React Email 6 tooling
+### React Email commands
 
 | Command | Purpose |
 |--------|---------|
-| `pnpm email:dev` | Preview at http://localhost:3030 with Gmail/Outlook/Apple Mail/Yahoo compatibility hints |
-| `pnpm email:export` | Build static HTML to `out/emails/` (also runs in CI) |
-| `pnpm email:resend:setup` | Store a Resend API key for send-from-preview in the React Email UI |
+| `pnpm email:dev` | Preview at http://localhost:3030 (Gmail / Outlook / Apple Mail / Yahoo hints) |
+| `pnpm email:export` | Static HTML to `out/emails/` (CI) |
+| `pnpm email:resend:setup` | API key for send-from-preview in the React Email UI |
 
-**Rendering:** [`emailRenderer.tsx`](./emailRenderer.tsx) returns `{ html, text }` from the same template (`render(..., { plainText: true })`). Resend routes use both parts. Join Our Team **confirmation** emails use the submitter's locale (`en` | `es`) via [`emailTranslations.ts`](./emailTranslations.ts) and `JoinOurTeamConfirmationEmail` message keys.
+Sample preview data: [`emailPreviewProps.ts`](../components/Email/emailPreviewProps.ts). Optional preview assets: [`src/components/Email/static/`](../components/Email/static/).
 
-**Theming:** Brand colors live in [`emailTheme.ts`](../components/Email/emailTheme.ts) (including Delmarva red `#e01e2d` for links and buttons) and map to Tailwind `delmarva-*` utilities in [`emailClasses.ts`](../components/Email/emailClasses.ts).
+**Theming:** [`emailTheme.ts`](../components/Email/emailTheme.ts), [`emailClasses.ts`](../components/Email/emailClasses.ts).
 
-### Preview emails locally (no send)
+### Adding or changing a template
 
-```bash
-pnpm email:dev
-```
+1. Add or edit a `*Template.tsx` in `src/components/Email/` (use shared `EmailLayout`, `EmailSection`, etc.).
+2. Export a render helper from [`emailRenderer.tsx`](./emailRenderer.tsx) if the route needs it.
+3. Wire the route (or extend `submitCareersApplication`) to call `sendResendFormEmail`.
+4. Add `PreviewProps` + `export default` for `pnpm email:dev`; extend [`emailPreviewProps.ts`](../components/Email/emailPreviewProps.ts) when useful.
+5. Run `pnpm test:ci -- src/lib/emailRenderer.test.ts src/lib/emailTranslations.test.ts` (and any new tests).
 
-Open **http://localhost:3030** and pick a template from the sidebar. Sample data lives in [`emailPreviewProps.ts`](../components/Email/emailPreviewProps.ts); each `*Template.tsx` sets `PreviewProps` and `export default` for the CLI.
+Join Our Team **confirmation** respects form `locale` (`en` | `es`). Team **notification** templates stay English.
 
-Optional assets for preview-only: [`src/components/Email/static/`](../components/Email/static/).
+### Logo URL in email clients
 
-**Shared components** (built on React Email primitives): `EmailSection`, `EmailFieldBlock`, `EmailHighlightedField`, `EmailDocumentField`, `EmailDivider`, `EmailQuickActions`, `EmailContactLinks` — see [`src/components/Email/README.md`](../components/Email/README.md).
+Headers use `getEmailAssetBaseUrl()` + `EMAIL_LOGO_PATH` (see [`emailHelpers.ts`](../utils/emailHelpers.ts)). On **local**, set `EMAIL_ASSET_BASE_URL=https://www.delmarvasite.com` in `.env.local` so clients can load the logo (they cannot fetch `localhost`).
 
-### Email logo and branding
+### Testing form sends (local and staging)
 
-All templates use a shared header (logo) and footer. The logo URL is built from `getEmailAssetBaseUrl()` + `EMAIL_LOGO_PATH` (PNG for email client compatibility). When **ENVIRONMENT=local** (e.g. in `.env.local`), you can set `EMAIL_ASSET_BASE_URL=https://www.delmarvasite.com` so the logo loads from your live site instead of localhost (email clients can’t load images from localhost). In Preview and Production, `getEmailAssetBaseUrl()` returns the normal site URL and this override is ignored.
+Routing is in [`resolveResendRecipients`](../utils/emailHelpers.ts) via [`sendResendFormEmail`](./resendFormEmail.ts):
 
-### Testing Resend locally
+- **`ENVIRONMENT=local`** or **`staging`** — all form `to` addresses go to test inboxes, not CMS recipients; BCC from Contentful is dropped.
+- **`ENVIRONMENT=production`** — CMS `emailsToSendNotification` / BCC as configured.
 
-1. **Get an API key**  
-   In the [Resend dashboard](https://resend.com/api-keys), create an API key and add it to `.env.local`:
+Setup:
+
+1. `RESEND_API_KEY` in `.env.local` (local) and Vercel (staging).
+2. `ENVIRONMENT=local` for `pnpm dev`; `staging` on the staging Vercel project.
+3. Optional test list (defaults in code if unset):
    ```
-   RESEND_API_KEY=re_xxxxxxxxxxxx
+   RESEND_TEST_RECIPIENTS=delivered@resend.dev,wade@provisioner.agency
    ```
+   Legacy override: `RESEND_DEV_TO_EMAIL`.
 
-2. **Run the app**  
-   Start the dev server (`pnpm dev`). Form submissions will call the Resend API and send real emails. When you run the **dev server** (`pnpm dev`), notification redirect uses `RESEND_DEV_TO_EMAIL` so you don’t email real recipients; deployed (staging/production) always uses real recipients.
+Resend sandbox: `delivered@resend.dev`, `bounced@resend.dev`, `complained@resend.dev`.
 
-3. **Redirect notification emails in dev (optional)**  
-   When running the dev server (`NODE_ENV=development`), set in `.env.local`:
-   ```
-   RESEND_DEV_TO_EMAIL=delivered@resend.dev
-   ```
-   Then all **notification** emails (Request a Proposal and Join Our Team) are sent to this address instead of the configured recipients. Confirmation emails still go to the applicant. Deployed (staging/production) ignores this and uses normal recipients.
+**Local reCAPTCHA:** `RECAPTCHA_BYPASS_LOCAL=true` in **`.env.local` only** with `ENVIRONMENT=local`. Do not set on Vercel.
 
-   Resend test addresses:
-   - `delivered@resend.dev` – simulates successful delivery (view in Resend dashboard → Emails)
-   - `bounced@resend.dev` – test bounces
-   - `complained@resend.dev` – test spam complaints
+Handbook: [integrations.md](../../docs/handbook/integrations.md), [patterns.md](../../docs/handbook/patterns.md) (forms), [platform.md](../../docs/handbook/platform.md) (env).
 
-   You can also set `RESEND_DEV_TO_EMAIL` to your own email to receive copies locally.
+### Troubleshooting
 
-## Troubleshooting
+| Symptom | Check |
+|--------|--------|
+| Email not sent | `RESEND_API_KEY`, Resend dashboard logs, route returns `{ error }` (client uses `assertFormApiOk` on Join Our Team) |
+| Wrong recipients on staging | `ENVIRONMENT` and `RESEND_TEST_RECIPIENTS` |
+| Broken logo in preview | `EMAIL_ASSET_BASE_URL` on local |
+| Spanish confirmation wrong | Form `locale` and [`emailTranslations.test.ts`](./emailTranslations.test.ts) |
 
-### Template Not Found
-- Check that the template name matches exactly
-- Verify the template was created successfully
-- Use the setup script to recreate templates
+## Other `src/lib` modules
 
-### Variables Not Replacing
-- Ensure variable names match exactly (case-sensitive)
-- Check that the variable object contains the expected keys
-- Verify template syntax uses `{{variableName}}` format
-
-### Email Not Sending
-- Check Resend API key configuration
-- Verify template IDs are correct
-- Check Resend dashboard for any errors
+| File | Role |
+|------|------|
+| [`generateRss.ts`](./generateRss.ts) | RSS feed generation |
+| [`generateSitemap.ts`](./generateSitemap.ts) | Sitemap output |
+| [`analytics.ts`](./analytics.ts) | Analytics helpers |

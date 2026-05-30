@@ -1,13 +1,13 @@
 import { Resend } from "resend";
 import type { GeneralInquiryInputs } from "src/components/GeneralInquiryForm/GeneralInquiryForm.component";
 import { renderGeneralInquiryNotificationEmail } from "src/lib/emailRenderer";
-import { getNotificationTo } from "src/utils/emailHelpers";
+import { sendResendFormEmail } from "src/lib/resendFormEmail";
+import { resolveResendBcc } from "src/utils/emailHelpers";
+import { FORM_FALLBACK_NOTIFICATION_TO } from "src/utils/formRoute.helpers";
 import { verifyRecaptchaToken } from "src/utils/recaptcha";
 import { isSpam } from "src/utils/spamDetection";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-const fallbackNotificationTo = "w@dehammes.com";
 
 export async function POST(request: Request) {
   const res: GeneralInquiryInputs = await request.json();
@@ -63,9 +63,7 @@ export async function POST(request: Request) {
 
   const toAddresses = res.emailsToSendNotification?.length
     ? res.emailsToSendNotification
-    : [fallbackNotificationTo];
-
-  const to = getNotificationTo(toAddresses);
+    : [FORM_FALLBACK_NOTIFICATION_TO];
 
   try {
     const notificationEmail = await renderGeneralInquiryNotificationEmail({
@@ -75,22 +73,35 @@ export async function POST(request: Request) {
       phone,
     });
 
-    const data = await resend.emails.send({
-      bcc: res.emailsToBcc?.length ? res.emailsToBcc : undefined,
-      from: "Delmarva Site Development <mail@delmarvasite.net>",
-      html: notificationEmail.html,
-      replyTo: `${name} <${email}>`,
-      subject: `General Inquiry: ${name}`,
-      text: notificationEmail.text,
-      to,
-    });
+    const data = await sendResendFormEmail(
+      resend,
+      {
+        bcc: resolveResendBcc(res.emailsToBcc),
+        from: "Delmarva Site Development <mail@delmarvasite.net>",
+        html: notificationEmail.html,
+        replyTo: `${name} <${email}>`,
+        subject: `General Inquiry: ${name}`,
+        text: notificationEmail.text,
+      },
+      toAddresses,
+    );
 
     if (data.error) {
-      return Response.json({ error: data.error });
+      console.error("General inquiry send failed:", data.error);
+      return Response.json({ error: data.error }, { status: 502 });
     }
 
     return Response.json(data);
   } catch (error) {
-    return Response.json({ error });
+    console.error("General inquiry form error:", error);
+    return Response.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error sending email",
+      },
+      { status: 500 },
+    );
   }
 }

@@ -45,3 +45,4 @@ yarn-error.log*
 public/generated-sitemap-*.xml
 public/rss-blog-en.xml
 public/rss-blog-es.xml
+.env*

@@ -20,7 +20,7 @@ Map of the Delmarva site: technologies, where code lives, and how a request move
 - **`[locale]/page.tsx`** — Home: fetches page, navigation, footer from Contentful, renders **PageLayout** with **PageComponent** (and **SchemaScript** for JSON-LD where used).
 - **`[locale]/[slug]/page.tsx`**, **`[locale]/what-we-deliver/`**, **`[locale]/markets/[slug]/page.tsx`** — Other static routes; each follows the same general pattern (validate locale, `draftMode()`, fetch Contentful, render).
 - **`[locale]/refresh-content/page.tsx`** — On-demand revalidation flow (protected by env token).
-- **`api/`** — Route handlers: **draft** ([`api/draft/route.ts`](../../src/app/api/draft/route.ts)), **disable-draft** ([`api/disable-draft/route.ts`](../../src/app/api/disable-draft/route.ts)), **Resend** email endpoints under `api/resend/`, **Mapbox boundaries** under `api/boundaries/`.
+- **`api/`** — Route handlers: **draft** ([`api/draft/route.ts`](../../src/app/api/draft/route.ts)), **disable-draft** ([`api/disable-draft/route.ts`](../../src/app/api/disable-draft/route.ts)), **form email** endpoints under `api/forms/`, **Mapbox boundaries** under `api/boundaries/`.
 - **`manifest.ts`**, **`robots.ts`**, **`opengraph-image.alt.txt`**, **`twitter-image.alt.txt`** — Metadata and PWA-related files.
 
 API details: [platform.md](platform.md). Tags: [integrations.md](integrations.md).

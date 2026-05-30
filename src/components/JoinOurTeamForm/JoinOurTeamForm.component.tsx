@@ -18,6 +18,10 @@ import type { Locales } from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
 import { US_STATES_MAP } from "src/utils/constants";
 import {
+  getRecaptchaTokenForForm,
+  isRecaptchaBypassEnabled,
+} from "src/utils/recaptcha.helpers";
+import {
   EMAIL_VALIDATION_REGEX,
   PHONE_NUMBER_VALIDATION_REGEX,
 } from "src/utils/regex";
@@ -93,55 +97,59 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
     clearErrors("email");
     clearErrors("position");
 
-    if (reCaptcha?.current) {
-      const captcha = await reCaptcha.current.executeAsync();
-
-      if (captcha) {
-        const {
-          briefDescription,
-          email,
-          name,
-          phone,
-          workEligibility,
-          address,
-          city,
-          state,
-          zipCode,
-          coverLetter,
-          resume,
-          position,
-          website,
-        } = data;
-
-        try {
-          await sendJoinOurTeamFormMutation.mutateAsync({
-            address,
-            briefDescription,
-            city,
-            coverLetter,
-            email,
-            emailsToSendNotification: fields.emailsToSendNotification,
-            locale,
-            name,
-            phone,
-            position,
-            recaptchaToken: captcha,
-            resume,
-            state,
-            website,
-            workEligibility,
-            zipCode,
-          });
-          const message =
-            documentToPlainTextString(formSubmitSuccessMessage).trim() ||
-            "Application received. We'll be in touch soon.";
-          toast.success(message);
-          reset(defaultValues);
-          reCaptcha.current?.reset();
-        } catch (_e) {
-          throw new Error("Failed to submit application. Please try again.");
-        }
+    try {
+      const captcha = await getRecaptchaTokenForForm(reCaptcha);
+      if (!captcha) {
+        toast.error("Could not verify reCAPTCHA. Please try again.");
+        return;
       }
+
+      const {
+        briefDescription,
+        email,
+        name,
+        phone,
+        workEligibility,
+        address,
+        city,
+        state,
+        zipCode,
+        coverLetter,
+        resume,
+        position,
+        website,
+      } = data;
+
+      await sendJoinOurTeamFormMutation.mutateAsync({
+        address,
+        briefDescription,
+        city,
+        coverLetter,
+        email,
+        emailsToSendNotification: fields.emailsToSendNotification,
+        locale,
+        name,
+        phone,
+        position,
+        recaptchaToken: captcha,
+        resume,
+        state,
+        website,
+        workEligibility,
+        zipCode,
+      });
+      const message =
+        documentToPlainTextString(formSubmitSuccessMessage).trim() ||
+        "Application received. We'll be in touch soon.";
+      toast.success(message);
+      reset(defaultValues);
+      reCaptcha.current?.reset();
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to submit application. Please try again.";
+      toast.error(message);
     }
   };
 
@@ -508,11 +516,13 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           />
         </div>
 
-        <ReCAPTCHA
-          ref={reCaptcha}
-          sitekey={process.env.RECAPTCHA_SITE_KEY as string} // v3
-          size="invisible"
-        />
+        {!isRecaptchaBypassEnabled() ? (
+          <ReCAPTCHA
+            ref={reCaptcha}
+            sitekey={process.env.RECAPTCHA_SITE_KEY as string}
+            size="invisible"
+          />
+        ) : null}
         <input hidden type="submit" />
       </form>
     </div>

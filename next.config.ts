@@ -20,26 +20,32 @@ const nextConfig: NextConfig = withNextIntl({
     GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
     GOOGLE_TAG_MANAGER_ID: process.env.GOOGLE_TAG_MANAGER_ID,
     MAPBOX_API_TOKEN: process.env.MAPBOX_API_TOKEN,
+    RECAPTCHA_BYPASS_LOCAL: process.env.RECAPTCHA_BYPASS_LOCAL,
     RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     REFRESH_CONTENT_ACCESS_TOKEN: process.env.REFRESH_CONTENT_ACCESS_TOKEN,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     RESEND_DEV_TO_EMAIL: process.env.RESEND_DEV_TO_EMAIL,
+    RESEND_TEST_RECIPIENTS: process.env.RESEND_TEST_RECIPIENTS,
   },
 
   experimental: {
-    // Optimize package imports to reduce bundle size
+    // Optimize package imports to reduce package size
     optimizePackageImports: [
       "@contentful/rich-text-react-renderer",
       "swiper",
       "gsap",
       "react-intersection-observer",
     ],
+    proxyClientMaxBodySize: "10mb",
   },
 
   // Optimized headers with better caching
   async headers() {
     try {
-      const isProduction = process.env.NODE_ENV === "production";
+      const isProduction =
+        process.env.ENVIRONMENT === "production" ||
+        process.env.NODE_ENV === "production";
+      const pageHeaders = headersForPages(isProduction);
       const htmlCacheControl = isProduction
         ? "public, max-age=2592000, stale-while-revalidate=86400"
         : "public, max-age=0, must-revalidate";
@@ -51,7 +57,7 @@ const nextConfig: NextConfig = withNextIntl({
               key: "Cache-Control",
               value: htmlCacheControl,
             },
-            ...securityHeaders,
+            ...pageHeaders,
           ],
           source: "/",
         },
@@ -61,7 +67,7 @@ const nextConfig: NextConfig = withNextIntl({
               key: "Cache-Control",
               value: htmlCacheControl,
             },
-            ...securityHeaders,
+            ...pageHeaders,
           ],
           source: "/:path*",
         },
@@ -154,6 +160,8 @@ const nextConfig: NextConfig = withNextIntl({
     }
   },
 
+  serverExternalPackages: ["react-email", "resend"],
+
   trailingSlash: false,
   // Note: Turbopack file system caching is enabled by default in Next.js 16.1
   turbopack: {
@@ -217,6 +225,21 @@ const productionRedirects = sources.map((source) => ({
 
 const sharedRedirects = [
   {
+    destination: "/api/forms/:path*",
+    permanent: false,
+    source: "/api/resend/:path*",
+  },
+  {
+    destination: "/api/forms/careers-application",
+    permanent: false,
+    source: "/api/forms/join-our-team",
+  },
+  {
+    destination: "/api/forms/careers-application",
+    permanent: false,
+    source: "/api/resend/join-our-team",
+  },
+  {
     destination: "/what-we-deliver",
     permanent: true,
     source: "/project-portfolio",
@@ -264,6 +287,11 @@ const ContentSecurityPolicy = `
   frame-ancestors 'none';
 `;
 
+const hstsHeader = {
+  key: "Strict-Transport-Security",
+  value: "max-age=31536000; includeSubDomains; preload",
+};
+
 const securityHeaders = [
   // Content Security Policy
   {
@@ -290,11 +318,6 @@ const securityHeaders = [
     key: "X-DNS-Prefetch-Control",
     value: "on",
   },
-  // Strict Transport Security
-  {
-    key: "Strict-Transport-Security",
-    value: "max-age=31536000; includeSubDomains; preload",
-  },
   // Permissions Policy
   {
     key: "Permissions-Policy",
@@ -306,5 +329,10 @@ const securityHeaders = [
     value: "1; mode=block",
   },
 ];
+
+/** HSTS on localhost breaks local HTTP fetches after the browser caches the header. */
+function headersForPages(isProduction: boolean) {
+  return isProduction ? [...securityHeaders, hstsHeader] : securityHeaders;
+}
 
 export default nextConfig;

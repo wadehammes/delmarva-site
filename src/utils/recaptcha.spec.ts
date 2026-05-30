@@ -1,4 +1,8 @@
-import { verifyRecaptchaToken } from "src/utils/recaptcha";
+import { Environments } from "src/interfaces/common.interfaces";
+import {
+  verifyRecaptchaForForm,
+  verifyRecaptchaToken,
+} from "src/utils/recaptcha";
 
 // Mock fetch globally
 global.fetch = jest.fn();
@@ -65,13 +69,14 @@ describe("recaptcha", () => {
       expect(result).toBe(true);
       expect(mockFetch).toHaveBeenCalledWith(
         "https://www.google.com/recaptcha/api/siteverify",
-        {
+        expect.objectContaining({
           body: "secret=test-secret-key&response=valid-token",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
           method: "POST",
-        },
+          signal: expect.any(AbortSignal),
+        }),
       );
     });
 
@@ -183,6 +188,34 @@ describe("recaptcha", () => {
           body: "secret=my-secret-key-123&response=test-token",
         }),
       );
+    });
+  });
+
+  describe("verifyRecaptchaForForm", () => {
+    it("skips Google verify when local bypass is enabled", async () => {
+      process.env.ENVIRONMENT = Environments.Local;
+      process.env.RECAPTCHA_BYPASS_LOCAL = "true";
+
+      const result = await verifyRecaptchaForForm("local-bypass");
+
+      expect(result).toBe(true);
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it("delegates to verifyRecaptchaToken when bypass is disabled", async () => {
+      process.env.RECAPTCHA_SECRET_KEY = "test-secret-key";
+      delete process.env.RECAPTCHA_BYPASS_LOCAL;
+      process.env.ENVIRONMENT = Environments.Production;
+
+      mockFetch.mockResolvedValueOnce({
+        json: async () => ({ success: true }),
+        ok: true,
+      } as Response);
+
+      const result = await verifyRecaptchaForForm("real-token");
+
+      expect(result).toBe(true);
+      expect(mockFetch).toHaveBeenCalled();
     });
   });
 });

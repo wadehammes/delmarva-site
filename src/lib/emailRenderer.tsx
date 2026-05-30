@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { ReactElement } from "react";
 import { render } from "react-email";
 import type { Locales } from "src/i18n/routing";

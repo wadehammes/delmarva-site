@@ -16,6 +16,7 @@ Quick map of **`src/`** when you know the task (“add a schema helper”, “fi
 | **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`) |
 | **Strings / React / Rich Text** | [string.helpers.ts](../../src/utils/string.helpers.ts), [react.helpers.ts](../../src/utils/react.helpers.ts), [richText.helpers.ts](../../src/utils/richText.helpers.ts) |
 | **Video URLs** | [videoUrl.helpers.ts](../../src/utils/videoUrl.helpers.ts) (embed detection, `isVideoUrl`, …) |
+| **Forms / API** | [formRoute.helpers.ts](../../src/utils/formRoute.helpers.ts), [recaptcha.helpers.ts](../../src/utils/recaptcha.helpers.ts) (client), [recaptcha.ts](../../src/utils/recaptcha.ts) (server verify); careers route parses multipart/JSON inline via [joinOurTeamForm.server.helpers.ts](../../src/utils/joinOurTeamForm.server.helpers.ts) |
 | **Other** | [browser.helpers.ts](../../src/utils/browser.helpers.ts), [value.helpers.ts](../../src/utils/value.helpers.ts) (`isNonNullable`), [contentModules.ts](../../src/utils/contentModules.ts) (**`isTypeContentModules`**), [areasServed.ts](../../src/utils/areasServed.ts) |
 
 Import the specific module you need; there is no barrel **`utils/index.ts`**.
@@ -24,7 +25,7 @@ Import the specific module you need; there is no barrel **`utils/index.ts`**.
 
 - **RSS / sitemap** — [generateRss.ts](../../src/lib/generateRss.ts), [generateSitemap.ts](../../src/lib/generateSitemap.ts)
 - **Analytics** — [analytics.ts](../../src/lib/analytics.ts)
-- **Resend / email templates** — [src/lib/README.md](../../src/lib/README.md), components in [src/components/Email/README.md](../../src/components/Email/README.md)
+- **Resend / email** — [src/lib/README.md](../../src/lib/README.md) (overview); [emailRenderer.tsx](../../src/lib/emailRenderer.tsx), [resendFormEmail.ts](../../src/lib/resendFormEmail.ts), [submitCareersApplication.ts](../../src/lib/submitCareersApplication.ts); templates in [src/components/Email/README.md](../../src/components/Email/README.md)
 
 ## `src/contentful/`
 
