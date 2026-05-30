@@ -1,10 +1,15 @@
 import type { ReactElement } from "react";
 import { render } from "react-email";
+import type { Locales } from "src/i18n/routing";
 import { GeneralInquiryNotificationTemplate } from "../components/Email/GeneralInquiryNotificationTemplate";
 import { JoinOurTeamConfirmationTemplate } from "../components/Email/JoinOurTeamConfirmationTemplate";
 import { JoinOurTeamNotificationTemplate } from "../components/Email/JoinOurTeamNotificationTemplate";
 import { RequestAProposalNotificationTemplate } from "../components/Email/RequestAProposalNotificationTemplate";
 import { getEmailBaseUrl } from "./emailConstants";
+import {
+  getJoinOurTeamConfirmationCopy,
+  parseEmailLocale,
+} from "./emailTranslations";
 
 export interface RenderedEmail {
   html: string;
@@ -35,8 +40,13 @@ export interface NotificationEmailData {
 }
 
 export interface ConfirmationEmailData {
+  locale?: Locales | string;
   name: string;
   position: string;
+}
+
+export interface RenderedConfirmationEmail extends RenderedEmail {
+  subject: string;
 }
 
 export async function renderNotificationEmail(
@@ -50,11 +60,22 @@ export async function renderNotificationEmail(
 
 export async function renderConfirmationEmail(
   data: ConfirmationEmailData,
-): Promise<RenderedEmail> {
+): Promise<RenderedConfirmationEmail> {
+  const locale = parseEmailLocale(data.locale);
+  const copy = getJoinOurTeamConfirmationCopy(locale, {
+    name: data.name,
+    position: data.position,
+  });
   const baseUrl = getEmailBaseUrl();
-  return renderEmail(
-    <JoinOurTeamConfirmationTemplate {...data} baseUrl={baseUrl} />,
+  const rendered = await renderEmail(
+    <JoinOurTeamConfirmationTemplate
+      baseUrl={baseUrl}
+      locale={locale}
+      name={data.name}
+      position={data.position}
+    />,
   );
+  return { ...rendered, subject: copy.subject };
 }
 
 export interface GeneralInquiryNotificationEmailData {

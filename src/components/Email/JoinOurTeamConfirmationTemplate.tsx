@@ -1,5 +1,11 @@
 import { Heading, Section, Text } from "react-email";
+import type { Locales } from "src/i18n/routing";
 import { getEmailBaseUrl } from "src/lib/emailConstants";
+import {
+  getJoinOurTeamConfirmationCopy,
+  type JoinOurTeamConfirmationCopy,
+  parseEmailLocale,
+} from "src/lib/emailTranslations";
 import { EmailDivider } from "./EmailDivider";
 import { EmailFooter } from "./EmailFooter";
 import { EmailHeader } from "./EmailHeader";
@@ -10,53 +16,54 @@ import { joinOurTeamConfirmationPreviewProps } from "./emailPreviewProps";
 
 interface JoinOurTeamConfirmationTemplateProps {
   baseUrl?: string;
-  name: string;
+  copy?: JoinOurTeamConfirmationCopy;
+  locale?: Locales | string;
+  name?: string;
   position: string;
 }
 
 export const JoinOurTeamConfirmationTemplate = ({
   baseUrl = getEmailBaseUrl(),
-  name,
+  copy: copyProp,
+  locale,
+  name = "Jane Doe",
   position,
-}: JoinOurTeamConfirmationTemplateProps) => (
-  <EmailLayout
-    preview={`We received your application for ${position}`}
-    title="Application Received"
-  >
-    <EmailHeader baseUrl={baseUrl} />
-    <Heading className={emailClasses.heading}>Application Received</Heading>
+}: JoinOurTeamConfirmationTemplateProps) => {
+  const copy =
+    copyProp ??
+    getJoinOurTeamConfirmationCopy(parseEmailLocale(locale), {
+      name,
+      position,
+    });
 
-    <Section className={emailClasses.content}>
-      <Text className={emailClasses.applicantLead}>Hi {name},</Text>
-      <Text className={emailClasses.paragraph}>
-        Thanks for applying for the <strong>{position}</strong> role. We've
-        received your application and will be in touch after our team reviews
-        it.
-      </Text>
+  return (
+    <EmailLayout preview={copy.preview} title={copy.title}>
+      <EmailHeader baseUrl={baseUrl} />
+      <Heading className={emailClasses.heading}>{copy.heading}</Heading>
 
-      <EmailDivider />
-
-      <EmailSection label="What happens next?">
-        <Text className={emailClasses.bullet}>
-          • We'll review your application and materials
+      <Section className={emailClasses.content}>
+        <Text className={emailClasses.applicantLead}>{copy.greeting}</Text>
+        <Text className={emailClasses.paragraph}>
+          {copy.paragraphIntro} <strong>{position}</strong>
+          {copy.paragraphOutro}
         </Text>
-        <Text className={emailClasses.bullet}>
-          • If you're a good fit, we'll reach out to schedule an interview
-        </Text>
-        <Text className={emailClasses.bulletLast}>
-          • We'll keep you updated throughout the process
-        </Text>
-      </EmailSection>
 
-      <Text className={emailClasses.closing}>
-        Questions? Reply to this email.
-      </Text>
-      <Text className={emailClasses.signoff}>— The Delmarva Team</Text>
-    </Section>
+        <EmailDivider />
 
-    <EmailFooter baseUrl={baseUrl} />
-  </EmailLayout>
-);
+        <EmailSection label={copy.sectionLabel}>
+          <Text className={emailClasses.bullet}>{copy.bullet1}</Text>
+          <Text className={emailClasses.bullet}>{copy.bullet2}</Text>
+          <Text className={emailClasses.bulletLast}>{copy.bullet3}</Text>
+        </EmailSection>
+
+        <Text className={emailClasses.closing}>{copy.closing}</Text>
+        <Text className={emailClasses.signoff}>{copy.signoff}</Text>
+      </Section>
+
+      <EmailFooter baseUrl={baseUrl} />
+    </EmailLayout>
+  );
+};
 
 JoinOurTeamConfirmationTemplate.PreviewProps =
   joinOurTeamConfirmationPreviewProps;

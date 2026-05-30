@@ -20,8 +20,17 @@ export const joinOurTeamNotificationPreviewProps = {
 
 export const joinOurTeamConfirmationPreviewProps = {
   baseUrl: EMAIL_PREVIEW_BASE_URL,
+  locale: "en",
   name: "Jane Doe",
   position: "Project Manager",
+} as const;
+
+/** Spanish preview — used by `JoinOurTeamConfirmationTemplateEs.tsx` in `pnpm email:dev`. */
+export const joinOurTeamConfirmationPreviewPropsEs = {
+  baseUrl: EMAIL_PREVIEW_BASE_URL,
+  locale: "es",
+  name: "María López",
+  position: "Gerente de Proyecto",
 } as const;
 
 export const generalInquiryNotificationPreviewProps = {
