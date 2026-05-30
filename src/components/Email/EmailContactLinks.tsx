@@ -4,15 +4,17 @@ import { emailClasses } from "./emailClasses";
 import { getPhoneDigits, hasPhone } from "./emailHelpers";
 
 interface EmailContactLinksProps {
+  className?: string;
   email: string;
   phone: string;
 }
 
 export const EmailContactLinks: React.FC<EmailContactLinksProps> = ({
+  className = emailClasses.contact,
   email,
   phone,
 }) => (
-  <Text className={emailClasses.contact}>
+  <Text className={className}>
     <Link className={emailClasses.link} href={`mailto:${email}`}>
       {email}
     </Link>

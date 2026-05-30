@@ -1,5 +1,8 @@
 /** Tailwind class strings for Delmarva transactional emails (inlined by react-email). */
 export const emailClasses = {
+  applicantContact: "m-0 mb-2 p-0 text-sm leading-6 text-delmarva-text",
+  applicantDetail: "m-0 mb-2 p-0 text-sm leading-6 text-delmarva-muted",
+  applicantLead: "m-0 mb-2 p-0 text-lg font-semibold leading-7 text-white",
   body: "mx-auto bg-delmarva-bg font-sans",
   bullet: "m-0 p-0 text-sm leading-5 text-delmarva-text",
   bulletLast: "mb-6 mt-0 p-0 text-sm leading-5 text-delmarva-text",
@@ -11,11 +14,17 @@ export const emailClasses = {
   contact: "mb-4 p-0 text-sm leading-6 text-delmarva-text",
   container: "mx-auto max-w-[560px] px-4 py-3 pb-6",
   content: "my-4",
+  eligibilityLabel:
+    "m-0 mb-1 mt-6 p-0 text-xs font-semibold uppercase tracking-wide text-delmarva-muted",
+  eligibilityValue:
+    "m-0 mb-4 p-0 text-sm font-semibold leading-6 text-delmarva-text",
   footerText: "m-0 text-center text-sm text-delmarva-muted",
   footerWrapper: "mt-10 pt-0",
   heading: "m-0 mb-5 p-0 text-center text-xl font-bold text-white",
   label:
-    "m-0 mb-4 mt-8 p-0 text-xs font-semibold uppercase tracking-wide text-delmarva-muted",
+    "m-0 mb-2 mt-6 p-0 text-xs font-semibold uppercase tracking-wide text-delmarva-muted",
+  labelFirst:
+    "m-0 mb-2 mt-0 p-0 text-xs font-semibold uppercase tracking-wide text-delmarva-muted",
   lead: "m-0 mb-3 p-0 text-lg font-semibold leading-7 text-white",
   link: "text-delmarva-red underline",
   meta: "m-0 mb-4 p-0 text-sm leading-6 text-delmarva-muted",
