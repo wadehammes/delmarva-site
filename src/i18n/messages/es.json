@@ -22,7 +22,11 @@
     "shareCopied": "¡Copiado!",
     "shareProject": "Compartir Proyecto"
   },
-  "MarketTemplate":{"eyebrow":"Nuestros Mercados","projects":"Proyectos"},"ServiceTemplate": {
+  "MarketTemplate": {
+    "eyebrow": "Nuestros Mercados",
+    "projects": "Proyectos"
+  },
+  "ServiceTemplate": {
     "eyebrow": "Nuestros Servicios",
     "projects": "Proyectos"
   },
@@ -110,5 +114,20 @@
       "invalidPhone": "Por favor ingresa un número de teléfono válido",
       "required": "Este campo es requerido"
     }
+  },
+  "JoinOurTeamConfirmationEmail": {
+    "preview": "Recibimos tu solicitud para {position}",
+    "title": "Solicitud recibida",
+    "heading": "Solicitud recibida",
+    "greeting": "Hola {name},",
+    "paragraphIntro": "Gracias por postularte al puesto de",
+    "paragraphOutro": ". Hemos recibido tu solicitud y nos pondremos en contacto después de que nuestro equipo la revise.",
+    "sectionLabel": "¿Qué sigue?",
+    "bullet1": "• Revisaremos tu solicitud y materiales",
+    "bullet2": "• Si eres un buen candidato, nos comunicaremos para programar una entrevista",
+    "bullet3": "• Te mantendremos informado durante todo el proceso",
+    "closing": "¿Preguntas? Responde a este correo.",
+    "signoff": "— El equipo de Delmarva",
+    "subject": "Solicitud recibida para {position}"
   }
 }

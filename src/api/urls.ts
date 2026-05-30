@@ -9,6 +9,7 @@ function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
   form.append("briefDescription", data.briefDescription);
   form.append("city", data.city);
   form.append("email", data.email);
+  if (data.locale) form.append("locale", data.locale);
   form.append("name", data.name);
   form.append("phone", data.phone);
   form.append("position", data.position);
@@ -76,6 +77,7 @@ export const api = {
           coverLetter: data.coverLetter,
           email: data.email,
           emailsToSendNotification: data.emailsToSendNotification,
+          locale: data.locale,
           name: data.name,
           phone: data.phone,
           position: data.position,

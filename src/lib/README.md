@@ -135,7 +135,7 @@ All templates use the `{{variableName}}` syntax for dynamic content:
 | `pnpm email:export` | Build static HTML to `out/emails/` (also runs in CI) |
 | `pnpm email:resend:setup` | Store a Resend API key for send-from-preview in the React Email UI |
 
-**Rendering:** [`emailRenderer.tsx`](./emailRenderer.tsx) returns `{ html, text }` from the same template (`render(..., { plainText: true })`). Resend routes use both parts.
+**Rendering:** [`emailRenderer.tsx`](./emailRenderer.tsx) returns `{ html, text }` from the same template (`render(..., { plainText: true })`). Resend routes use both parts. Join Our Team **confirmation** emails use the submitter's locale (`en` | `es`) via [`emailTranslations.ts`](./emailTranslations.ts) and `JoinOurTeamConfirmationEmail` message keys.
 
 **Theming:** Brand colors live in [`emailTheme.ts`](../components/Email/emailTheme.ts) (including Delmarva red `#e01e2d` for links and buttons) and map to Tailwind `delmarva-*` utilities in [`emailClasses.ts`](../components/Email/emailClasses.ts).
 

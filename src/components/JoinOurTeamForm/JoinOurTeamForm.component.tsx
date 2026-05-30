@@ -2,7 +2,7 @@
 
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import clsx from "clsx";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useId, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
@@ -14,6 +14,7 @@ import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import type { FormJoinOurTeamType } from "src/contentful/parseFormJoinOurTeam";
 import { useSendJoinOurTeamFormMutation } from "src/hooks/mutations/useSendJoinOurTeamForm.mutation";
+import type { Locales } from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
 import { US_STATES_MAP } from "src/utils/constants";
 import {
@@ -32,6 +33,7 @@ export interface JoinOurTeamInputs {
   coverLetter: File | null;
   email: string;
   emailsToSendNotification?: string[];
+  locale?: Locales;
   name: string;
   phone: string;
   position: string;
@@ -62,6 +64,7 @@ const defaultValues: JoinOurTeamInputs = {
 
 export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
   const { fields } = props;
+  const locale = useLocale() as Locales;
   const t = useTranslations("JoinOurTeamForm");
 
   const reCaptcha = useRef<ReCAPTCHA>(null);
@@ -118,6 +121,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             coverLetter,
             email,
             emailsToSendNotification: fields.emailsToSendNotification,
+            locale,
             name,
             phone,
             position,

@@ -33,3 +33,4 @@ Transactional email uses **React Email 6** (`react-email`) and the **Resend** AP
 - **Rendering**: [`src/lib/emailRenderer.tsx`](../../src/lib/emailRenderer.tsx) returns `{ html, text }` via `render()` and `render(..., { plainText: true })`.
 - **Routes**: [`src/app/api/resend/`](../../src/app/api/resend/) (Join Our Team, General Inquiry, Request a Proposal).
 - **Local workflow**: `pnpm email:dev` (preview + client compatibility hints), `pnpm email:export` (static HTML to `out/emails/`, runs in CI), `pnpm email:resend:setup` (optional send from preview UI). See **[src/lib/README.md](../../src/lib/README.md)**.
+- **Locale**: Join Our Team applicant confirmation respects `locale` from the form (`en` / `es`); internal notification templates remain English.

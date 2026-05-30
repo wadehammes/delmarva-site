@@ -7,11 +7,16 @@ React Email 6 templates for Resend. Rendered via [`src/lib/emailRenderer.tsx`](.
 | File | Audience |
 |------|----------|
 | `JoinOurTeamNotificationTemplate` | Team — new application |
-| `JoinOurTeamConfirmationTemplate` | Applicant — receipt |
+| `JoinOurTeamConfirmationTemplate` | Applicant — receipt (English preview) |
+| `JoinOurTeamConfirmationTemplateEs` | Same template — Spanish preview (`pnpm email:dev`) |
 | `GeneralInquiryNotificationTemplate` | Team — inquiry |
 | `RequestAProposalNotificationTemplate` | Team — RFP |
 
 Each exports `default` + `PreviewProps` for `pnpm email:dev`.
+
+**Applicant confirmation** (`JoinOurTeamConfirmationTemplate`) is localized: copy comes from `JoinOurTeamConfirmationEmail` in `src/i18n/messages/` via [`emailTranslations.ts`](../../lib/emailTranslations.ts). The form sends `locale` (`en` | `es`); team notification emails stay English.
+
+In **`pnpm email:dev`**, open **JoinOurTeamConfirmationTemplate** for English or **JoinOurTeamConfirmationTemplateEs** for Spanish (separate sidebar entry; React Email supports one `PreviewProps` per file).
 
 ## Shared components
 
@@ -40,6 +45,9 @@ Each exports `default` + `PreviewProps` for `pnpm email:dev`.
 pnpm email:dev      # http://localhost:3030
 pnpm email:export   # out/emails/*.html (CI)
 pnpm email:resend:setup
+pnpm test:ci -- src/lib/emailTranslations.test.ts src/lib/emailRenderer.test.ts
 ```
+
+**Tests:** [`emailTranslations.test.ts`](../../lib/emailTranslations.test.ts) covers locale parsing and `en`/`es` copy (including message-key parity). [`emailRenderer.test.ts`](../../lib/emailRenderer.test.ts) verifies confirmation subjects and the html + plain-text render path (with `react-email` mocked in Jest).
 
 See [`src/lib/README.md`](../../lib/README.md) for Resend env and logo URL behavior.

@@ -4,6 +4,7 @@ import {
   renderConfirmationEmail,
   renderNotificationEmail,
 } from "src/lib/emailRenderer";
+import { parseEmailLocale } from "src/lib/emailTranslations";
 import { US_STATES_MAP } from "src/utils/constants";
 import {
   blobToBase64,
@@ -37,6 +38,10 @@ function parseFormData(formData: FormData): JoinOurTeamInputs {
     coverLetter: (get("coverLetter") as File | null) ?? null,
     email: getString("email"),
     emailsToSendNotification,
+    locale: (() => {
+      const localeRaw = getString("locale");
+      return localeRaw ? parseEmailLocale(localeRaw) : undefined;
+    })(),
     name: getString("name"),
     phone: getString("phone"),
     position: getString("position"),
@@ -219,6 +224,7 @@ export async function POST(request: Request) {
 
     const delayConfirmationEmail = setTimeout(async () => {
       const confirmationEmail = await renderConfirmationEmail({
+        locale: res.locale,
         name,
         position,
       });
@@ -226,7 +232,7 @@ export async function POST(request: Request) {
       await resend.emails.send({
         from: "Delmarva Site Development <mail@delmarvasite.net>",
         html: confirmationEmail.html,
-        subject: `Application Received for ${position}`,
+        subject: confirmationEmail.subject,
         text: confirmationEmail.text,
         to: email,
       });
