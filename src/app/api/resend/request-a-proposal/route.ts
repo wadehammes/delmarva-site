@@ -69,7 +69,7 @@ export async function POST(request: Request) {
   const to = getNotificationTo(toAddresses);
 
   try {
-    const notificationHtml = await renderRequestAProposalNotificationEmail({
+    const notificationEmail = await renderRequestAProposalNotificationEmail({
       companyName,
       email,
       name,
@@ -80,10 +80,10 @@ export async function POST(request: Request) {
     const data = await resend.emails.send({
       bcc: res.emailsToBcc,
       from: "Delmarva Site Development <mail@delmarvasite.net>",
-      html: notificationHtml,
+      html: notificationEmail.html,
       replyTo: `${name} <${email}>`,
       subject: `Request for Proposal: ${companyName} — ${name}`,
-      text: `Request for Proposal received from ${name} at ${companyName}.`,
+      text: notificationEmail.text,
       to,
     });
 

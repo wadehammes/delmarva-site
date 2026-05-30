@@ -180,7 +180,7 @@ export async function POST(request: Request) {
     }
 
     // Render the notification email using React Email
-    const notificationHtml = await renderNotificationEmail({
+    const notificationEmail = await renderNotificationEmail({
       address,
       briefDescription,
       city,
@@ -210,24 +210,24 @@ export async function POST(request: Request) {
     const data = await resend.emails.send({
       attachments: attachments.length > 0 ? attachments : undefined,
       from: "Delmarva Site Development <mail@delmarvasite.net>",
-      html: notificationHtml,
+      html: notificationEmail.html,
       replyTo: `${name} <${email}>`,
       subject: `New Job Application: ${name} for ${position}`,
-      text: `New job application received from ${name} for ${position}. Check the HTML version for full details.`,
+      text: notificationEmail.text,
       to: notificationTo,
     });
 
     const delayConfirmationEmail = setTimeout(async () => {
-      const confirmationHtml = await renderConfirmationEmail({
+      const confirmationEmail = await renderConfirmationEmail({
         name,
         position,
       });
 
       await resend.emails.send({
         from: "Delmarva Site Development <mail@delmarvasite.net>",
-        html: confirmationHtml,
+        html: confirmationEmail.html,
         subject: `Application Received for ${position}`,
-        text: `Hi ${name}, we've received your application for ${position}. We'll review it and get back to you soon.`,
+        text: confirmationEmail.text,
         to: email,
       });
     }, 500);

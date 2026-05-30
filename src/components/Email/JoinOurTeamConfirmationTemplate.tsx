@@ -1,18 +1,10 @@
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
-import type * as React from "react";
+import { Heading, Section, Text } from "react-email";
 import { getEmailBaseUrl } from "src/lib/emailConstants";
 import { EmailFooter } from "./EmailFooter";
 import { EmailHeader } from "./EmailHeader";
-import { emailTheme } from "./emailTheme";
+import { EmailLayout } from "./EmailLayout";
+import { emailClasses } from "./emailClasses";
+import { joinOurTeamConfirmationPreviewProps } from "./emailPreviewProps";
 
 interface JoinOurTeamConfirmationTemplateProps {
   baseUrl?: string;
@@ -20,55 +12,48 @@ interface JoinOurTeamConfirmationTemplateProps {
   position: string;
 }
 
-export const JoinOurTeamConfirmationTemplate: React.FC<
-  JoinOurTeamConfirmationTemplateProps
-> = ({ baseUrl = getEmailBaseUrl(), name, position }) => (
-  <Html>
-    <Head />
-    <Preview>We received your application for {position}</Preview>
-    <Body style={emailTheme.main}>
-      <Container style={emailTheme.container}>
-        <EmailHeader baseUrl={baseUrl} />
-        <Heading style={emailTheme.heading}>Application Received</Heading>
+export const JoinOurTeamConfirmationTemplate = ({
+  baseUrl = getEmailBaseUrl(),
+  name,
+  position,
+}: JoinOurTeamConfirmationTemplateProps) => (
+  <EmailLayout
+    preview={`We received your application for ${position}`}
+    title="Application Received"
+  >
+    <EmailHeader baseUrl={baseUrl} />
+    <Heading className={emailClasses.heading}>Application Received</Heading>
 
-        <Section style={emailTheme.section}>
-          <Text style={emailTheme.text}>Hi {name},</Text>
-          <Text style={emailTheme.text}>
-            Thank you for your interest in joining our team! We've received your
-            application for the <strong>{position}</strong> position.
-          </Text>
-          <Text style={emailTheme.text}>
-            Our team will review your application and get back to you soon. We
-            appreciate your patience during this process.
-          </Text>
-        </Section>
+    <Section className={emailClasses.content}>
+      <Text className={emailClasses.lead}>Hi {name},</Text>
+      <Text className={emailClasses.paragraph}>
+        Thanks for applying for the <strong>{position}</strong> role. We've
+        received your application and will be in touch after our team reviews
+        it.
+      </Text>
 
-        <Section style={emailTheme.section}>
-          <Text style={emailTheme.text}>
-            <strong>What happens next?</strong>
-          </Text>
-          <Text style={emailTheme.text}>
-            • We'll review your application and materials
-            <br />• If you're a good fit, we'll reach out to schedule an
-            interview
-            <br />• We'll keep you updated throughout the process
-          </Text>
-        </Section>
+      <Text className={emailClasses.label}>What happens next?</Text>
+      <Text className={emailClasses.bullet}>
+        • We'll review your application and materials
+      </Text>
+      <Text className={emailClasses.bullet}>
+        • If you're a good fit, we'll reach out to schedule an interview
+      </Text>
+      <Text className={emailClasses.bulletLast}>
+        • We'll keep you updated throughout the process
+      </Text>
 
-        <Section style={emailTheme.section}>
-          <Text style={emailTheme.text}>
-            If you have any questions about your application, feel free to reply
-            to this email.
-          </Text>
-          <Text style={emailTheme.text}>
-            Best regards,
-            <br />
-            The Delmarva Team
-          </Text>
-        </Section>
+      <Text className={emailClasses.closing}>
+        Questions? Reply to this email.
+      </Text>
+      <Text className={emailClasses.signoff}>— The Delmarva Team</Text>
+    </Section>
 
-        <EmailFooter baseUrl={baseUrl} />
-      </Container>
-    </Body>
-  </Html>
+    <EmailFooter baseUrl={baseUrl} />
+  </EmailLayout>
 );
+
+JoinOurTeamConfirmationTemplate.PreviewProps =
+  joinOurTeamConfirmationPreviewProps;
+
+export default JoinOurTeamConfirmationTemplate;
