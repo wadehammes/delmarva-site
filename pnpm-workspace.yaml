@@ -12,6 +12,10 @@ nodeLinker: hoisted
 allowBuilds:
   '@parcel/watcher': false
   '@swc/core': false
+  esbuild: false
   less: false
   sharp: false
   unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@react-email/ui@6.5.0'
+  - react-email@6.5.0

@@ -127,6 +127,28 @@ All templates use the `{{variableName}}` syntax for dynamic content:
 - **Variable validation**: Always check that required variables are provided
 - **Error handling**: Gracefully handle missing template variables
 
+### React Email 6 tooling
+
+| Command | Purpose |
+|--------|---------|
+| `pnpm email:dev` | Preview at http://localhost:3030 with Gmail/Outlook/Apple Mail/Yahoo compatibility hints |
+| `pnpm email:export` | Build static HTML to `out/emails/` (also runs in CI) |
+| `pnpm email:resend:setup` | Store a Resend API key for send-from-preview in the React Email UI |
+
+**Rendering:** [`emailRenderer.tsx`](./emailRenderer.tsx) returns `{ html, text }` from the same template (`render(..., { plainText: true })`). Resend routes use both parts.
+
+**Theming:** Brand colors live in [`emailTheme.ts`](../components/Email/emailTheme.ts) (including Delmarva red `#e01e2d` for links and buttons) and map to Tailwind `delmarva-*` utilities in [`emailClasses.ts`](../components/Email/emailClasses.ts).
+
+### Preview emails locally (no send)
+
+```bash
+pnpm email:dev
+```
+
+Open **http://localhost:3030** and pick a template from the sidebar. Sample data lives in [`emailPreviewProps.ts`](../components/Email/emailPreviewProps.ts); each `*Template.tsx` sets `PreviewProps` and `export default` for the CLI.
+
+Optional assets for preview-only: [`src/components/Email/static/`](../components/Email/static/).
+
 ### Email logo and branding
 
 All templates use a shared header (logo) and footer. The logo URL is built from `getEmailAssetBaseUrl()` + `EMAIL_LOGO_PATH` (PNG for email client compatibility). When **ENVIRONMENT=local** (e.g. in `.env.local`), you can set `EMAIL_ASSET_BASE_URL=https://www.delmarvasite.com` so the logo loads from your live site instead of localhost (email clients can’t load images from localhost). In Preview and Production, `getEmailAssetBaseUrl()` returns the normal site URL and this override is ignored.

@@ -17,6 +17,8 @@
 # next.js
 /.next/
 /out/
+/out/emails/
+.react-email
 .swc
 
 # production

@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   const to = getNotificationTo(toAddresses);
 
   try {
-    const notificationHtml = await renderGeneralInquiryNotificationEmail({
+    const notificationEmail = await renderGeneralInquiryNotificationEmail({
       email,
       message,
       name,
@@ -78,10 +78,10 @@ export async function POST(request: Request) {
     const data = await resend.emails.send({
       bcc: res.emailsToBcc?.length ? res.emailsToBcc : undefined,
       from: "Delmarva Site Development <mail@delmarvasite.net>",
-      html: notificationHtml,
+      html: notificationEmail.html,
       replyTo: `${name} <${email}>`,
       subject: `General Inquiry: ${name}`,
-      text: `General inquiry received from ${name}.`,
+      text: notificationEmail.text,
       to,
     });
 

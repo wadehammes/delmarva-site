@@ -1,9 +1,23 @@
-import { render } from "@react-email/render";
+import type { ReactElement } from "react";
+import { render } from "react-email";
 import { GeneralInquiryNotificationTemplate } from "../components/Email/GeneralInquiryNotificationTemplate";
 import { JoinOurTeamConfirmationTemplate } from "../components/Email/JoinOurTeamConfirmationTemplate";
 import { JoinOurTeamNotificationTemplate } from "../components/Email/JoinOurTeamNotificationTemplate";
 import { RequestAProposalNotificationTemplate } from "../components/Email/RequestAProposalNotificationTemplate";
 import { getEmailBaseUrl } from "./emailConstants";
+
+export interface RenderedEmail {
+  html: string;
+  text: string;
+}
+
+async function renderEmail(template: ReactElement): Promise<RenderedEmail> {
+  const [html, text] = await Promise.all([
+    render(template),
+    render(template, { plainText: true }),
+  ]);
+  return { html, text };
+}
 
 export interface NotificationEmailData {
   name: string;
@@ -27,18 +41,18 @@ export interface ConfirmationEmailData {
 
 export async function renderNotificationEmail(
   data: NotificationEmailData,
-): Promise<string> {
+): Promise<RenderedEmail> {
   const baseUrl = getEmailBaseUrl();
-  return await render(
+  return renderEmail(
     <JoinOurTeamNotificationTemplate {...data} baseUrl={baseUrl} />,
   );
 }
 
 export async function renderConfirmationEmail(
   data: ConfirmationEmailData,
-): Promise<string> {
+): Promise<RenderedEmail> {
   const baseUrl = getEmailBaseUrl();
-  return await render(
+  return renderEmail(
     <JoinOurTeamConfirmationTemplate {...data} baseUrl={baseUrl} />,
   );
 }
@@ -52,9 +66,9 @@ export interface GeneralInquiryNotificationEmailData {
 
 export async function renderGeneralInquiryNotificationEmail(
   data: GeneralInquiryNotificationEmailData,
-): Promise<string> {
+): Promise<RenderedEmail> {
   const baseUrl = getEmailBaseUrl();
-  return await render(
+  return renderEmail(
     <GeneralInquiryNotificationTemplate {...data} baseUrl={baseUrl} />,
   );
 }
@@ -69,9 +83,9 @@ export interface RequestAProposalNotificationEmailData {
 
 export async function renderRequestAProposalNotificationEmail(
   data: RequestAProposalNotificationEmailData,
-): Promise<string> {
+): Promise<RenderedEmail> {
   const baseUrl = getEmailBaseUrl();
-  return await render(
+  return renderEmail(
     <RequestAProposalNotificationTemplate {...data} baseUrl={baseUrl} />,
   );
 }

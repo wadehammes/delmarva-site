@@ -1,18 +1,12 @@
-import {
-  Body,
-  Container,
-  Head,
-  Html,
-  Link,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
-import type * as React from "react";
+import { Heading, Section, Text } from "react-email";
 import { getEmailBaseUrl } from "src/lib/emailConstants";
+import { EmailContactLinks } from "./EmailContactLinks";
 import { EmailFooter } from "./EmailFooter";
 import { EmailHeader } from "./EmailHeader";
-import { emailTheme } from "./emailTheme";
+import { EmailLayout } from "./EmailLayout";
+import { EmailQuickActions } from "./EmailQuickActions";
+import { emailClasses } from "./emailClasses";
+import { generalInquiryNotificationPreviewProps } from "./emailPreviewProps";
 
 interface GeneralInquiryNotificationTemplateProps {
   baseUrl?: string;
@@ -22,37 +16,39 @@ interface GeneralInquiryNotificationTemplateProps {
   message: string;
 }
 
-export const GeneralInquiryNotificationTemplate: React.FC<
-  GeneralInquiryNotificationTemplateProps
-> = ({ baseUrl = getEmailBaseUrl(), email, message, name, phone }) => (
-  <Html>
-    <Head />
-    <Preview>General inquiry from {name}</Preview>
-    <Body style={emailTheme.main}>
-      <Container style={emailTheme.container}>
-        <EmailHeader baseUrl={baseUrl} />
-        <Section style={emailTheme.section}>
-          <Text style={emailTheme.heading}>General Inquiry</Text>
-          <Text style={emailTheme.textBlock}>
-            <strong>Name:</strong> {name}
-          </Text>
-          <Text style={emailTheme.textBlock}>
-            <strong>Email:</strong>{" "}
-            <Link href={`mailto:${email}`} style={emailTheme.link}>
-              {email}
-            </Link>
-          </Text>
-          <Text style={emailTheme.textBlock}>
-            <strong>Phone:</strong>{" "}
-            <Link href={`tel:${phone}`} style={emailTheme.link}>
-              {phone}
-            </Link>
-          </Text>
-          <Text style={emailTheme.label}>Message</Text>
-          <Text style={emailTheme.textBlockLast}>{message}</Text>
-        </Section>
-        <EmailFooter baseUrl={baseUrl} />
-      </Container>
-    </Body>
-  </Html>
+export const GeneralInquiryNotificationTemplate = ({
+  baseUrl = getEmailBaseUrl(),
+  email,
+  message,
+  name,
+  phone,
+}: GeneralInquiryNotificationTemplateProps) => (
+  <EmailLayout preview={`General inquiry from ${name}`} title="General Inquiry">
+    <EmailHeader baseUrl={baseUrl} />
+    <Heading className={emailClasses.heading}>General Inquiry</Heading>
+
+    <Section className={emailClasses.content}>
+      <Text className={emailClasses.lead}>{name}</Text>
+      <EmailContactLinks email={email} phone={phone} />
+      {message && message !== "No message provided." && (
+        <>
+          <Text className={emailClasses.label}>Message</Text>
+          <Text className={emailClasses.textBlockLast}>{message}</Text>
+        </>
+      )}
+    </Section>
+
+    <EmailQuickActions
+      email={email}
+      phone={phone}
+      replySubject={`Re: General inquiry from ${name}`}
+    />
+
+    <EmailFooter baseUrl={baseUrl} />
+  </EmailLayout>
 );
+
+GeneralInquiryNotificationTemplate.PreviewProps =
+  generalInquiryNotificationPreviewProps;
+
+export default GeneralInquiryNotificationTemplate;
