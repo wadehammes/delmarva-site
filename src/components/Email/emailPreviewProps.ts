@@ -7,7 +7,7 @@ export const joinOurTeamNotificationPreviewProps = {
   briefDescription:
     "I have 8 years of site development experience and am interested in joining the Delmarva team.",
   city: "Salisbury",
-  coverLetter: "Please see my attached cover letter.",
+  coverLetter: "File attached",
   email: "jane.doe@example.com",
   name: "Jane Doe",
   phone: "(410) 555-0100",

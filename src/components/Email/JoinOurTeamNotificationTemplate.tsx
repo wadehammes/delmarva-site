@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Heading, Section, Text } from "react-email";
 import { getEmailBaseUrl } from "src/lib/emailConstants";
 import { EmailContactLinks } from "./EmailContactLinks";
@@ -24,6 +25,11 @@ interface JoinOurTeamNotificationTemplateProps {
   resume: string;
 }
 
+const FILE_ATTACHED = "File attached";
+const NO_COVER_LETTER = "No cover letter provided.";
+const NO_RESUME = "No resume provided.";
+const NO_MESSAGE = "No message provided.";
+
 const hasAddress = (address: string) =>
   address && address !== "No address provided.";
 
@@ -47,21 +53,30 @@ const formatAddress = (
   return line2 ? `${address}, ${line2}` : address;
 };
 
-const formatAttachmentLine = (
-  resume: string,
-  coverLetter: string,
-): string[] => {
-  const parts: string[] = [];
-  if (resume === "File attached") parts.push("Resume attached");
-  else if (resume && resume !== "No resume provided.") parts.push(resume);
-
-  if (coverLetter === "File attached") parts.push("Cover letter attached");
-  else if (coverLetter && coverLetter !== "No cover letter provided.") {
-    parts.push("Cover letter included");
-  }
-
-  return parts;
-};
+function DocumentSection({
+  emptyLabel,
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+  emptyLabel: string;
+}): ReactNode {
+  return (
+    <>
+      <Text className={emailClasses.label}>{label}</Text>
+      {value === FILE_ATTACHED ? (
+        <Text className={emailClasses.textBlockLast}>
+          <span className={emailClasses.success}>Attached to this email</span>
+        </Text>
+      ) : value === emptyLabel ? (
+        <Text className={emailClasses.muted}>Not provided</Text>
+      ) : (
+        <Text className={emailClasses.textBlockLast}>{value}</Text>
+      )}
+    </>
+  );
+}
 
 export const JoinOurTeamNotificationTemplate = ({
   baseUrl = getEmailBaseUrl(),
@@ -78,14 +93,11 @@ export const JoinOurTeamNotificationTemplate = ({
   coverLetter,
   resume,
 }: JoinOurTeamNotificationTemplateProps) => {
-  const locationLabel = hasCityState(city, state) ? `${city}, ${state}` : null;
   const addressLine = formatAddress(address, city, state, zipCode);
-  const metaParts = [locationLabel, workEligibility].filter(Boolean);
-  const attachments = formatAttachmentLine(resume, coverLetter);
-  const coverLetterIsText =
-    coverLetter &&
-    coverLetter !== "File attached" &&
-    coverLetter !== "No cover letter provided.";
+  const locationOnly =
+    hasCityState(city, state) && !addressLine ? `${city}, ${state}` : null;
+  const locationLine = addressLine ?? locationOnly;
+  const showAbout = briefDescription && briefDescription !== NO_MESSAGE;
 
   return (
     <EmailLayout
@@ -98,20 +110,31 @@ export const JoinOurTeamNotificationTemplate = ({
       </Heading>
 
       <Section className={emailClasses.content}>
-        <Text className={emailClasses.lead}>
+        <Text className={emailClasses.labelFirst}>Applicant</Text>
+        <Text className={emailClasses.applicantLead}>
           {name} · {position}
         </Text>
-        {metaParts.length > 0 && (
-          <Text className={emailClasses.meta}>{metaParts.join(" · ")}</Text>
+        <EmailContactLinks
+          className={emailClasses.applicantContact}
+          email={email}
+          phone={phone}
+        />
+        {locationLine && (
+          <Text className={emailClasses.applicantDetail}>{locationLine}</Text>
         )}
 
-        <EmailContactLinks email={email} phone={phone} />
-
-        {addressLine && (
-          <Text className={emailClasses.meta}>{addressLine}</Text>
+        {workEligibility && (
+          <>
+            <Text className={emailClasses.eligibilityLabel}>
+              Work eligibility
+            </Text>
+            <Text className={emailClasses.eligibilityValue}>
+              {workEligibility}
+            </Text>
+          </>
         )}
 
-        {briefDescription && briefDescription !== "No message provided." && (
+        {showAbout && (
           <>
             <Text className={emailClasses.label}>About</Text>
             <Text className={emailClasses.textBlockLast}>
@@ -120,27 +143,12 @@ export const JoinOurTeamNotificationTemplate = ({
           </>
         )}
 
-        {coverLetterIsText && (
-          <>
-            <Text className={emailClasses.label}>Cover letter</Text>
-            <Text className={emailClasses.textBlockLast}>{coverLetter}</Text>
-          </>
-        )}
-
-        {attachments.length > 0 && (
-          <Text className={emailClasses.meta}>
-            {attachments.map((part, index) => (
-              <span key={part}>
-                {index > 0 && " · "}
-                {part.includes("attached") ? (
-                  <span className={emailClasses.success}>{part}</span>
-                ) : (
-                  part
-                )}
-              </span>
-            ))}
-          </Text>
-        )}
+        <DocumentSection emptyLabel={NO_RESUME} label="Resume" value={resume} />
+        <DocumentSection
+          emptyLabel={NO_COVER_LETTER}
+          label="Cover letter"
+          value={coverLetter}
+        />
       </Section>
 
       <EmailQuickActions
