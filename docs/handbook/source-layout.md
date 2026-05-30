@@ -24,7 +24,7 @@ Import the specific module you need; there is no barrel **`utils/index.ts`**.
 
 - **RSS / sitemap** — [generateRss.ts](../../src/lib/generateRss.ts), [generateSitemap.ts](../../src/lib/generateSitemap.ts)
 - **Analytics** — [analytics.ts](../../src/lib/analytics.ts)
-- **Resend / email templates** — see [README.md](../../src/lib/README.md) in the same folder
+- **Resend / email templates** — [src/lib/README.md](../../src/lib/README.md), components in [src/components/Email/README.md](../../src/components/Email/README.md)
 
 ## `src/contentful/`
 

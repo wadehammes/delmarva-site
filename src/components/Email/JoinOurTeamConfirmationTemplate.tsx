@@ -1,8 +1,10 @@
 import { Heading, Section, Text } from "react-email";
 import { getEmailBaseUrl } from "src/lib/emailConstants";
+import { EmailDivider } from "./EmailDivider";
 import { EmailFooter } from "./EmailFooter";
 import { EmailHeader } from "./EmailHeader";
 import { EmailLayout } from "./EmailLayout";
+import { EmailSection } from "./EmailSection";
 import { emailClasses } from "./emailClasses";
 import { joinOurTeamConfirmationPreviewProps } from "./emailPreviewProps";
 
@@ -25,23 +27,26 @@ export const JoinOurTeamConfirmationTemplate = ({
     <Heading className={emailClasses.heading}>Application Received</Heading>
 
     <Section className={emailClasses.content}>
-      <Text className={emailClasses.lead}>Hi {name},</Text>
+      <Text className={emailClasses.applicantLead}>Hi {name},</Text>
       <Text className={emailClasses.paragraph}>
         Thanks for applying for the <strong>{position}</strong> role. We've
         received your application and will be in touch after our team reviews
         it.
       </Text>
 
-      <Text className={emailClasses.label}>What happens next?</Text>
-      <Text className={emailClasses.bullet}>
-        • We'll review your application and materials
-      </Text>
-      <Text className={emailClasses.bullet}>
-        • If you're a good fit, we'll reach out to schedule an interview
-      </Text>
-      <Text className={emailClasses.bulletLast}>
-        • We'll keep you updated throughout the process
-      </Text>
+      <EmailDivider />
+
+      <EmailSection label="What happens next?">
+        <Text className={emailClasses.bullet}>
+          • We'll review your application and materials
+        </Text>
+        <Text className={emailClasses.bullet}>
+          • If you're a good fit, we'll reach out to schedule an interview
+        </Text>
+        <Text className={emailClasses.bulletLast}>
+          • We'll keep you updated throughout the process
+        </Text>
+      </EmailSection>
 
       <Text className={emailClasses.closing}>
         Questions? Reply to this email.

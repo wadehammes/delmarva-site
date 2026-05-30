@@ -10,7 +10,7 @@ interface EmailContactLinksProps {
 }
 
 export const EmailContactLinks: React.FC<EmailContactLinksProps> = ({
-  className = emailClasses.contact,
+  className = emailClasses.applicantContact,
   email,
   phone,
 }) => (

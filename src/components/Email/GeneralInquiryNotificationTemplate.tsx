@@ -1,11 +1,15 @@
 import { Heading, Section, Text } from "react-email";
 import { getEmailBaseUrl } from "src/lib/emailConstants";
 import { EmailContactLinks } from "./EmailContactLinks";
+import { EmailDivider } from "./EmailDivider";
+import { EmailFieldBlock } from "./EmailFieldBlock";
 import { EmailFooter } from "./EmailFooter";
 import { EmailHeader } from "./EmailHeader";
 import { EmailLayout } from "./EmailLayout";
 import { EmailQuickActions } from "./EmailQuickActions";
+import { EmailSection } from "./EmailSection";
 import { emailClasses } from "./emailClasses";
+import { EMAIL_NO_MESSAGE } from "./emailDocumentConstants";
 import { generalInquiryNotificationPreviewProps } from "./emailPreviewProps";
 
 interface GeneralInquiryNotificationTemplateProps {
@@ -28,12 +32,19 @@ export const GeneralInquiryNotificationTemplate = ({
     <Heading className={emailClasses.heading}>General Inquiry</Heading>
 
     <Section className={emailClasses.content}>
-      <Text className={emailClasses.lead}>{name}</Text>
-      <EmailContactLinks email={email} phone={phone} />
-      {message && message !== "No message provided." && (
+      <EmailSection first label="From">
+        <Text className={emailClasses.applicantLead}>{name}</Text>
+        <EmailContactLinks
+          className={emailClasses.applicantContact}
+          email={email}
+          phone={phone}
+        />
+      </EmailSection>
+
+      {message && message !== EMAIL_NO_MESSAGE && (
         <>
-          <Text className={emailClasses.label}>Message</Text>
-          <Text className={emailClasses.textBlockLast}>{message}</Text>
+          <EmailDivider />
+          <EmailFieldBlock label="Message">{message}</EmailFieldBlock>
         </>
       )}
     </Section>
