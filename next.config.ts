@@ -215,17 +215,269 @@ const productionRedirects = sources.map((source) => ({
   source,
 }));
 
-const sharedRedirects = [
+const VALID_SERVICE_SLUGS =
+  "earthwork|storm-water-management|soil-stabilization|turn-key-development|utilities";
+
+const legacyWordpressRedirects = [
+  // Duplicate homepage slug and legacy locale-prefixed home URL
+  {
+    destination: "/",
+    permanent: true,
+    source: "/home",
+  },
+  {
+    destination: "/",
+    permanent: true,
+    source: "/en/home",
+  },
+  // Renamed top-level pages
+  {
+    destination: "/our-people",
+    permanent: true,
+    source: "/who-we-are",
+  },
+  {
+    destination: "/our-people",
+    permanent: true,
+    source: "/our-team",
+  },
+  {
+    destination: "/our-people",
+    permanent: true,
+    source: "/our-team/:path+",
+  },
+  {
+    destination: "/construction-jobs-in-maryland",
+    permanent: true,
+    source: "/join-our-team",
+  },
   {
     destination: "/what-we-deliver",
     permanent: true,
-    source: "/project-portfolio",
+    source: "/project",
+  },
+  {
+    destination: "/",
+    permanent: true,
+    source: "/site-development-maryland-home",
+  },
+  {
+    destination: "/",
+    permanent: true,
+    source: "/site-development-maryland-home/:path+",
+  },
+  // Legacy WordPress project gallery/attachment URLs
+  {
+    destination: "/what-we-deliver?project=:slug",
+    permanent: true,
+    source: "/project/:slug/:path+",
   },
   {
     destination: "/what-we-deliver?project=:slug",
     permanent: true,
     source: "/project/:slug",
   },
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: "/project-portfolio/:path+",
+  },
+  // Legacy WordPress project category archives
+  {
+    destination: "/markets/commercial",
+    permanent: true,
+    source: "/project_categories/commercial",
+  },
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: "/project_categories/highway",
+  },
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: "/project_categories/residential",
+  },
+  // Legacy WordPress service category archives
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/service_categories/demolition-clearing",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/service_categories/demolition-clearing/feed",
+  },
+  {
+    destination: "/what-we-deliver/storm-water-management",
+    permanent: true,
+    source: "/service_categories/stream-restoration-wetland-mitigation",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/service_categories/concrete-structures",
+  },
+  {
+    destination: "/what-we-deliver/turn-key-development",
+    permanent: true,
+    source: "/service_categories/preconstruction",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/service_categories/retaining-walls",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
+    source: "/service_categories/signalization-pavement-markings-signage",
+  },
+  {
+    destination: "/what-we-deliver/soil-stabilization",
+    permanent: true,
+    source: "/service_categories/soil-stabilization-pavement-reclamation",
+  },
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: "/service_categories/:path+",
+  },
+  // Legacy WordPress service subpages (renamed or consolidated)
+  {
+    destination: "/what-we-deliver/storm-water-management",
+    permanent: true,
+    source: "/what-we-deliver/stormwater-management-esd",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
+    source: "/what-we-deliver/signalization-pavement-markings-signage",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
+    source: "/what-we-deliver/signalization-pavement-markings-signage/:path+",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
+    source: "/what-we-deliver/conduits-site-lighting",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
+    source: "/what-we-deliver/conduits-site-lighting/:path+",
+  },
+  {
+    destination: "/what-we-deliver/turn-key-development",
+    permanent: true,
+    source: "/what-we-deliver/preconstruction",
+  },
+  {
+    destination: "/what-we-deliver/turn-key-development",
+    permanent: true,
+    source: "/what-we-deliver/preconstruction/:path+",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/what-we-deliver/concrete-structures/:path+",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/what-we-deliver/retaining-walls/:path+",
+  },
+  {
+    destination: "/what-we-deliver/storm-water-management",
+    permanent: true,
+    source: "/what-we-deliver/sediment-erosion-controls/:path+",
+  },
+  {
+    destination: "/what-we-deliver/storm-water-management",
+    permanent: true,
+    source: "/what-we-deliver/stream-restoration-wetland-mitigation/:path+",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/what-we-deliver/structural-concrete/:path+",
+  },
+  // Legacy WordPress gallery attachments nested under current service pages
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/what-we-deliver/earthwork/:path+",
+  },
+  {
+    destination: "/what-we-deliver/storm-water-management",
+    permanent: true,
+    source: "/what-we-deliver/storm-water-management/:path+",
+  },
+  {
+    destination: "/what-we-deliver/soil-stabilization",
+    permanent: true,
+    source: "/what-we-deliver/soil-stabilization/:path+",
+  },
+  {
+    destination: "/what-we-deliver/turn-key-development",
+    permanent: true,
+    source: "/what-we-deliver/turn-key-development/:path+",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
+    source: "/what-we-deliver/utilities/:path+",
+  },
+  // Legacy WordPress project photos published directly under /what-we-deliver
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: `/what-we-deliver/:legacy((?!${VALID_SERVICE_SLUGS}$)[^/]+)`,
+  },
+  // Legacy WordPress client testimonials
+  {
+    destination: "/",
+    permanent: true,
+    source: "/testimonial/:path+",
+  },
+  // Legacy WordPress media/attachment URLs nested under pages
+  {
+    destination: "/contact-us",
+    permanent: true,
+    source: "/contact-us/:path+",
+  },
+  {
+    destination: "/request-a-proposal",
+    permanent: true,
+    source: "/request-a-proposal/:path+",
+  },
+  {
+    destination: "/our-people",
+    permanent: true,
+    source: "/who-we-are/:path+",
+  },
+  {
+    destination: "/construction-jobs-in-maryland",
+    permanent: true,
+    source: "/construction-jobs-in-maryland/:path+",
+  },
+  {
+    destination: "/our-people",
+    permanent: true,
+    source: "/team/:path+",
+  },
+];
+
+const sharedRedirects = [
+  {
+    destination: "/what-we-deliver",
+    permanent: true,
+    source: "/project-portfolio",
+  },
+  ...legacyWordpressRedirects,
 ];
 
 // Enhanced security headers
