@@ -3,7 +3,6 @@ import { setRequestLocale } from "next-intl/server";
 import type { Page } from "src/contentful/getPages";
 import { fetchServices } from "src/contentful/getServices";
 import type { SectionType } from "src/contentful/parseSections";
-import { isTypeContentVideoBlock } from "src/contentful/types";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { aggregateAreasServedFromServices } from "src/utils/areasServed";
@@ -34,13 +33,7 @@ function buildAlternateLanguages(
   );
 }
 
-export interface PageData {
-  page: Page;
-  services?: Awaited<ReturnType<typeof fetchServices>>;
-  organizationAreasServed?: string[];
-}
-
-export interface ServiceDataForSchema {
+interface ServiceDataForSchema {
   services: Awaited<ReturnType<typeof fetchServices>>;
   organizationAreasServed?: string[];
 }
@@ -62,7 +55,7 @@ export async function validateAndSetLocale(
 /**
  * Fetches services and aggregates areas served based on page content modules
  */
-export async function getServiceDataForSchema(
+async function getServiceDataForSchema(
   page: Page,
   locale: Locales,
   preview: boolean,
@@ -131,7 +124,7 @@ export async function generatePageSchemaGraph(
 /**
  * Creates metadata images array for OpenGraph and Twitter
  */
-export function createMetadataImages(
+function createMetadataImages(
   metaImage: { src: string } | null | undefined,
   alt = "Delmarva Site Development, Inc.",
 ): Array<{ alt: string; url: string }> {
@@ -150,28 +143,6 @@ export function createMetadataImages(
       url: `${envUrl()}/opengraph-image.png`,
     },
   ];
-}
-
-export function pageHasVideoBlock(entity: {
-  sections?: (SectionType | null)[];
-}): boolean {
-  for (const section of entity.sections ?? []) {
-    for (const content of section?.content ?? []) {
-      if (isTypeContentVideoBlock(content)) return true;
-    }
-  }
-  return false;
-}
-
-const VIDEO_PRECONNECT_LINKS: Array<{ rel: string; url: string }> = [
-  { rel: "preconnect", url: "https://player.vimeo.com" },
-  { rel: "preconnect", url: "https://www.youtube.com" },
-];
-
-export function getVideoPreconnectLinks(entity: {
-  sections?: (SectionType | null)[];
-}): Array<{ rel: string; url: string }> | undefined {
-  return pageHasVideoBlock(entity) ? VIDEO_PRECONNECT_LINKS : undefined;
 }
 
 /**

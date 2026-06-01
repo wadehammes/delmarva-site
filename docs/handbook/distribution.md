@@ -4,13 +4,11 @@ How the site exposes feeds, crawlable URL lists, and default social preview meta
 
 ## RSS
 
-**[src/lib/generateRss.ts](../../src/lib/generateRss.ts)** exports **`generateRss`** and **`outputRss`**, writing RSS XML under **`public/`** when called.
-
-If you add or revive RSS output, invoke **`outputRss`** from a build-time path that has the post list (similar to other sites’ static generation patterns) and commit or generate the resulting **`public/*.xml`** according to your release process.
+Committed feeds under **`public/`** (e.g. **`rss-blog-en.xml`**, **`rss-blog-es.xml`**) are the source of truth today. To regenerate from code, add a build-time script that renders posts and writes XML (there is no active **`src/lib/generateRss`** helper in the repo).
 
 ## XML sitemaps
 
-**[src/lib/generateSitemap.ts](../../src/lib/generateSitemap.ts)** — **`generateSitemap`**, **`outputSitemap`**. Writes **`public/generated-sitemap-${filename}.xml`**. Each URL currently includes **`xhtml:link`** alternates for **`en`** and **`x-default`** only (no **`es`** alternate in the generator yet, despite **`es`** being a supported locale).
+**[src/lib/generateSitemap.ts](../../src/lib/generateSitemap.ts)** — **`outputSitemap`**. Writes **`public/generated-sitemap-${filename}.xml`**. Each URL currently includes **`xhtml:link`** alternates for **`en`** and **`x-default`** only (no **`es`** alternate in the generator yet, despite **`es`** being a supported locale).
 
 **Call sites** (partial): static generation in **`[locale]/[slug]/page.tsx`**, **`what-we-deliver/[slug]/page.tsx`**, **`markets/[slug]/page.tsx`** — each passes routes built from Contentful-derived paths and a **filename** label.
 

@@ -18,7 +18,7 @@ export interface GeoJSONFeatureCollection {
 /**
  * Validates if a coordinate is valid (within world bounds and not NaN)
  */
-export function isValidCoordinate(coord: unknown[]): coord is [number, number] {
+function isValidCoordinate(coord: unknown[]): coord is [number, number] {
   return (
     Array.isArray(coord) &&
     coord.length >= 2 &&

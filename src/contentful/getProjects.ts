@@ -35,11 +35,6 @@ import type { Locales } from "src/i18n/routing";
 
 export type ProjectEntry = TypeProjectWithoutUnresolvableLinksResponse;
 
-export interface ProjectMarketType {
-  id: string;
-  name: string;
-}
-
 export interface ProjectType {
   id: string;
   projectCompletionDate?: string;
@@ -177,61 +172,6 @@ export async function fetchProjects(
   });
 }
 
-// A function to fetch a single project by its slug.
-// Optionally uses the Contentful content preview.
-interface FetchProjectOptions {
-  slug: string;
-  preview: boolean;
-  locale?: Locales;
-}
-
-async function fetchProjectUncached({
-  slug,
-  preview,
-  locale = "en",
-}: FetchProjectOptions): Promise<ProjectType | null> {
-  const contentful = contentfulClient({ preview });
-  const projectResult =
-    await contentful.withoutUnresolvableLinks.getEntries<TypeProjectSkeleton>({
-      content_type: "project",
-      "fields.slug": slug,
-      include: 10,
-      locale,
-    });
-
-  const project = parseContentfulProject(projectResult.items[0]);
-  if (!project) return null;
-
-  const fallbackMedia = await getContentfulAsset(FALLBACK_PROJECT_MEDIA_ID, {
-    locale,
-    preview,
-  });
-
-  return {
-    ...project,
-    media: mediaWithFallback(project, fallbackMedia),
-  };
-}
-
-export async function fetchProject(
-  opts: FetchProjectOptions,
-): Promise<ProjectType | null> {
-  const locale = opts.locale ?? "en";
-  const { key, tags } = cacheKeys.project(opts.slug, locale, opts.preview);
-  return cached({
-    fn: () =>
-      fetchProjectUncached({
-        locale,
-        preview: opts.preview,
-        slug: opts.slug,
-      }),
-    key,
-    tags,
-  });
-}
-
-// A function to fetch all pages.
-// Optionally uses the Contentful content preview.
 interface FetchProjectsByServiceOptions {
   preview: boolean;
   locale?: Locales;

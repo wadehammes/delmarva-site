@@ -1,5 +1,5 @@
 /** Sample props for `pnpm email:dev` (logo loads from production CDN). */
-export const EMAIL_PREVIEW_BASE_URL = "https://www.delmarvasite.com";
+const EMAIL_PREVIEW_BASE_URL = "https://www.delmarvasite.com";
 
 export const joinOurTeamNotificationPreviewProps = {
   address: "123 Main Street",

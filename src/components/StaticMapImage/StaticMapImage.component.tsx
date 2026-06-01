@@ -13,7 +13,7 @@ interface StaticMapImageProps {
   zoom?: number;
 }
 
-export function useStaticMapUrl(
+function useStaticMapUrl(
   location: { lat: number; lon: number } | undefined,
   options?: { height?: number; width?: number; zoom?: number },
 ): string | null {

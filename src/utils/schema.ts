@@ -360,7 +360,7 @@ export async function generateSchemaGraph(
 /**
  * Generates schema graph for a service page (uses ServiceType instead of Page)
  */
-export async function generateServicePageSchemaGraph(
+async function generateServicePageSchemaGraph(
   options: GenerateServicePageSchemaOptions,
 ): Promise<SchemaGraphContext> {
   const { service, slug, locale, organizationOptions } = options;
@@ -438,22 +438,6 @@ export function createMinimalSchemaGraph(
   };
 }
 
-export async function generateSchemaGraphSafe(
-  options: GenerateSchemaGraphOptions,
-): Promise<SchemaGraphContext> {
-  try {
-    return await generateSchemaGraph(options);
-  } catch (error) {
-    console.error("[Schema] generateSchemaGraph failed:", error);
-    const baseUrl = envUrl();
-    const canonicalUrl =
-      options.slug === "home" || options.slug === ""
-        ? baseUrl
-        : `${baseUrl}/${options.slug}`;
-    return createMinimalSchemaGraph(canonicalUrl);
-  }
-}
-
 export async function generateServicePageSchemaGraphSafe(
   options: GenerateServicePageSchemaOptions,
 ): Promise<SchemaGraphContext> {
@@ -493,7 +477,7 @@ export interface GenerateMarketPageSchemaOptions {
   preview: boolean;
 }
 
-export async function generateMarketPageSchemaGraph(
+async function generateMarketPageSchemaGraph(
   options: GenerateMarketPageSchemaOptions,
 ): Promise<SchemaGraphContext> {
   const { market, slug, locale } = options;

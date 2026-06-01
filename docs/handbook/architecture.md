@@ -65,8 +65,8 @@ Custom hooks (modal, scroll, mutations). See [src/hooks/README.md](../../src/hoo
 
 ### `src/lib/`
 
-- **[generateRss.ts](../../src/lib/generateRss.ts)**, **[generateSitemap.ts](../../src/lib/generateSitemap.ts)** — RSS/XML helpers writing under `public/` where invoked.
-- **[analytics.ts](../../src/lib/analytics.ts)** — GTM `dataLayer` helpers.
+- **[generateSitemap.ts](../../src/lib/generateSitemap.ts)** — sitemap XML written under `public/` from page build paths.
+- **GTM** — configured in the tag manager UI; see [integrations.md](integrations.md).
 - Email template docs: [src/lib/README.md](../../src/lib/README.md).
 
 ### `src/utils/`
