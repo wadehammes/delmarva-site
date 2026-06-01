@@ -9,7 +9,7 @@ type RequiredKeys<T> = {
     : K;
 }[keyof T];
 
-export type ContentfulRequiredKeys<TFields> = Exclude<
+type ContentfulRequiredKeys<TFields> = Exclude<
   RequiredKeys<TFields>,
   "entryTitle"
 >;

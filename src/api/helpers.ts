@@ -47,5 +47,5 @@ export const fetchResponse = async <T>(
 ): Promise<T> => {
   const res = await endpoint;
 
-  return res.json();
+  return res.json() as Promise<T>;
 };

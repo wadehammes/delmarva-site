@@ -50,7 +50,7 @@ const _validatePageCheck: ContentfulTypeCheck<
   "id" | "updatedAt" | "publishDate"
 > = true;
 
-export function parseContentfulPage(pageEntry?: PageEntry): Page | null {
+function parseContentfulPage(pageEntry?: PageEntry): Page | null {
   if (!pageEntry || !isTypePage(pageEntry)) {
     return null;
   }

@@ -71,7 +71,7 @@ export const SkeletonCardTrack = ({
   </div>
 );
 
-export const SkeletonCard = ({ className, ...props }: SkeletonCardProps) => (
+const SkeletonCard = ({ className, ...props }: SkeletonCardProps) => (
   <div className={clsx(styles.card, className)}>
     <Skeleton {...props} style={{ height: "100%", width: "100%" }} />
   </div>

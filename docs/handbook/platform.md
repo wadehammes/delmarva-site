@@ -39,7 +39,7 @@ Notable groups (see **`env`** in config for the full set):
 - **ENVIRONMENT** — used for redirects and environment-specific behavior
 - **Analytics** — **`GOOGLE_TAG_MANAGER_ID`** (used in [layout.tsx](../../src/app/[locale]/layout.tsx)). **`GA_MEASUREMENT_ID`** is listed in **`next.config` `env`** but not referenced under **`src/`** directly today (typically wired through GTM).
 - **Email** — Resend keys and dev recipient
-- **Maps** — **`MAPBOX_API_TOKEN`** (server: boundaries API, [zipCodeUtils.ts](../../src/utils/zipCodeUtils.ts), etc.); client map components use **`NEXT_PUBLIC_MAPBOX_API_TOKEN`** (see layout preconnect and map components). Only **`MAPBOX_API_TOKEN`** is listed under **`next.config` `env`**; the public token must still be set in the environment for client bundles.
+- **Maps** — **`MAPBOX_API_TOKEN`** (server: [boundaries API](../../src/app/api/boundaries/)); client map components use **`NEXT_PUBLIC_MAPBOX_API_TOKEN`** (see layout preconnect and map components). Only **`MAPBOX_API_TOKEN`** is listed under **`next.config` `env`**; the public token must still be set in the environment for client bundles.
 - **reCAPTCHA** — **`RECAPTCHA_SITE_KEY`** in **`next.config` `env`** for the widget; server verification uses **`RECAPTCHA_SECRET_KEY`** in [recaptcha.ts](../../src/utils/recaptcha.ts) (set in deployment env; not duplicated in the `env` block today).
 
 Local workflow: link the Vercel project and **`npx vercel env pull`** as described in the root [README.md](../../README.md).

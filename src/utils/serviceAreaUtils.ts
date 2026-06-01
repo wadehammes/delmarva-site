@@ -21,7 +21,7 @@ export interface ServiceWithCsvFields {
  * Converts a service with CSV fields to a ServiceArea if it has valid CSV data
  * Returns null if service should be excluded (no CSV or invalid file type)
  */
-export async function parseServiceToServiceArea(
+async function parseServiceToServiceArea(
   service: ServiceWithCsvFields,
 ): Promise<ServiceArea | null> {
   // Validate CSV file exists and is actually a CSV

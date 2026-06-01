@@ -10,11 +10,11 @@ import {
   type TypeContentCopyMediaBlockWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentCopyMediaBlock";
 
-export type MediaBackgroundStyleType = ExtractSymbolType<
+type MediaBackgroundStyleType = ExtractSymbolType<
   NonNullable<TypeContentCopyMediaBlockFields["mediaBackgroundStyle"]>
 >;
 
-export type MediaPlacementType = ExtractSymbolType<
+type MediaPlacementType = ExtractSymbolType<
   NonNullable<TypeContentCopyMediaBlockFields["mediaPlacement"]>
 >;
 

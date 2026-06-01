@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/knip/schema.json",
+  "tags": ["-lintignore"],
+  "ignore": ["src/contentful/types/**", "scripts/**"],
+  "ignoreDependencies": ["@svgr/webpack", "jest-mock"],
+  "ignoreIssues": {
+    "src/api/helpers.ts": ["types", "enumMembers"]
+  },
+  "rules": {
+    "duplicates": "off"
+  },
+  "workspaces": {
+    ".": {}
+  }
+}

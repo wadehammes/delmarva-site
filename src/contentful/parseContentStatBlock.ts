@@ -9,11 +9,11 @@ import {
   type TypeContentStatBlockWithoutUnresolvableLinksResponse,
 } from "src/contentful/types/TypeContentStatBlock";
 
-export type NumberFormatType = ExtractSymbolType<
+type NumberFormatType = ExtractSymbolType<
   NonNullable<TypeContentStatBlockFields["statType"]>
 >;
 
-export type DecoratorType = ExtractSymbolType<
+type DecoratorType = ExtractSymbolType<
   NonNullable<TypeContentStatBlockFields["decorator"]>
 >;
 

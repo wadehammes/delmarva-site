@@ -7,16 +7,14 @@ Where marketing tags and lightweight analytics hooks connect to the app.
 - **[src/app/[locale]/layout.tsx](../../src/app/[locale]/layout.tsx)** renders **`GoogleTagManager`** from **`@next/third-parties/google`** when **`GOOGLE_TAG_MANAGER_ID`** is set.
 - Tag configuration (triggers, variables, additional tags) lives in the **GTM** product UI, not in this repository.
 
-## Data layer helpers
+## Data layer
 
-**[src/lib/analytics.ts](../../src/lib/analytics.ts)** defines **`ActionTypes`**, **`EventTypes`**, and **`trackEvent`**, which pushes structured payloads to **`window.dataLayer`**.
-
-Use these helpers (or extend them) instead of ad hoc **`dataLayer.push`** calls so event names stay consistent.
+Tag configuration lives in **GTM**. Form and UI components use **`data-tracking-click`** (and related attributes) where events should be measured—wire those in GTM rather than ad hoc **`dataLayer.push`** in app code unless you add a shared helper under **`src/lib/`**.
 
 ## Mapbox
 
 - **Browser / map GL**: Components read **`NEXT_PUBLIC_MAPBOX_API_TOKEN`**. When it is set, [layout.tsx](../../src/app/[locale]/layout.tsx) adds a **preconnect** to Mapbox.
-- **Server**: Route handlers and utilities use **`MAPBOX_API_TOKEN`** (see **`src/app/api/boundaries/`**, [zipCodeUtils.ts](../../src/utils/zipCodeUtils.ts)).
+- **Server**: **`MAPBOX_API_TOKEN`** is used by **`src/app/api/boundaries/`** route handlers.
 
 Imagery and styles must stay within **`images.remotePatterns`** and CSP **`connect-src`** in [next.config.ts](../../next.config.ts).
 

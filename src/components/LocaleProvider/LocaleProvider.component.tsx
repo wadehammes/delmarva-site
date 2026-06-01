@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, type ReactNode, useContext } from "react";
+import { createContext, type ReactNode } from "react";
 import type { Locales } from "src/i18n/routing";
 
 interface LocaleContextType {
@@ -24,10 +24,4 @@ export const LocaleProvider = (props: LocaleProviderProps) => {
       {children}
     </LocaleContext.Provider>
   );
-};
-
-export const useLocale = (): Locales | undefined => {
-  const context = useContext(LocaleContext);
-
-  return context.locale;
 };
