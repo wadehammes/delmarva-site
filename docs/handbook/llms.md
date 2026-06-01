@@ -23,7 +23,7 @@ Use this page to choose **which markdown file to read first**. It mirrors the ha
 | Task | Location |
 |------|----------|
 | Install tools, first run, env / Vercel | Repo root **[README.md](../../README.md)** |
-| Agent defaults, handbook sync | **[CLAUDE.md](../../CLAUDE.md)**; Cursor **[`.cursor/rules/delmarva-site-handbook.mdc`](../../.cursor/rules/delmarva-site-handbook.mdc)** |
+| Agent defaults, handbook sync | **[AGENTS.md](../../AGENTS.md)**; Cursor **[`.cursor/rules/delmarva-site-handbook.mdc`](../../.cursor/rules/delmarva-site-handbook.mdc)** (when present) |
 | Per-hook notes | **[src/hooks/README.md](../../src/hooks/README.md)** |
 | Resend email templates | **[src/lib/README.md](../../src/lib/README.md)** |
 

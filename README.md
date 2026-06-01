@@ -122,7 +122,7 @@ The handbook under [`docs/handbook/`](./docs/handbook/) is the canonical place f
 
 **Entry point:** [`docs/handbook/README.md`](./docs/handbook/README.md)
 
-**Agents / AI tools:** [CLAUDE.md](./CLAUDE.md). In Cursor, project rules live under [`.cursor/rules/`](./.cursor/rules/). For other tools, use the task map in [`docs/handbook/llms.md`](./docs/handbook/llms.md).
+**Agents / AI tools:** [AGENTS.md](./AGENTS.md). In Cursor, project rules may live under [`.cursor/rules/`](./.cursor/rules/). For other tools, use the task map in [`docs/handbook/llms.md`](./docs/handbook/llms.md).
 
 ### Suggested reading order
 
