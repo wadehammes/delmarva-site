@@ -5,11 +5,11 @@ javascript:
   - public/**/*
   - .tool-versions
   - docs/**/*
-  - CLAUDE.md
+  - AGENTS.md
 
 documentation:
   - docs/**/*
-  - CLAUDE.md
+  - AGENTS.md
   - README.md
 
 configuration:
@@ -22,6 +22,8 @@ configuration:
   - vercel.json
   - i18next.config.js
   - .browserslistrc
+  - stylelint.config.js
+  - knip.json
 
 # Add `dependencies` label to any changes to package.json or pnpm-lock.yaml
 dependencies:
@@ -29,3 +31,4 @@ dependencies:
   - package.json
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
+  - patches/**/*
