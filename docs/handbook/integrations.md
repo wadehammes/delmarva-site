@@ -20,8 +20,10 @@ Imagery and styles must stay within **`images.remotePatterns`** and CSP **`conne
 
 ## reCAPTCHA
 
-- **Client**: Forms pass **`process.env.RECAPTCHA_SITE_KEY`** into the widget (wired via **`next.config`** **`env`**).
-- **Server**: [recaptcha.ts](../../src/utils/recaptcha.ts) verifies tokens with **`RECAPTCHA_SECRET_KEY`**. Route handlers that accept form posts should use that helper (or the same pattern) before sending email.
+- **Client**: Forms pass **`process.env.RECAPTCHA_SITE_KEY`** into the widget (wired via **`next.config`** **`env`**). Each form sends a **`formStartedAt`** timestamp (set when the form mounts) with the submission.
+- **Server**: [recaptcha.ts](../../src/utils/recaptcha.ts) verifies tokens with **`RECAPTCHA_SECRET_KEY`**, checks the token **`hostname`** against allowed Delmarva / preview domains, and requires reCAPTCHA v3 scores **≥ 0.7** when a score is present. Optional override: comma-separated **`RECAPTCHA_ALLOWED_HOSTNAMES`**.
+- **Spam pipeline**: [formSpamProtection.ts](../../src/utils/formSpamProtection.ts) centralizes checks used by all Resend form routes—honeypot, minimum dwell time (**3s**), reCAPTCHA, then [spamDetection.ts](../../src/utils/spamDetection.ts) content rules (keyword patterns, blocked sender domains, repeated submitter email in message body). Blocked submissions return a fake success response so bots are not tipped off.
+- **Vercel Observability**: blocked submissions emit structured JSON warnings via [observabilityLogger.ts](../../src/utils/observabilityLogger.ts) with **`event: "form_spam_blocked"`**, plus form name, layer, reason, and submitter metadata. In the Vercel dashboard, open **Observability → Logs**, filter **`level:warning`**, and search for **`form_spam_blocked`** or restrict to **`/api/resend/*`**. For retention, alerting, or dashboards beyond Vercel’s log window, add a **Log Drain** (Datadog, Axiom, custom HTTP endpoint, etc.) and query the JSON **`event`** field.
 
 ## Resend and React Email
 

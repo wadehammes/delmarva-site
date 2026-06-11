@@ -26,6 +26,7 @@ export interface GeneralInquiryInputs {
   phone: string;
   message: string;
   recaptchaToken: string;
+  formStartedAt?: number;
   website?: string;
   emailsToSendNotification?: string[];
   emailsToBcc?: string[];
@@ -48,6 +49,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
   const t = useTranslations("GeneralInquiryForm");
 
   const reCaptcha = useRef<ReCAPTCHA>(null);
+  const formStartedAt = useRef(Date.now());
 
   const {
     handleSubmit,
@@ -77,6 +79,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
             email,
             emailsToBcc: emailsToBcc,
             emailsToSendNotification,
+            formStartedAt: formStartedAt.current,
             message,
             name,
             phone,
@@ -85,6 +88,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
           });
           toast.success(t("messages.success"));
           reset(defaultValues);
+          formStartedAt.current = Date.now();
           reCaptcha.current?.reset();
         } catch (_e) {
           throw new Error("Failed to submit inquiry. Please try again.");
@@ -184,16 +188,13 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
         </div>
       </div>
 
-      <div className={styles.honeypot}>
-        <label htmlFor="website">
-          Please leave this field empty (anti-spam)
-        </label>
+      <div aria-hidden="true" className={styles.honeypot}>
+        <label htmlFor="website">Website</label>
         <Controller
           control={control}
           name="website"
           render={({ field: { onChange, value, name, ref } }) => (
             <input
-              aria-label="Leave this field empty"
               autoComplete="off"
               id="website"
               name={name}

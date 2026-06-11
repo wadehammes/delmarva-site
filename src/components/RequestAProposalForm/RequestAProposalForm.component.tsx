@@ -27,6 +27,7 @@ export interface RequestAProposalInputs {
   phone: string;
   projectDetails: string;
   recaptchaToken: string;
+  formStartedAt?: number;
   website?: string;
   emailsToSendNotification?: string[];
   emailsToBcc?: string[];
@@ -50,6 +51,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
   const t = useTranslations("RequestAProposalForm");
 
   const reCaptcha = useRef<ReCAPTCHA>(null);
+  const formStartedAt = useRef(Date.now());
 
   const {
     handleSubmit,
@@ -81,6 +83,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             email,
             emailsToBcc: emailsToBcc,
             emailsToSendNotification,
+            formStartedAt: formStartedAt.current,
             name,
             phone,
             projectDetails,
@@ -89,6 +92,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
           });
           toast.success(t("messages.success"));
           reset(defaultValues);
+          formStartedAt.current = Date.now();
           reCaptcha.current?.reset();
         } catch (_e) {
           throw new Error("Failed to submit request. Please try again.");
@@ -205,16 +209,13 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         </div>
       </div>
 
-      <div className={styles.honeypot}>
-        <label htmlFor="website">
-          Please leave this field empty (anti-spam)
-        </label>
+      <div aria-hidden="true" className={styles.honeypot}>
+        <label htmlFor="website">Website</label>
         <Controller
           control={control}
           name="website"
           render={({ field: { onChange, value, name, ref } }) => (
             <input
-              aria-label="Leave this field empty"
               autoComplete="off"
               id="website"
               name={name}

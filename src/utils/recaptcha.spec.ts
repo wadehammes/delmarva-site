@@ -3,6 +3,8 @@ import { verifyRecaptchaToken } from "src/utils/recaptcha";
 // Mock fetch globally
 global.fetch = jest.fn();
 
+const validHostname = "www.delmarvasite.com";
+
 describe("recaptcha", () => {
   const originalEnv = process.env;
   const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
@@ -26,7 +28,7 @@ describe("recaptcha", () => {
 
       expect(result).toBe(false);
       expect(consoleSpy).toHaveBeenCalledWith(
-        "RECAPTCHA_SECRET_KEY is not configured",
+        expect.stringContaining('"event":"recaptcha_misconfigured"'),
       );
       consoleSpy.mockRestore();
     });
@@ -56,7 +58,7 @@ describe("recaptcha", () => {
       const token = "valid-token";
 
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ success: true }),
+        json: async () => ({ hostname: validHostname, success: true }),
         ok: true,
       } as Response);
 
@@ -80,7 +82,11 @@ describe("recaptcha", () => {
       const token = "valid-token";
 
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ score: 0.9, success: true }),
+        json: async () => ({
+          hostname: validHostname,
+          score: 0.9,
+          success: true,
+        }),
         ok: true,
       } as Response);
 
@@ -94,7 +100,11 @@ describe("recaptcha", () => {
       const token = "low-score-token";
 
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ score: 0.3, success: true }),
+        json: async () => ({
+          hostname: validHostname,
+          score: 0.3,
+          success: true,
+        }),
         ok: true,
       } as Response);
 
@@ -117,20 +127,39 @@ describe("recaptcha", () => {
       expect(result).toBe(false);
     });
 
-    it("should return false when score is missing and defaults to 0.5 threshold", async () => {
+    it("should return false for reCAPTCHA v3 response with borderline score", async () => {
       process.env.RECAPTCHA_SECRET_KEY = "test-secret-key";
-      const token = "token-without-score";
+      const token = "borderline-score-token";
 
-      // v2 response (no score field)
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ success: true }),
+        json: async () => ({
+          hostname: validHostname,
+          score: 0.6,
+          success: true,
+        }),
         ok: true,
       } as Response);
 
       const result = await verifyRecaptchaToken(token);
 
-      // Should pass because score defaults to 0.5 and threshold is 0.5
-      expect(result).toBe(true);
+      expect(result).toBe(false);
+    });
+
+    it("should return false when hostname is not allowed", async () => {
+      process.env.RECAPTCHA_SECRET_KEY = "test-secret-key";
+      const token = "wrong-host-token";
+
+      mockFetch.mockResolvedValueOnce({
+        json: async () => ({
+          hostname: "evil.example.com",
+          success: true,
+        }),
+        ok: true,
+      } as Response);
+
+      const result = await verifyRecaptchaToken(token);
+
+      expect(result).toBe(false);
     });
 
     it("should handle fetch errors gracefully", async () => {
@@ -144,8 +173,7 @@ describe("recaptcha", () => {
 
       expect(result).toBe(false);
       expect(consoleSpy).toHaveBeenCalledWith(
-        "reCAPTCHA verification error:",
-        expect.any(Error),
+        expect.stringContaining('"event":"recaptcha_verification_error"'),
       );
       consoleSpy.mockRestore();
     });
@@ -171,7 +199,7 @@ describe("recaptcha", () => {
       const token = "test-token";
 
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ success: true }),
+        json: async () => ({ hostname: validHostname, success: true }),
         ok: true,
       } as Response);
 

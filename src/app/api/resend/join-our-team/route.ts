@@ -12,13 +12,17 @@ import {
   getMimeType,
   getNotificationTo,
 } from "src/utils/emailHelpers";
-import { verifyRecaptchaToken } from "src/utils/recaptcha";
-import { isSpam } from "src/utils/spamDetection";
+import {
+  checkFormSubmissionSpam,
+  createSpamBlockedResponse,
+  logBlockedFormSubmission,
+} from "src/utils/formSpamProtection";
 import { isNonNullable } from "src/utils/value.helpers";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const fallbackNotificationTo = "w@dehammes.com";
+const formName = "Join Our Team form";
 
 function parseFormData(formData: FormData): JoinOurTeamInputs {
   const get = (key: string) => formData.get(key);
@@ -31,6 +35,10 @@ function parseFormData(formData: FormData): JoinOurTeamInputs {
     typeof emailsRaw === "string" && emailsRaw
       ? (JSON.parse(emailsRaw) as string[])
       : undefined;
+  const formStartedAtRaw = getString("formStartedAt");
+  const formStartedAt = formStartedAtRaw
+    ? Number.parseInt(formStartedAtRaw, 10)
+    : undefined;
   return {
     address: getString("address"),
     briefDescription: getString("briefDescription"),
@@ -38,6 +46,7 @@ function parseFormData(formData: FormData): JoinOurTeamInputs {
     coverLetter: (get("coverLetter") as File | null) ?? null,
     email: getString("email"),
     emailsToSendNotification,
+    formStartedAt,
     locale: (() => {
       const localeRaw = getString("locale");
       return localeRaw ? parseEmailLocale(localeRaw) : undefined;
@@ -60,30 +69,6 @@ export async function POST(request: Request) {
     ? parseFormData(await request.formData())
     : await request.json();
 
-  // Honeypot check - if website field is filled, it's likely a bot
-  if (res.website && res.website.trim() !== "") {
-    console.warn("Spam detected (honeypot): Join Our Team form", {
-      email: res.email,
-      name: res.name,
-      position: res.position,
-    });
-    // Return success response to avoid alerting bots
-    return Response.json({ id: "spam-blocked", message: "success" });
-  }
-
-  // Verify reCAPTCHA token
-  const isRecaptchaValid = await verifyRecaptchaToken(res.recaptchaToken);
-
-  if (!isRecaptchaValid) {
-    console.warn("Spam detected (reCAPTCHA failed): Join Our Team form", {
-      email: res.email,
-      name: res.name,
-      position: res.position,
-    });
-    // Return success response to avoid alerting bots
-    return Response.json({ id: "spam-blocked", message: "success" });
-  }
-
   const email = res.email;
   const name = res.name;
   const phone = res.phone || "No phone number provided.";
@@ -100,37 +85,32 @@ export async function POST(request: Request) {
   const resume = res.resume;
   const position = res.position || "No position provided.";
 
-  // Keyword-based spam detection
-  // Combine all text fields for spam checking
-  const combinedContent = [
-    name,
-    email,
-    phone,
-    address,
-    city,
-    stateName,
-    zipCode,
-    position,
-    briefDescription,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const spamCheck = isSpam({
-    email,
-    message: combinedContent,
-    name,
+  const spamCheck = await checkFormSubmissionSpam({
+    formStartedAt: res.formStartedAt,
+    honeypot: res.website,
+    recaptchaToken: res.recaptchaToken,
+    spamContent: {
+      email,
+      message: [
+        name,
+        email,
+        phone,
+        address,
+        city,
+        stateName,
+        zipCode,
+        position,
+        briefDescription,
+      ]
+        .filter(Boolean)
+        .join(" "),
+      name,
+    },
   });
 
-  if (spamCheck.isSpam) {
-    console.warn("Spam detected (keywords): Join Our Team form", {
-      email,
-      name,
-      position,
-      reasons: spamCheck.reasons,
-    });
-    // Return success response to avoid alerting bots
-    return Response.json({ id: "spam-blocked", message: "success" });
+  if (!spamCheck.allowed) {
+    logBlockedFormSubmission(formName, spamCheck, { email, name, position });
+    return createSpamBlockedResponse();
   }
 
   if (!email) {
