@@ -1,64 +1,76 @@
-/**
- * Spam detection utilities
- */
+const BLOCKED_EMAIL_DOMAINS = new Set(["proonlinepage.com"]);
 
-// Common spam patterns
 const SPAM_PATTERNS = [
   /\b(viagra|cialis|casino|poker|loan|mortgage|debt|free money|make money fast)\b/i,
   /\b(click here|buy now|limited time|act now|urgent)\b/i,
-  /(http|https|www\.)[^\s]{20,}/i, // Long URLs
-  /[A-Z]{10,}/, // Excessive caps
-  /[!@#$%^&*()]{5,}/, // Excessive special chars
-  /(.)\1{10,}/, // Repeated characters (e.g., "aaaaaaaaaa")
+  /\b(reply\s+stop\s+to\s+opt\s+out|text\s+stop\s+to\s+opt\s+out)\b/i,
+  /\b(wikipedia\s+page|wiki\s+page)\b.*\b(created|creation|getting|build|revered|reference)\b/i,
+  /\b(getting|get|create|build)\b.*\b(wikipedia|wiki)\s+page\b/i,
+  /\b(1st|first)\s+page\s+of\s+google\b/i,
+  /\b(backlink|link building|seo services|rank on google|google ranking)\b/i,
+  /\brespond\s+back\s+to\s+this\s+email\b/i,
+  /(http|https|www\.)[^\s]{20,}/i,
+  /[A-Z]{10,}/,
+  /[!@#$%^&*()]{5,}/,
+  /(.)\1{10,}/,
 ];
 
-// Suspicious email patterns
 const SUSPICIOUS_EMAIL_PATTERNS = [
   /^[a-z0-9._%+-]+@(gmail|yahoo|hotmail|outlook)\.(com|net|org)$/i,
 ];
 
-/**
- * Check if content contains spam patterns
- */
-export function containsSpamPatterns(content: string): boolean {
-  // Check caps pattern before lowercasing (caps pattern needs original case)
+export const containsSpamPatterns = (content: string): boolean => {
   const hasExcessiveCaps = /[A-Z]{10,}/.test(content);
   if (hasExcessiveCaps) {
     return true;
   }
 
-  // Check other patterns on normalized content
   const normalizedContent = content.toLowerCase();
   return SPAM_PATTERNS.some((pattern) => pattern.test(normalizedContent));
-}
+};
 
-/**
- * Check if email looks suspicious
- * Note: This is a heuristic - legitimate users may have these emails too
- */
-export function isSuspiciousEmail(email: string): boolean {
+export const isSuspiciousEmail = (email: string): boolean => {
   return SUSPICIOUS_EMAIL_PATTERNS.some((pattern) => pattern.test(email));
-}
+};
 
-/**
- * Check if message is too short (likely automated)
- * Only flag truly empty or single-character messages
- */
-export function isMessageTooShort(message: string, minLength = 3): boolean {
+export const isBlockedEmailDomain = (email: string): boolean => {
+  const atIndex = email.lastIndexOf("@");
+
+  if (atIndex === -1) {
+    return false;
+  }
+
+  const domain = email
+    .slice(atIndex + 1)
+    .trim()
+    .toLowerCase();
+
+  return BLOCKED_EMAIL_DOMAINS.has(domain);
+};
+
+export const messageRepeatsSubmitterEmail = (
+  message: string,
+  email: string,
+): boolean => {
+  if (!message.trim() || !email.trim()) {
+    return false;
+  }
+
+  return message.toLowerCase().includes(email.trim().toLowerCase());
+};
+
+export const isMessageTooShort = (message: string, minLength = 3): boolean => {
   return message.trim().length < minLength;
-}
+};
 
-/**
- * Check if message is too long (likely spam)
- */
-export function isMessageTooLong(message: string, maxLength = 5000): boolean {
+export const isMessageTooLong = (
+  message: string,
+  maxLength = 5000,
+): boolean => {
   return message.length > maxLength;
-}
+};
 
-/**
- * Comprehensive spam check
- */
-export function isSpam(content: {
+export const isSpam = (content: {
   email: string;
   message: string;
   name?: string;
@@ -66,8 +78,14 @@ export function isSpam(content: {
 }): {
   isSpam: boolean;
   reasons: string[];
-} {
-  // Early return for critical spam patterns
+} => {
+  if (isBlockedEmailDomain(content.email)) {
+    return {
+      isSpam: true,
+      reasons: ["Email domain is blocked"],
+    };
+  }
+
   if (containsSpamPatterns(content.message)) {
     return {
       isSpam: true,
@@ -77,6 +95,10 @@ export function isSpam(content: {
 
   const reasons: string[] = [];
 
+  if (messageRepeatsSubmitterEmail(content.message, content.email)) {
+    reasons.push("Message repeats submitter email");
+  }
+
   if (isMessageTooShort(content.message)) {
     reasons.push("Message is too short");
   }
@@ -85,30 +107,10 @@ export function isSpam(content: {
     reasons.push("Message is too long");
   }
 
-  // Check email (informational only - don't use for spam detection)
-  // Many legitimate users have Gmail/Yahoo addresses
-  // if (isSuspiciousEmail(content.email)) {
-  //   reasons.push("Email appears suspicious");
-  // }
-
-  // Check name (common spam names)
-  if (content.name) {
-    const nameLower = content.name.toLowerCase();
-    if (
-      nameLower.length < 2 ||
-      nameLower.length > 50 ||
-      /^[a-z]+$/.test(nameLower) // Only letters (no spaces, numbers, etc.)
-    ) {
-      // This is lenient - adjust based on your needs
-    }
-  }
-
-  // Only flag as spam if multiple indicators
-  // This prevents false positives from single checks like "message too short"
   const hasMultipleIndicators = reasons.length >= 2;
 
   return {
     isSpam: hasMultipleIndicators,
     reasons,
   };
-}
+};

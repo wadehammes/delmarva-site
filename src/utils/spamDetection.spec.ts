@@ -1,13 +1,29 @@
 import {
   containsSpamPatterns,
+  isBlockedEmailDomain,
   isMessageTooLong,
   isMessageTooShort,
   isSpam,
   isSuspiciousEmail,
+  messageRepeatsSubmitterEmail,
 } from "src/utils/spamDetection";
 
 describe("spamDetection", () => {
   describe("containsSpamPatterns", () => {
+    it("should detect SEO and reputation scam patterns", () => {
+      expect(
+        containsSpamPatterns(
+          "If you're thinking of getting a Wikipedia Page created, respond back to this email.",
+        ),
+      ).toBe(true);
+      expect(
+        containsSpamPatterns(
+          "Wiki links show up on the 1st page of Google 97% of the time.",
+        ),
+      ).toBe(true);
+      expect(containsSpamPatterns("Reply STOP to opt out.")).toBe(true);
+    });
+
     it("should detect spam keywords", () => {
       expect(containsSpamPatterns("Buy viagra now")).toBe(true);
       expect(containsSpamPatterns("Check out this casino")).toBe(true);
@@ -63,6 +79,36 @@ describe("spamDetection", () => {
       expect(containsSpamPatterns("VIAGRA")).toBe(true);
       expect(containsSpamPatterns("ViAgRa")).toBe(true);
       expect(containsSpamPatterns("viagra")).toBe(true);
+    });
+  });
+
+  describe("isBlockedEmailDomain", () => {
+    it("should block known spam domains", () => {
+      expect(isBlockedEmailDomain("julie.barker@proonlinepage.com")).toBe(true);
+    });
+
+    it("should allow legitimate domains", () => {
+      expect(isBlockedEmailDomain("contact@company.com")).toBe(false);
+    });
+  });
+
+  describe("messageRepeatsSubmitterEmail", () => {
+    it("should detect when the message repeats the submitter email", () => {
+      expect(
+        messageRepeatsSubmitterEmail(
+          "Thanks, Julie julie.barker@proonlinepage.com",
+          "julie.barker@proonlinepage.com",
+        ),
+      ).toBe(true);
+    });
+
+    it("should not flag when the email is absent from the message", () => {
+      expect(
+        messageRepeatsSubmitterEmail(
+          "Hi, I'm interested in your services.",
+          "contact@company.com",
+        ),
+      ).toBe(false);
     });
   });
 
@@ -128,6 +174,19 @@ describe("spamDetection", () => {
   });
 
   describe("isSpam", () => {
+    it("should flag known spam outreach like the Wikipedia pitch", () => {
+      const spamMessage =
+        "Wikipedia is considered to be the World's most significant tool for reference material. The Wiki links show up on the 1st page of Google 97% of the time. With a Page on one of the most revered reference tools, you are sure to get yourself or your business noticed. So if you're thinking of getting a Wikipedia Page created, it's the best time of the year. If you are interested in getting more information just respond back to this email. Thanks, Julie Barker Sales Executive Pro Online Page julie.barker@proonlinepage.com Reply STOP to opt out.";
+
+      const result = isSpam({
+        email: "julie.barker@proonlinepage.com",
+        message: spamMessage,
+        name: "Julie Barker",
+      });
+
+      expect(result.isSpam).toBe(true);
+    });
+
     it("should flag spam with critical spam patterns", () => {
       const result = isSpam({
         companyName: "Company",

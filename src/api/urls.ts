@@ -22,6 +22,7 @@ function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
   form.append("phone", data.phone);
   form.append("position", data.position);
   form.append("recaptchaToken", data.recaptchaToken);
+  form.append("formStartedAt", String(data.formStartedAt ?? ""));
   form.append("state", data.state);
   form.append("workEligibility", String(data.workEligibility));
   form.append("zipCode", data.zipCode);
@@ -48,6 +49,7 @@ export const api = {
     email,
     emailsToBcc,
     emailsToSendNotification,
+    formStartedAt,
     message,
     name,
     phone,
@@ -62,6 +64,7 @@ export const api = {
             email,
             emailsToBcc,
             emailsToSendNotification,
+            formStartedAt,
             message,
             name,
             phone,
@@ -96,6 +99,7 @@ export const api = {
             city: data.city,
             email: data.email,
             emailsToSendNotification: data.emailsToSendNotification,
+            formStartedAt: data.formStartedAt,
             locale: data.locale,
             name: data.name,
             phone: data.phone,
@@ -116,6 +120,7 @@ export const api = {
     email,
     emailsToBcc,
     emailsToSendNotification,
+    formStartedAt,
     name,
     phone,
     projectDetails,
@@ -131,6 +136,7 @@ export const api = {
             email,
             emailsToBcc,
             emailsToSendNotification,
+            formStartedAt,
             name,
             phone,
             projectDetails,

@@ -38,6 +38,7 @@ export interface JoinOurTeamInputs {
   phone: string;
   position: string;
   recaptchaToken: string;
+  formStartedAt?: number;
   resume: File | null;
   state: string;
   website?: string; // Honeypot field
@@ -68,6 +69,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
   const t = useTranslations("JoinOurTeamForm");
 
   const reCaptcha = useRef<ReCAPTCHA>(null);
+  const formStartedAt = useRef(Date.now());
 
   const {
     handleSubmit,
@@ -121,6 +123,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             coverLetter,
             email,
             emailsToSendNotification: fields.emailsToSendNotification,
+            formStartedAt: formStartedAt.current,
             locale,
             name,
             phone,
@@ -137,6 +140,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             "Application received. We'll be in touch soon.";
           toast.success(message);
           reset(defaultValues);
+          formStartedAt.current = Date.now();
           reCaptcha.current?.reset();
         } catch (_e) {
           throw new Error("Failed to submit application. Please try again.");
@@ -485,11 +489,8 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           </div>
         </div>
 
-        {/* Honeypot field - hidden from users but visible to bots */}
-        <div className={styles.honeypot}>
-          <label htmlFor="website">
-            Please leave this field empty (anti-spam)
-          </label>
+        <div aria-hidden="true" className={styles.honeypot}>
+          <label htmlFor="website">Website</label>
           <Controller
             control={control}
             name="website"
