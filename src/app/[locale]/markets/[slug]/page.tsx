@@ -61,7 +61,7 @@ export async function generateStaticParams(): Promise<PageParams[]> {
 
         return {
           modTime: "",
-          route: `${MARKETS_PAGE_SLUG}/${market.slug}`,
+          route: `/${MARKETS_PAGE_SLUG}/${market.slug}`,
         };
       })
       .filter((item: SitemapItem) => item.route.length);

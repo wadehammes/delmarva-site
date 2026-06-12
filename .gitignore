@@ -43,5 +43,6 @@ yarn-error.log*
 .vscode
 
 public/generated-sitemap-*.xml
+public/sitemap-index.xml
 public/rss-blog-en.xml
 public/rss-blog-es.xml

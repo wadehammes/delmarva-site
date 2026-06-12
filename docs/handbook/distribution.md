@@ -14,7 +14,7 @@ Committed feeds under **`public/`** (e.g. **`rss-blog-en.xml`**, **`rss-blog-es.
 
 When you add a **new family of routes**, decide whether they belong in the sitemap and follow an existing **`outputSitemap`** pattern.
 
-**[public/sitemap-index.xml](../../public/sitemap-index.xml)** is committed as the sitemap index. Builds also write **`public/generated-sitemap-pages.xml`**, **`generated-sitemap-markets.xml`**, and **`generated-sitemap-what-we-deliver.xml`** (from **`outputSitemap`** in the corresponding **`page.tsx`** files). Today the index only lists **`generated-sitemap-pages.xml`**; if markets and services sitemaps should be discoverable, add **`<sitemap>`** entries for those files here.
+**[public/sitemap-index.xml](../../public/sitemap-index.xml)** is written at build time by **`refreshSitemapIndex()`** in [generateSitemap.ts](../../src/lib/generateSitemap.ts). Each **`outputSitemap`** call writes a fragment and then rescans **`public/generated-sitemap-*.xml`** to regenerate the index, so new route families are picked up automatically when their sitemap file appears.
 
 ## Robots
 

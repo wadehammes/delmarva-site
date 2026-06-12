@@ -358,6 +358,16 @@ const legacyWordpressRedirects = [
   {
     destination: "/what-we-deliver/utilities",
     permanent: true,
+    source: "/what-we-deliver/pavement",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
+    source: "/what-we-deliver/pavement/:path+",
+  },
+  {
+    destination: "/what-we-deliver/utilities",
+    permanent: true,
     source: "/what-we-deliver/signalization-pavement-markings-signage/:path+",
   },
   {

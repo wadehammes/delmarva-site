@@ -79,7 +79,7 @@ Lower-level primitives (Button, TextField, TextArea) used by feature components.
 
 ### `public/`
 
-Static assets, **sitemap-index.xml**, generated sitemap fragments when builds run `outputSitemap`.
+Static assets, **`sitemap-index.xml`** (generated at build from `public/generated-sitemap-*.xml`), and generated sitemap fragments when builds run **`outputSitemap`**.
 
 ## Data flow
 
