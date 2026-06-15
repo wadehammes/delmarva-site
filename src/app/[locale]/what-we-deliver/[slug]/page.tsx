@@ -15,14 +15,15 @@ import {
 } from "src/contentful/getServices";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
-import type { SitemapItem } from "src/lib/generateSitemap";
-import { outputSitemap } from "src/lib/generateSitemap";
+import {
+  buildServicesSitemapRoutes,
+  outputSitemap,
+} from "src/lib/generateSitemap";
 import {
   EXCLUDED_PAGE_SLUGS_FROM_BUILD,
   FOOTER_ID,
   NAVIGATION_ID,
   SERVICES_PAGE_SLUG,
-  TEST_PAGE_SLUG,
 } from "src/utils/constants";
 import { envUrl } from "src/utils/env.helpers";
 import {
@@ -48,26 +49,7 @@ export async function generateStaticParams(): Promise<PageParams[]> {
   const services = await fetchServices({ preview: false });
 
   if (services) {
-    // Generate Sitemap
-    const routes: SitemapItem[] = services
-      .map((service: ServiceType) => {
-        if (
-          service.slug?.includes(TEST_PAGE_SLUG) ||
-          !service.enableIndexing ||
-          EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(service.slug ?? "")
-        ) {
-          return {
-            modTime: "",
-            route: "",
-          };
-        }
-
-        return {
-          modTime: service.updatedAt,
-          route: `/${SERVICES_PAGE_SLUG}/${service.slug}`,
-        };
-      })
-      .filter((item: SitemapItem) => item.route.length);
+    const routes = buildServicesSitemapRoutes(services, SERVICES_PAGE_SLUG);
 
     if (routes.length > 0) {
       outputSitemap(routes, SERVICES_PAGE_SLUG);

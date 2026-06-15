@@ -1,9 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import {
+  buildMarketsSitemapRoutes,
   buildPagesSitemapRoutes,
   generateSitemap,
   generateSitemapIndex,
+  getSitemapLastmod,
   outputSitemap,
   refreshSitemapIndex,
 } from "src/lib/generateSitemap";
@@ -34,15 +36,64 @@ describe("generateSitemap", () => {
     writeFileSync.mockClear();
   });
 
+  it("prefers updatedAt and falls back to publishDate for lastmod", () => {
+    expect(
+      getSitemapLastmod({
+        publishDate: "2026-01-01T00:00:00.000Z",
+        updatedAt: "2026-02-01T00:00:00.000Z",
+      }),
+    ).toBe("2026-02-01T00:00:00.000Z");
+
+    expect(
+      getSitemapLastmod({
+        publishDate: "2026-01-01T00:00:00.000Z",
+        updatedAt: "",
+      }),
+    ).toBe("2026-01-01T00:00:00.000Z");
+  });
+
+  it("uses publishDate for markets when updatedAt is missing", () => {
+    const routes = buildMarketsSitemapRoutes(
+      [
+        {
+          enableIndexing: true,
+          publishDate: "2026-03-01T00:00:00.000Z",
+          slug: "commercial",
+          updatedAt: "",
+        },
+      ],
+      "markets",
+    );
+
+    expect(routes).toEqual([
+      {
+        modTime: "2026-03-01T00:00:00.000Z",
+        route: "/markets/commercial",
+      },
+    ]);
+  });
+
+  it("omits lastmod when no valid date is available", () => {
+    const sitemap = generateSitemap([
+      {
+        route: "/contact-us",
+      },
+    ]);
+
+    expect(sitemap).not.toContain("<lastmod>");
+  });
+
   it("includes the home page even though it is excluded from slug routes", () => {
     const routes = buildPagesSitemapRoutes([
       {
         enableIndexing: true,
+        publishDate: "2025-12-01T00:00:00.000Z",
         slug: "home",
         updatedAt: "2026-01-01T00:00:00.000Z",
       },
       {
         enableIndexing: true,
+        publishDate: "2026-01-01T00:00:00.000Z",
         slug: "contact-us",
         updatedAt: "2026-01-02T00:00:00.000Z",
       },
