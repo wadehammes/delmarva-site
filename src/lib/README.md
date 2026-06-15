@@ -31,7 +31,8 @@ When **`ENVIRONMENT`** is **`local`** or **`staging`**, use **`RESEND_TEST_RECIP
 
 | File | Role |
 |------|------|
-| [`generateSitemap.ts`](./generateSitemap.ts) | Writes `public/generated-sitemap-*.xml` from page builds |
+| [`generateSitemap.ts`](./generateSitemap.ts) | Writes `public/generated-sitemap-*.xml` and `public/sitemap-index.xml` from page builds |
+
 RSS feeds under `public/` are committed directly (no generator in `src/lib/`).
 
 Handbook: [integrations.md](../../docs/handbook/integrations.md), [distribution.md](../../docs/handbook/distribution.md).

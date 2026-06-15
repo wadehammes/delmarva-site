@@ -9,15 +9,14 @@ import { fetchNavigation } from "src/contentful/getNavigation";
 import type { Page as PageType } from "src/contentful/getPages";
 import { fetchPage, fetchPages } from "src/contentful/getPages";
 import { routing } from "src/i18n/routing";
-import type { SitemapItem } from "src/lib/generateSitemap";
-import { outputSitemap } from "src/lib/generateSitemap";
+import {
+  buildPagesSitemapRoutes,
+  outputSitemap,
+} from "src/lib/generateSitemap";
 import {
   EXCLUDED_PAGE_SLUGS_FROM_BUILD,
   FOOTER_ID,
-  HOME_PAGE_SLUG,
   NAVIGATION_ID,
-  SERVICES_PAGE_SLUG,
-  TEST_PAGE_SLUG,
 } from "src/utils/constants";
 import { envUrl } from "src/utils/env.helpers";
 import {
@@ -41,39 +40,7 @@ export async function generateStaticParams(): Promise<PageParams[]> {
   const pages = await fetchPages({ preview: false });
 
   if (pages) {
-    const routes: SitemapItem[] = pages
-      .map((page: PageType) => {
-        if (
-          page.slug?.includes(TEST_PAGE_SLUG) ||
-          !page.enableIndexing ||
-          EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(page.slug ?? "")
-        ) {
-          return {
-            modTime: "",
-            route: "",
-          };
-        }
-
-        if (page.slug === HOME_PAGE_SLUG) {
-          return {
-            modTime: page.updatedAt,
-            route: "/",
-          };
-        }
-
-        if (page.slug === SERVICES_PAGE_SLUG) {
-          return {
-            modTime: page.updatedAt,
-            route: `/${SERVICES_PAGE_SLUG}`,
-          };
-        }
-
-        return {
-          modTime: page.updatedAt,
-          route: `/${page.slug}`,
-        };
-      })
-      .filter((item: SitemapItem) => item.route.length);
+    const routes = buildPagesSitemapRoutes(pages);
 
     if (routes.length > 0) {
       outputSitemap(routes, "pages");

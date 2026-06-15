@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import type { Page } from "src/contentful/getPages";
 import { fetchServices } from "src/contentful/getServices";
 import type { SectionType } from "src/contentful/parseSections";
+import { buildLocalizedUrl } from "src/i18n/localeUtils";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { aggregateAreasServedFromServices } from "src/utils/areasServed";
@@ -21,15 +22,13 @@ function buildAlternateLanguages(
   path: string,
   baseUrl: string,
 ): Record<string, string> {
-  const pathSegment = path ? `/${path}` : "";
+  const route = path ? `/${path}` : "/";
+
   return Object.fromEntries(
-    routing.locales.map((locale) => {
-      const url =
-        locale === routing.defaultLocale
-          ? `${baseUrl}${pathSegment}`
-          : `${baseUrl}/${locale}${pathSegment}`;
-      return [locale, url];
-    }),
+    routing.locales.map((locale) => [
+      locale,
+      buildLocalizedUrl(route, locale, baseUrl),
+    ]),
   );
 }
 
