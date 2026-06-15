@@ -19,11 +19,46 @@ const generatedSitemapPattern = /^generated-sitemap-.+\.xml$/;
 const sitemapIndexPath = path.join(publicDir, "sitemap-index.xml");
 
 export interface SitemapItem {
+  modTime?: string;
   route: string;
-  modTime: string;
 }
 
-type PageSitemapSource = Pick<Page, "slug" | "enableIndexing" | "updatedAt">;
+export interface SitemapDates {
+  publishDate?: string;
+  updatedAt?: string;
+}
+
+export const getSitemapLastmod = ({
+  publishDate,
+  updatedAt,
+}: SitemapDates): string | undefined => {
+  const lastmod = updatedAt?.trim() || publishDate?.trim();
+
+  return lastmod || undefined;
+};
+
+type PageSitemapSource = Pick<
+  Page,
+  "slug" | "enableIndexing" | "updatedAt" | "publishDate"
+>;
+
+type MarketSitemapSource = {
+  enableIndexing?: boolean;
+  publishDate?: string;
+  slug?: string;
+  updatedAt?: string;
+};
+
+type ServiceSitemapSource = {
+  enableIndexing: boolean;
+  publishDate: string;
+  slug: string;
+  updatedAt: string;
+};
+
+const emptySitemapItem = (): SitemapItem => ({
+  route: "",
+});
 
 export const buildPagesSitemapRoutes = (
   pages: PageSitemapSource[],
@@ -31,36 +66,74 @@ export const buildPagesSitemapRoutes = (
   pages
     .map((page) => {
       if (page.slug?.includes(TEST_PAGE_SLUG) || !page.enableIndexing) {
-        return {
-          modTime: "",
-          route: "",
-        };
+        return emptySitemapItem();
       }
+
+      const modTime = getSitemapLastmod(page);
 
       if (page.slug === HOME_PAGE_SLUG) {
         return {
-          modTime: page.updatedAt,
+          modTime,
           route: "/",
         };
       }
 
       if (EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(page.slug ?? "")) {
-        return {
-          modTime: "",
-          route: "",
-        };
+        return emptySitemapItem();
       }
 
       if (page.slug === SERVICES_PAGE_SLUG) {
         return {
-          modTime: page.updatedAt,
+          modTime,
           route: `/${SERVICES_PAGE_SLUG}`,
         };
       }
 
       return {
-        modTime: page.updatedAt,
+        modTime,
         route: `/${page.slug}`,
+      };
+    })
+    .filter((item) => item.route.length);
+
+export const buildMarketsSitemapRoutes = (
+  markets: MarketSitemapSource[],
+  marketsPageSlug: string,
+): SitemapItem[] =>
+  markets
+    .map((market) => {
+      if (
+        market.slug?.includes(TEST_PAGE_SLUG) ||
+        !market.enableIndexing ||
+        EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(market.slug ?? "")
+      ) {
+        return emptySitemapItem();
+      }
+
+      return {
+        modTime: getSitemapLastmod(market),
+        route: `/${marketsPageSlug}/${market.slug}`,
+      };
+    })
+    .filter((item) => item.route.length);
+
+export const buildServicesSitemapRoutes = (
+  services: ServiceSitemapSource[],
+  servicesPageSlug: string,
+): SitemapItem[] =>
+  services
+    .map((service) => {
+      if (
+        service.slug?.includes(TEST_PAGE_SLUG) ||
+        !service.enableIndexing ||
+        EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(service.slug ?? "")
+      ) {
+        return emptySitemapItem();
+      }
+
+      return {
+        modTime: getSitemapLastmod(service),
+        route: `/${servicesPageSlug}/${service.slug}`,
       };
     })
     .filter((item) => item.route.length);
@@ -88,8 +161,7 @@ const buildSitemapUrlBlock = ({ route, modTime }: SitemapItem): string[] => {
 
     return `  <url>
     <loc>${loc}</loc>
-    ${alternateLinks}
-    <lastmod>${modTime}</lastmod>
+    ${alternateLinks}${modTime ? `\n    <lastmod>${modTime}</lastmod>` : ""}
   </url>`;
   });
 };

@@ -29,12 +29,14 @@ export interface MarketType {
   socialImage?: ContentfulAsset | null;
   stats?: (ContentStatBlock | null)[];
   enableIndexing?: boolean;
+  publishDate: string;
+  updatedAt: string;
 }
 
 const _validateMarketCheck: ContentfulTypeCheck<
   MarketType,
   TypeMarketFields,
-  "id"
+  "id" | "publishDate" | "updatedAt"
 > = true;
 
 export type MarketEntry =
@@ -65,9 +67,11 @@ export function parseContentfulMarket(market: MarketEntry): MarketType | null {
     marketTitle,
     metadataDescription,
     metadataTitle,
+    publishDate: market.sys.createdAt,
     sections: sections?.map(parseContentfulSection),
     slug,
     socialImage: socialImage ? parseContentfulAsset(socialImage) : undefined,
     stats: stats?.map(parseContentStatBlock),
+    updatedAt: market.sys.updatedAt,
   };
 }

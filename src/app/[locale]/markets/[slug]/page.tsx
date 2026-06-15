@@ -15,14 +15,15 @@ import { fetchNavigation } from "src/contentful/getNavigation";
 import type { MarketType } from "src/contentful/parseMarket";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
-import type { SitemapItem } from "src/lib/generateSitemap";
-import { outputSitemap } from "src/lib/generateSitemap";
+import {
+  buildMarketsSitemapRoutes,
+  outputSitemap,
+} from "src/lib/generateSitemap";
 import {
   EXCLUDED_PAGE_SLUGS_FROM_BUILD,
   FOOTER_ID,
   MARKETS_PAGE_SLUG,
   NAVIGATION_ID,
-  TEST_PAGE_SLUG,
 } from "src/utils/constants";
 import { envUrl } from "src/utils/env.helpers";
 import {
@@ -46,25 +47,7 @@ export async function generateStaticParams(): Promise<PageParams[]> {
   const markets = await fetchMarkets({ preview: false });
 
   if (markets?.length) {
-    const routes: SitemapItem[] = markets
-      .map((market: MarketType) => {
-        if (
-          market.slug?.includes(TEST_PAGE_SLUG) ||
-          !market.enableIndexing ||
-          EXCLUDED_PAGE_SLUGS_FROM_BUILD.includes(market.slug ?? "")
-        ) {
-          return {
-            modTime: "",
-            route: "",
-          };
-        }
-
-        return {
-          modTime: "",
-          route: `/${MARKETS_PAGE_SLUG}/${market.slug}`,
-        };
-      })
-      .filter((item: SitemapItem) => item.route.length);
+    const routes = buildMarketsSitemapRoutes(markets, MARKETS_PAGE_SLUG);
 
     if (routes.length > 0) {
       outputSitemap(routes, MARKETS_PAGE_SLUG);
