@@ -8,13 +8,11 @@ Committed feeds under **`public/`** (e.g. **`rss-blog-en.xml`**, **`rss-blog-es.
 
 ## XML sitemaps
 
-**[src/lib/generateSitemap.ts](../../src/lib/generateSitemap.ts)** — **`outputSitemap`**. Writes **`public/generated-sitemap-${filename}.xml`**. Each URL currently includes **`xhtml:link`** alternates for **`en`** and **`x-default`** only (no **`es`** alternate in the generator yet, despite **`es`** being a supported locale).
+**[src/lib/generateSitemap.ts](../../src/lib/generateSitemap.ts)** — **`outputSitemap`**. Writes **`public/generated-sitemap-${filename}.xml`** and then rescans **`public/generated-sitemap-*.xml`** to write **`public/sitemap-index.xml`**. For each logical route, the generator emits one **`<url>`** per supported locale (**`en`**, **`es`**) with that locale’s URL as **`<loc>`**, plus reciprocal **`xhtml:link`** alternates for every locale and **`x-default`** (see [Google’s localized sitemap guidance](https://developers.google.com/search/docs/specialty/international/localized-versions#sitemap)). URL shapes match **`buildLocalizedUrl`** in **`src/i18n/localeUtils.ts`** (same rules as page metadata alternates). Both generated files are gitignored and produced during static generation.
 
 **Call sites** (partial): static generation in **`[locale]/[slug]/page.tsx`**, **`what-we-deliver/[slug]/page.tsx`**, **`markets/[slug]/page.tsx`** — each passes routes built from Contentful-derived paths and a **filename** label.
 
 When you add a **new family of routes**, decide whether they belong in the sitemap and follow an existing **`outputSitemap`** pattern.
-
-**[public/sitemap-index.xml](../../public/sitemap-index.xml)** is written at build time by **`refreshSitemapIndex()`** in [generateSitemap.ts](../../src/lib/generateSitemap.ts). Each **`outputSitemap`** call writes a fragment and then rescans **`public/generated-sitemap-*.xml`** to regenerate the index, so new route families are picked up automatically when their sitemap file appears.
 
 ## Robots
 

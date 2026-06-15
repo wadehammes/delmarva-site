@@ -65,7 +65,7 @@ Custom hooks (modal, scroll, mutations). See [src/hooks/README.md](../../src/hoo
 
 ### `src/lib/`
 
-- **[generateSitemap.ts](../../src/lib/generateSitemap.ts)** — sitemap XML written under `public/` from page build paths.
+- **[generateSitemap.ts](../../src/lib/generateSitemap.ts)** — localized sitemap fragments and **`sitemap-index.xml`** written under `public/` from page build paths.
 - **GTM** — configured in the tag manager UI; see [integrations.md](integrations.md).
 - Email template docs: [src/lib/README.md](../../src/lib/README.md).
 
