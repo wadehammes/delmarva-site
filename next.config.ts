@@ -212,6 +212,17 @@ const legacyWordpressRedirects = [
     permanent: true,
     source: "/en/home",
   },
+  // Legacy English locale prefix (default locale uses unprefixed URLs)
+  {
+    destination: "/",
+    permanent: true,
+    source: "/en",
+  },
+  {
+    destination: "/:path*",
+    permanent: true,
+    source: "/en/:path*",
+  },
   // Renamed top-level pages
   {
     destination: "/our-people",
@@ -381,6 +392,26 @@ const legacyWordpressRedirects = [
     destination: "/what-we-deliver/earthwork",
     permanent: true,
     source: "/what-we-deliver/retaining-walls/:path+",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/what-we-deliver/retaining-walls",
+  },
+  {
+    destination: "/what-we-deliver/storm-water-management",
+    permanent: true,
+    source: "/what-we-deliver/sediment-erosion-controls",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/what-we-deliver/demolition-clearing",
+  },
+  {
+    destination: "/what-we-deliver/earthwork",
+    permanent: true,
+    source: "/what-we-deliver/structural-concrete",
   },
   {
     destination: "/what-we-deliver/storm-water-management",
