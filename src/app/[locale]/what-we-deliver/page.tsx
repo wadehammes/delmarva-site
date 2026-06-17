@@ -13,17 +13,17 @@ import {
   NAVIGATION_ID,
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
+import { createPageMetadata } from "src/utils/metadata.helpers";
 import {
-  createPageMetadata,
   generatePageSchemaGraph,
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
 
 export const revalidate = 2592000;
 
-export async function generateStaticParams() {
+export const generateStaticParams = async () => {
   return routing.locales.map((locale) => ({ locale }));
-}
+};
 
 interface WhatWeDeliverParams {
   locale: string;
@@ -33,9 +33,9 @@ interface WhatWeDeliverProps {
   params: Promise<WhatWeDeliverParams>;
 }
 
-export async function generateMetadata(
+export const generateMetadata = async (
   props: WhatWeDeliverProps,
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const { locale } = await props.params;
 
   const validLocale = await validateAndSetLocale(locale);
@@ -58,7 +58,7 @@ export async function generateMetadata(
   return createPageMetadata(page, validLocale, {
     path: SERVICES_PAGE_SLUG,
   });
-}
+};
 
 const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
   try {

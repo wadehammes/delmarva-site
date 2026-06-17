@@ -1,13 +1,7 @@
-import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import type { Page } from "src/contentful/getPages";
 import { fetchServices } from "src/contentful/getServices";
-import type { SectionType } from "src/contentful/parseSections";
-import {
-  buildCanonicalUrl,
-  buildLocalizedUrl,
-  buildOpenGraphLocale,
-} from "src/i18n/localeUtils";
+import { buildCanonicalUrl } from "src/i18n/localeUtils";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { aggregateAreasServedFromServices } from "src/utils/areasServed";
@@ -19,51 +13,28 @@ import {
 import { envUrl } from "src/utils/env.helpers";
 import type { GenerateSchemaGraphOptions } from "src/utils/schema";
 import { generateSchemaGraph } from "src/utils/schema";
-import { createMediaUrl } from "src/utils/urlHelpers";
-
-const SITE_NAME = "Delmarva Site Development";
-
-function buildAlternateLanguages(
-  path: string,
-  baseUrl: string,
-): Record<string, string> {
-  const route = path ? `/${path}` : "/";
-
-  return Object.fromEntries(
-    routing.locales.map((locale) => [
-      locale,
-      buildLocalizedUrl(route, locale, baseUrl),
-    ]),
-  );
-}
 
 interface ServiceDataForSchema {
   services: Awaited<ReturnType<typeof fetchServices>>;
   organizationAreasServed?: string[];
 }
 
-/**
- * Validates locale and sets it for the request
- */
-export async function validateAndSetLocale(
+export const validateAndSetLocale = async (
   locale: string,
-): Promise<Locales | null> {
+): Promise<Locales | null> => {
   if (!routing.locales.includes(locale as Locales)) {
     return null;
   }
 
   setRequestLocale(locale);
   return locale as Locales;
-}
+};
 
-/**
- * Fetches services and aggregates areas served based on page content modules
- */
-async function getServiceDataForSchema(
+const getServiceDataForSchema = async (
   page: Page,
   locale: Locales,
   preview: boolean,
-): Promise<ServiceDataForSchema | null> {
+): Promise<ServiceDataForSchema | null> => {
   const hasServiceList = hasServiceListModule(page);
   const hasAreasServiced = hasAreasServicedListModule(page);
 
@@ -86,18 +57,15 @@ async function getServiceDataForSchema(
     organizationAreasServed,
     services,
   };
-}
+};
 
-/**
- * Generates schema graph for a page with automatic service data detection
- */
-export async function generatePageSchemaGraph(
+export const generatePageSchemaGraph = async (
   page: Page,
   slug: string,
   locale: Locales,
   preview: boolean,
   additionalBreadcrumbItems?: Array<{ name: string; url?: string }>,
-): Promise<Awaited<ReturnType<typeof generateSchemaGraph>>> {
+): Promise<Awaited<ReturnType<typeof generateSchemaGraph>>> => {
   try {
     const serviceData = await getServiceDataForSchema(page, locale, preview);
 
@@ -124,175 +92,4 @@ export async function generatePageSchemaGraph(
     const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
     return createMinimalSchemaGraph(canonicalUrl);
   }
-}
-
-/**
- * Creates metadata images array for OpenGraph and Twitter
- */
-function createMetadataImages(
-  metaImage: { src: string } | null | undefined,
-  alt = "Delmarva Site Development, Inc.",
-): Array<{ alt: string; url: string }> {
-  if (metaImage) {
-    return [
-      {
-        alt,
-        url: createMediaUrl(metaImage.src),
-      },
-    ];
-  }
-
-  return [
-    {
-      alt,
-      url: `${envUrl()}/opengraph-image.png`,
-    },
-  ];
-}
-
-/**
- * Generates page metadata with common fields
- */
-export function createPageMetadata(
-  page: Page,
-  locale: Locales,
-  options?: {
-    imageAlt?: string;
-    path?: string;
-    title?: string;
-  },
-): Metadata {
-  const baseUrl = envUrl();
-  const path = options?.path ?? "";
-  const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
-  const images = createMetadataImages(page.metaImage, options?.imageAlt);
-
-  return {
-    alternates: {
-      canonical: new URL(canonicalUrl),
-      languages: buildAlternateLanguages(path, baseUrl),
-    },
-    description: page.metaDescription,
-    keywords: page?.metaKeywords?.join(",") ?? "",
-    openGraph: {
-      ...buildOpenGraphLocale(locale),
-      description: page.metaDescription,
-      images,
-      siteName: SITE_NAME,
-      title: options?.title ?? page.metaTitle,
-      type: "website",
-      url: canonicalUrl,
-    },
-    robots:
-      page.enableIndexing && process.env.ENVIRONMENT === "production"
-        ? "index, follow"
-        : "noindex, nofollow",
-    title: options?.title ?? page.metaTitle,
-    twitter: {
-      card: "summary_large_image",
-      description: page.metaDescription,
-      images,
-      title: options?.title ?? page.metaTitle,
-    },
-  };
-}
-
-/**
- * Generates service metadata with common fields
- */
-export function createServiceMetadata(
-  service: {
-    metaDescription: string;
-    metaTitle: string;
-    metaImage: { src: string } | null | undefined;
-    enableIndexing: boolean;
-    slug: string;
-    sections?: (SectionType | null)[];
-  },
-  locale: Locales,
-  options?: { pathPrefix?: string },
-): Metadata {
-  const pathPrefix = options?.pathPrefix ?? "";
-  const path = pathPrefix ? `${pathPrefix}/${service.slug}` : service.slug;
-  const baseUrl = envUrl();
-  const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
-  const images = createMetadataImages(service.metaImage, service.metaTitle);
-  return {
-    alternates: {
-      canonical: new URL(canonicalUrl),
-      languages: buildAlternateLanguages(path, baseUrl),
-    },
-    description: service.metaDescription,
-    openGraph: {
-      ...buildOpenGraphLocale(locale),
-      description: service.metaDescription,
-      images,
-      siteName: SITE_NAME,
-      title: service.metaTitle,
-      type: "website",
-      url: canonicalUrl,
-    },
-    robots:
-      service.enableIndexing && process.env.ENVIRONMENT === "production"
-        ? "index, follow"
-        : "noindex, nofollow",
-    title: service.metaTitle,
-    twitter: {
-      card: "summary_large_image",
-      description: service.metaDescription,
-      images,
-      title: service.metaTitle,
-    },
-  };
-}
-
-/**
- * Generates market metadata with common fields
- */
-export function createMarketMetadata(
-  market: {
-    metadataDescription?: string;
-    metadataTitle?: string;
-    socialImage?: { src: string } | null;
-    enableIndexing?: boolean;
-    slug: string;
-    marketTitle?: string;
-  },
-  locale: Locales,
-  options?: { pathPrefix?: string },
-): Metadata {
-  const pathPrefix = options?.pathPrefix ?? "";
-  const path = pathPrefix ? `${pathPrefix}/${market.slug}` : market.slug;
-  const baseUrl = envUrl();
-  const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
-  const title = market.metadataTitle ?? market.marketTitle ?? "Market";
-  const description = market.metadataDescription ?? "";
-  const images = createMetadataImages(market.socialImage, title);
-  return {
-    alternates: {
-      canonical: new URL(canonicalUrl),
-      languages: buildAlternateLanguages(path, baseUrl),
-    },
-    description,
-    openGraph: {
-      ...buildOpenGraphLocale(locale),
-      description,
-      images,
-      siteName: SITE_NAME,
-      title,
-      type: "website",
-      url: canonicalUrl,
-    },
-    robots:
-      market.enableIndexing && process.env.ENVIRONMENT === "production"
-        ? "index, follow"
-        : "noindex, nofollow",
-    title,
-    twitter: {
-      card: "summary_large_image",
-      description,
-      images,
-      title,
-    },
-  };
-}
+};

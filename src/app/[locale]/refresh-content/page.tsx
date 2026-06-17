@@ -6,29 +6,38 @@ import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { Environments } from "src/interfaces/common.interfaces";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
-import { envUrl } from "src/utils/env.helpers";
+import { createUtilityPageMetadata } from "src/utils/metadata.helpers";
 import { validateAndSetLocale } from "src/utils/pageHelpers";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    alternates: {
-      canonical: new URL(`${envUrl()}/refresh-content`),
-    },
-    robots: "noindex, nofollow",
-    title: "Refresh Site Content | Delmarva Site Development",
-  };
+interface RefreshContentParams {
+  locale: string;
 }
 
-const Deployments = async ({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ locale: string }>;
+interface RefreshContentProps {
+  params: Promise<RefreshContentParams>;
   searchParams?: Promise<{ token?: string }>;
-}) => {
+}
+
+export const generateMetadata = async ({
+  params,
+}: Pick<RefreshContentProps, "params">): Promise<Metadata> => {
+  const { locale } = await params;
+  const validLocale = await validateAndSetLocale(locale);
+
+  if (!validLocale) {
+    return { robots: "noindex, nofollow" };
+  }
+
+  return createUtilityPageMetadata(validLocale, {
+    path: "refresh-content",
+    title: "Refresh Site Content",
+  });
+};
+
+const Deployments = async ({ params, searchParams }: RefreshContentProps) => {
   const [{ locale }, { token }] = await Promise.all([
     params,
     searchParams ?? Promise.resolve({ token: undefined }),

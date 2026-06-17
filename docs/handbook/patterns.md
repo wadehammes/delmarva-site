@@ -19,9 +19,10 @@ Use **`export const revalidate = …`** on routes to control ISR-style static ca
 ## generateStaticParams and generateMetadata
 
 - **`generateStaticParams`** — Prebuild locale (or slug) combinations where used (e.g. home lists locales). Sitemap fragments are written from **`outputSitemap`** in the same pass (see [distribution.md](distribution.md)).
-- **`generateMetadata`** — Pass the validated **`locale`** into **`createPageMetadata`**, **`createServiceMetadata`**, or **`createMarketMetadata`** from [pageHelpers.ts](../../src/utils/pageHelpers.ts). Do **not** hand-build canonical URLs with **`envUrl()`** in page files; helpers derive them via **`buildCanonicalUrl`** in [localeUtils.ts](../../src/i18n/localeUtils.ts).
+- **`generateMetadata`** — Pass the validated **`locale`** into **`createPageMetadata`**, **`createServiceMetadata`**, or **`createMarketMetadata`** from [metadata.helpers.ts](../../src/utils/metadata.helpers.ts). Do **not** hand-build canonical URLs with **`envUrl()`** in page files; helpers derive them via **`buildCanonicalUrl`** in [localeUtils.ts](../../src/i18n/localeUtils.ts).
+- **Page titles** — Use **`buildDisplayTitle`** from **`metadata.helpers.ts`** for any custom **`title`** (e.g. non-Contentful routes). It strips a trailing **` | Delmarva Site Development`** from CMS copy, adds the brand when missing, and sets **`title: { absolute: … }`**. The root layout only sets a plain-string fallback; it does not apply a title template. Non-Contentful utility routes should use **`createUtilityPageMetadata`** (locale-aware canonical, **`noindex`**) instead of hand-building metadata in the page file.
 - **Canonical + Open Graph** — Each locale self-references its own URL (**`/es/...`** for Spanish, unprefixed for English). Helpers set **`alternates.canonical`**, **`openGraph.url`**, **`openGraph.locale`** (**`es_ES`** / **`en_US`**), and **`openGraph.alternateLocale`**. **`alternates.languages`** (hreflang) still lists every locale.
-- **JSON-LD** — [schema.ts](../../src/utils/schema.ts) uses the same **`buildCanonicalUrl`** rules for **`WebPage.url`** so structured data matches **`<head>`**.
+- **JSON-LD** — [schema.ts](../../src/utils/schema.ts) uses the same **`buildCanonicalUrl`** rules for **`WebPage.url`** so structured data matches **`<head>`**. **`WebPage.name`** uses **`buildDisplayTitle`** from [metadata.helpers.ts](../../src/utils/metadata.helpers.ts) so JSON-LD titles match **`<title>`** and Open Graph.
 
 ## JSON-LD / schema
 
@@ -59,7 +60,7 @@ Ephemeral UI such as **project modal** state uses atoms in **`src/atoms/`** and 
 
 ## Constants
 
-Shared IDs and site constants live in **[src/utils/constants.ts](../../src/utils/constants.ts)** (e.g. navigation/footer entry slugs). Prefer named constants over magic strings when the value is reused.
+Shared IDs and site constants live in **[src/utils/constants.ts](../../src/utils/constants.ts)** (e.g. navigation/footer entry slugs, **`SITE_NAME`**). Prefer named constants over magic strings when the value is reused.
 
 ## Dynamic imports
 

@@ -10,6 +10,7 @@ import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
+import { SITE_NAME } from "src/utils/constants";
 import { envUrl } from "src/utils/env.helpers";
 import { getGoogleAnalyticsMeasurementId } from "src/utils/publicEnv";
 
@@ -18,25 +19,17 @@ interface RootLayoutProps {
   params: Promise<{ locale: string }>;
 }
 
-const SITE_NAME = "Delmarva Site Development";
-
-export async function generateMetadata(): Promise<Metadata> {
+export const generateMetadata = async (): Promise<Metadata> => {
   return {
     applicationName: SITE_NAME,
     creator: SITE_NAME,
     metadataBase: new URL(`${envUrl()}/`),
     publisher: SITE_NAME,
-    title: {
-      default: SITE_NAME,
-      template: `%s | ${SITE_NAME}`,
-    },
+    title: SITE_NAME,
   };
-}
+};
 
-export default async function RootLayout({
-  children,
-  params,
-}: RootLayoutProps) {
+const RootLayout = async ({ children, params }: RootLayoutProps) => {
   const { locale } = await params;
 
   if (!routing.locales.includes(locale as Locales)) {
@@ -87,4 +80,6 @@ export default async function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

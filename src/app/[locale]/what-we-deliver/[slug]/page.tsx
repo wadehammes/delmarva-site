@@ -25,10 +25,8 @@ import {
   NAVIGATION_ID,
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
-import {
-  createServiceMetadata,
-  validateAndSetLocale,
-} from "src/utils/pageHelpers";
+import { createServiceMetadata } from "src/utils/metadata.helpers";
+import { validateAndSetLocale } from "src/utils/pageHelpers";
 import { generateServicePageSchemaGraphSafe } from "src/utils/schema";
 
 export const revalidate = 2592000;
@@ -42,9 +40,7 @@ interface PageProps {
   params: Promise<PageParams>;
 }
 
-// Tell Next.js about all our pages so
-// they can be statically generated at build time.
-export async function generateStaticParams(): Promise<PageParams[]> {
+export const generateStaticParams = async (): Promise<PageParams[]> => {
   const services = await fetchServices({ preview: false });
 
   if (services) {
@@ -66,13 +62,11 @@ export async function generateStaticParams(): Promise<PageParams[]> {
         slug: service?.slug ?? "",
       })),
   );
-}
+};
 
-// For each page, tell Next.js which metadata
-// (e.g. page title) to display.
-export async function generateMetadata({
+export const generateMetadata = async ({
   params,
-}: PageProps): Promise<Metadata> {
+}: PageProps): Promise<Metadata> => {
   const { slug, locale } = await params;
 
   const validLocale = await validateAndSetLocale(locale);
@@ -95,9 +89,9 @@ export async function generateMetadata({
   return createServiceMetadata(service, validLocale, {
     pathPrefix: SERVICES_PAGE_SLUG,
   });
-}
+};
 
-async function Page({ params }: PageProps) {
+const Page = async ({ params }: PageProps) => {
   try {
     const { slug, locale } = await params;
 
@@ -170,6 +164,6 @@ async function Page({ params }: PageProps) {
     );
     throw error;
   }
-}
+};
 
 export default Page;

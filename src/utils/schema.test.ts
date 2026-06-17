@@ -196,7 +196,7 @@ describe("schema", () => {
         datePublished: mockPage.publishDate,
         description: mockPage.metaDescription,
         image: mockPage.metaImage?.src,
-        name: mockPage.metaTitle,
+        name: "Test Page | Delmarva Site Development",
         publisher: {
           "@id": organizationId,
         },
