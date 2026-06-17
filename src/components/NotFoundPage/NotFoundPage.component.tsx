@@ -22,7 +22,6 @@ export const NotFoundPage = async () => {
       <h1>{text[locale]}</h1>
       <ButtonLink
         arrow="Right Arrow"
-        data-tracking-click="Clicked Not Found Page Home Button"
         href="/"
         label={buttonText[locale]}
         variant="primary"

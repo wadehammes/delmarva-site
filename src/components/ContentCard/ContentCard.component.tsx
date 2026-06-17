@@ -6,6 +6,7 @@ import { ContentCardModal } from "src/components/ContentCardModal/ContentCardMod
 import { RichText } from "src/components/RichText/RichText.component";
 import type { ContentCardType } from "src/contentful/parseContentCard";
 import { useModal } from "src/hooks/useModal";
+import { trackEvent } from "src/lib/trackEvent";
 import { createCardBackgroundColor } from "src/styles/utils";
 import { createMediaUrl } from "src/utils/urlHelpers";
 import styles from "./ContentCard.module.css";
@@ -67,6 +68,11 @@ export const ContentCard = (props: ContentCardProps) => {
           : undefined,
       };
 
+  const handleOpen = () => {
+    trackEvent("Clicked Content Card", { label: card.id });
+    open();
+  };
+
   return (
     <>
       {isInteractive ? (
@@ -75,7 +81,7 @@ export const ContentCard = (props: ContentCardProps) => {
           className={clsx(styles.contentCard, styles.interactive, {
             microdotBg: cardMicrodotBg,
           })}
-          onClick={open}
+          onClick={handleOpen}
           style={cardStyles}
           type="button"
         >

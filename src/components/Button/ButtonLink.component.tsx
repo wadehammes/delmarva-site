@@ -4,7 +4,6 @@ import styles from "src/components/Button/Button.module.css";
 import { Link } from "src/components/Link/Link.component";
 
 interface ButtonLinkProps extends HTMLAttributes<HTMLAnchorElement> {
-  "data-tracking-click": string;
   label: string;
   variant?: "primary" | "secondary" | "outline";
   href: string;
@@ -31,7 +30,6 @@ export const ButtonLink = (props: ButtonLinkProps) => {
   const {
     label,
     variant = "primary",
-    "data-tracking-click": dataTrackingClick,
     href,
     arrow = "No Arrow",
     className,
@@ -48,7 +46,6 @@ export const ButtonLink = (props: ButtonLinkProps) => {
         },
         className,
       )}
-      data-tracking-click={dataTrackingClick}
       href={href}
       {...rest}
     >

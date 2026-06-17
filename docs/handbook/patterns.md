@@ -18,12 +18,14 @@ Use **`export const revalidate = …`** on routes to control ISR-style static ca
 
 ## generateStaticParams and generateMetadata
 
-- **`generateStaticParams`** — Prebuild locale (or slug) combinations where used (e.g. home lists locales).
-- **`generateMetadata`** — Use **`createPageMetadata`** and helpers from [pageHelpers.ts](../../src/utils/pageHelpers.ts) so titles, alternates, and Open Graph stay aligned with Contentful.
+- **`generateStaticParams`** — Prebuild locale (or slug) combinations where used (e.g. home lists locales). Sitemap fragments are written from **`outputSitemap`** in the same pass (see [distribution.md](distribution.md)).
+- **`generateMetadata`** — Pass the validated **`locale`** into **`createPageMetadata`**, **`createServiceMetadata`**, or **`createMarketMetadata`** from [pageHelpers.ts](../../src/utils/pageHelpers.ts). Do **not** hand-build canonical URLs with **`envUrl()`** in page files; helpers derive them via **`buildCanonicalUrl`** in [localeUtils.ts](../../src/i18n/localeUtils.ts).
+- **Canonical + Open Graph** — Each locale self-references its own URL (**`/es/...`** for Spanish, unprefixed for English). Helpers set **`alternates.canonical`**, **`openGraph.url`**, **`openGraph.locale`** (**`es_ES`** / **`en_US`**), and **`openGraph.alternateLocale`**. **`alternates.languages`** (hreflang) still lists every locale.
+- **JSON-LD** — [schema.ts](../../src/utils/schema.ts) uses the same **`buildCanonicalUrl`** rules for **`WebPage.url`** so structured data matches **`<head>`**.
 
 ## JSON-LD / schema
 
-**[SchemaScript.component.tsx](../../src/components/SchemaScript/SchemaScript.component.tsx)** and **[schema.ts](../../src/utils/schema.ts)** build structured data for pages. Extend **`generateSchemaGraph`** / page helpers when new page types need schema.
+**[SchemaScript.component.tsx](../../src/components/SchemaScript/SchemaScript.component.tsx)** and **[schema.ts](../../src/utils/schema.ts)** build structured data for pages. Extend **`generateSchemaGraph`** / page helpers when new page types need schema. Reuse **`buildCanonicalUrl`** for page URLs; breadcrumb item URLs in schema may still use English paths today—align them when you touch breadcrumb generation.
 
 ## React Query
 
@@ -41,6 +43,7 @@ If you add client-side **`useQuery`**, put it in a dedicated hook file under **`
 ## Internationalization (next-intl)
 
 - **Locales**: **`en`** and **`es`** in [routing.ts](../../src/i18n/routing.ts); **`localePrefix: "as-needed"`** so the default locale omits the prefix in URLs.
+- **Localized URLs & metadata** — [localeUtils.ts](../../src/i18n/localeUtils.ts): **`buildLocalizedUrl`**, **`buildCanonicalUrl`**, **`buildHreflangAlternates`**, **`buildOpenGraphLocale`**. Shared by page metadata, sitemaps, and JSON-LD; keep new SEO URL logic here rather than duplicating prefix rules.
 - **Messages**: JSON files under **`src/i18n/messages/`**, loaded in [request.ts](../../src/i18n/request.ts).
 - **Server**: `getRequestConfig` ensures a valid locale and supplies messages.
 - **Client**: **`useTranslations`** and **`NextIntlClientProvider`** (from layout) for UI strings not coming from Contentful.

@@ -60,7 +60,7 @@ export const MarketTemplate = async (props: MarketTemplateProps) => {
         <div className={styles.marketPhotos}>
           {(marketPhotos ?? []).length > 0 && (
             <HeaderMediaErrorBoundary>
-              <Carousel autoplay>
+              <Carousel autoplay trackingLabel={`market-photos-${market.slug}`}>
                 {(marketPhotos ?? []).map((media) => (
                   <ContentfulAssetRenderer asset={media} key={media.id} />
                 ))}

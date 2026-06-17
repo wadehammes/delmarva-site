@@ -5,6 +5,7 @@ import { useEffect, useId, useMemo, useRef } from "react";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import Chevron from "src/icons/Chevron.svg";
+import { trackEvent } from "src/lib/trackEvent";
 import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper/types";
@@ -105,6 +106,15 @@ export const ProjectCoverflowCarousel = (
     }
   };
 
+  const trackCarouselNavigation = (direction: "previous" | "next") => {
+    trackEvent(
+      direction === "previous"
+        ? "Clicked Project Carousel Previous Button"
+        : "Clicked Project Carousel Next Button",
+      { label: carouselId },
+    );
+  };
+
   if (!projects || projects.length === 0) {
     return (
       <div className={styles.singleProject}>
@@ -146,6 +156,7 @@ export const ProjectCoverflowCarousel = (
           aria-label={t("previousProject")}
           className={styles.navigationButton}
           id={elementIds.navigationPrev}
+          onClick={() => trackCarouselNavigation("previous")}
           type="button"
         >
           <Chevron className={styles.navigationIconLeft} />
@@ -155,6 +166,7 @@ export const ProjectCoverflowCarousel = (
           aria-label={t("nextProject")}
           className={styles.navigationButton}
           id={elementIds.navigationNext}
+          onClick={() => trackCarouselNavigation("next")}
           type="button"
         >
           <Chevron className={styles.navigationIconRight} />

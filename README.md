@@ -131,7 +131,7 @@ The handbook under [`docs/handbook/`](./docs/handbook/) is the canonical place f
 - **CMS (Contentful):** [contentful.md](./docs/handbook/contentful.md).
 - **Pages, data fetching, or SEO:** [patterns.md](./docs/handbook/patterns.md) and the data-flow notes in [architecture.md](./docs/handbook/architecture.md).
 - **CI, env, draft mode:** [platform.md](./docs/handbook/platform.md).
-- **GTM and analytics helpers:** [integrations.md](./docs/handbook/integrations.md).
+- **GA4 and analytics helpers:** [integrations.md](./docs/handbook/integrations.md).
 - **RSS, sitemaps, social metadata:** [distribution.md](./docs/handbook/distribution.md).
 - **Jotai, hooks, `src/utils`, `src/lib`:** [source-layout.md](./docs/handbook/source-layout.md).
 
@@ -145,7 +145,7 @@ The handbook under [`docs/handbook/`](./docs/handbook/) is the canonical place f
 | [**components.md**](./docs/handbook/components.md) | Component folders, registry / dynamic imports, READMEs, no scaffold script. |
 | [**patterns.md**](./docs/handbook/patterns.md) | **App Router** pages, **`generateMetadata`**, caching, React Query mutations, **API** routes, **next-intl**, forms. |
 | [**platform.md**](./docs/handbook/platform.md) | **GitHub CI** (`tsc`, Biome, Jest), **`pnpm` scripts**, **`next.config`** env and redirects, **CSP**, draft APIs. |
-| [**integrations.md**](./docs/handbook/integrations.md) | **GTM**, **data layer** / `trackEvent`, Mapbox and reCAPTCHA env notes. |
+| [**integrations.md**](./docs/handbook/integrations.md) | **GA4**, **`trackEvent`**, Mapbox and reCAPTCHA env notes. |
 | [**distribution.md**](./docs/handbook/distribution.md) | **RSS** and **sitemap** helpers, **robots**, Open Graph / Twitter metadata patterns. |
 | [**source-layout.md**](./docs/handbook/source-layout.md) | **Jotai** atoms, **`src/utils`** module map, **`src/lib`**. |
 | [**llms.md**](./docs/handbook/llms.md) | Task → chapter map and copy-paste blurb for agents. |

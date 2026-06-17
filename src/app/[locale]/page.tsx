@@ -9,7 +9,6 @@ import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
 import { routing } from "src/i18n/routing";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
-import { envUrl } from "src/utils/env.helpers";
 import {
   createPageMetadata,
   generatePageSchemaGraph,
@@ -51,7 +50,7 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
     return notFound();
   }
 
-  return createPageMetadata(page, envUrl(), { path: "" });
+  return createPageMetadata(page, validLocale, { path: "" });
 }
 
 const Home = async (props: HomeProps) => {

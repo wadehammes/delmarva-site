@@ -6,15 +6,17 @@ import { useEffect, useRef, useState } from "react";
 import styles from "src/components/Accordion/Accordion.module.css";
 import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import PlusIcon from "src/icons/plus.svg";
+import { trackEvent } from "src/lib/trackEvent";
 
 interface AccordionProps {
   children: React.ReactNode;
   className?: string;
-  "data-tracking-click"?: string;
   defaultOpen?: boolean;
   headerElement?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div";
   onToggle?: (isOpen: boolean) => void;
   title: string;
+  trackingEvent?: string;
+  trackingLabel?: string;
 }
 
 /**
@@ -24,11 +26,12 @@ interface AccordionProps {
 export const Accordion = ({
   children,
   className,
-  "data-tracking-click": dataTrackingClick,
   defaultOpen = false,
   headerElement = "h3",
   onToggle,
   title,
+  trackingEvent,
+  trackingLabel,
 }: AccordionProps) => {
   const [userToggledOpen, setUserToggledOpen] = useState<boolean | null>(null);
   const isOpen = userToggledOpen !== null ? userToggledOpen : defaultOpen;
@@ -43,6 +46,14 @@ export const Accordion = ({
 
   const toggleAccordion = () => {
     const newIsOpen = !isOpen;
+
+    if (trackingEvent) {
+      trackEvent(trackingEvent, {
+        ...(trackingLabel ? { label: trackingLabel } : {}),
+        is_open: newIsOpen,
+      });
+    }
+
     setUserToggledOpen(newIsOpen);
     onToggle?.(newIsOpen);
   };
@@ -73,7 +84,6 @@ export const Accordion = ({
         [styles.active]: isOpen,
         [styles.fadeIn]: true,
       })}
-      data-tracking-click={dataTrackingClick}
       ref={inViewRef}
     >
       <HeaderComponent className={styles.accordionHeader}>

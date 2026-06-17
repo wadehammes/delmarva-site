@@ -12,6 +12,7 @@ import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { useModal } from "src/hooks/useModal";
 import { useProjectModal } from "src/hooks/useProjectModal";
 import { usePathname, useRouter } from "src/i18n/routing";
+import { trackEvent } from "src/lib/trackEvent";
 import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectCard.module.css";
 
@@ -68,6 +69,11 @@ export const ProjectCard = (props: ProjectCardProps) => {
     }, [projectStats, selectedServiceSlug]);
 
   const handleCardClick = () => {
+    trackEvent("Clicked Project Card", {
+      label: projectName ?? project.slug ?? "",
+      slug: project.slug ?? "",
+    });
+
     modal.open();
     if (syncUrlOnOpen && project.slug) {
       const params = new URLSearchParams(window.location.search);

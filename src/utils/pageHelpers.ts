@@ -3,10 +3,15 @@ import { setRequestLocale } from "next-intl/server";
 import type { Page } from "src/contentful/getPages";
 import { fetchServices } from "src/contentful/getServices";
 import type { SectionType } from "src/contentful/parseSections";
-import { buildLocalizedUrl } from "src/i18n/localeUtils";
+import {
+  buildCanonicalUrl,
+  buildLocalizedUrl,
+  buildOpenGraphLocale,
+} from "src/i18n/localeUtils";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { aggregateAreasServedFromServices } from "src/utils/areasServed";
+import { HOME_PAGE_SLUG } from "src/utils/constants";
 import {
   hasAreasServicedListModule,
   hasServiceListModule,
@@ -115,7 +120,8 @@ export async function generatePageSchemaGraph(
     console.error("[PageHelpers] generatePageSchemaGraph failed:", error);
     const { createMinimalSchemaGraph } = await import("src/utils/schema");
     const baseUrl = envUrl();
-    const canonicalUrl = slug ? `${baseUrl}/${slug}` : baseUrl;
+    const path = slug === HOME_PAGE_SLUG ? "" : slug;
+    const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
     return createMinimalSchemaGraph(canonicalUrl);
   }
 }
@@ -149,7 +155,7 @@ function createMetadataImages(
  */
 export function createPageMetadata(
   page: Page,
-  canonicalUrl: string,
+  locale: Locales,
   options?: {
     imageAlt?: string;
     path?: string;
@@ -158,6 +164,7 @@ export function createPageMetadata(
 ): Metadata {
   const baseUrl = envUrl();
   const path = options?.path ?? "";
+  const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
   const images = createMetadataImages(page.metaImage, options?.imageAlt);
 
   return {
@@ -168,6 +175,7 @@ export function createPageMetadata(
     description: page.metaDescription,
     keywords: page?.metaKeywords?.join(",") ?? "",
     openGraph: {
+      ...buildOpenGraphLocale(locale),
       description: page.metaDescription,
       images,
       siteName: SITE_NAME,
@@ -201,12 +209,13 @@ export function createServiceMetadata(
     slug: string;
     sections?: (SectionType | null)[];
   },
-  canonicalUrl: string,
+  locale: Locales,
   options?: { pathPrefix?: string },
 ): Metadata {
   const pathPrefix = options?.pathPrefix ?? "";
   const path = pathPrefix ? `${pathPrefix}/${service.slug}` : service.slug;
   const baseUrl = envUrl();
+  const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
   const images = createMetadataImages(service.metaImage, service.metaTitle);
   return {
     alternates: {
@@ -215,6 +224,7 @@ export function createServiceMetadata(
     },
     description: service.metaDescription,
     openGraph: {
+      ...buildOpenGraphLocale(locale),
       description: service.metaDescription,
       images,
       siteName: SITE_NAME,
@@ -248,12 +258,13 @@ export function createMarketMetadata(
     slug: string;
     marketTitle?: string;
   },
-  canonicalUrl: string,
+  locale: Locales,
   options?: { pathPrefix?: string },
 ): Metadata {
   const pathPrefix = options?.pathPrefix ?? "";
   const path = pathPrefix ? `${pathPrefix}/${market.slug}` : market.slug;
   const baseUrl = envUrl();
+  const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
   const title = market.metadataTitle ?? market.marketTitle ?? "Market";
   const description = market.metadataDescription ?? "";
   const images = createMetadataImages(market.socialImage, title);
@@ -264,6 +275,7 @@ export function createMarketMetadata(
     },
     description,
     openGraph: {
+      ...buildOpenGraphLocale(locale),
       description,
       images,
       siteName: SITE_NAME,

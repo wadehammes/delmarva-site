@@ -9,9 +9,10 @@ import { Modal } from "src/components/Modal/Modal.component";
 import { ProjectStaticMap } from "src/components/ProjectStaticMap/ProjectStaticMap.component";
 import { ProjectStatsList } from "src/components/ProjectStatsList/ProjectStatsList.component";
 import { RichText } from "src/components/RichText/RichText.component";
-import { FALLBACK_PROJECT_MEDIA_ID } from "src/contentful/getContentfulAsset";
+import { FALLBACK_PROJECT_MEDIA_ID } from "src/contentful/constants";
 import type { ProjectType } from "src/contentful/getProjects";
 import ShareIcon from "src/icons/Share.svg";
+import { trackEvent } from "src/lib/trackEvent";
 import { Button as UIButton } from "src/ui/Button/Button.component";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { isValidProjectLocation } from "src/utils/mapUtils";
@@ -37,6 +38,9 @@ export const ProjectModal = ({
 
   const handleShare = useCallback(() => {
     if (!project?.slug) return;
+
+    trackEvent("project-modal-share");
+
     const path =
       locale === "en"
         ? `/${SERVICES_PAGE_SLUG}`
@@ -118,7 +122,12 @@ export const ProjectModal = ({
       <Modal.Body>
         <div className={styles.mediaSection}>
           {showCarousel && (
-            <Carousel animation="fade" controlsSize="Small" spaceBetween={0}>
+            <Carousel
+              animation="fade"
+              controlsSize="Small"
+              spaceBetween={0}
+              trackingLabel={`project-modal-${project.slug}`}
+            >
               {carouselSlides}
             </Carousel>
           )}
@@ -142,7 +151,6 @@ export const ProjectModal = ({
           <div className={styles.shareSection}>
             <UIButton
               className={`${buttonStyles.button} ${buttonStyles.outline} ${styles.shareButton}`}
-              data-tracking-click="project-modal-share"
               onClick={handleShare}
               type="button"
             >

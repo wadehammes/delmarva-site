@@ -13,7 +13,6 @@ import {
   NAVIGATION_ID,
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
-import { envUrl } from "src/utils/env.helpers";
 import {
   createPageMetadata,
   generatePageSchemaGraph,
@@ -56,7 +55,7 @@ export async function generateMetadata(
     return notFound();
   }
 
-  return createPageMetadata(page, `${envUrl()}/${SERVICES_PAGE_SLUG}`, {
+  return createPageMetadata(page, validLocale, {
     path: SERVICES_PAGE_SLUG,
   });
 }

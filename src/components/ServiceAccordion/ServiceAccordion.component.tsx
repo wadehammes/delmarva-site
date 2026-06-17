@@ -276,6 +276,8 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       headerElement="h3"
       onToggle={handleAccordionToggle}
       title={serviceName}
+      trackingEvent="service-accordion-toggle"
+      trackingLabel={serviceName}
     >
       <div className={styles.serviceAccordion} ref={contentRef}>
         <div className={styles.serviceAccordionContent}>
@@ -291,7 +293,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           <div className={styles.serviceAccordionCta} ref={ctaRef}>
             <ButtonLink
               arrow="Right Arrow"
-              data-tracking-click="service-accordion-cta"
               href={`/${SERVICES_PAGE_SLUG}/${slug}`}
               label={buttonText[locale]}
               variant="secondary"

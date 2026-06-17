@@ -46,6 +46,7 @@ export const ContentCarouselComponent = (props: ContentCarouselProps) => {
       showPagination={showPagination}
       slidesPerView={slidesPerView}
       spaceBetween={spaceBetween}
+      trackingLabel={`content-carousel-${carousel.id}`}
     >
       {carousel.carouselItems.map((item) => {
         if (!item) {

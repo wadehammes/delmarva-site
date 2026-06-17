@@ -8,24 +8,6 @@ const nextConfig: NextConfig = withNextIntl({
   // Performance optimizations
   compress: true,
 
-  // Environment variables
-  env: {
-    CONTENTFUL_CMA_TOKEN: process.env.CONTENTFUL_CMA_TOKEN,
-    CONTENTFUL_CONTENT_DELIVERY_API_KEY:
-      process.env.CONTENTFUL_CONTENT_DELIVERY_API_KEY,
-    CONTENTFUL_PREVIEW_API_KEY: process.env.CONTENTFUL_PREVIEW_API_KEY,
-    CONTENTFUL_PREVIEW_SECRET: process.env.CONTENTFUL_PREVIEW_SECRET,
-    CONTENTFUL_SPACE_ID: process.env.CONTENTFUL_SPACE_ID,
-    ENVIRONMENT: process.env.ENVIRONMENT,
-    GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
-    GOOGLE_TAG_MANAGER_ID: process.env.GOOGLE_TAG_MANAGER_ID,
-    MAPBOX_API_TOKEN: process.env.MAPBOX_API_TOKEN,
-    RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
-    REFRESH_CONTENT_ACCESS_TOKEN: process.env.REFRESH_CONTENT_ACCESS_TOKEN,
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    RESEND_DEV_TO_EMAIL: process.env.RESEND_DEV_TO_EMAIL,
-  },
-
   experimental: {
     // Optimize package imports to reduce bundle size
     optimizePackageImports: [

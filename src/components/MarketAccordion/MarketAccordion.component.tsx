@@ -291,6 +291,8 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
       headerElement="h3"
       onToggle={handleAccordionToggle}
       title={marketTitle ?? slug}
+      trackingEvent="market-accordion-toggle"
+      trackingLabel={marketTitle ?? slug}
     >
       <div className={styles.marketAccordion} ref={contentRef}>
         <div className={styles.marketAccordionContent}>
@@ -308,7 +310,6 @@ export const MarketAccordion = (props: MarketAccordionProps) => {
           <div className={styles.marketAccordionCta} ref={ctaRef}>
             <ButtonLink
               arrow="Right Arrow"
-              data-tracking-click="market-accordion-cta"
               href={`/${MARKETS_PAGE_SLUG}/${slug}`}
               label={buttonText[locale]}
               variant="secondary"

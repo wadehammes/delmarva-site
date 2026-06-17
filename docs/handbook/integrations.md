@@ -2,14 +2,27 @@
 
 Where marketing tags and lightweight analytics hooks connect to the app.
 
-## Google Tag Manager
+## Google Analytics (GA4)
 
-- **[src/app/[locale]/layout.tsx](../../src/app/[locale]/layout.tsx)** renders **`GoogleTagManager`** from **`@next/third-parties/google`** when **`GOOGLE_TAG_MANAGER_ID`** is set.
-- Tag configuration (triggers, variables, additional tags) lives in the **GTM** product UI, not in this repository.
+- **[src/app/[locale]/layout.tsx](../../src/app/[locale]/layout.tsx)** renders **`GoogleAnalytics`** from **`@next/third-parties/google`** when **`NEXT_PUBLIC_GA_MEASUREMENT_ID`** is set (via [publicEnv.ts](../../src/utils/publicEnv.ts)).
+- This site does **not** use Google Tag Manager. Page views and enhanced measurement are configured in the **GA4** property UI.
+- For custom events from React code, use **`trackEvent`** from **[trackEvent.ts](../../src/lib/trackEvent.ts)**. It wraps **`sendGAEvent`** from **`@next/third-parties/google`** and pushes to the same gtag **`dataLayer`** the layout initializes.
+- **Do not** track internal link clicks—GA4 **`page_view`** (and Enhanced Measurement for outbound links) covers navigation. Use **`trackEvent`** only when the interaction does **not** produce a useful page view or needs a named conversion.
+- **`Button`** accepts optional **`trackingEvent`** / **`trackingLabel`** for form submits. **`Accordion`** accepts the same for expand/collapse toggles. Other in-page UI calls **`trackEvent`** directly.
 
-## Data layer
+**Custom events in use:**
 
-Tag configuration lives in **GTM**. Form and UI components use **`data-tracking-click`** (and related attributes) where events should be measured—wire those in GTM rather than ad hoc **`dataLayer.push`** in app code unless you add a shared helper under **`src/lib/`**.
+| Event | Why not page views alone |
+|-------|--------------------------|
+| `general-inquiry-form-submit`, `request-a-proposal-form-submit`, `join-our-team-form-submit` | Named form conversions |
+| `Clicked Project Card`, `Clicked Content Card` | Opens modal without route change |
+| `project-modal-share` | Clipboard action |
+| `service-accordion-toggle`, `market-accordion-toggle` | In-page expand/collapse |
+| `Clicked Carousel Previous/Next Button`, `Clicked Project Carousel Previous/Next Button` | Same-page carousel controls |
+| `Clicked Mobile Navigation Toggle Button`, `Clicked Mobile NavigationClose Button` | Overlay UI |
+| `Clicked Footer Scroll To Top Button` | Scroll only |
+| `Changed Language` | Locale switch on same path |
+| `Clicked Refresh Content Button` | Deploy hook (admin) |
 
 ## Mapbox
 
@@ -20,7 +33,7 @@ Imagery and styles must stay within **`images.remotePatterns`** and CSP **`conne
 
 ## reCAPTCHA
 
-- **Client**: Forms pass **`process.env.RECAPTCHA_SITE_KEY`** into the widget (wired via **`next.config`** **`env`**). Each form sends a **`formStartedAt`** timestamp (set when the form mounts) with the submission.
+- **Client**: Forms pass **`getRecaptchaSiteKey()`** (**`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`**) into the widget. Each form sends a **`formStartedAt`** timestamp (set when the form mounts) with the submission.
 - **Server**: [recaptcha.ts](../../src/utils/recaptcha.ts) verifies tokens with **`RECAPTCHA_SECRET_KEY`**, checks the token **`hostname`** against allowed Delmarva / preview domains, and requires reCAPTCHA v3 scores **≥ 0.7** when a score is present. Optional override: comma-separated **`RECAPTCHA_ALLOWED_HOSTNAMES`**.
 - **Spam pipeline**: [formSpamProtection.ts](../../src/utils/formSpamProtection.ts) centralizes checks used by all Resend form routes—honeypot, minimum dwell time (**3s**), reCAPTCHA, then [spamDetection.ts](../../src/utils/spamDetection.ts) content rules (keyword patterns, blocked sender domains, repeated submitter email in message body). Blocked submissions return a fake success response so bots are not tipped off.
 - **Vercel Observability**: blocked submissions emit structured JSON warnings via [observabilityLogger.ts](../../src/utils/observabilityLogger.ts) with **`event: "form_spam_blocked"`**, plus form name, layer, reason, and submitter metadata. In the Vercel dashboard, open **Observability → Logs**, filter **`level:warning`**, and search for **`form_spam_blocked`** or restrict to **`/api/resend/*`**. For retention, alerting, or dashboards beyond Vercel’s log window, add a **Log Drain** (Datadog, Axiom, custom HTTP endpoint, etc.) and query the JSON **`event`** field.
