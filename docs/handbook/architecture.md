@@ -71,7 +71,7 @@ Custom hooks (modal, scroll, mutations). See [src/hooks/README.md](../../src/hoo
 
 ### `src/utils/`
 
-Page metadata ([pageHelpers.ts](../../src/utils/pageHelpers.ts)), JSON-LD ([schema.ts](../../src/utils/schema.ts)), localized URL helpers ([localeUtils.ts](../../src/i18n/localeUtils.ts)), Contentful helpers, URL/env helpers, etc. Overview: [source-layout.md](source-layout.md).
+Page metadata ([metadata.helpers.ts](../../src/utils/metadata.helpers.ts), [pageHelpers.ts](../../src/utils/pageHelpers.ts)), JSON-LD ([schema.ts](../../src/utils/schema.ts)), localized URL helpers ([localeUtils.ts](../../src/i18n/localeUtils.ts)), Contentful helpers, URL/env helpers, etc. Overview: [source-layout.md](source-layout.md).
 
 ### `src/ui/`
 

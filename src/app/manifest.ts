@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SITE_NAME } from "src/utils/constants";
 
-export default function manifest(): MetadataRoute.Manifest {
+const manifest = (): MetadataRoute.Manifest => {
   return {
     background_color: "#e01e2d",
     description: "",
@@ -12,9 +13,11 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/x-icon",
       },
     ],
-    name: "Delmarva Site Development",
-    short_name: "Delmarva Site Development",
+    name: SITE_NAME,
+    short_name: SITE_NAME,
     start_url: "/",
     theme_color: "#e01e2d",
   };
-}
+};
+
+export default manifest;

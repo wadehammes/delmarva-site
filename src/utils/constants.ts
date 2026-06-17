@@ -9,6 +9,9 @@ export const TURNKEY_SERVICE_SLUG = "turn-key-development";
 
 export const EXCLUDED_PAGE_SLUGS_FROM_BUILD = [HOME_PAGE_SLUG];
 
+export const SITE_NAME = "Delmarva Site Development";
+export const SITE_NAME_LEGAL = "Delmarva Site Development, Inc.";
+
 // US States mapping for converting codes to names
 export const US_STATES_MAP: Record<string, string> = {
   AK: "Alaska",

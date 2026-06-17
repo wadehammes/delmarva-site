@@ -28,6 +28,6 @@ Both generated files are gitignored and produced during static generation.
 
 The App Router can serve default metadata via files such as **`opengraph-image.alt.txt`** and **`twitter-image.alt.txt`** under **`src/app/`**.
 
-Per-page metadata is built in **`generateMetadata`** via **`createPageMetadata`** / **`createServiceMetadata`** / **`createMarketMetadata`** in [pageHelpers.ts](../../src/utils/pageHelpers.ts). Those helpers set locale-aware **canonical**, **`openGraph.url`**, **`openGraph.locale`**, and **`alternateLocale`** using [localeUtils.ts](../../src/i18n/localeUtils.ts)—see [patterns.md](patterns.md).
+Per-page metadata is built in **`generateMetadata`** via **`createPageMetadata`** / **`createServiceMetadata`** / **`createMarketMetadata`** in [metadata.helpers.ts](../../src/utils/metadata.helpers.ts). Those helpers set locale-aware **canonical**, **`openGraph.url`**, **`openGraph.locale`**, and **`alternateLocale`** using [localeUtils.ts](../../src/i18n/localeUtils.ts)—see [patterns.md](patterns.md). **`buildDisplayTitle`** ensures the site name appears once in **`<title>`**, Open Graph, and Twitter even when Contentful **`metaTitle`** already includes **` | Delmarva Site Development`**.
 
 For fine-grained OG images per URL, follow Next.js metadata image conventions (`opengraph-image.tsx`, etc.) when product needs require it.

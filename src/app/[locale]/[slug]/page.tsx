@@ -18,8 +18,8 @@ import {
   FOOTER_ID,
   NAVIGATION_ID,
 } from "src/utils/constants";
+import { createPageMetadata } from "src/utils/metadata.helpers";
 import {
-  createPageMetadata,
   generatePageSchemaGraph,
   validateAndSetLocale,
 } from "src/utils/pageHelpers";
@@ -35,7 +35,7 @@ interface PageProps {
   params: Promise<PageParams>;
 }
 
-export async function generateStaticParams(): Promise<PageParams[]> {
+export const generateStaticParams = async (): Promise<PageParams[]> => {
   const pages = await fetchPages({ preview: false });
 
   if (pages) {
@@ -56,11 +56,11 @@ export async function generateStaticParams(): Promise<PageParams[]> {
         slug: page?.slug ?? "",
       })),
   );
-}
+};
 
-export async function generateMetadata({
+export const generateMetadata = async ({
   params,
-}: PageProps): Promise<Metadata> {
+}: PageProps): Promise<Metadata> => {
   const { slug, locale } = await params;
 
   const validLocale = await validateAndSetLocale(locale);
@@ -84,9 +84,9 @@ export async function generateMetadata({
   return createPageMetadata(page, validLocale, {
     path: page.slug,
   });
-}
+};
 
-async function Page({ params }: PageProps) {
+const Page = async ({ params }: PageProps) => {
   const { slug, locale } = await params;
 
   const validLocale = await validateAndSetLocale(locale);
@@ -132,6 +132,6 @@ async function Page({ params }: PageProps) {
       <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );
-}
+};
 
 export default Page;

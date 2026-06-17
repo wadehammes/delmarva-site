@@ -5,7 +5,7 @@ House style for TypeScript, React, CSS, and tests. When in doubt, mirror a nearb
 ## TypeScript
 
 - **Never use `any`.** Use proper types for props, state, and function signatures.
-- **Prefer arrow functions** for components and most functions: `const MyComponent = (props: Props) => { ... }`. Do not use `React.FC`.
+- **Always use arrow functions** for components and functions: `const MyComponent = (props: Props) => { ... }`, `const myHelper = (value: string) => { ... }`. Do not use `function` declarations or `React.FC`.
 - **Braces on control flow** — always use `{}` for `if` / `else` / loops; no single-line unbraced bodies.
 - **No non-null assertion (`!`).** Prefer optional chaining, nullish coalescing (`??`), or explicit checks.
 - **No nullish coalescing assignment (`??=`).** Assign lazily with an `if` check instead (e.g. `if (!client) { client = createClient(); }`).

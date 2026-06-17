@@ -13,8 +13,13 @@ import { buildCanonicalUrl } from "src/i18n/localeUtils";
 import type { Locales } from "src/i18n/routing";
 import { getServiceAreasServed } from "src/utils/areasServed";
 import { generateBreadcrumbs } from "src/utils/breadcrumbs";
-import { MARKETS_PAGE_SLUG, SERVICES_PAGE_SLUG } from "src/utils/constants";
+import {
+  MARKETS_PAGE_SLUG,
+  SERVICES_PAGE_SLUG,
+  SITE_NAME,
+} from "src/utils/constants";
 import { envUrl } from "src/utils/env.helpers";
+import { buildDisplayTitle } from "src/utils/metadata.helpers";
 import { createMediaUrl } from "src/utils/urlHelpers";
 
 export interface SchemaGraphContext {
@@ -56,13 +61,23 @@ export interface GenerateServicePageSchemaOptions {
   organizationOptions?: OrganizationSchemaOptions;
 }
 
-/**
- * Creates a LocalBusiness schema for the organization
- */
-export function createOrganizationSchema(
+export interface GenerateMarketPageSchemaOptions {
+  market: {
+    marketTitle?: string;
+    metadataDescription?: string;
+    metadataTitle?: string;
+    socialImage?: { src: string } | null;
+    slug: string;
+  };
+  slug: string;
+  locale: Locales;
+  preview: boolean;
+}
+
+export const createOrganizationSchema = (
   baseUrl: string,
   options?: OrganizationSchemaOptions,
-): WithContext<LocalBusiness> {
+): WithContext<LocalBusiness> => {
   const {
     areasServed,
     email,
@@ -99,7 +114,7 @@ export function createOrganizationSchema(
       latitude: "38.9926619",
       longitude: "-76.7006339",
     },
-    name: "Delmarva Site Development",
+    name: SITE_NAME,
     telephone: "+1-443-292-8083",
     url: baseUrl,
   };
@@ -165,16 +180,13 @@ export function createOrganizationSchema(
   }
 
   return organization;
-}
+};
 
-/**
- * Creates a WebPage schema
- */
-export function createWebPageSchema(
+export const createWebPageSchema = (
   page: Page,
   canonicalUrl: string,
   organizationId: string,
-): WithContext<WebPage> {
+): WithContext<WebPage> => {
   const webpage: WithContext<WebPage> = {
     "@context": "https://schema.org",
     "@id": `${canonicalUrl}#webpage`,
@@ -182,7 +194,7 @@ export function createWebPageSchema(
     dateModified: page.updatedAt,
     datePublished: page.publishDate,
     description: page.metaDescription,
-    name: page.metaTitle,
+    name: buildDisplayTitle(page.metaTitle),
     publisher: {
       "@id": organizationId,
     },
@@ -194,12 +206,9 @@ export function createWebPageSchema(
   }
 
   return webpage;
-}
+};
 
-/**
- * Creates a BreadcrumbList schema
- */
-export function createBreadcrumbSchema(
+export const createBreadcrumbSchema = (
   breadcrumbs: Array<{
     "@type": "ListItem";
     name: string;
@@ -207,7 +216,7 @@ export function createBreadcrumbSchema(
     item?: string;
   }>,
   canonicalUrl: string,
-): WithContext<BreadcrumbList> {
+): WithContext<BreadcrumbList> => {
   return {
     "@context": "https://schema.org",
     "@id": `${canonicalUrl}#breadcrumb`,
@@ -219,15 +228,12 @@ export function createBreadcrumbSchema(
       ...(crumb.item ? { item: crumb.item } : {}),
     })),
   };
-}
+};
 
-/**
- * Creates a Service schema from a ServiceType
- */
-export async function createServiceSchema(
+export const createServiceSchema = async (
   service: ServiceType,
   baseUrl: string,
-): Promise<WithContext<Service> | null> {
+): Promise<WithContext<Service> | null> => {
   try {
     let description: string | undefined;
     try {
@@ -274,14 +280,11 @@ export async function createServiceSchema(
     );
     return null;
   }
-}
+};
 
-/**
- * Generates a complete Schema.org @graph structure for a page
- */
-export async function generateSchemaGraph(
+export const generateSchemaGraph = async (
   options: GenerateSchemaGraphOptions,
-): Promise<SchemaGraphContext> {
+): Promise<SchemaGraphContext> => {
   const {
     page,
     slug,
@@ -356,14 +359,11 @@ export async function generateSchemaGraph(
     "@context": "https://schema.org",
     "@graph": graph,
   };
-}
+};
 
-/**
- * Generates schema graph for a service page (uses ServiceType instead of Page)
- */
-async function generateServicePageSchemaGraph(
+const generateServicePageSchemaGraph = async (
   options: GenerateServicePageSchemaOptions,
-): Promise<SchemaGraphContext> {
+): Promise<SchemaGraphContext> => {
   const { service, slug, locale, organizationOptions } = options;
 
   const baseUrl = envUrl();
@@ -387,7 +387,7 @@ async function generateServicePageSchemaGraph(
     dateModified: service.updatedAt,
     datePublished: service.publishDate,
     description: service.metaDescription,
-    name: `${service.serviceName} | Delmarva Site Development`,
+    name: buildDisplayTitle(service.metaTitle),
     publisher: {
       "@id": organizationId,
     },
@@ -422,11 +422,11 @@ async function generateServicePageSchemaGraph(
     "@context": "https://schema.org",
     "@graph": graph,
   };
-}
+};
 
-export function createMinimalSchemaGraph(
+export const createMinimalSchemaGraph = (
   canonicalUrl: string,
-): SchemaGraphContext {
+): SchemaGraphContext => {
   const baseUrl = envUrl();
   return {
     "@context": "https://schema.org",
@@ -441,11 +441,11 @@ export function createMinimalSchemaGraph(
       },
     ],
   };
-}
+};
 
-export async function generateServicePageSchemaGraphSafe(
+export const generateServicePageSchemaGraphSafe = async (
   options: GenerateServicePageSchemaOptions,
-): Promise<SchemaGraphContext> {
+): Promise<SchemaGraphContext> => {
   try {
     return await generateServicePageSchemaGraph(options);
   } catch (error) {
@@ -458,41 +458,11 @@ export async function generateServicePageSchemaGraphSafe(
     );
     return createMinimalSchemaGraph(canonicalUrl);
   }
-}
+};
 
-export async function generateMarketPageSchemaGraphSafe(
+const generateMarketPageSchemaGraph = async (
   options: GenerateMarketPageSchemaOptions,
-): Promise<SchemaGraphContext> {
-  try {
-    return await generateMarketPageSchemaGraph(options);
-  } catch (error) {
-    console.error("[Schema] generateMarketPageSchemaGraph failed:", error);
-    const baseUrl = envUrl();
-    const canonicalUrl = buildCanonicalUrl(
-      `${MARKETS_PAGE_SLUG}/${options.market.slug}`,
-      options.locale,
-      baseUrl,
-    );
-    return createMinimalSchemaGraph(canonicalUrl);
-  }
-}
-
-export interface GenerateMarketPageSchemaOptions {
-  market: {
-    marketTitle?: string;
-    metadataDescription?: string;
-    metadataTitle?: string;
-    socialImage?: { src: string } | null;
-    slug: string;
-  };
-  slug: string;
-  locale: Locales;
-  preview: boolean;
-}
-
-async function generateMarketPageSchemaGraph(
-  options: GenerateMarketPageSchemaOptions,
-): Promise<SchemaGraphContext> {
+): Promise<SchemaGraphContext> => {
   const { market, slug, locale } = options;
 
   const baseUrl = envUrl();
@@ -505,16 +475,14 @@ async function generateMarketPageSchemaGraph(
 
   const organizationSchema = createOrganizationSchema(baseUrl);
 
-  const title =
-    market.metadataTitle ??
-    `${market.marketTitle ?? "Market"} | Delmarva Site Development`;
+  const title = market.metadataTitle ?? market.marketTitle ?? "Market";
 
   const webpageSchema: WithContext<WebPage> = {
     "@context": "https://schema.org",
     "@id": `${canonicalUrl}#webpage`,
     "@type": "WebPage",
     description: market.metadataDescription ?? "",
-    name: title,
+    name: buildDisplayTitle(title),
     publisher: {
       "@id": organizationId,
     },
@@ -544,4 +512,21 @@ async function generateMarketPageSchemaGraph(
     "@context": "https://schema.org",
     "@graph": graph,
   };
-}
+};
+
+export const generateMarketPageSchemaGraphSafe = async (
+  options: GenerateMarketPageSchemaOptions,
+): Promise<SchemaGraphContext> => {
+  try {
+    return await generateMarketPageSchemaGraph(options);
+  } catch (error) {
+    console.error("[Schema] generateMarketPageSchemaGraph failed:", error);
+    const baseUrl = envUrl();
+    const canonicalUrl = buildCanonicalUrl(
+      `${MARKETS_PAGE_SLUG}/${options.market.slug}`,
+      options.locale,
+      baseUrl,
+    );
+    return createMinimalSchemaGraph(canonicalUrl);
+  }
+};

@@ -25,10 +25,8 @@ import {
   MARKETS_PAGE_SLUG,
   NAVIGATION_ID,
 } from "src/utils/constants";
-import {
-  createMarketMetadata,
-  validateAndSetLocale,
-} from "src/utils/pageHelpers";
+import { createMarketMetadata } from "src/utils/metadata.helpers";
+import { validateAndSetLocale } from "src/utils/pageHelpers";
 import { generateMarketPageSchemaGraphSafe } from "src/utils/schema";
 
 export const revalidate = 2592000;
@@ -42,7 +40,7 @@ interface PageProps {
   params: Promise<PageParams>;
 }
 
-export async function generateStaticParams(): Promise<PageParams[]> {
+export const generateStaticParams = async (): Promise<PageParams[]> => {
   const markets = await fetchMarkets({ preview: false });
 
   if (markets?.length) {
@@ -64,11 +62,11 @@ export async function generateStaticParams(): Promise<PageParams[]> {
         slug: market?.slug ?? "",
       })),
   );
-}
+};
 
-export async function generateMetadata({
+export const generateMetadata = async ({
   params,
-}: PageProps): Promise<Metadata> {
+}: PageProps): Promise<Metadata> => {
   const { slug, locale } = await params;
 
   const validLocale = await validateAndSetLocale(locale);
@@ -91,9 +89,9 @@ export async function generateMetadata({
   return createMarketMetadata(market, validLocale, {
     pathPrefix: MARKETS_PAGE_SLUG,
   });
-}
+};
 
-async function Page({ params }: PageProps) {
+const Page = async ({ params }: PageProps) => {
   try {
     const { slug, locale } = await params;
 
@@ -166,6 +164,6 @@ async function Page({ params }: PageProps) {
     );
     throw error;
   }
-}
+};
 
 export default Page;
