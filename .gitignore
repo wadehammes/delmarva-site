@@ -47,3 +47,5 @@ public/sitemap-index.xml
 public/rss-blog-en.xml
 public/rss-blog-es.xml
 .env*
+
+tsconfig.tsbuildinfo
