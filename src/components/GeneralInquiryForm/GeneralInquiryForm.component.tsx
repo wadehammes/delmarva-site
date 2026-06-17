@@ -10,6 +10,7 @@ import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import type { FormType } from "src/contentful/parseForm";
 import { useSendGeneralInquiryFormMutation } from "src/hooks/mutations/useSendGeneralInquiryForm.mutation";
+import { getRecaptchaSiteKey } from "src/utils/publicEnv";
 import {
   EMAIL_VALIDATION_REGEX,
   PHONE_NUMBER_VALIDATION_REGEX,
@@ -178,9 +179,9 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
         <div />
         <div>
           <Button
-            data-tracking-click="general-inquiry-form-submit"
             isDisabled={isSubmitting}
             label={t("messages.submit")}
+            trackingEvent="general-inquiry-form-submit"
             type="submit"
           >
             {isSubmitting ? t("messages.submitting") : t("messages.submit")}
@@ -210,7 +211,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
 
       <ReCAPTCHA
         ref={reCaptcha}
-        sitekey={process.env.RECAPTCHA_SITE_KEY as string}
+        sitekey={getRecaptchaSiteKey() ?? ""}
         size="invisible"
       />
       <input hidden type="submit" />

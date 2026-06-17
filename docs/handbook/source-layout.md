@@ -12,13 +12,22 @@ Quick map of **`src/`** when you know the task (“add a schema helper”, “fi
 
 | Area | Examples |
 |------|----------|
-| **Pages / SEO** | [pageHelpers.ts](../../src/utils/pageHelpers.ts), [schema.ts](../../src/utils/schema.ts) |
-| **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`) |
+| **Pages / SEO** | [pageHelpers.ts](../../src/utils/pageHelpers.ts) (`createPageMetadata`, …), [schema.ts](../../src/utils/schema.ts) |
+| **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`), [publicEnv.ts](../../src/utils/publicEnv.ts) (`NEXT_PUBLIC_*` for client) |
 | **Strings / React / Rich Text** | [string.helpers.ts](../../src/utils/string.helpers.ts), [react.helpers.ts](../../src/utils/react.helpers.ts), [richText.helpers.ts](../../src/utils/richText.helpers.ts) |
 | **Video URLs** | [videoUrl.helpers.ts](../../src/utils/videoUrl.helpers.ts) (embed detection, `isVideoUrl`, …) |
 | **Other** | [browser.helpers.ts](../../src/utils/browser.helpers.ts), [value.helpers.ts](../../src/utils/value.helpers.ts) (`isNonNullable`), [contentModules.ts](../../src/utils/contentModules.ts) (**`isTypeContentModules`**), [areasServed.ts](../../src/utils/areasServed.ts) |
 
 Import the specific module you need; there is no barrel **`utils/index.ts`**.
+
+## `src/i18n/`
+
+| File | Role |
+|------|------|
+| [routing.ts](../../src/i18n/routing.ts) | Locales, **`localePrefix`**, navigation wrappers |
+| [localeUtils.ts](../../src/i18n/localeUtils.ts) | **`buildLocalizedUrl`**, **`buildCanonicalUrl`**, **`buildHreflangAlternates`**, **`buildOpenGraphLocale`** |
+| [request.ts](../../src/i18n/request.ts) | Server message loading |
+| [messages/](../../src/i18n/messages/) | UI copy JSON per locale |
 
 ## `src/lib/`
 

@@ -8,6 +8,7 @@ House style for TypeScript, React, CSS, and tests. When in doubt, mirror a nearb
 - **Prefer arrow functions** for components and most functions: `const MyComponent = (props: Props) => { ... }`. Do not use `React.FC`.
 - **Braces on control flow** — always use `{}` for `if` / `else` / loops; no single-line unbraced bodies.
 - **No non-null assertion (`!`).** Prefer optional chaining, nullish coalescing (`??`), or explicit checks.
+- **No nullish coalescing assignment (`??=`).** Assign lazily with an `if` check instead (e.g. `if (!client) { client = createClient(); }`).
 - **Absolute imports (`src/…`).** Import app code from `src/` (e.g. `src/utils/urlHelpers`, `src/utils/env.helpers`). Exceptions: co-located **CSS Modules** and assets (`./MyComponent.module.css`).
 - **No barrel `index.ts` files** that only re-export other modules; import from the defining file. **Exception:** **`src/contentful/types/`** is generated (includes **`index.ts`**); do not hand-edit or “fix” its export style.
 - **Contentful**: Use generated types under `src/contentful/types/` and **parsed** shapes from `src/contentful/parse*.ts` in components. Regenerate with `pnpm types:contentful`; do not hand-edit generated files.
@@ -49,7 +50,7 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 
 - **Jest** with **Testing Library**; shared render helpers in [src/tests/testUtils.tsx](../../src/tests/testUtils.tsx) (includes **Jotai** provider where needed).
 - **[basePageObject.po.ts](../../src/tests/basePageObject.po.ts)** — lightweight base class; extend per feature if you introduce a page-object style test.
-- Tests use **`.test.tsx`** for components and **`.spec.ts`** for some utilities (e.g. [recaptcha.spec.ts](../../src/utils/recaptcha.spec.ts)); follow the naming pattern already used next to the code under test.
+- Tests use **`.test.tsx`** for components and **`.spec.ts`** for utilities (e.g. [recaptcha.spec.ts](../../src/utils/recaptcha.spec.ts), [localeUtils.spec.ts](../../src/i18n/localeUtils.spec.ts)); follow the naming pattern already used next to the code under test.
 - Prefer **queries** that reflect accessible roles/labels; add stable selectors only when necessary.
 
 ## Accessibility

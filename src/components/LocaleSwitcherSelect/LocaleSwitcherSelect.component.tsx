@@ -12,6 +12,7 @@ import styles from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.mod
 import type { Locales } from "src/i18n/routing";
 import { routing, usePathname, useRouter } from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
+import { trackEvent } from "src/lib/trackEvent";
 
 const localeLabel: Record<Locales, string> = {
   en: "English",
@@ -61,6 +62,8 @@ export const LocaleSwitcherSelect = () => {
       }
 
       announce("Changing language, please wait...");
+
+      trackEvent("Changed Language", { label: localeLabel[nextLocale] });
 
       startTransition(() => {
         try {

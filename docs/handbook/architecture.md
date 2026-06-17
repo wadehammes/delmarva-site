@@ -16,7 +16,7 @@ Map of the Delmarva site: technologies, where code lives, and how a request move
 
 ### `src/app/`
 
-- **`[locale]/layout.tsx`** — Root layout for localized routes: `html` `lang`, optional **Google Tag Manager** ([`GoogleTagManager`](https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries#google-tag-manager)), draft-mode banner, **NextIntlClientProvider**, and **Providers** (React Query, locale, toaster). Preconnects for Mapbox (when configured), Contentful images, YouTube.
+- **`[locale]/layout.tsx`** — Root layout for localized routes: `html` `lang`, optional **Google Analytics (GA4)** ([`GoogleAnalytics`](https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries#google-analytics)), draft-mode banner, **NextIntlClientProvider**, and **Providers** (React Query, locale, toaster). Preconnects for Mapbox (when configured), Contentful images, YouTube.
 - **`[locale]/page.tsx`** — Home: fetches page, navigation, footer from Contentful, renders **PageLayout** with **PageComponent** (and **SchemaScript** for JSON-LD where used).
 - **`[locale]/[slug]/page.tsx`**, **`[locale]/what-we-deliver/`**, **`[locale]/markets/[slug]/page.tsx`** — Other static routes; each follows the same general pattern (validate locale, `draftMode()`, fetch Contentful, render).
 - **`[locale]/refresh-content/page.tsx`** — On-demand revalidation flow (protected by env token).
@@ -66,12 +66,12 @@ Custom hooks (modal, scroll, mutations). See [src/hooks/README.md](../../src/hoo
 ### `src/lib/`
 
 - **[generateSitemap.ts](../../src/lib/generateSitemap.ts)** — localized sitemap fragments and **`sitemap-index.xml`** written under `public/` from page build paths.
-- **GTM** — configured in the tag manager UI; see [integrations.md](integrations.md).
+- **GA4** — page views via layout; custom events via **`trackEvent`**; see [integrations.md](integrations.md).
 - Email template docs: [src/lib/README.md](../../src/lib/README.md).
 
 ### `src/utils/`
 
-Page metadata, schema, Contentful helpers, URL/env helpers, etc. Overview: [source-layout.md](source-layout.md).
+Page metadata ([pageHelpers.ts](../../src/utils/pageHelpers.ts)), JSON-LD ([schema.ts](../../src/utils/schema.ts)), localized URL helpers ([localeUtils.ts](../../src/i18n/localeUtils.ts)), Contentful helpers, URL/env helpers, etc. Overview: [source-layout.md](source-layout.md).
 
 ### `src/ui/`
 
@@ -116,6 +116,6 @@ More: [platform.md](platform.md).
 | Topic | Doc |
 |-------|-----|
 | CI, env, CSP, draft routes | [platform.md](platform.md) |
-| GTM / data layer | [integrations.md](integrations.md) |
+| GA4 / `trackEvent` | [integrations.md](integrations.md) |
 | RSS, sitemaps, metadata images | [distribution.md](distribution.md) |
 | Atoms, utils, lib | [source-layout.md](source-layout.md) |

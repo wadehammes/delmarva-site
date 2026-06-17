@@ -31,16 +31,32 @@ Run the same commands locally before pushing when possible.
 
 ## Environment variables and `next.config`
 
-**[next.config.ts](../../next.config.ts)** **`env`** block lists keys forwarded into the Next.js build. If a variable is not listed there, client/server code may not see it even when set on Vercel.
+**Do not** use the **`env`** block in [next.config.ts](../../next.config.ts) to forward variables. That inlines values into **client** bundles as well as server code. **Secrets must never be listed there.**
 
-Notable groups (see **`env`** in config for the full set):
+### Client-safe (`NEXT_PUBLIC_*`)
 
-- **Contentful** — space id, delivery/preview keys, preview secret, CMA token for codegen
-- **ENVIRONMENT** — used for redirects and environment-specific behavior
-- **Analytics** — **`GOOGLE_TAG_MANAGER_ID`** (used in [layout.tsx](../../src/app/[locale]/layout.tsx)). **`GA_MEASUREMENT_ID`** is listed in **`next.config` `env`** but not referenced under **`src/`** directly today (typically wired through GTM).
-- **Email** — Resend keys and dev recipient
-- **Maps** — **`MAPBOX_API_TOKEN`** (server: [boundaries API](../../src/app/api/boundaries/)); client map components use **`NEXT_PUBLIC_MAPBOX_API_TOKEN`** (see layout preconnect and map components). Only **`MAPBOX_API_TOKEN`** is listed under **`next.config` `env`**; the public token must still be set in the environment for client bundles.
-- **reCAPTCHA** — **`RECAPTCHA_SITE_KEY`** in **`next.config` `env`** for the widget; server verification uses **`RECAPTCHA_SECRET_KEY`** and optional **`RECAPTCHA_ALLOWED_HOSTNAMES`** in [recaptcha.ts](../../src/utils/recaptcha.ts) (set in deployment env; not duplicated in the `env` block today).
+Set in Vercel / `.env.local`. Read via [publicEnv.ts](../../src/utils/publicEnv.ts) or `process.env.NEXT_PUBLIC_*` in Client Components:
+
+| Variable | Purpose |
+|----------|---------|
+| **`NEXT_PUBLIC_GA_MEASUREMENT_ID`** | GA4 in [layout.tsx](../../src/app/[locale]/layout.tsx) |
+| **`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`** | reCAPTCHA widget (public site key) |
+| **`NEXT_PUBLIC_MAPBOX_API_TOKEN`** | Mapbox GL in map components |
+
+### Server-only
+
+Available to Server Components, Route Handlers, and build scripts via `process.env` on the server. **Not** bundled for the browser:
+
+| Variable | Purpose |
+|----------|---------|
+| **Contentful** — **`CONTENTFUL_SPACE_ID`**, **`CONTENTFUL_CONTENT_DELIVERY_API_KEY`**, **`CONTENTFUL_PREVIEW_API_KEY`**, **`CONTENTFUL_PREVIEW_SECRET`**, **`CONTENTFUL_CMA_TOKEN`** (codegen script) | CMS fetch, draft mode, types |
+| **`ENVIRONMENT`** | Redirects, robots metadata, email routing, refresh-content gate |
+| **`MAPBOX_API_TOKEN`** | [boundaries API](../../src/app/api/boundaries/) |
+| **`RECAPTCHA_SECRET_KEY`**, optional **`RECAPTCHA_ALLOWED_HOSTNAMES`** | [recaptcha.ts](../../src/utils/recaptcha.ts) |
+| **`RESEND_API_KEY`**, **`RESEND_DEV_TO_EMAIL`**, **`RESEND_TEST_RECIPIENTS`** | [Resend routes](../../src/app/api/resend/) |
+| **`REFRESH_CONTENT_ACCESS_TOKEN`** | [refresh-content](../../src/app/[locale]/refresh-content/page.tsx) |
+
+After renaming client vars in Vercel, remove legacy unprefixed names (**`GOOGLE_TAG_MANAGER_ID`**, **`GA_MEASUREMENT_ID`**, **`RECAPTCHA_SITE_KEY`**) if they were only used for the old **`env`** block.
 
 Local workflow: link the Vercel project and **`npx vercel env pull`** as described in the root [README.md](../../README.md).
 

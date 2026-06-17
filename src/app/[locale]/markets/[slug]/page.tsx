@@ -25,7 +25,6 @@ import {
   MARKETS_PAGE_SLUG,
   NAVIGATION_ID,
 } from "src/utils/constants";
-import { envUrl } from "src/utils/env.helpers";
 import {
   createMarketMetadata,
   validateAndSetLocale,
@@ -89,11 +88,9 @@ export async function generateMetadata({
     return notFound();
   }
 
-  return createMarketMetadata(
-    market,
-    `${envUrl()}/${MARKETS_PAGE_SLUG}/${market.slug}`,
-    { pathPrefix: MARKETS_PAGE_SLUG },
-  );
+  return createMarketMetadata(market, validLocale, {
+    pathPrefix: MARKETS_PAGE_SLUG,
+  });
 }
 
 async function Page({ params }: PageProps) {

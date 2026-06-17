@@ -31,18 +31,22 @@ export const Link = ({ children, ...props }: LinkProps) => {
     [href],
   );
 
-  const handleClick = href.startsWith("#")
-    ? (e: React.MouseEvent<HTMLAnchorElement>) => {
-        fireHashChange(e);
-        onClickProp?.(e);
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      if (href.startsWith("#")) {
+        fireHashChange(event);
       }
-    : undefined;
+
+      onClickProp?.(event);
+    },
+    [fireHashChange, href, onClickProp],
+  );
 
   return (
     <RouterLink
       className={className}
       href={href}
-      {...(handleClick && { onClick: handleClick })}
+      onClick={href.startsWith("#") || onClickProp ? handleClick : undefined}
       {...rest}
     >
       {children}

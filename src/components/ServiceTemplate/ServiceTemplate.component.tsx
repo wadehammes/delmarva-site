@@ -60,7 +60,11 @@ export const ServiceTemplate = async (props: ServiceTemplateProps) => {
         <div className={styles.servicePhotos}>
           {(servicePhotos ?? []).length > 0 && (
             <HeaderMediaErrorBoundary>
-              <Carousel autoplay showSkeleton>
+              <Carousel
+                autoplay
+                showSkeleton
+                trackingLabel={`service-photos-${service.slug}`}
+              >
                 {(servicePhotos ?? []).map((media) => (
                   <ContentfulAssetRenderer asset={media} key={media.id} />
                 ))}

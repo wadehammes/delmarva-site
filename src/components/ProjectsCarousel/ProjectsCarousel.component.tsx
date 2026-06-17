@@ -92,6 +92,7 @@ export const ProjectsCarousel = ({
         showPagination
         slideClassName={styles.slide}
         spaceBetween={12}
+        trackingLabel={`projects-carousel-${selectedServiceSlug ?? "all"}`}
       >
         {projects.map((project) => (
           <div className={styles.slideInner} key={project.id}>

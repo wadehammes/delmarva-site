@@ -31,7 +31,8 @@ When **`ENVIRONMENT`** is **`local`** or **`staging`**, use **`RESEND_TEST_RECIP
 
 | File | Role |
 |------|------|
-| [`generateSitemap.ts`](./generateSitemap.ts) | Writes `public/generated-sitemap-*.xml` and `public/sitemap-index.xml` from page builds |
+| [`generateSitemap.ts`](./generateSitemap.ts) | **`outputSitemap`**, route builders, **`getSitemapLastmod`** → `public/generated-sitemap-*.xml` and `public/sitemap-index.xml` |
+| [`trackEvent.ts`](./trackEvent.ts) | Client **`trackEvent`** helper → GA4 **`dataLayer`** via **`sendGAEvent`** |
 
 RSS feeds under `public/` are committed directly (no generator in `src/lib/`).
 

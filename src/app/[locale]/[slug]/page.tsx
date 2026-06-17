@@ -18,7 +18,6 @@ import {
   FOOTER_ID,
   NAVIGATION_ID,
 } from "src/utils/constants";
-import { envUrl } from "src/utils/env.helpers";
 import {
   createPageMetadata,
   generatePageSchemaGraph,
@@ -82,7 +81,7 @@ export async function generateMetadata({
     return notFound();
   }
 
-  return createPageMetadata(page, `${envUrl()}/${page.slug}`, {
+  return createPageMetadata(page, validLocale, {
     path: page.slug,
   });
 }

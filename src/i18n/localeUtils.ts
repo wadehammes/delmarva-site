@@ -23,6 +23,26 @@ export const buildLocalizedUrl = (
   return `${baseUrl}/${locale}${pathSegment}`;
 };
 
+const OPEN_GRAPH_LOCALE: Record<Locales, string> = {
+  en: "en_US",
+  es: "es_ES",
+};
+
+export const buildOpenGraphLocale = (locale: Locales) => ({
+  alternateLocale: routing.locales
+    .filter((entry) => entry !== locale)
+    .map((entry) => OPEN_GRAPH_LOCALE[entry]),
+  locale: OPEN_GRAPH_LOCALE[locale],
+});
+
+const buildMetadataRoute = (path: string): string => (path ? `/${path}` : "/");
+
+export const buildCanonicalUrl = (
+  path: string,
+  locale: Locales,
+  baseUrl: string,
+): string => buildLocalizedUrl(buildMetadataRoute(path), locale, baseUrl);
+
 export const buildHreflangAlternates = (
   route: string,
   baseUrl: string,
@@ -37,20 +57,10 @@ export const buildHreflangAlternates = (
   },
 ];
 
-/**
- * Type guard to check if a string is a valid locale
- */
-export function isValidLocale(locale: string): locale is Locales {
-  return routing.locales.includes(locale as Locales);
-}
+export const isValidLocale = (locale: string): locale is Locales =>
+  routing.locales.includes(locale as Locales);
 
-/**
- * Safely converts a string locale to Locales type with fallback
- * Returns the fallback locale if the input is invalid
- */
-export function toLocaleSafe(
+export const toLocaleSafe = (
   locale: string,
   fallback: Locales = "en",
-): Locales {
-  return isValidLocale(locale) ? locale : fallback;
-}
+): Locales => (isValidLocale(locale) ? locale : fallback);

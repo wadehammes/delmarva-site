@@ -6,6 +6,7 @@ import { RichText } from "src/components/RichText/RichText.component";
 import type { FooterType } from "src/contentful/getFooter";
 import { Link } from "src/i18n/routing";
 import LinkedInIcon from "src/icons/linkedin.svg";
+import { trackEvent } from "src/lib/trackEvent";
 import DelmarvaBadge from "src/logos/delmarva-white-outlined-badge-full-color-rgb.svg";
 import { parseCtaUrl } from "src/utils/urlHelpers";
 import styles from "./Footer.module.css";
@@ -44,6 +45,7 @@ export const Footer = (props: FooterProps) => {
         <button
           aria-label={t("scroll")}
           onClick={() => {
+            trackEvent("Clicked Footer Scroll To Top Button");
             window.scrollTo({ behavior: "smooth", top: 0 });
           }}
           type="button"

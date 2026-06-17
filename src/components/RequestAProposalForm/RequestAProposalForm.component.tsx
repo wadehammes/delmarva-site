@@ -10,6 +10,7 @@ import { StyledInput } from "src/components/StyledInput/StyledInput.component";
 import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
 import type { FormType } from "src/contentful/parseForm";
 import { useSendRequestAProposalFormMutation } from "src/hooks/mutations/useSendRequestAProposalForm.mutation";
+import { getRecaptchaSiteKey } from "src/utils/publicEnv";
 import {
   EMAIL_VALIDATION_REGEX,
   PHONE_NUMBER_VALIDATION_REGEX,
@@ -199,9 +200,9 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         <div />
         <div>
           <Button
-            data-tracking-click="request-a-proposal-form-submit"
             isDisabled={isSubmitting}
             label={t("messages.submit")}
+            trackingEvent="request-a-proposal-form-submit"
             type="submit"
           >
             {isSubmitting ? t("messages.submitting") : t("messages.submit")}
@@ -231,7 +232,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
 
       <ReCAPTCHA
         ref={reCaptcha}
-        sitekey={process.env.RECAPTCHA_SITE_KEY as string}
+        sitekey={getRecaptchaSiteKey() ?? ""}
         size="invisible"
       />
       <input hidden type="submit" />

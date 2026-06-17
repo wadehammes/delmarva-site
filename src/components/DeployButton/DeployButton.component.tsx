@@ -27,13 +27,11 @@ export const DeployButton = (props: DeployButtonProps) => {
 
   return (
     <Button
-      data-tracking-click={JSON.stringify({
-        event: "Clicked Refresh Content Button",
-        label: "Refresh",
-      })}
       isDisabled={clicked}
       label={clicked ? "Refreshing (wait ~2min)" : label}
       onPress={handleDeploy}
+      trackingEvent="Clicked Refresh Content Button"
+      trackingLabel="Refresh"
       variant={clicked ? "primary" : "secondary"}
     />
   );

@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Children, useId, useState } from "react";
 import styles from "src/components/Carousel/Carousel.module.css";
 import { Skeleton } from "src/components/Skeleton/Skeleton.component";
+import { trackEvent } from "src/lib/trackEvent";
 import type { Swiper as SwiperType } from "swiper";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, type SwiperProps, SwiperSlide } from "swiper/react";
@@ -34,6 +35,7 @@ export interface CarouselProps {
   onSlideChange?: (swiper: SwiperType) => void;
   onSwiper?: (swiper: SwiperType) => void;
   animation?: "slide" | "fade";
+  trackingLabel?: string;
 }
 
 /**
@@ -60,6 +62,7 @@ export const Carousel = (props: CarouselProps) => {
     onSwiper,
     animation = "slide",
     showSkeleton = false,
+    trackingLabel,
   } = props;
 
   const [isReady, setIsReady] = useState(!showSkeleton);
@@ -104,6 +107,19 @@ export const Carousel = (props: CarouselProps) => {
           type: "fraction" as const,
         }
       : undefined;
+
+  const trackCarouselNavigation = (direction: "previous" | "next") => {
+    if (!trackingLabel) {
+      return;
+    }
+
+    trackEvent(
+      direction === "previous"
+        ? "Clicked Carousel Previous Button"
+        : "Clicked Carousel Next Button",
+      { label: trackingLabel },
+    );
+  };
 
   return (
     <div
@@ -186,6 +202,7 @@ export const Carousel = (props: CarouselProps) => {
                   aria-label="Previous slide"
                   className={styles.navigationButton}
                   id={navigationPrevId}
+                  onClick={() => trackCarouselNavigation("previous")}
                   type="button"
                 >
                   <span aria-hidden className={styles.navigationIcon}>
@@ -199,6 +216,7 @@ export const Carousel = (props: CarouselProps) => {
                   aria-label="Next slide"
                   className={styles.navigationButton}
                   id={navigationNextId}
+                  onClick={() => trackCarouselNavigation("next")}
                   type="button"
                 >
                   <span aria-hidden className={styles.navigationIcon}>

@@ -1,27 +1,44 @@
+"use client";
+
 import clsx from "clsx";
 import type { AriaButtonProps } from "react-aria";
 import styles from "src/components/Button/Button.module.css";
+import { trackEvent } from "src/lib/trackEvent";
 import { Button as UIButton } from "src/ui/Button/Button.component";
 
 interface ButtonProps extends AriaButtonProps {
-  "data-tracking-click": string;
   label: string;
+  trackingEvent?: string;
+  trackingLabel?: string;
   type?: "button" | "submit" | "reset";
   variant?: "primary" | "secondary" | "outline";
 }
 
 /**
- * Button component with multiple variants and tracking support
+ * Button component with multiple variants
  * Supports primary, secondary, and outline styles
  */
 export const Button = (props: ButtonProps) => {
   const {
     label,
+    trackingEvent,
+    trackingLabel,
     type = "button",
     variant = "primary",
-    "data-tracking-click": dataTrackingClick,
+    onPress,
     ...rest
   } = props;
+
+  const handlePress: AriaButtonProps["onPress"] = (event) => {
+    if (trackingEvent) {
+      trackEvent(
+        trackingEvent,
+        trackingLabel ? { label: trackingLabel } : undefined,
+      );
+    }
+
+    onPress?.(event);
+  };
 
   return (
     <UIButton
@@ -29,7 +46,7 @@ export const Button = (props: ButtonProps) => {
         [styles.secondary]: variant === "secondary",
         [styles.outline]: variant === "outline",
       })}
-      data-tracking-click={dataTrackingClick}
+      onPress={handlePress}
       type={type}
       {...rest}
     >

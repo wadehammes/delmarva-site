@@ -50,4 +50,9 @@ Rich Text uses **`@contentful/rich-text-react-renderer`** and types from **`@con
 
 ## Client
 
-**[client.ts](../../src/contentful/client.ts)** exports **`contentfulClient`** for delivery/preview. Use that client through the **getters** (and **`cached`**) rather than constructing one-off clients, so tokens, preview behavior, and caching stay consistent.
+**[client.ts](../../src/contentful/client.ts)** exports **`contentfulClient`** for delivery/preview. Clients are created **lazily** on first use (not at module load) so accidental client-bundle imports do not throw before env is available.
+
+- **Server only**: Contentful tokens (**`CONTENTFUL_*`**) are **not** exposed via **`NEXT_PUBLIC_*`**. Call getters from Server Components, Route Handlers, or **`generateStaticParams`** / **`generateMetadata`**—not from **`"use client"`** modules.
+- Shared entry IDs used by UI and getters live in **[constants.ts](../../src/contentful/constants.ts)** (e.g. **`FALLBACK_PROJECT_MEDIA_ID`**) so client code never imports **[getContentfulAsset.ts](../../src/contentful/getContentfulAsset.ts)** just for a constant.
+
+Use **`contentfulClient`** through the **getters** (and **`cached`**) rather than constructing one-off clients, so tokens, preview behavior, and caching stay consistent.

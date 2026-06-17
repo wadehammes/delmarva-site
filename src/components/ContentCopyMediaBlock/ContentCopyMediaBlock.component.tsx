@@ -49,7 +49,11 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
           } as CSSProperties & { "--dot-bg": string }
         }
       >
-        <Carousel animation="fade" spaceBetween={0}>
+        <Carousel
+          animation="fade"
+          spaceBetween={0}
+          trackingLabel={`content-copy-media-${fields.id}`}
+        >
           {(media ?? [])
             .filter((item) => item != null)
             .filter(

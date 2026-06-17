@@ -17,6 +17,7 @@ import { useSendJoinOurTeamFormMutation } from "src/hooks/mutations/useSendJoinO
 import type { Locales } from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
 import { US_STATES_MAP } from "src/utils/constants";
+import { getRecaptchaSiteKey } from "src/utils/publicEnv";
 import {
   EMAIL_VALIDATION_REGEX,
   PHONE_NUMBER_VALIDATION_REGEX,
@@ -479,9 +480,9 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           </div>
           <div>
             <Button
-              data-tracking-click="join-our-team-form-submit"
               isDisabled={isSubmitting}
               label={t("messages.submit")}
+              trackingEvent="join-our-team-form-submit"
               type="submit"
             >
               {isSubmitting ? t("messages.submitting") : t("messages.submit")}
@@ -511,7 +512,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
 
         <ReCAPTCHA
           ref={reCaptcha}
-          sitekey={process.env.RECAPTCHA_SITE_KEY as string} // v3
+          sitekey={getRecaptchaSiteKey() ?? ""}
           size="invisible"
         />
         <input hidden type="submit" />

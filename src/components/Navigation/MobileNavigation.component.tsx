@@ -4,6 +4,7 @@ import { Link } from "src/components/Link/Link.component";
 import styles from "src/components/Navigation/Navigation.module.css";
 import type { NavigationType } from "src/contentful/getNavigation";
 import Close from "src/icons/Close.svg";
+import { trackEvent } from "src/lib/trackEvent";
 import DelmarvaLogo from "src/logos/delmarva-white-full-cutout-full-color-rgb.svg";
 
 interface MobileNavigationDrawerProps {
@@ -26,11 +27,12 @@ export const MobileNavigationDrawer = (props: MobileNavigationDrawerProps) => {
       <button
         aria-label="Close"
         className={styles.closeButton}
-        data-tracking-click={JSON.stringify({
-          event: "Clicked Mobile NavigationClose Button",
-          label: "Close",
-        })}
-        onClick={closeMenu}
+        onClick={() => {
+          trackEvent("Clicked Mobile NavigationClose Button", {
+            label: "Close",
+          });
+          closeMenu?.();
+        }}
         type="button"
       >
         <Close className={styles.close} />
@@ -60,10 +62,6 @@ export const MobileNavigationDrawer = (props: MobileNavigationDrawerProps) => {
           <div className={styles.ctaContainer}>
             <ButtonLink
               className={styles.mobileNavCta}
-              data-tracking-click={JSON.stringify({
-                event: "Clicked Mobile Navigation CTA Button",
-                label: ctaButton.text,
-              })}
               href={ctaButton.pageLink?.url || ctaButton.externalLink || "#"}
               label={ctaButton.text}
             >

@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { MobileNavigationDrawer } from "src/components/Navigation/MobileNavigation.component";
 import styles from "src/components/Navigation/Navigation.module.css";
@@ -13,6 +13,7 @@ import { isTypeContentHero } from "src/contentful/types";
 import { useDOMCleanup, useIsBrowser } from "src/hooks/useIsBrowser";
 import { Link, usePathname } from "src/i18n/routing";
 import Menu from "src/icons/Menu.svg";
+import { trackEvent } from "src/lib/trackEvent";
 import DelmarvaLogo from "src/logos/delmarva-white-full-cutout-full-color-rgb.svg";
 import { throttle } from "src/utils/throttle";
 
@@ -157,22 +158,6 @@ export const Navigation = (props: NavigationProps) => {
   // Show background if we're not currently on a hero section
   const shouldShowBackground = !isCurrentSectionHero();
 
-  const ctaButtonTrackingData = useMemo(
-    () =>
-      navigation?.ctaButton
-        ? JSON.stringify({
-            event: "Clicked Navigation CTA Button",
-            label: navigation.ctaButton.text,
-          })
-        : undefined,
-    [navigation?.ctaButton?.text],
-  );
-
-  const mobileNavToggleTrackingData = JSON.stringify({
-    event: "Clicked Mobile Navigation Toggle Button",
-    label: "Menu Toggle",
-  });
-
   if (!navigation) {
     return null;
   }
@@ -219,7 +204,6 @@ export const Navigation = (props: NavigationProps) => {
         {navigation.ctaButton ? (
           <div className={styles.ctaButton}>
             <ButtonLink
-              data-tracking-click={ctaButtonTrackingData ?? ""}
               href={navigation.ctaButton.pageLink?.url ?? ""}
               label={navigation.ctaButton.text ?? ""}
               variant="primary"
@@ -230,8 +214,12 @@ export const Navigation = (props: NavigationProps) => {
           <button
             aria-label={t("menuToggle")}
             className={styles.mobileNavToggle}
-            data-tracking-click={mobileNavToggleTrackingData}
-            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+            onClick={() => {
+              trackEvent("Clicked Mobile Navigation Toggle Button", {
+                label: "Menu Toggle",
+              });
+              setIsMobileNavOpen((prev) => !prev);
+            }}
             type="button"
           >
             <Menu aria-hidden className={styles.menu} />

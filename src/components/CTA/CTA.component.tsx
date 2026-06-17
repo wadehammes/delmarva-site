@@ -24,7 +24,6 @@ export const CTA = (props: CTAProps) => {
     <ButtonLink
       arrow={arrow}
       className={className}
-      data-tracking-click={`Clicked ${cta.text} CTA Button`}
       href={url}
       label={cta.text}
       variant={buttonVariant}

@@ -2,7 +2,7 @@ import { draftMode } from "next/headers";
 import Providers from "src/app/providers";
 import { ExitDraftModeLink } from "src/components/ExitDraftModeLink/ExitDraftModeLink.component";
 import "src/styles/globals.css";
-import { GoogleTagManager } from "@next/third-parties/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
@@ -11,6 +11,7 @@ import type { ReactNode } from "react";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
 import { envUrl } from "src/utils/env.helpers";
+import { getGoogleAnalyticsMeasurementId } from "src/utils/publicEnv";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -45,12 +46,13 @@ export default async function RootLayout({
   setRequestLocale(locale);
 
   const draft = await draftMode();
+  const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId();
 
   return (
     <html data-theme="dark" lang={locale}>
-      {process.env.GOOGLE_TAG_MANAGER_ID && (
-        <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID} />
-      )}
+      {googleAnalyticsMeasurementId ? (
+        <GoogleAnalytics gaId={googleAnalyticsMeasurementId} />
+      ) : null}
       <head>
         {process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN ? (
           <link

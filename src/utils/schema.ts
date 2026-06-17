@@ -9,6 +9,7 @@ import type {
 } from "schema-dts";
 import type { Page } from "src/contentful/getPages";
 import type { ServiceType } from "src/contentful/getServices";
+import { buildCanonicalUrl } from "src/i18n/localeUtils";
 import type { Locales } from "src/i18n/routing";
 import { getServiceAreasServed } from "src/utils/areasServed";
 import { generateBreadcrumbs } from "src/utils/breadcrumbs";
@@ -292,8 +293,8 @@ export async function generateSchemaGraph(
   } = options;
 
   const baseUrl = envUrl();
-  const canonicalUrl =
-    slug === "home" || slug === "" ? baseUrl : `${baseUrl}/${slug}`;
+  const path = slug === "home" || slug === "" ? "" : slug;
+  const canonicalUrl = buildCanonicalUrl(path, locale, baseUrl);
   const organizationId = `${baseUrl}#organization`;
 
   const graph: Array<
@@ -366,7 +367,11 @@ async function generateServicePageSchemaGraph(
   const { service, slug, locale, organizationOptions } = options;
 
   const baseUrl = envUrl();
-  const canonicalUrl = `${baseUrl}/${SERVICES_PAGE_SLUG}/${service.slug}`;
+  const canonicalUrl = buildCanonicalUrl(
+    `${SERVICES_PAGE_SLUG}/${service.slug}`,
+    locale,
+    baseUrl,
+  );
   const organizationId = `${baseUrl}#organization`;
 
   const serviceSchema = await createServiceSchema(service, baseUrl);
@@ -446,7 +451,11 @@ export async function generateServicePageSchemaGraphSafe(
   } catch (error) {
     console.error("[Schema] generateServicePageSchemaGraph failed:", error);
     const baseUrl = envUrl();
-    const canonicalUrl = `${baseUrl}/${SERVICES_PAGE_SLUG}/${options.service.slug}`;
+    const canonicalUrl = buildCanonicalUrl(
+      `${SERVICES_PAGE_SLUG}/${options.service.slug}`,
+      options.locale,
+      baseUrl,
+    );
     return createMinimalSchemaGraph(canonicalUrl);
   }
 }
@@ -459,7 +468,11 @@ export async function generateMarketPageSchemaGraphSafe(
   } catch (error) {
     console.error("[Schema] generateMarketPageSchemaGraph failed:", error);
     const baseUrl = envUrl();
-    const canonicalUrl = `${baseUrl}/${MARKETS_PAGE_SLUG}/${options.market.slug}`;
+    const canonicalUrl = buildCanonicalUrl(
+      `${MARKETS_PAGE_SLUG}/${options.market.slug}`,
+      options.locale,
+      baseUrl,
+    );
     return createMinimalSchemaGraph(canonicalUrl);
   }
 }
@@ -483,7 +496,11 @@ async function generateMarketPageSchemaGraph(
   const { market, slug, locale } = options;
 
   const baseUrl = envUrl();
-  const canonicalUrl = `${baseUrl}/${MARKETS_PAGE_SLUG}/${market.slug}`;
+  const canonicalUrl = buildCanonicalUrl(
+    `${MARKETS_PAGE_SLUG}/${market.slug}`,
+    locale,
+    baseUrl,
+  );
   const organizationId = `${baseUrl}#organization`;
 
   const organizationSchema = createOrganizationSchema(baseUrl);

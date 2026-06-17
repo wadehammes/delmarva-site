@@ -25,7 +25,6 @@ import {
   NAVIGATION_ID,
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
-import { envUrl } from "src/utils/env.helpers";
 import {
   createServiceMetadata,
   validateAndSetLocale,
@@ -93,11 +92,9 @@ export async function generateMetadata({
     return notFound();
   }
 
-  return createServiceMetadata(
-    service,
-    `${envUrl()}/${SERVICES_PAGE_SLUG}/${service.slug}`,
-    { pathPrefix: SERVICES_PAGE_SLUG },
-  );
+  return createServiceMetadata(service, validLocale, {
+    pathPrefix: SERVICES_PAGE_SLUG,
+  });
 }
 
 async function Page({ params }: PageProps) {

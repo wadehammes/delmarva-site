@@ -20,7 +20,8 @@ A reusable, accessible accordion component with animated content and keyboard na
 | `defaultOpen` | `boolean` | `false` | Whether the accordion starts in an open state |
 | `className` | `string` | `undefined` | Additional CSS classes for styling |
 | `headerElement` | `"h1" \| "h2" \| "h3" \| "h4" \| "h5" \| "h6" \| "div"` | `"h3"` | The HTML element to use for the accordion header |
-| `data-tracking-click` | `string` | `undefined` | Tracking attribute for analytics |
+| `trackingEvent` | `string` | `undefined` | GA4 event name pushed on toggle |
+| `trackingLabel` | `string` | `undefined` | Optional `label` param sent with the event |
 
 ## Usage
 
@@ -41,7 +42,6 @@ import { Accordion } from "src/components/Accordion";
 <Accordion 
   title="Custom Styled Accordion" 
   className="my-custom-accordion"
-  data-tracking-click="faq-section"
 >
   <div>
     <h4>Subheading</h4>
