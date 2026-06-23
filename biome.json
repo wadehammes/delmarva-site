@@ -95,7 +95,7 @@
         "noUnusedVariables": "error",
         "useExhaustiveDependencies": "off"
       },
-      "recommended": true,
+      "preset": "recommended",
       "security": {
         "noDangerouslySetInnerHtml": "warn"
       },
