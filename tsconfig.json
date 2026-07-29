@@ -19,6 +19,11 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmit": true,
+    "paths": {
+      "src/*": [
+        "src/*"
+      ]
+    },
     "resolveJsonModule": true,
     "rootDir": ".",
     "skipLibCheck": true,
@@ -26,6 +31,10 @@
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
+    ],
+    "types": [
+      "jest",
+      "node"
     ],
     "incremental": true,
     "plugins": [
@@ -48,6 +57,7 @@
   ],
   "exclude": [
     "node_modules",
-    "next.config.ts"
+    "next.config.ts",
+    ".next/types/validator.ts"
   ]
 }

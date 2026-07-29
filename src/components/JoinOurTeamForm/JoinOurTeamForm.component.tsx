@@ -33,7 +33,7 @@ export interface JoinOurTeamInputs {
   city: string;
   coverLetter: File | null;
   email: string;
-  emailsToSendNotification?: string[];
+  formId?: string;
   locale?: Locales;
   name: string;
   phone: string;
@@ -123,7 +123,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             city,
             coverLetter,
             email,
-            emailsToSendNotification: fields.emailsToSendNotification,
+            formId: fields.id,
             formStartedAt: formStartedAt.current,
             locale,
             name,

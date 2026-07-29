@@ -3,15 +3,14 @@ import { render } from "src/tests/testUtils";
 import { DeployButton } from "./DeployButton.component";
 
 export interface DeployButtonProps {
-  deployHook: string;
+  accessToken?: string;
   label: string;
+  target: "staging" | "production";
 }
 
 export class DeployButtonPO extends BasePageObject {
-  public mockDeploy = jest.fn();
-
   setupApiMocks() {
-    this.mockDeploy.mockResolvedValue({ ok: true });
+    return undefined;
   }
 
   render(props?: Partial<DeployButtonProps>) {
@@ -20,7 +19,7 @@ export class DeployButtonPO extends BasePageObject {
   }
 
   private defaultProps: DeployButtonProps = {
-    deployHook: "https://api.vercel.com/v1/integrations/deploy/test",
     label: "Deploy Test",
+    target: "staging",
   };
 }

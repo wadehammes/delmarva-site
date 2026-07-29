@@ -22,7 +22,6 @@
   width: 100%;
   min-height: min(500px, 45vh);
 
-  /* Mapbox attribution styling */
   :global(.mapboxgl-ctrl-attrib) {
     font-size: 10px;
     color: var(--color-text);
@@ -31,7 +30,6 @@
     backdrop-filter: blur(4px);
   }
 
-  /* Mapbox control styling */
   :global(.mapboxgl-ctrl-group) {
     background-color: var(--overlay-bg-90);
     border-radius: 4px;
@@ -50,7 +48,6 @@
   }
 }
 
-/* Loading state and error message */
 .map:not(:global(.mapboxgl-map)) {
   display: flex;
   align-items: center;
@@ -62,46 +59,71 @@
   background-color: var(--card-bg);
 }
 
-/* Loading overlay for zip code data */
 .loadingOverlay {
   position: absolute;
   inset: 0;
   z-index: 10;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--overlay-bg-90);
-  backdrop-filter: blur(2px);
+  overflow: hidden;
+  border-radius: inherit;
 
-  .loadingSpinner {
-    width: 32px;
-    height: 32px;
-    margin-bottom: 1rem;
-    border: 3px solid var(--colors-gray);
-    border-top: 3px solid var(--colors-red);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  .loadingSkeleton {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
   }
 
-  p {
+  .loadingPanel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    min-width: min(100%, 16rem);
+    padding: 1rem 1.25rem;
+    background-color: var(--overlay-bg-90);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(8px);
+  }
+
+  .loadingSpinner {
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 2px solid var(--color-skeleton-border);
+    border-top-color: var(--colors-red);
+    border-radius: 50%;
+    animation: mapLoadingSpin 0.9s linear infinite;
+  }
+
+  .loadingMessage {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
     color: var(--color-text);
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loadingSpinner {
+      opacity: 0.85;
+      animation: none;
+    }
   }
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
+@keyframes mapLoadingSpin {
+  to {
     transform: rotate(360deg);
   }
 }
 
-/* Legend */
 .mapLegend {
   display: flex;
   flex-flow: row wrap;

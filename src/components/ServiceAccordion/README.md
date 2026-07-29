@@ -1,45 +1,35 @@
-# ServiceAccordion Component
+# ServiceAccordion
 
-A service accordion component with smooth GSAP animations that reveals content in a staggered sequence when the accordion is opened.
+Service accordion with GSAP panel reveal when expanded. Uses the base **Accordion** component for structure and accessibility.
+
+Handbook: [docs/handbook/components.md](../../../docs/handbook/components.md) (GSAP expand animations).
 
 ## Features
 
-- **Smooth Content Animation**: When the accordion opens, content elements animate in sequence:
-  1. Rich text description (fades in and slides up)
-  2. Stats list container
-  3. Individual stat items (staggered animation with 0.06s delay between each)
-  4. Call-to-action button
-  5. Project carousel
+On open, content animates in sequence: rich text → stats container → individual stats (staggered) → CTA → project carousel. Closing reverses the timeline immediately.
 
-- **Optimized Performance**: Clean GSAP animations without conflicting CSS transitions
-- **Coordinated Timing**: Content animations are delayed slightly to let the accordion height animation complete first
-- **Reverse Animation**: When the accordion closes, animations play in reverse immediately
-- **Accessible**: Maintains accessibility features from the base Accordion component
+Stats layout depends on count:
 
-## Animation Details
+- **≤3 stats** — **Stat** components in a grid (**`statsGridRef`**)
+- **>3 stats** — definition list (**`statsRef`**) with **`.statItem`** rows
 
-- **Duration**: 0.25-0.35 seconds per element for snappy, responsive feel
-- **Easing**: `power1.out` for smooth, natural motion without overshoot
-- **Effects**: 
-  - Opacity fade (0 to 1)
-  - Subtle Y-axis translation (8px to 0 for containers, 6px to 0 for stat items)
-- **Stagger**: Individual stat items animate with 0.06s stagger for a quick cascading effect
-- **Timing**: Content animations start 0.1s after accordion opens to prevent conflicts
+Only one layout mounts at a time. GSAP targets must be guarded so empty refs or **`querySelectorAll`** results are never passed to **`gsap.to`** (see **MarketAccordion** for the same pattern).
 
 ## Props
 
 ```typescript
 interface ServiceAccordionProps {
-  service: ServiceType;
+  defaultOpen?: boolean;
   locale: Locales;
-  projects: any[];
+  projects: ProjectType[];
+  service: ServiceType;
 }
 ```
 
 ## Usage
 
 ```tsx
-<ServiceAccordion 
+<ServiceAccordion
   service={serviceData}
   locale="en"
   projects={projectData}
@@ -48,6 +38,6 @@ interface ServiceAccordionProps {
 
 ## Dependencies
 
-- GSAP (^3.13.0)
-- React (with hooks: useEffect, useRef)
-- Base Accordion component 
+- **GSAP** — panel reveal timelines only (stat digits use **Stat** CSS ticker, not GSAP)
+- **`useDOMCleanup`** — timeline cleanup on unmount
+- **Accordion**, **RichText**, **Stat**, **ProjectCoverflowCarousel**

@@ -1,7 +1,11 @@
 import { DeployButton } from "src/components/DeployButton/DeployButton.component";
 import styles from "src/components/DeployPage/DeployPage.module.css";
 
-export const DeployPage = async () => {
+interface DeployPageProps {
+  accessToken?: string;
+}
+
+export const DeployPage = ({ accessToken }: DeployPageProps) => {
   return (
     <div className={styles.deployPage}>
       <header className={styles.deployPageHeader}>
@@ -13,12 +17,14 @@ export const DeployPage = async () => {
       </header>
       <div className={styles.buttonGroup}>
         <DeployButton
-          deployHook="https://api.vercel.com/v1/integrations/deploy/prj_IjZMy4WuZf1N2uGfbLneZHcSIJvl/KMXxoK51Xj"
+          accessToken={accessToken}
           label="Refresh staging.delmarvasite.com"
+          target="staging"
         />
         <DeployButton
-          deployHook="https://api.vercel.com/v1/integrations/deploy/prj_IjZMy4WuZf1N2uGfbLneZHcSIJvl/ArJpwW4pCd"
+          accessToken={accessToken}
           label="Refresh delmarvasite.com"
+          target="production"
         />
       </div>
     </div>

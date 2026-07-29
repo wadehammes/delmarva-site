@@ -1,11 +1,12 @@
+import { afterEach, beforeEach, describe, expect, it } from "@jest/globals";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import type { ServiceType } from "src/contentful/getServices";
 import { AreasServicedMap } from "./AreasServicedMap.component";
 
-// Mock mapbox-gl
 jest.mock("mapbox-gl", () => ({
   accessToken: "",
   Map: jest.fn().mockImplementation(() => ({
+    addControl: jest.fn(),
     addLayer: jest.fn(),
     addSource: jest.fn(),
     fitBounds: jest.fn(),
@@ -16,9 +17,9 @@ jest.mock("mapbox-gl", () => ({
     }),
     remove: jest.fn(),
   })),
+  NavigationControl: jest.fn(),
 }));
 
-// Mock utility functions
 jest.mock("src/utils/countyUtils", () => ({
   countiesToBoundaryLines: jest.fn().mockResolvedValue({
     features: [
@@ -118,11 +119,11 @@ describe("AreasServicedMap", () => {
 
   it("renders loading state initially", async () => {
     render(<AreasServicedMap services={[mockService]} />);
-    expect(screen.getByText("Loading service areas...")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Loading service areas",
+    );
     await waitFor(() => {
-      expect(
-        screen.queryByText("Loading service areas..."),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 
@@ -159,9 +160,7 @@ describe("AreasServicedMap", () => {
     );
     expect(container.firstChild).toHaveClass("custom-class");
     await waitFor(() => {
-      expect(
-        screen.queryByText("Loading service areas..."),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 
@@ -172,9 +171,7 @@ describe("AreasServicedMap", () => {
     ) as HTMLElement;
     expect(mapContainer).toHaveStyle({ height: "500px" });
     await waitFor(() => {
-      expect(
-        screen.queryByText("Loading service areas..."),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 

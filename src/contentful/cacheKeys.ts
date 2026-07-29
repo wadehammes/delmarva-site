@@ -4,6 +4,7 @@ export const CONTENTFUL_TAGS = {
   asset: "contentful-asset",
   featuredServices: "contentful-featured-services",
   footer: "contentful-footer",
+  formRecipients: "contentful-form-recipients",
   hasRecentNews: "contentful-has-recent-news",
   market: "contentful-market",
   marketPhotos: "contentful-market-photos",
@@ -37,6 +38,10 @@ export const cacheKeys = {
   footer: (slug: string, locale: string, preview: boolean) => ({
     key: contentfulKey(["footer", slug, locale, String(preview)]),
     tags: [CONTENTFUL_CACHE_TAG, CONTENTFUL_TAGS.footer],
+  }),
+  formRecipients: (formId: string) => ({
+    key: contentfulKey(["form-recipients", formId]),
+    tags: [CONTENTFUL_CACHE_TAG, CONTENTFUL_TAGS.formRecipients],
   }),
   hasRecentNews: (locale: string, preview: boolean) => ({
     key: contentfulKey(["has-recent-news", locale, String(preview)]),

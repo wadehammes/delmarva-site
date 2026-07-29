@@ -1,3 +1,4 @@
+import { describe, expect, it } from "@jest/globals";
 import { kebabCase, replaceNbsp } from "./string.helpers";
 
 describe("string.helpers", () => {

@@ -4,7 +4,7 @@ import { DeployPage } from "src/components/DeployPage/DeployPage.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
-import { Environments } from "src/interfaces/common.interfaces";
+import { isRefreshContentAuthorized } from "src/lib/refreshContentAccess";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 import { createUtilityPageMetadata } from "src/utils/metadata.helpers";
 import { validateAndSetLocale } from "src/utils/pageHelpers";
@@ -49,10 +49,7 @@ const Deployments = async ({ params, searchParams }: RefreshContentProps) => {
     return notFound();
   }
 
-  if (
-    process.env.ENVIRONMENT === Environments.Production &&
-    (!token || token !== process.env.REFRESH_CONTENT_ACCESS_TOKEN)
-  ) {
+  if (!isRefreshContentAuthorized(token)) {
     return notFound();
   }
 
@@ -75,7 +72,7 @@ const Deployments = async ({ params, searchParams }: RefreshContentProps) => {
 
   return (
     <PageLayout footer={footer} navigation={navigation}>
-      <DeployPage />
+      <DeployPage accessToken={token} />
     </PageLayout>
   );
 };

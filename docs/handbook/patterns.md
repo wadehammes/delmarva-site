@@ -14,7 +14,7 @@ Localized routes live under **`src/app/[locale]/`**. Typical page flow:
 
 Use **`export const revalidate = …`** on routes to control ISR-style static caching where set (values vary by page).
 
-**Refresh content**: [refresh-content/page.tsx](../../src/app/[locale]/refresh-content/page.tsx) is **`force-dynamic`** and **`noindex`**. In **production**, it **`notFound()`** unless **`searchParams.token`** matches **`REFRESH_CONTENT_ACCESS_TOKEN`**. [DeployPage.component.tsx](../../src/components/DeployPage/DeployPage.component.tsx) triggers **Vercel deploy hooks** (redeploy) to pick up new CMS content—not in-app `revalidatePath`/`revalidateTag`.
+**Refresh content**: [refresh-content/page.tsx](../../src/app/[locale]/refresh-content/page.tsx) is **`force-dynamic`** and **`noindex`**. Access is gated by **`REFRESH_CONTENT_ACCESS_TOKEN`** on every environment where that env var is set — see [platform.md](platform.md). [DeployPage.component.tsx](../../src/components/DeployPage/DeployPage.component.tsx) triggers deploys through **`POST /api/refresh-content/deploy`** (redeploy) to pick up new CMS content—not in-app `revalidatePath`/`revalidateTag`.
 
 ## generateStaticParams and generateMetadata
 
@@ -51,8 +51,9 @@ If you add client-side **`useQuery`**, put it in a dedicated hook file under **`
 
 ## Forms
 
-- **react-hook-form** for local form state; **reCAPTCHA** where required (see env in [next.config.ts](../../next.config.ts)).
+- **react-hook-form** for local form state; **reCAPTCHA** where required (**`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`** via [publicEnv.ts](../../src/utils/publicEnv.ts)—see [integrations.md](integrations.md)).
 - **Submit** via **mutation hooks** → **`api.*`** → Resend (or other) **Route Handlers** under **`src/app/api/resend/`**.
+- **Notification recipients** come from Contentful by **`formId`** on the server ([formNotificationRecipients.ts](../../src/lib/formNotificationRecipients.ts), [getFormEntry.ts](../../src/contentful/getFormEntry.ts)). Do **not** accept **`to`** / **`bcc`** lists from the client request body.
 
 ## Jotai (client UI)
 

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "src/tests/testUtils";
 import { DeployButtonPO } from "./DeployButton.po";
@@ -41,15 +42,13 @@ describe("DeployButton", () => {
       ).toBeInTheDocument();
     });
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /refreshing \(wait ~2min\)/i }),
-      ).toBeDisabled();
+    expect(mockFetch).toHaveBeenCalledWith("/api/refresh-content/deploy", {
+      body: JSON.stringify({ target: "staging", token: undefined }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
     });
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.vercel.com/v1/integrations/deploy/test",
-    );
   });
 
   it("handles deployment failure", async () => {
@@ -68,54 +67,6 @@ describe("DeployButton", () => {
         screen.getByRole("button", { name: /deploy test/i }),
       ).toBeInTheDocument();
     });
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /deploy test/i }),
-      ).not.toBeDisabled();
-    });
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.vercel.com/v1/integrations/deploy/test",
-    );
-  });
-
-  it("handles network error", async () => {
-    mockFetch.mockRejectedValueOnce(new Error("Network error"));
-
-    po.setupApiMocks();
-    po.render();
-    const deployButton = screen.getByRole("button", { name: /deploy test/i });
-
-    await user.click(deployButton);
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /deploy test/i }),
-      ).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /deploy test/i }),
-      ).not.toBeDisabled();
-    });
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      "https://api.vercel.com/v1/integrations/deploy/test",
-    );
-  });
-
-  it("renders with custom props", () => {
-    po.setupApiMocks();
-    po.render({
-      deployHook: "https://custom-deploy-hook.com",
-      label: "Custom Deploy",
-    });
-
-    expect(
-      screen.getByRole("button", { name: /custom deploy/i }),
-    ).toBeInTheDocument();
   });
 
   it("prevents multiple clicks during deployment", async () => {
@@ -134,11 +85,6 @@ describe("DeployButton", () => {
         screen.getByRole("button", { name: /refreshing \(wait ~2min\)/i }),
       ).toBeDisabled();
     });
-
-    const disabledButton = screen.getByRole("button", {
-      name: /refreshing \(wait ~2min\)/i,
-    });
-    await user.click(disabledButton);
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
   });

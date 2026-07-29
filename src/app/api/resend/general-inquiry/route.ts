@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import type { GeneralInquiryInputs } from "src/components/GeneralInquiryForm/GeneralInquiryForm.component";
 import { renderGeneralInquiryNotificationEmail } from "src/lib/emailRenderer";
-import { getNotificationTo } from "src/utils/emailHelpers";
+import { resolveFormNotificationRecipients } from "src/lib/formNotificationRecipients";
 import {
   checkFormSubmissionSpam,
   createSpamBlockedResponse,
@@ -44,11 +44,10 @@ export async function POST(request: Request) {
     });
   }
 
-  const toAddresses = res.emailsToSendNotification?.length
-    ? res.emailsToSendNotification
-    : [fallbackNotificationTo];
-
-  const to = getNotificationTo(toAddresses);
+  const { to, bcc } = await resolveFormNotificationRecipients({
+    fallbackTo: fallbackNotificationTo,
+    formId: res.formId,
+  });
 
   try {
     const notificationEmail = await renderGeneralInquiryNotificationEmail({
@@ -59,7 +58,7 @@ export async function POST(request: Request) {
     });
 
     const data = await resend.emails.send({
-      bcc: res.emailsToBcc?.length ? res.emailsToBcc : undefined,
+      bcc: bcc?.length ? bcc : undefined,
       from: "Delmarva Site Development <mail@delmarvasite.net>",
       html: notificationEmail.html,
       replyTo: `${name} <${email}>`,

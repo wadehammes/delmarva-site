@@ -25,14 +25,14 @@ Recommended onboarding order:
 | File | What it covers |
 |------|----------------|
 | [architecture.md](architecture.md) | Tech stack, directory map, layout/providers, data flow. Start here. |
-| [conventions.md](conventions.md) | TypeScript, Biome, CSS Modules, testing, accessibility. |
+| [conventions.md](conventions.md) | TypeScript, Biome, Stylelint, CSS Modules, Jest setup, testing, accessibility. |
 | [contentful.md](contentful.md) | Generated types, getters, parsers, sections, ContentRenderer, Rich Text. |
-| [components.md](components.md) | Component folder layout, registry pattern, dynamic imports, READMEs. |
+| [components.md](components.md) | Component folder layout, registry pattern, dynamic imports, loading states, maps, GSAP accordions, nested registries, READMEs. |
 | [patterns.md](patterns.md) | RSC pages, `generateMetadata`, caching, React Query mutations, `api`, next-intl, forms. |
-| [platform.md](platform.md) | GitHub CI, `pnpm` scripts, `next.config` (env, redirects, CSP), draft APIs. |
-| [integrations.md](integrations.md) | Google Analytics (GA4), `trackEvent`. |
+| [platform.md](platform.md) | GitHub CI, releases, knip, `pnpm` scripts, `next.config` (env, redirects, CSP), draft APIs. |
+| [integrations.md](integrations.md) | Google Analytics (GA4), `trackEvent`, Mapbox, reCAPTCHA, Resend. |
 | [distribution.md](distribution.md) | RSS helpers, sitemap XML, `robots`, Open Graph / Twitter metadata files. |
-| [source-layout.md](source-layout.md) | Jotai atoms, `src/utils` map, `src/lib`, constants. |
+| [source-layout.md](source-layout.md) | Jotai atoms, hooks, `src/utils` map, `src/lib`, constants. |
 | [llms.md](llms.md) | Task-to-chapter routing for tools; copy-paste blurb for agents. |
 
 ## Development setup

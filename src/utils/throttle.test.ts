@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from "@jest/globals";
 import { debounce, throttle } from "./throttle";
 
 describe("throttle", () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from "@jest/globals";
 import { isVideoUrl } from "./videoUrl.helpers";
 
 describe("videoUrl.helpers", () => {

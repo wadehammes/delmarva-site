@@ -1,6 +1,7 @@
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import type { Document } from "@contentful/rich-text-types";
 import { BLOCKS } from "@contentful/rich-text-types";
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import type { Page } from "src/contentful/getPages";
 import type { ServiceType } from "src/contentful/getServices";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
@@ -338,6 +339,7 @@ describe("schema", () => {
 
     it("should use metaDescription as fallback when RichText parsing fails", async () => {
       const baseUrl = "https://www.delmarvasite.com";
+      const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
       mockDocumentToPlainTextString.mockImplementation(() => {
         throw new Error("Parse error");
       });
@@ -346,6 +348,11 @@ describe("schema", () => {
       const schema = await createServiceSchema(mockService, baseUrl);
 
       expect(schema?.description).toBe(mockService.metaDescription);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to extract plain text from service Test Service:",
+        expect.any(Error),
+      );
+      consoleSpy.mockRestore();
     });
 
     it("should use metaDescription when description is undefined", async () => {
@@ -493,6 +500,7 @@ describe("schema", () => {
         services: [mockService, serviceThatFails],
         slug: "test-page",
       };
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
       mockGetServiceAreasServed
         .mockResolvedValueOnce(null)
         .mockRejectedValueOnce(new Error("Service creation failed"));
@@ -509,6 +517,11 @@ describe("schema", () => {
         return false;
       });
       expect(serviceSchemas).toHaveLength(1);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to create service schema for Test Service:",
+        expect.any(Error),
+      );
+      consoleSpy.mockRestore();
     });
 
     it("should include organization areasServed when provided", async () => {

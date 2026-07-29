@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from "@jest/globals";
 import { verifyRecaptchaToken } from "src/utils/recaptcha";
 
 // Mock fetch globally
@@ -148,6 +149,7 @@ describe("recaptcha", () => {
     it("should return false when hostname is not allowed", async () => {
       process.env.RECAPTCHA_SECRET_KEY = "test-secret-key";
       const token = "wrong-host-token";
+      const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
 
       mockFetch.mockResolvedValueOnce({
         json: async () => ({
@@ -160,6 +162,13 @@ describe("recaptcha", () => {
       const result = await verifyRecaptchaToken(token);
 
       expect(result).toBe(false);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('"event":"recaptcha_hostname_mismatch"'),
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('"hostname":"evil.example.com"'),
+      );
+      consoleSpy.mockRestore();
     });
 
     it("should handle fetch errors gracefully", async () => {

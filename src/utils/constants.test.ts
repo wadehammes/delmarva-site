@@ -1,3 +1,4 @@
+import { describe, expect, it } from "@jest/globals";
 import {
   EXCLUDED_PAGE_SLUGS_FROM_BUILD,
   FOOTER_ID,

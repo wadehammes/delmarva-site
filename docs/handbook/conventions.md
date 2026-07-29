@@ -25,8 +25,14 @@ House style for TypeScript, React, CSS, and tests. When in doubt, mirror a nearb
 **Biome** is the single linter/formatter ([biome.json](../../biome.json)).
 
 - `pnpm lint` — check
-- `pnpm lint:fix` / `pnpm lint:write` — fix and format writes
+- `pnpm lint:fix` — fix and format writes
 - `pnpm lint:ci` — CI mode with GitHub reporter
+
+**Stylelint** ([stylelint.config.ts](../../stylelint.config.ts)) checks CSS Modules and global styles:
+
+- `pnpm lint:css` — check (same as CI)
+- `pnpm lint:css:fix` — auto-fix where supported
+- `pnpm lint:all` — changed-file Biome check plus CSS fix
 
 Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 
@@ -48,10 +54,46 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 
 ## Testing
 
-- **Jest** with **Testing Library**; shared render helpers in [src/tests/testUtils.tsx](../../src/tests/testUtils.tsx) (includes **Jotai** provider where needed).
-- **[basePageObject.po.ts](../../src/tests/basePageObject.po.ts)** — lightweight base class; extend per feature if you introduce a page-object style test.
+- **Jest** with **Testing Library**; import **`describe`**, **`it`**, **`expect`**, and lifecycle hooks from **`@jest/globals`** in every spec—do not rely on other undeclared globals. Use the shared **`jest`** object for **`jest.mock`**, **`jest.fn()`**, and **`jest.mocked()`** (hoisted mock factories must use the same instance). Matchers: **`@testing-library/jest-dom/jest-globals`** in [`.jest/setupTests.ts`](../../.jest/setupTests.ts) (extends **`expect`** from **`@jest/globals`**). Shared render helpers in [src/tests/testUtils.tsx](../../src/tests/testUtils.tsx) (includes **Jotai** provider where needed).
+- **Write tests for expected behavior first.** Assert what users or callers should see (accessible labels, API payloads, error handling, security boundaries)—not implementation details. When a new or updated test fails, **fix the production code** if the expectation matches product intent; only change the test when the requirement was wrong or the assertion was brittle.
+- **[basePageObject.po.ts](../../src/tests/basePageObject.po.ts)** — lightweight base class shared with energy-texas; extend per feature for page-object style tests.
+- **Per-component page object** (when useful): `<Name>.po.tsx` extends **`BasePageObject`**, holds **test data and setup/render helpers only**—not wrappers around every `screen.getBy*`. POs do not assert; specs drive interactions and assertions with **`screen`** and **`userEvent`**.
 - Tests use **`.test.tsx`** for components and **`.spec.ts`** for utilities (e.g. [recaptcha.spec.ts](../../src/utils/recaptcha.spec.ts), [localeUtils.spec.ts](../../src/i18n/localeUtils.spec.ts)); follow the naming pattern already used next to the code under test.
 - Prefer **queries** that reflect accessible roles/labels; add stable selectors only when necessary.
+- **`jest.mock` factories** — keep them free of `require()`; use ESM imports in dedicated mock modules under [`src/tests/mocks/`](../../src/tests/mocks/) or automock + `jest.mocked()` in the spec when a factory needs `jest.fn()`. **`next/dynamic`** is stubbed in Jest ([`nextDynamic.mock.ts`](../../src/tests/mocks/nextDynamic.mock.ts)) so lazy chunks do not resolve asynchronously during unrelated tests; import the underlying component directly when you need to assert on it.
+- **`mapbox-gl` mocks** — When testing map components, mock **`NavigationControl`** and **`addControl`** on the **`Map`** instance (in addition to **`on('load', …)`**) so the **`load`** handler completes and loading overlays dismiss. Assert loading UI with **`getByRole('status')`**. See [AreasServicedMap.test.tsx](../../src/components/AreasServicedMap/AreasServicedMap.test.tsx).
+
+### Jest configuration
+
+- **[jest.config.ts](../../jest.config.ts)** — **`next/jest`**, jsdom, **`testTimeout: 20000`**, CSS mapped to **`identity-obj-proxy`**.
+- **[`.jest/setEnvVars.ts`](../../.jest/setEnvVars.ts)** — sets **`ENVIRONMENT=staging`** before tests run.
+- **[`.jest/setupTests.ts`](../../.jest/setupTests.ts)** — global mocks and lifecycle:
+  - **`jest`** and hooks from **`@jest/globals`**; **`@testing-library/jest-dom/jest-globals`** for DOM matchers
+  - **`global.fetch`** stubbed
+  - **IntersectionObserver** and **matchMedia** via [src/tests/mocks/](../../src/tests/mocks/)
+  - **`cleanup()`** after each test
+- **`tsconfig.json`** — **`"types": ["jest", "node"]`** so specs and setup resolve **`jest`** globals; **`.next/types/validator.ts`** is excluded (stale route refs after deletes). SVGR imports: **`declare module "*.svg"`** in [src/@types/svg.d.ts](../../src/@types/svg.d.ts) (ambient file with no exports—same pattern as energy-texas / rhythm-marketing).
+
+**`moduleNameMapper`** (prefer extending this over per-spec mocks):
+
+| Module | Mock |
+|--------|------|
+| **`@faker-js/faker`** | [faker.ts](../../src/tests/mocks/faker.ts) |
+| **`next-intl/navigation`** | [nextIntlNavigation.mock.ts](../../src/tests/mocks/nextIntlNavigation.mock.ts) |
+| **`next/dynamic`** | [nextDynamic.mock.ts](../../src/tests/mocks/nextDynamic.mock.ts) |
+| **`react-google-recaptcha`** | [reactGoogleRecaptcha.mock.ts](../../src/tests/mocks/reactGoogleRecaptcha.mock.ts) |
+
+There is no **`pnpm test`** script; run **`pnpm test:ci`** locally (or **`pnpm exec jest --testPathPatterns=<pattern>`** for a subset).
+
+### Test data and factories
+
+- Factories use **@faker-js/faker** and extend [`BaseFactory`](../../src/tests/factories/BaseFactory.ts). Each factory exposes **`.build(attributes?)`** / **`.buildList(n, attributes?)`**—pass partial **`attributes`** to pin specific fields while the rest get fresh fake values.
+- **Adding a factory**: create **`src/tests/factories/<Name>.factory.ts`**, build the instance with **`satisfies <TargetType>`**, and gate it with a **`KeysMatch<TargetType, typeof instance>`** line ([KeysMatch.ts](../../src/types/KeysMatch.ts)) so TypeScript fails when the target type grows a field the factory does not cover. Example: [`Form.factory.ts`](../../src/tests/factories/Form.factory.ts).
+
+**Page object examples** (PO holds data + render/mocks; spec asserts):
+
+- [GeneralInquiryForm.po.tsx](../../src/components/GeneralInquiryForm/GeneralInquiryForm.po.tsx) + [GeneralInquiryForm.test.tsx](../../src/components/GeneralInquiryForm/GeneralInquiryForm.test.tsx)
+- [RequestAProposalForm.po.tsx](../../src/components/RequestAProposalForm/RequestAProposalForm.po.tsx) + [RequestAProposalForm.test.tsx](../../src/components/RequestAProposalForm/RequestAProposalForm.test.tsx)
 
 ## Accessibility
 
@@ -59,6 +101,7 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 - Form controls need labels or an accessible name (`aria-label` / `aria-labelledby` when design hides the label).
 - Keyboard: focusable controls, focus management for modals/overlays.
 - Honor **`prefers-reduced-motion`** for large or looping motion when straightforward.
+- Async loading overlays that replace content should use **`role="status"`** (or **`role="alert"`** for errors) with visible status text; mark decorative spinners and skeletons **`aria-hidden`**. See [AreasServicedMapLoadingOverlay.component.tsx](../../src/components/AreasServicedMap/AreasServicedMapLoadingOverlay.component.tsx).
 
 ## Comments
 

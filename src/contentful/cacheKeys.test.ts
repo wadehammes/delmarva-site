@@ -1,3 +1,4 @@
+import { describe, expect, it } from "@jest/globals";
 import {
   CONTENTFUL_CACHE_TAG,
   CONTENTFUL_TAGS,

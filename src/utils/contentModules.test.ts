@@ -1,3 +1,4 @@
+import { describe, expect, it } from "@jest/globals";
 import type { ContentModuleEntry } from "src/contentful/parseContentModules";
 import type { ContentEntries, SectionType } from "src/contentful/parseSections";
 import {

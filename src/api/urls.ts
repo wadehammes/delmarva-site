@@ -15,6 +15,9 @@ function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
   form.append("briefDescription", data.briefDescription);
   form.append("city", data.city);
   form.append("email", data.email);
+  if (data.formId) {
+    form.append("formId", data.formId);
+  }
   if (data.locale) {
     form.append("locale", data.locale);
   }
@@ -29,12 +32,6 @@ function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
   if (data.website !== undefined) {
     form.append("website", data.website);
   }
-  if (data.emailsToSendNotification?.length) {
-    form.append(
-      "emailsToSendNotification",
-      JSON.stringify(data.emailsToSendNotification),
-    );
-  }
   if (data.resume instanceof File) {
     form.append("resume", data.resume);
   }
@@ -47,8 +44,7 @@ function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
 export const api = {
   generalInquiry: ({
     email,
-    emailsToBcc,
-    emailsToSendNotification,
+    formId,
     formStartedAt,
     message,
     name,
@@ -62,8 +58,7 @@ export const api = {
         fetchOptions({
           body: JSON.stringify({
             email,
-            emailsToBcc,
-            emailsToSendNotification,
+            formId,
             formStartedAt,
             message,
             name,
@@ -98,7 +93,7 @@ export const api = {
             briefDescription: data.briefDescription,
             city: data.city,
             email: data.email,
-            emailsToSendNotification: data.emailsToSendNotification,
+            formId: data.formId,
             formStartedAt: data.formStartedAt,
             locale: data.locale,
             name: data.name,
@@ -118,8 +113,7 @@ export const api = {
   requestAProposal: ({
     companyName,
     email,
-    emailsToBcc,
-    emailsToSendNotification,
+    formId,
     formStartedAt,
     name,
     phone,
@@ -134,8 +128,7 @@ export const api = {
           body: JSON.stringify({
             companyName,
             email,
-            emailsToBcc,
-            emailsToSendNotification,
+            formId,
             formStartedAt,
             name,
             phone,

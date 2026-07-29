@@ -28,9 +28,8 @@ export interface GeneralInquiryInputs {
   message: string;
   recaptchaToken: string;
   formStartedAt?: number;
+  formId?: string;
   website?: string;
-  emailsToSendNotification?: string[];
-  emailsToBcc?: string[];
 }
 
 const defaultValues: GeneralInquiryInputs = {
@@ -45,7 +44,7 @@ const defaultValues: GeneralInquiryInputs = {
 export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
   const { fields } = props;
 
-  const { emailsToSendNotification, emailsToBcc } = fields;
+  const { id: formId } = fields;
 
   const t = useTranslations("GeneralInquiryForm");
 
@@ -78,8 +77,7 @@ export const GeneralInquiryForm = (props: GeneralInquiryFormProps) => {
         try {
           await sendMutation.mutateAsync({
             email,
-            emailsToBcc: emailsToBcc,
-            emailsToSendNotification,
+            formId,
             formStartedAt: formStartedAt.current,
             message,
             name,
