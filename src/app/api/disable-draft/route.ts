@@ -1,5 +1,6 @@
 import { draftMode } from "next/headers";
 import { redirect } from "next/navigation";
+import { getSafeRedirectPath } from "src/utils/redirectHelpers";
 
 export async function GET(request: Request) {
   const draft = await draftMode();
@@ -7,5 +8,5 @@ export async function GET(request: Request) {
 
   draft.disable();
 
-  redirect(searchParams.get("redirect") || "/");
+  redirect(getSafeRedirectPath(searchParams.get("redirect")));
 }

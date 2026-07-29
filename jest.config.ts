@@ -1,8 +1,6 @@
-// jest.config.ts
 import type { Config } from "@jest/types";
 import nextJest from "next/jest.js";
 
-// Sync object
 const customJestConfig: Config.InitialOptions = {
   moduleDirectories: ["node_modules", "<rootDir>"],
   preset: "ts-jest",
@@ -11,22 +9,26 @@ const customJestConfig: Config.InitialOptions = {
   testEnvironment: "jest-environment-jsdom",
   testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
   transformIgnorePatterns: [
-    "<rootDir>/node_modules/(?!(isbot|jest-dom|next-intl)/)",
+    "<rootDir>/node_modules/(?!(isbot|jest-dom|next-intl|@faker-js)/)",
   ],
   verbose: true,
 };
 
-// Providing the path to your Next.js app which will enable loading next.config.js and .env files
 const createJestConfig = nextJest({ dir: "./" })(customJestConfig);
 
 export default async () => {
-  // Create Next.js jest configuration presets
   const jestConfig = await createJestConfig();
 
-  // Custom `moduleNameMapper` configuration
   const moduleNameMapper = {
+    "^.+\\.(svg)$": "<rootDir>/src/tests/mocks/svgMock.tsx",
     ...jestConfig.moduleNameMapper,
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "^@faker-js/faker$": "<rootDir>/src/tests/mocks/faker.ts",
+    "^next-intl/navigation$":
+      "<rootDir>/src/tests/mocks/nextIntlNavigation.mock.ts",
+    "^next/dynamic$": "<rootDir>/src/tests/mocks/nextDynamic.mock.ts",
+    "^react-google-recaptcha$":
+      "<rootDir>/src/tests/mocks/reactGoogleRecaptcha.mock.ts",
   };
 
   return { ...jestConfig, moduleNameMapper, testTimeout: 20000 };

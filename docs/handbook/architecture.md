@@ -106,8 +106,8 @@ flowchart TB
 
 ## Config and deployment
 
-- **[next.config.ts](../../next.config.ts)** — `env` exposure, `headers` (cache + security), `images.remotePatterns`, redirects, webpack/turbopack (e.g. SVGR).
-- **CI**: [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) — `tsc:ci`, `lint:ci`, `test:ci`.
+- **[next.config.ts](../../next.config.ts)** — **`headers`** (cache + security/CSP), **`images.remotePatterns`**, redirects, webpack/turbopack (e.g. SVGR). **Do not** add an **`env`** block—see [platform.md](platform.md).
+- **CI**: [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) — full pipeline in [platform.md](platform.md).
 
 More: [platform.md](platform.md).
 
@@ -115,7 +115,8 @@ More: [platform.md](platform.md).
 
 | Topic | Doc |
 |-------|-----|
-| CI, env, CSP, draft routes | [platform.md](platform.md) |
-| GA4 / `trackEvent` | [integrations.md](integrations.md) |
+| CI, env, CSP, draft routes, releases | [platform.md](platform.md) |
+| GA4 / `trackEvent`, Mapbox | [integrations.md](integrations.md) |
+| Maps, loading states, GSAP accordions | [components.md](components.md) |
 | RSS, sitemaps, metadata images | [distribution.md](distribution.md) |
-| Atoms, utils, lib | [source-layout.md](source-layout.md) |
+| Atoms, hooks, utils, lib | [source-layout.md](source-layout.md) |

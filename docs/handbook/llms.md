@@ -11,12 +11,15 @@ Use this page to choose **which markdown file to read first**. It mirrors the ha
 | Stack, folders, layout, providers, Contentful → page render flow | [architecture.md](architecture.md) |
 | TypeScript / React style, Biome, CSS Modules, tests, a11y, `next/image` | [conventions.md](conventions.md) |
 | Contentful types/codegen, getters, parsers, sections, ContentRenderer / registry, new CMS block | [contentful.md](contentful.md) |
-| Component folder layout, dynamic imports, co-located READMEs | [components.md](components.md) |
+| Component folder layout, dynamic imports, co-located READMEs, loading states, maps, GSAP accordions | [components.md](components.md) |
 | App Router pages, metadata, revalidation, React Query mutations, `src/api`, next-intl, locale-aware canonicals / OG | [patterns.md](patterns.md) |
 | CI, env, `next.config` (env vars, redirects, CSP), draft/disable-draft routes | [platform.md](platform.md) |
-| GA4, `trackEvent` | [integrations.md](integrations.md) |
+| GA4, `trackEvent`, Mapbox, reCAPTCHA, Resend | [integrations.md](integrations.md) |
 | RSS helpers, sitemap output, `robots`, OG/Twitter metadata | [distribution.md](distribution.md) |
-| Jotai atoms, `src/utils` map, `src/lib`, constants | [source-layout.md](source-layout.md) |
+| Jotai atoms, `src/utils` map, `src/hooks`, `src/lib`, constants | [source-layout.md](source-layout.md) |
+| Jest setup, Stylelint, test mocks, page objects | [conventions.md](conventions.md) |
+| CI, releases, knip, package scripts | [platform.md](platform.md) |
+| ContentModules / FormRenderer nested registries, CMS map block | [components.md](components.md) |
 
 ## Outside this folder
 

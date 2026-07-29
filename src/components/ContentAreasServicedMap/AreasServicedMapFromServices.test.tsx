@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from "@jest/globals";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import type { ServiceForMap } from "src/contentful/parseContentAreasServicedMap";
 import { AreasServicedMapFromServices } from "./AreasServicedMapFromServices.component";
@@ -5,6 +6,7 @@ import { AreasServicedMapFromServices } from "./AreasServicedMapFromServices.com
 jest.mock("mapbox-gl", () => ({
   accessToken: "",
   Map: jest.fn().mockImplementation(() => ({
+    addControl: jest.fn(),
     addLayer: jest.fn(),
     addSource: jest.fn(),
     fitBounds: jest.fn(),
@@ -15,6 +17,7 @@ jest.mock("mapbox-gl", () => ({
     }),
     remove: jest.fn(),
   })),
+  NavigationControl: jest.fn(),
 }));
 
 jest.mock("src/utils/countyUtils", () => ({
@@ -106,11 +109,11 @@ describe("AreasServicedMapFromServices", () => {
 
   it("renders loading state initially", async () => {
     render(<AreasServicedMapFromServices services={[mockServiceForMap]} />);
-    expect(screen.getByText("Loading service areas...")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Loading service areas",
+    );
     await waitFor(() => {
-      expect(
-        screen.queryByText("Loading service areas..."),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import { render } from "react-email";
 import { renderConfirmationEmail } from "./emailRenderer";
 import { getJoinOurTeamConfirmationCopy } from "./emailTranslations";

@@ -29,9 +29,8 @@ export interface RequestAProposalInputs {
   projectDetails: string;
   recaptchaToken: string;
   formStartedAt?: number;
+  formId?: string;
   website?: string;
-  emailsToSendNotification?: string[];
-  emailsToBcc?: string[];
 }
 
 const defaultValues: RequestAProposalInputs = {
@@ -47,7 +46,7 @@ const defaultValues: RequestAProposalInputs = {
 export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
   const { fields } = props;
 
-  const { emailsToSendNotification, emailsToBcc } = fields;
+  const { id: formId } = fields;
 
   const t = useTranslations("RequestAProposalForm");
 
@@ -82,8 +81,7 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
           await sendMutation.mutateAsync({
             companyName,
             email,
-            emailsToBcc: emailsToBcc,
-            emailsToSendNotification,
+            formId,
             formStartedAt: formStartedAt.current,
             name,
             phone,

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import { screen } from "src/tests/testUtils";
 import { StatPO } from "./Stat.po";
 

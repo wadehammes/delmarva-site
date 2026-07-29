@@ -1,7 +1,9 @@
 {
   "$schema": "./node_modules/knip/schema.json",
   "tags": ["-lintignore"],
+  "entry": ["jest.config.ts"],
   "ignore": ["src/contentful/types/**", "scripts/**"],
+  "ignoreFiles": ["src/tests/mocks/svgMock.tsx"],
   "ignoreDependencies": ["@svgr/webpack", "jest-mock"],
   "ignoreIssues": {
     "src/api/helpers.ts": ["types", "enumMembers"]

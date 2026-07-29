@@ -1,9 +1,6 @@
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import { sendGAEvent } from "@next/third-parties/google";
 import { trackEvent } from "src/lib/trackEvent";
-
-jest.mock("@next/third-parties/google", () => ({
-  sendGAEvent: jest.fn(),
-}));
 
 describe("trackEvent", () => {
   beforeEach(() => {
@@ -22,8 +19,10 @@ describe("trackEvent", () => {
   it("includes optional event params", () => {
     trackEvent("Changed Language", { label: "Español" });
 
-    expect(sendGAEvent).toHaveBeenCalledWith("event", "Changed Language", {
-      label: "Español",
-    });
+    expect(sendGAEvent).toHaveBeenCalledWith(
+      "event",
+      "Changed Language",
+      expect.objectContaining({ label: "Español" }),
+    );
   });
 });

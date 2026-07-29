@@ -1,3 +1,4 @@
+import { afterEach, describe, expect, it } from "@jest/globals";
 import { isBrowser } from "./browser.helpers";
 
 describe("browser.helpers", () => {

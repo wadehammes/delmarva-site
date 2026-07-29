@@ -103,7 +103,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const { isMounted, addCleanup, removeCleanup } = useDOMCleanup();
 
-  // GSAP cleanup function
   const cleanupGSAP = useCallback(() => {
     if (timelineRef.current) {
       timelineRef.current.kill();
@@ -111,15 +110,12 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     }
   }, []);
 
-  // Memoized animation setup
   const setupAnimation = useCallback(() => {
     const content = contentRef.current;
     if (!content || !isMounted()) return;
 
-    // Kill any existing timeline
     cleanupGSAP();
 
-    // Create a new timeline with optimized settings
     const tl = gsap.timeline({
       defaults: {
         duration: 0.18,
@@ -129,15 +125,22 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     });
     timelineRef.current = tl;
 
-    tl.to(richTextRef.current, {
-      duration: 0.15,
-      ease: "power2.out",
-      force3D: true,
-      opacity: 1,
-      y: 0,
-    })
-      .to(
-        [statsRef.current, statsGridRef.current].filter(Boolean),
+    if (richTextRef.current) {
+      tl.to(richTextRef.current, {
+        duration: 0.15,
+        ease: "power2.out",
+        force3D: true,
+        opacity: 1,
+        y: 0,
+      });
+    }
+
+    const statsContainers = [statsRef.current, statsGridRef.current].filter(
+      (el): el is HTMLDivElement | HTMLDListElement => el != null,
+    );
+    if (statsContainers.length > 0) {
+      tl.to(
+        statsContainers,
         {
           duration: 0.2,
           ease: "power2.out",
@@ -146,9 +149,15 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           y: 0,
         },
         "-=0.12",
-      )
-      .to(
-        statsRef.current?.querySelectorAll(`.${styles.statItem}`) || [],
+      );
+    }
+
+    const listStatEls = statsRef.current?.querySelectorAll(
+      `.${styles.statItem}`,
+    );
+    if (listStatEls && listStatEls.length > 0) {
+      tl.to(
+        listStatEls,
         {
           duration: 0.18,
           ease: "power2.out",
@@ -158,9 +167,14 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           y: 0,
         },
         "-=0.1",
-      )
-      .to(
-        statsGridRef.current?.querySelectorAll('[class*="stat"]') || [],
+      );
+    }
+
+    const gridStatEls =
+      statsGridRef.current?.querySelectorAll('[class*="stat"]');
+    if (gridStatEls && gridStatEls.length > 0) {
+      tl.to(
+        gridStatEls,
         {
           duration: 0.18,
           ease: "power2.out",
@@ -170,8 +184,11 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           y: 0,
         },
         "-=0.1",
-      )
-      .to(
+      );
+    }
+
+    if (ctaRef.current) {
+      tl.to(
         ctaRef.current,
         {
           duration: 0.2,
@@ -181,8 +198,11 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           y: 0,
         },
         "-=0.08",
-      )
-      .to(
+      );
+    }
+
+    if (carouselRef.current) {
+      tl.to(
         carouselRef.current,
         {
           duration: 0.22,
@@ -193,9 +213,9 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
         },
         "-=0.08",
       );
+    }
   }, [isMounted, cleanupGSAP]);
 
-  // Setup animation on mount
   useEffect(() => {
     setupAnimation();
     addCleanup(cleanupGSAP);
@@ -206,14 +226,12 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     };
   }, [setupAnimation, addCleanup, removeCleanup, cleanupGSAP]);
 
-  // Cleanup on locale change
   useEffect(() => {
     return () => {
       cleanupGSAP();
     };
   }, [cleanupGSAP]);
 
-  // Memoized accordion toggle handler
   const handleAccordionToggle = useCallback(
     (isOpen: boolean) => {
       setIsAccordionOpen(isOpen);
@@ -221,7 +239,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       if (!timelineRef.current || !isMounted()) return;
 
       if (isOpen) {
-        // Set initial hidden state when opening
         gsap.set(
           [
             richTextRef.current,
@@ -229,7 +246,7 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
             statsGridRef.current,
             ctaRef.current,
             carouselRef.current,
-          ],
+          ].filter((el): el is HTMLDivElement | HTMLDListElement => el != null),
           {
             force3D: true,
             opacity: 0,
@@ -237,7 +254,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           },
         );
 
-        // Hide individual stat items initially
         if (statsRef.current) {
           gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
             force3D: true,
@@ -246,7 +262,6 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
           });
         }
 
-        // Hide individual stat components in grid initially
         if (statsGridRef.current) {
           gsap.set(statsGridRef.current.querySelectorAll('[class*="stat"]'), {
             force3D: true,
@@ -260,11 +275,8 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
             timelineRef.current.play();
           }
         });
-      } else {
-        // Reverse immediately when closing
-        if (timelineRef.current) {
-          timelineRef.current.reverse();
-        }
+      } else if (timelineRef.current) {
+        timelineRef.current.reverse();
       }
     },
     [isMounted],

@@ -3,12 +3,10 @@ export async function blobToBase64(blob: Blob): Promise<string> {
   return Buffer.from(arrayBuffer).toString("base64");
 }
 
-// Helper function to get file extension from filename
 export function getFileExtension(filename: string): string {
   return filename.split(".").pop()?.toLowerCase() || "txt";
 }
 
-// Helper function to get MIME type from file extension
 export function getMimeType(extension: string): string {
   const mimeTypes: Record<string, string> = {
     doc: "application/msword",
@@ -26,5 +24,14 @@ export function getNotificationTo(
   if (process.env.ENVIRONMENT === "local" && devTo) {
     return devTo;
   }
+
+  const testRecipients = process.env.RESEND_TEST_RECIPIENTS?.trim();
+  if (process.env.ENVIRONMENT === "staging" && testRecipients) {
+    return testRecipients
+      .split(",")
+      .map((email) => email.trim())
+      .filter(Boolean);
+  }
+
   return productionTo;
 }

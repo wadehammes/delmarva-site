@@ -1,3 +1,4 @@
+import { describe, expect, it } from "@jest/globals";
 import { buildCanonicalUrl, buildOpenGraphLocale } from "src/i18n/localeUtils";
 
 describe("localeUtils", () => {

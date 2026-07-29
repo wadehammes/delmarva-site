@@ -1,46 +1,53 @@
 # Hooks
 
-This directory contains custom React hooks used throughout the application.
+Custom React hooks and form mutation hooks used across the app. Handbook overview: [docs/handbook/source-layout.md](../../docs/handbook/source-layout.md).
 
-## Available Hooks
-
-### useModal
-
-A custom hook for managing modal state with open, close, and toggle functions.
-
-#### Usage
-
-```tsx
-import { useModal } from "src/hooks/useModal";
-
-const MyComponent = () => {
-  const { isOpen, open, close, toggle } = useModal();
-
-  return (
-    <div>
-      <button onClick={open}>Open Modal</button>
-      <button onClick={close}>Close Modal</button>
-      <button onClick={toggle}>Toggle Modal</button>
-      
-      {isOpen && <Modal onClose={close}>Content</Modal>}
-    </div>
-  );
-};
-```
-
-#### API
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `isOpen` | `boolean` | Current modal visibility state |
-| `open` | `() => void` | Function to open the modal |
-| `close` | `() => void` | Function to close the modal |
-| `toggle` | `() => void` | Function to toggle modal state |
-
-### useHash
-
-Hook for managing URL hash state.
+## Browser and lifecycle
 
 ### useIsBrowser
 
-Hook to detect if code is running in the browser environment.
+Returns **`true`** after client mount (via **`useLayoutEffect`**). Use to gate browser-only APIs or avoid SSR mismatches.
+
+### useDOMCleanup
+
+From [useIsBrowser.ts](./useIsBrowser.ts). Tracks mount state and registers cleanup callbacks—used by GSAP accordions to kill timelines on unmount or locale change.
+
+| Method | Description |
+|--------|-------------|
+| **`isMounted()`** | Whether the component is still mounted |
+| **`addCleanup(fn)`** | Register a cleanup function |
+| **`removeCleanup(fn)`** | Unregister a cleanup function |
+
+## Visibility and UI state
+
+### useOptimizedInView
+
+Intersection Observer wrapper for performant in-view detection. Powers **Stat** ticker animation when **`trigger`** is not passed explicitly.
+
+### useModal
+
+Local open/close/toggle state for simple modals.
+
+### useHash
+
+Syncs component state with the URL hash.
+
+### useProjectModal
+
+Jotai-backed project modal (open project by slug). See **`src/atoms/`**.
+
+### useServerLocale
+
+Reads the active locale in client components under localized layouts.
+
+## Form mutations
+
+Thin **`useMutation`** wrappers in **`src/hooks/mutations/`**—each calls **`api.*`** from [src/api/urls.ts](../api/urls.ts):
+
+| File | Form |
+|------|------|
+| [useSendGeneralInquiryForm.mutation.ts](./mutations/useSendGeneralInquiryForm.mutation.ts) | General Inquiry |
+| [useSendRequestAProposalForm.mutation.ts](./mutations/useSendRequestAProposalForm.mutation.ts) | Request a Proposal |
+| [useSendJoinOurTeamForm.mutation.ts](./mutations/useSendJoinOurTeamForm.mutation.ts) | Join Our Team |
+
+Keep side effects (toasts, navigation) at the call site when possible. See [docs/handbook/patterns.md](../../docs/handbook/patterns.md).

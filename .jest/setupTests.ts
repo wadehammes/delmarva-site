@@ -1,4 +1,12 @@
-import "@testing-library/jest-dom";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  jest,
+} from "@jest/globals";
+import "@testing-library/jest-dom/jest-globals";
+import { cleanup } from "@testing-library/react";
 import { setupIntersectionObserverMock } from "src/tests/mocks/mockIntersectionObserver";
 import { setupMockMatchMedia } from "src/tests/mocks/mockMatchMedia";
 import { mockedUseRouterReturnValue } from "src/tests/mocks/mockNextRouter";
@@ -7,49 +15,12 @@ jest.mock("next/router", () => ({
   useRouter: () => mockedUseRouterReturnValue,
 }));
 
-// Mock next-intl to avoid ESM module issues
 jest.mock("next-intl", () => ({
   NextIntlClientProvider: ({ children }: { children: React.ReactNode }) =>
     children,
   useLocale: () => "en",
   useTranslations: () => (key: string) => key,
 }));
-
-jest.mock("next-intl/navigation", () => {
-  const React = require("react");
-  return {
-    createNavigation: () => ({
-      Link: React.forwardRef(
-        (
-          { children, ...props }: { children: React.ReactNode },
-          _ref: React.Ref<HTMLAnchorElement>,
-        ) => React.createElement("a", props, children),
-      ),
-      redirect: jest.fn(),
-      usePathname: () => "/",
-      useRouter: () => ({
-        back: jest.fn(),
-        forward: jest.fn(),
-        prefetch: jest.fn(),
-        push: jest.fn(),
-        refresh: jest.fn(),
-        replace: jest.fn(),
-      }),
-    }),
-    notFound: jest.fn(),
-    redirect: jest.fn(),
-    usePathname: () => "/",
-    useRouter: () => ({
-      back: jest.fn(),
-      forward: jest.fn(),
-      prefetch: jest.fn(),
-      push: jest.fn(),
-      refresh: jest.fn(),
-      replace: jest.fn(),
-    }),
-    useSearchParams: () => new URLSearchParams(),
-  };
-});
 
 jest.mock("next-intl/routing", () => ({
   defineRouting: (config: {
@@ -59,19 +30,27 @@ jest.mock("next-intl/routing", () => ({
   }) => config,
 }));
 
-// Mock fetch globally
-global.fetch = jest.fn();
+jest.mock("@next/third-parties/google", () => ({
+  GoogleAnalytics: () => null,
+  sendGAEvent: jest.fn(),
+}));
 
-global.beforeAll(() => {
+global.fetch = jest.fn<typeof fetch>();
+
+beforeAll(() => {
   setupIntersectionObserverMock();
   setupMockMatchMedia();
 });
 
-global.beforeEach(() => {
+beforeEach(() => {
   jest.clearAllTimers();
   jest.clearAllMocks();
 });
 
-global.afterAll(() => {
+afterEach(() => {
+  cleanup();
+});
+
+afterAll(() => {
   jest.resetAllMocks();
 });

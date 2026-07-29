@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import type { ContentRecentNewsEntry } from "src/contentful/getContentRecentNews";
 import {
   hasRecentNews,

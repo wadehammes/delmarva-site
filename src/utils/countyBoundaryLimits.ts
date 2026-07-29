@@ -1,0 +1,2 @@
+export const MAX_COUNTIES_PER_REQUEST = 100;
+export const MAX_COUNTY_NAME_LENGTH = 120;

@@ -5,12 +5,12 @@ import {
   renderNotificationEmail,
 } from "src/lib/emailRenderer";
 import { parseEmailLocale } from "src/lib/emailTranslations";
+import { resolveFormNotificationRecipients } from "src/lib/formNotificationRecipients";
 import { US_STATES_MAP } from "src/utils/constants";
 import {
   blobToBase64,
   getFileExtension,
   getMimeType,
-  getNotificationTo,
 } from "src/utils/emailHelpers";
 import {
   checkFormSubmissionSpam,
@@ -30,11 +30,6 @@ function parseFormData(formData: FormData): JoinOurTeamInputs {
   const workEligibilityRaw = getString("workEligibility");
   const workEligibility =
     workEligibilityRaw === "true" || workEligibilityRaw !== "false";
-  const emailsRaw = get("emailsToSendNotification");
-  const emailsToSendNotification =
-    typeof emailsRaw === "string" && emailsRaw
-      ? (JSON.parse(emailsRaw) as string[])
-      : undefined;
   const formStartedAtRaw = getString("formStartedAt");
   const formStartedAt = formStartedAtRaw
     ? Number.parseInt(formStartedAtRaw, 10)
@@ -45,7 +40,7 @@ function parseFormData(formData: FormData): JoinOurTeamInputs {
     city: getString("city"),
     coverLetter: (get("coverLetter") as File | null) ?? null,
     email: getString("email"),
-    emailsToSendNotification,
+    formId: getString("formId") || undefined,
     formStartedAt,
     locale: (() => {
       const localeRaw = getString("locale");
@@ -120,14 +115,12 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Prepare email attachments
     const attachments: Array<{
       filename: string;
       content: string;
       contentType: string;
     }> = [];
 
-    // Add resume attachment if provided
     if (resume instanceof Blob && resume.size > 0) {
       try {
         const resumeBase64 = await blobToBase64(resume);
@@ -145,7 +138,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // Add cover letter attachment if provided
     if (coverLetter instanceof Blob && coverLetter.size > 0) {
       try {
         const coverLetterBase64 = await blobToBase64(coverLetter);
@@ -164,7 +156,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // Render the notification email using React Email
     const notificationEmail = await renderNotificationEmail({
       address,
       briefDescription,
@@ -181,16 +172,15 @@ export async function POST(request: Request) {
         resume instanceof Blob && resume.size > 0
           ? "File attached"
           : "No resume provided",
-      state: stateName, // Use the full state name
+      state: stateName,
       workEligibility: workEligibility ? "Yes" : "No",
       zipCode,
     });
 
-    const notificationTo = getNotificationTo(
-      res.emailsToSendNotification && res.emailsToSendNotification.length > 0
-        ? res.emailsToSendNotification
-        : fallbackNotificationTo,
-    );
+    const { to: notificationTo } = await resolveFormNotificationRecipients({
+      fallbackTo: fallbackNotificationTo,
+      formId: res.formId,
+    });
 
     const data = await resend.emails.send({
       attachments: attachments.length > 0 ? attachments : undefined,

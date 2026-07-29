@@ -1,7 +1,7 @@
 "use client";
 
 import mapboxgl from "mapbox-gl";
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import clsx from "clsx";
 import type { ServiceType } from "src/contentful/getServices";
@@ -21,6 +21,7 @@ import {
   type ServiceArea,
 } from "src/utils/serviceAreaUtils";
 import styles from "./AreasServicedMap.module.css";
+import { AreasServicedMapLoadingOverlay } from "./AreasServicedMapLoadingOverlay.component";
 
 const DEFAULT_CENTER: [number, number] = [-78, 39.5];
 const DEFAULT_ZOOM = 9.0;
@@ -103,6 +104,7 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
   const mapboxAccessToken = process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN;
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
   const [state, dispatch] = useReducer(areasReducer, {
     status: "loading",
   });
@@ -110,6 +112,14 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
   const isLoading = state.status === "loading";
   const serviceAreasWithGeoJSON =
     state.status === "success" ? state.serviceAreasWithGeoJSON : [];
+  const showLoadingOverlay =
+    isLoading || (serviceAreasWithGeoJSON.length > 0 && !isMapReady);
+
+  useEffect(() => {
+    if (isLoading) {
+      setIsMapReady(false);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -202,13 +212,13 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
               ...FIT_BOUNDS_OPTIONS,
               duration: 0,
             });
-          } catch {
-            // Silently ignore bounds fitting errors
-          }
+          } catch {}
         }
       } catch (error) {
         console.error("[Map] Error adding boundary layers:", error);
       }
+
+      setIsMapReady(true);
     });
 
     return () => {
@@ -216,6 +226,7 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
         map.current.remove();
         map.current = null;
       }
+      setIsMapReady(false);
     };
   }, [
     mapboxAccessToken,
@@ -244,12 +255,7 @@ export const AreasServicedMap = (props: AreasServicedMapProps) => {
   return (
     <div className={clsx(styles.wrapper, className)}>
       <div className={styles.container}>
-        {isLoading && (
-          <div className={styles.loadingOverlay}>
-            <div className={styles.loadingSpinner} />
-            <p>Loading service areas...</p>
-          </div>
-        )}
+        {showLoadingOverlay && <AreasServicedMapLoadingOverlay />}
         <div
           className={styles.map}
           ref={mapContainer}

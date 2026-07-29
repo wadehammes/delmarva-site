@@ -15,7 +15,7 @@ Each type module exports an **`isType…(entry)`** guard (e.g. **`isTypeContentH
 
 **Getters** are async functions that use the Contentful client (and caching helpers where applicable).
 
-- **Examples**: [getPages.ts](../../src/contentful/getPages.ts) (`fetchPage`, etc.), [getNavigation.ts](../../src/contentful/getNavigation.ts), [getFooter.ts](../../src/contentful/getFooter.ts), [getServices.ts](../../src/contentful/getServices.ts), [getProjects.ts](../../src/contentful/getProjects.ts), [getMarkets.ts](../../src/contentful/getMarkets.ts).
+- **Examples**: [getPages.ts](../../src/contentful/getPages.ts) (`fetchPage`, etc.), [getNavigation.ts](../../src/contentful/getNavigation.ts), [getFooter.ts](../../src/contentful/getFooter.ts), [getServices.ts](../../src/contentful/getServices.ts), [getProjects.ts](../../src/contentful/getProjects.ts), [getMarkets.ts](../../src/contentful/getMarkets.ts), [getFormEntry.ts](../../src/contentful/getFormEntry.ts) (`fetchFormRecipients` for Resend notification routing).
 - **Preview**: Pass `preview: true` when **draft mode** is enabled so unpublished content loads.
 - **Pagination**: List fetches use **`CONTENTFUL_BATCH_LIMIT`** (500) from [contentfulPagination.ts](../../src/contentful/contentfulPagination.ts) per `getEntries` page. Single-entry queries keep **`limit: 1`** where appropriate.
 
@@ -43,6 +43,8 @@ Heavy UI pieces are imported from **[ContentRendererRegistry.tsx](../../src/comp
 3. Register the component in **ContentRendererRegistry** (dynamic import) if it should lazy-load.
 4. Add a **`case`** in **ContentRenderer** that parses the entry and returns the component with the parsed props.
 5. If the block appears inside a section’s **`content`** array, ensure the Contentful model allows it there; no extra wiring is needed beyond the content type id in the switch.
+
+**Client-only example:** **`contentAreasServicedMap`** parses via [parseContentAreasServicedMap.ts](../../src/contentful/parseContentAreasServicedMap.ts), renders through **`ContentAreasServicedMapClient`** with **`ssr: false`**, and is wrapped in **`MapErrorBoundary`** in **ContentRenderer**. See [components.md](components.md).
 
 ## Rich Text
 
