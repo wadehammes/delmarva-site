@@ -1,5 +1,3 @@
-import type { Config } from "stylelint";
-
 export default {
   extends: ["stylelint-config-standard", "stylelint-config-css-modules"],
   overrides: [
@@ -39,4 +37,4 @@ export default {
       },
     ],
   },
-} satisfies Config;
+};

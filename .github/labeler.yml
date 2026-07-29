@@ -25,7 +25,7 @@ configuration:
           - biome.json
           - jest.config.js
           - tsconfig.json
-          - stylelint.config.ts
+          - stylelint.config.mjs
           - knip.json
 
 dependencies:
