@@ -42,7 +42,7 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId();
 
   return (
-    <html data-theme="dark" lang={locale}>
+    <html data-scroll-behavior="smooth" data-theme="dark" lang={locale}>
       {googleAnalyticsMeasurementId ? (
         <GoogleAnalytics gaId={googleAnalyticsMeasurementId} />
       ) : null}

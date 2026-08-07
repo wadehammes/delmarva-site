@@ -1,192 +1,5 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
-import type { RuleSetRule } from "webpack";
-
-const withNextIntl = createNextIntlPlugin();
-
-const nextConfig: NextConfig = withNextIntl({
-  // Performance optimizations
-  compress: true,
-
-  experimental: {
-    // Optimize package imports to reduce bundle size
-    optimizePackageImports: [
-      "@contentful/rich-text-react-renderer",
-      "swiper",
-      "gsap",
-      "react-intersection-observer",
-    ],
-  },
-
-  // Optimized headers with better caching
-  async headers() {
-    try {
-      const isProduction = process.env.NODE_ENV === "production";
-      const htmlCacheControl = isProduction
-        ? "public, max-age=2592000, stale-while-revalidate=86400"
-        : "public, max-age=0, must-revalidate";
-
-      return [
-        {
-          headers: [
-            {
-              key: "Cache-Control",
-              value: htmlCacheControl,
-            },
-            ...securityHeaders,
-          ],
-          source: "/",
-        },
-        {
-          headers: [
-            {
-              key: "Cache-Control",
-              value: htmlCacheControl,
-            },
-            ...securityHeaders,
-          ],
-          source: "/:path*",
-        },
-        {
-          headers: [
-            {
-              key: "Cache-Control",
-              value: "public, max-age=3600, stale-while-revalidate=86400",
-            },
-          ],
-          source: "/api/(.*)",
-        },
-      ];
-    } catch (error) {
-      console.error("Error in headers:", error);
-      return [];
-    }
-  },
-
-  // Optimized image configuration for Next.js 16.1
-  images: {
-    // Enable dangerous allow SVG for better optimization (if needed)
-    dangerouslyAllowSVG: false,
-    // Optimize device sizes for better performance and reduced bundle size
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    formats: ["image/webp", "image/avif"],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 31536000, // 1 year
-    remotePatterns: [
-      {
-        hostname: "images.ctfassets.net",
-        pathname: "/**",
-        port: "",
-        protocol: "https",
-      },
-      {
-        hostname: "downloads.ctfassets.net",
-        pathname: "/**",
-        port: "",
-        protocol: "https",
-      },
-      {
-        hostname: "videos.ctfassets.net",
-        pathname: "/**",
-        port: "",
-        protocol: "https",
-      },
-      {
-        hostname: "via.placeholder.com",
-        pathname: "/**",
-        port: "",
-        protocol: "https",
-      },
-      {
-        hostname: "api.mapbox.com",
-        pathname: "/styles/v1/**",
-        port: "",
-        protocol: "https",
-      },
-    ],
-  },
-  outputFileTracingExcludes: {
-    "*": [
-      "node_modules/@swc/core-linux-x64-gnu",
-      "node_modules/@swc/core-linux-x64-musl",
-      "node_modules/@esbuild/linux-x64",
-    ],
-  },
-  // Optimize output file tracing to reduce build size and improve cold starts
-  outputFileTracingIncludes: {
-    "/api/**/*": ["./node_modules/**/*.wasm"],
-  },
-  poweredByHeader: false,
-
-  // Build optimizations
-  productionBrowserSourceMaps: process.env.NODE_ENV === "development",
-  reactStrictMode: true,
-
-  // Optimized redirects
-  async redirects() {
-    try {
-      if (process.env.ENVIRONMENT === "production") {
-        return [...productionRedirects, ...sharedRedirects];
-      }
-
-      return sharedRedirects;
-    } catch (error) {
-      console.error("Error in redirects:", error);
-      return [];
-    }
-  },
-
-  trailingSlash: false,
-  // Note: Turbopack file system caching is enabled by default in Next.js 16.1
-  turbopack: {
-    rules: {
-      "*.svg": {
-        as: "*.js",
-        loaders: [
-          {
-            loader: "@svgr/webpack",
-            options: { svgo: false },
-          },
-        ],
-      },
-    },
-  },
-  webpack(config, { isServer }) {
-    try {
-      // Resolve symlinks properly for pnpm in serverless environments
-      if (isServer) {
-        config.resolve.symlinks = true;
-      }
-
-      const fileLoaderRule = config.module.rules.find(
-        (rule: RuleSetRule) =>
-          rule.test instanceof RegExp && rule.test.test(".svg"),
-      );
-
-      if (fileLoaderRule) {
-        // SVG optimization - simplified
-        config.module.rules.push({
-          issuer: fileLoaderRule.issuer,
-          test: /\.svg$/i,
-          use: {
-            loader: "@svgr/webpack",
-            options: {
-              svgo: false,
-            },
-          },
-        });
-
-        // Modify the file loader rule to ignore *.svg
-        fileLoaderRule.exclude = /\.svg$/i;
-      }
-
-      return config;
-    } catch (error) {
-      console.error("Error in webpack configuration:", error);
-      return config;
-    }
-  },
-});
 
 // Redirect test and home slug pages on Production
 const sources = ["/:slug(test-page.*)"];
@@ -522,7 +335,7 @@ const scriptSrc = [
   "*.facebook.com",
 ];
 
-const ContentSecurityPolicy = `
+const ContentSecurityPolicy: string = `
   default-src 'self';
   script-src ${scriptSrc.join(" ")};
   child-src *.youtube.com *.vimeo.com *.google.com *.twitter.com vercel.live *.googletagmanager.com;
@@ -581,5 +394,155 @@ const securityHeaders = [
     value: "1; mode=block",
   },
 ];
+
+const withNextIntl = createNextIntlPlugin();
+
+const nextConfig: NextConfig = withNextIntl({
+  // Performance optimizations
+  compress: true,
+
+  experimental: {
+    // Optimize package imports to reduce bundle size
+    optimizePackageImports: [
+      "@contentful/rich-text-react-renderer",
+      "swiper",
+      "gsap",
+      "react-intersection-observer",
+    ],
+  },
+
+  // Optimized headers with better caching
+  async headers() {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+      const htmlCacheControl = isProduction
+        ? "public, max-age=2592000, stale-while-revalidate=86400"
+        : "public, max-age=0, must-revalidate";
+
+      return [
+        {
+          headers: [
+            {
+              key: "Cache-Control",
+              value: htmlCacheControl,
+            },
+            ...securityHeaders,
+          ],
+          source: "/",
+        },
+        {
+          headers: [
+            {
+              key: "Cache-Control",
+              value: htmlCacheControl,
+            },
+            ...securityHeaders,
+          ],
+          source: "/:path*",
+        },
+        {
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "public, max-age=3600, stale-while-revalidate=86400",
+            },
+          ],
+          source: "/api/(.*)",
+        },
+      ];
+    } catch (error) {
+      console.error("Error in headers:", error);
+      return [];
+    }
+  },
+
+  // Optimized image configuration for Next.js 16.1
+  images: {
+    // Enable dangerous allow SVG for better optimization (if needed)
+    dangerouslyAllowSVG: false,
+    // Optimize device sizes for better performance and reduced bundle size
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    formats: ["image/webp", "image/avif"],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 31536000, // 1 year
+    remotePatterns: [
+      {
+        hostname: "images.ctfassets.net",
+        pathname: "/**",
+        port: "",
+        protocol: "https",
+      },
+      {
+        hostname: "downloads.ctfassets.net",
+        pathname: "/**",
+        port: "",
+        protocol: "https",
+      },
+      {
+        hostname: "videos.ctfassets.net",
+        pathname: "/**",
+        port: "",
+        protocol: "https",
+      },
+      {
+        hostname: "via.placeholder.com",
+        pathname: "/**",
+        port: "",
+        protocol: "https",
+      },
+      {
+        hostname: "api.mapbox.com",
+        pathname: "/styles/v1/**",
+        port: "",
+        protocol: "https",
+      },
+    ],
+  },
+  outputFileTracingExcludes: {
+    "*": [
+      "node_modules/@swc/core-linux-x64-gnu",
+      "node_modules/@swc/core-linux-x64-musl",
+      "node_modules/@esbuild/linux-x64",
+    ],
+  },
+  // Optimize output file tracing to reduce build size and improve cold starts
+  outputFileTracingIncludes: {
+    "/api/**/*": ["./node_modules/**/*.wasm"],
+  },
+  poweredByHeader: false,
+
+  // Build optimizations
+  productionBrowserSourceMaps: process.env.NODE_ENV === "development",
+  reactStrictMode: true,
+
+  // Optimized redirects
+  async redirects() {
+    try {
+      if (process.env.ENVIRONMENT === "production") {
+        return [...productionRedirects, ...sharedRedirects];
+      }
+
+      return sharedRedirects;
+    } catch (error) {
+      console.error("Error in redirects:", error);
+      return [];
+    }
+  },
+
+  trailingSlash: false,
+  turbopack: {
+    rules: {
+      "*.svg": {
+        as: "*.js",
+        loaders: [
+          {
+            loader: "@svgr/webpack",
+            options: { svgo: false },
+          },
+        ],
+      },
+    },
+  },
+});
 
 export default nextConfig;

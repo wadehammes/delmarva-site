@@ -27,7 +27,7 @@ Run the same commands locally before pushing when possible.
 
 | Script | Purpose |
 |--------|---------|
-| `pnpm dev` | Next dev server (port **5656**, webpack) |
+| `pnpm dev` | Next dev server (port **5656**, Turbopack) |
 | `pnpm dev:debug` | Dev server with Node inspector |
 | `pnpm build` / `pnpm start` | Production build and serve |
 | `pnpm build:analyze` | Production build with bundle analyzer |

@@ -2,7 +2,6 @@
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "declaration": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -21,7 +20,7 @@
     "noEmit": true,
     "paths": {
       "src/*": [
-        "src/*"
+        "./src/*"
       ]
     },
     "resolveJsonModule": true,
@@ -57,7 +56,6 @@
   ],
   "exclude": [
     "node_modules",
-    "next.config.ts",
     ".next/types/validator.ts"
   ]
 }
