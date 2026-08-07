@@ -28,7 +28,7 @@ House style for TypeScript, React, CSS, and tests. When in doubt, mirror a nearb
 - `pnpm lint:fix` — fix and format writes
 - `pnpm lint:ci` — CI mode with GitHub reporter
 
-**Stylelint** ([stylelint.config.ts](../../stylelint.config.ts)) checks CSS Modules and global styles:
+**Stylelint** ([stylelint.config.mjs](../../stylelint.config.mjs)) checks CSS Modules and global styles:
 
 - `pnpm lint:css` — check (same as CI)
 - `pnpm lint:css:fix` — auto-fix where supported

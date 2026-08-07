@@ -106,7 +106,7 @@ flowchart TB
 
 ## Config and deployment
 
-- **[next.config.ts](../../next.config.ts)** — **`headers`** (cache + security/CSP), **`images.remotePatterns`**, redirects, webpack/turbopack (e.g. SVGR). **Do not** add an **`env`** block—see [platform.md](platform.md).
+- **[next.config.ts](../../next.config.ts)** — **`headers`** (cache + security/CSP), **`images.remotePatterns`**, redirects, Turbopack (e.g. SVGR). **Do not** add an **`env`** block—see [platform.md](platform.md).
 - **CI**: [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) — full pipeline in [platform.md](platform.md).
 
 More: [platform.md](platform.md).
