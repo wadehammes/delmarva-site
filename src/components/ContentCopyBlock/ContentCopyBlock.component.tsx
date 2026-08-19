@@ -2,7 +2,6 @@
 
 import clsx from "clsx";
 import { forwardRef, type Ref } from "react";
-import { useObjectRef } from "react-aria";
 import styles from "src/components/ContentCopyBlock/ContentCopyBlock.module.css";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
@@ -20,7 +19,6 @@ export const ContentCopyBlock = forwardRef<
   ContentCopyBlockProps
 >((props, ref: Ref<HTMLDivElement>) => {
   const { fields } = props;
-  const divRef = useObjectRef(ref);
 
   if (!fields) {
     return null;
@@ -63,7 +61,7 @@ export const ContentCopyBlock = forwardRef<
         [styles.desktopAlignRight]: fields.alignment === Alignment.Right,
       })}
       id={slug || id}
-      ref={divRef}
+      ref={ref}
     >
       {copyEyebrow ? (
         <div className={styles.copyEyebrow}>

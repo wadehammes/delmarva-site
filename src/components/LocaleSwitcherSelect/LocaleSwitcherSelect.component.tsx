@@ -1,16 +1,16 @@
 "use client";
 
+import { Select } from "@base-ui/react/select";
 import { useParams } from "next/navigation";
-import {
-  type ChangeEvent,
-  useCallback,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { useCallback, useRef, useState, useTransition } from "react";
 import styles from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.module.css";
 import type { Locales } from "src/i18n/routing";
-import { routing, usePathname, useRouter } from "src/i18n/routing";
+import {
+  replacePageLocale,
+  routing,
+  usePathname,
+  useRouter,
+} from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
 import { trackEvent } from "src/lib/trackEvent";
 
@@ -29,6 +29,11 @@ const ariaDescription: Record<Locales, string> = {
   es: "Elige tu idioma preferido para navegar por este sitio web",
 };
 
+const LOCALE_ITEMS = routing.locales.map((locale) => ({
+  label: localeLabel[locale],
+  value: locale,
+}));
+
 export const LocaleSwitcherSelect = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -42,7 +47,9 @@ export const LocaleSwitcherSelect = () => {
   );
 
   const announce = useCallback((message: string) => {
-    if (clearTimerRef.current) clearTimeout(clearTimerRef.current);
+    if (clearTimerRef.current) {
+      clearTimeout(clearTimerRef.current);
+    }
     setAnnouncement(message);
     if (message) {
       clearTimerRef.current = setTimeout(() => {
@@ -52,30 +59,23 @@ export const LocaleSwitcherSelect = () => {
     }
   }, []);
 
-  const onSelectChange = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>) => {
-      const nextLocale = event.target.value as Locales;
-
-      // Prevent multiple rapid locale switches
-      if (isPending || nextLocale === currentLocale) {
+  const handleValueChange = useCallback(
+    (nextLocale: string | null) => {
+      if (!nextLocale || isPending || nextLocale === currentLocale) {
         return;
       }
 
-      announce("Changing language, please wait...");
+      const locale = nextLocale as Locales;
 
-      trackEvent("Changed Language", { label: localeLabel[nextLocale] });
+      announce("Changing language, please wait...");
+      trackEvent("Changed Language", { label: localeLabel[locale] });
 
       startTransition(() => {
         try {
-          // @ts-expect-error -- TypeScript will validate that only known `params`
-          // are used in combination with a given `pathname`. Since the two will
-          // always match for the current route, we can skip runtime checks.
-          router.replace({ params, pathname }, { locale: nextLocale });
-
-          announce(`Language changed to ${localeLabel[nextLocale]}`);
+          replacePageLocale(router, pathname, params, locale);
+          announce(`Language changed to ${localeLabel[locale]}`);
         } catch (error) {
           console.error("Error during locale switch:", error);
-          event.target.value = currentLocale as string;
           announce("Error changing language. Please try again.");
         }
       });
@@ -83,67 +83,70 @@ export const LocaleSwitcherSelect = () => {
     [router, params, pathname, currentLocale, isPending, announce],
   );
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLSelectElement>) => {
-      // Allow space and enter to open the select
-      if (event.key === " " || event.key === "Enter") {
-        event.preventDefault();
-        event.currentTarget.focus();
-      }
-    },
-    [],
-  );
-
-  // Generate stable IDs that work consistently across server and client
   const selectId = "locale-switcher-select";
   const srId = "locale-switcher-description";
 
   return (
     <div className={styles.localeSwitcherSelectWrapper}>
-      {/* Screen reader announcement region */}
       <output aria-atomic="true" aria-live="polite" className="sr-only">
         {announcement}
       </output>
 
-      <label className="sr-only" htmlFor="locale-select">
+      <label className="sr-only" htmlFor={selectId}>
         {ariaLabel[currentLocale]}
       </label>
 
-      <select
-        aria-busy={isPending}
-        aria-describedby={srId}
-        aria-label={ariaLabel[currentLocale]}
-        className={styles.localeSwitcherSelect}
-        defaultValue={currentLocale}
+      <Select.Root
         disabled={isPending}
-        id={selectId}
-        onChange={onSelectChange}
-        onKeyDown={handleKeyDown}
+        items={LOCALE_ITEMS}
+        onValueChange={handleValueChange}
+        value={currentLocale}
       >
-        {routing.locales.map((locale) => (
-          <option
-            aria-selected={locale === currentLocale}
-            key={locale}
-            value={locale}
+        <Select.Trigger
+          aria-busy={isPending}
+          aria-describedby={srId}
+          aria-label={ariaLabel[currentLocale]}
+          className={styles.trigger}
+          id={selectId}
+        >
+          <Select.Value />
+        </Select.Trigger>
+
+        <span
+          aria-hidden="true"
+          className={styles.selectChevron}
+          role="presentation"
+        >
+          <ChevronDown />
+        </span>
+
+        <Select.Portal>
+          <Select.Positioner
+            alignItemWithTrigger={false}
+            className={styles.positioner}
+            sideOffset={4}
           >
-            {localeLabel[locale]}
-          </option>
-        ))}
-      </select>
+            <Select.Popup className={styles.popup}>
+              <Select.List className={styles.list}>
+                {LOCALE_ITEMS.map((item) => (
+                  <Select.Item
+                    className={styles.item}
+                    key={item.value}
+                    value={item.value}
+                  >
+                    <Select.ItemText>{item.label}</Select.ItemText>
+                  </Select.Item>
+                ))}
+              </Select.List>
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Root>
 
       <div className="sr-only" id={srId}>
         {ariaDescription[currentLocale]}
       </div>
 
-      <span
-        aria-hidden="true"
-        className={styles.selectChevron}
-        role="presentation"
-      >
-        <ChevronDown />
-      </span>
-
-      {/* Loading indicator for screen readers */}
       {isPending ? (
         <span aria-live="polite" className="sr-only">
           Loading new language...

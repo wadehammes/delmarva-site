@@ -64,6 +64,10 @@ If you add client-side **`useQuery`**, put it in a dedicated hook file under **`
 ## Forms
 
 - **react-hook-form** for local form state; **reCAPTCHA** where required (**`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`** via [publicEnv.ts](../../src/utils/publicEnv.ts)—see [integrations.md](integrations.md)).
+- Set **`noValidate`** on every **`<form>`** so the browser does not block submit with native tooltips—validation is handled by react-hook-form and styled field components.
+- Read validation state with **`useFormState({ control })`** (not a one-time **`formState`** destructure) so **`errors`** update after a failed submit.
+- Use **translated rule messages** (e.g. **`required: t("messages.fieldRequired")`**, not bare **`required: true`**) so **`FieldErrorMessage`** can render copy; react-hook-form’s boolean **`required`** rule leaves **`message`** empty.
+- Do **not** pass native **`required`** on **`Select`** / **`FileInput`** when the same field already has a Controller **`rules`** entry—RHF owns validation; native **`required`** can still trigger browser UI if **`noValidate`** is missing.
 - **Submit** via **mutation hooks** → **`api.*`** → Resend (or other) **Route Handlers** under **`src/app/api/resend/`**.
 - **Notification recipients** come from Contentful by **`formId`** on the server ([formNotificationRecipients.ts](../../src/lib/formNotificationRecipients.ts), [getFormEntry.ts](../../src/contentful/getFormEntry.ts)). Do **not** accept **`to`** / **`bcc`** lists from the client request body.
 

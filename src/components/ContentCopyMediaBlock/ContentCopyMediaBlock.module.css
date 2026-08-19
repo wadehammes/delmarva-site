@@ -69,3 +69,15 @@
     }
   }
 }
+
+.copyFirstMobile {
+  @media (width < 900px) {
+    .copyBlock {
+      order: 1;
+    }
+
+    .mediaBlock {
+      order: 2;
+    }
+  }
+}

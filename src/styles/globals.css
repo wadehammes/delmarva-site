@@ -137,6 +137,10 @@ body {
   }
 }
 
+.appRoot {
+  isolation: isolate;
+}
+
 .draftMode {
   position: fixed;
   right: var(--default-padding);

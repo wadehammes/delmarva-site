@@ -128,11 +128,9 @@ export const ProjectCard = (props: ProjectCardProps) => {
           </div>
         </div>
       </button>
-      <ProjectModal
-        isOpen={modal.isOpen}
-        onClose={modal.close}
-        project={project}
-      />
+      {!syncUrlOnOpen && modal.isOpen ? (
+        <ProjectModal isOpen onClose={modal.close} project={project} />
+      ) : null}
     </>
   );
 };

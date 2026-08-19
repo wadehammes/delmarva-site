@@ -196,6 +196,6 @@ This README focuses on **machine setup**, **release tagging**, env keys, package
 - [VideoPlayer Component](src/components/VideoPlayer/README.md)
 - [Hooks](src/hooks/README.md)
 - [Resend Email Templates](src/lib/README.md)
-- [UI Button Component](src/ui/Button/README.md)
+- [UI primitives (`src/ui/`)](src/ui/README.md)
 - [UI TextArea Component](src/ui/TextArea/README.md)
 - [UI TextField Component](src/ui/TextField/README.md)

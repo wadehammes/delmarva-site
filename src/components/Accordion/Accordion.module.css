@@ -59,6 +59,11 @@
     outline: none;
   }
 
+  &:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
   &:hover {
     color: var(--colors-red);
 
@@ -109,10 +114,13 @@
 }
 
 .accordionContent {
-  overflow: visible !important;
   background-color: var(--color-bg);
 
-  &:not(.isOpen) .accordionInner {
+  &[data-open]:not([data-starting-style], [data-ending-style]) {
+    overflow: visible;
+  }
+
+  &:not([data-open]) .accordionInner {
     opacity: 0;
     transform: scaleY(0);
   }

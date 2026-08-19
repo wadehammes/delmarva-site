@@ -124,6 +124,8 @@
   --image-max-width: initial;
   --image-max-width-mobile: initial;
   --desktop-columns: initial;
+  --anchor-width: initial;
+  --collapsible-panel-height: initial;
 
   /* Viewport height — updated by JS for iOS browser chrome handling */
   --vh: 1vh;

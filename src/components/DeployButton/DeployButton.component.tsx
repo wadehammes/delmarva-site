@@ -37,9 +37,11 @@ export const DeployButton = (props: DeployButtonProps) => {
 
   return (
     <Button
-      isDisabled={clicked}
+      disabled={clicked}
       label={clicked ? "Refreshing (wait ~2min)" : label}
-      onPress={handleDeploy}
+      onClick={() => {
+        void handleDeploy();
+      }}
       trackingEvent="Clicked Refresh Content Button"
       trackingLabel="Refresh"
       variant={clicked ? "primary" : "secondary"}

@@ -1,12 +1,15 @@
 "use client";
 
+import { Button as UIButton } from "@base-ui/react/button";
 import clsx from "clsx";
-import type { AriaButtonProps } from "react-aria";
+import type { ComponentProps } from "react";
 import styles from "src/components/Button/Button.module.css";
 import { trackEvent } from "src/lib/trackEvent";
-import { Button as UIButton } from "src/ui/Button/Button.component";
 
-interface ButtonProps extends AriaButtonProps {
+interface ButtonProps
+  extends Omit<ComponentProps<typeof UIButton>, "children"> {
+  children?: React.ReactNode;
+  isDisabled?: boolean;
   label: string;
   trackingEvent?: string;
   trackingLabel?: string;
@@ -14,22 +17,21 @@ interface ButtonProps extends AriaButtonProps {
   variant?: "primary" | "secondary" | "outline";
 }
 
-/**
- * Button component with multiple variants
- * Supports primary, secondary, and outline styles
- */
 export const Button = (props: ButtonProps) => {
   const {
+    children: _children,
+    disabled,
+    isDisabled,
     label,
     trackingEvent,
     trackingLabel,
     type = "button",
     variant = "primary",
-    onPress,
+    onClick,
     ...rest
   } = props;
 
-  const handlePress: AriaButtonProps["onPress"] = (event) => {
+  const handleClick: ComponentProps<typeof UIButton>["onClick"] = (event) => {
     if (trackingEvent) {
       trackEvent(
         trackingEvent,
@@ -37,7 +39,7 @@ export const Button = (props: ButtonProps) => {
       );
     }
 
-    onPress?.(event);
+    onClick?.(event);
   };
 
   return (
@@ -46,7 +48,8 @@ export const Button = (props: ButtonProps) => {
         [styles.secondary]: variant === "secondary",
         [styles.outline]: variant === "outline",
       })}
-      onPress={handlePress}
+      disabled={disabled ?? isDisabled}
+      onClick={handleClick}
       type={type}
       {...rest}
     >

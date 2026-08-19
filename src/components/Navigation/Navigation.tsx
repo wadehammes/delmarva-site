@@ -226,11 +226,13 @@ export const Navigation = (props: NavigationProps) => {
           </button>
         </div>
       </nav>
-      <MobileNavigationDrawer
-        closeMenu={() => setIsMobileNavOpen(false)}
-        navigation={navigation}
-        visible={isMobileNavOpen}
-      />
+      {isMobileNavOpen ? (
+        <MobileNavigationDrawer
+          closeMenu={() => setIsMobileNavOpen(false)}
+          navigation={navigation}
+          visible
+        />
+      ) : null}
     </>
   );
 };

@@ -21,7 +21,13 @@ interface ContentCopyMediaBlockProps {
 
 export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   const { fields } = props;
-  const { copy, media, mediaPlacement, mediaBackgroundStyle } = fields;
+  const {
+    copy,
+    media,
+    mediaPlacement,
+    mediaBackgroundStyle,
+    mediaOrderMobile,
+  } = fields;
 
   const hasVideo = (media ?? []).some(
     (item) => item != null && isTypeContentVideoBlock(item),
@@ -30,6 +36,7 @@ export const ContentCopyMediaBlock = (props: ContentCopyMediaBlockProps) => {
   return (
     <div
       className={clsx(styles.contentCopyMediaBlock, {
+        [styles.copyFirstMobile]: mediaOrderMobile === "Below Copy Block",
         [styles.mediaLeft]: mediaPlacement === "Left",
         [styles.hasVideo]: hasVideo,
       })}

@@ -3,11 +3,16 @@
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import {
+  Controller,
+  type SubmitHandler,
+  useForm,
+  useFormState,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
-import { StyledInput } from "src/components/StyledInput/StyledInput.component";
-import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
+import { Input } from "src/components/Input/Input.component";
+import { TextArea } from "src/components/TextArea/TextArea.component";
 import type { FormType } from "src/contentful/parseForm";
 import { useSendRequestAProposalFormMutation } from "src/hooks/mutations/useSendRequestAProposalForm.mutation";
 import { getRecaptchaSiteKey } from "src/utils/publicEnv";
@@ -53,17 +58,12 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
   const reCaptcha = useRef<ReCAPTCHA>(null);
   const formStartedAt = useRef(Date.now());
 
-  const {
-    handleSubmit,
-    control,
-    clearErrors,
-    reset,
-    formState: { isSubmitting, errors },
-  } = useForm({
+  const { handleSubmit, control, clearErrors, reset } = useForm({
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
   });
+  const { errors, isSubmitting } = useFormState({ control });
 
   const sendMutation = useSendRequestAProposalFormMutation();
 
@@ -101,12 +101,12 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+    <form className={styles.form} noValidate onSubmit={handleSubmit(onSubmit)}>
       <Controller
         control={control}
         name="companyName"
         render={({ field: { onChange, value, name, ref } }) => (
-          <StyledInput
+          <Input
             aria-label={t("labels.companyName")}
             hasError={errors.companyName}
             label={`${t("labels.companyName")} *`}
@@ -117,14 +117,14 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             value={value}
           />
         )}
-        rules={{ required: true }}
+        rules={{ required: t("messages.fieldRequired") }}
       />
 
       <Controller
         control={control}
         name="name"
         render={({ field: { onChange, value, name, ref } }) => (
-          <StyledInput
+          <Input
             aria-label={t("labels.fullName")}
             hasError={errors.name}
             label={`${t("labels.fullName")} *`}
@@ -135,14 +135,14 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             value={value}
           />
         )}
-        rules={{ required: true }}
+        rules={{ required: t("messages.fieldRequired") }}
       />
 
       <Controller
         control={control}
         name="email"
         render={({ field: { onChange, value, name, ref } }) => (
-          <StyledInput
+          <Input
             aria-label={t("labels.email")}
             hasError={errors.email}
             label={`${t("labels.email")} *`}
@@ -156,14 +156,20 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             value={value}
           />
         )}
-        rules={{ pattern: EMAIL_VALIDATION_REGEX, required: true }}
+        rules={{
+          pattern: {
+            message: t("messages.invalidEmail"),
+            value: EMAIL_VALIDATION_REGEX,
+          },
+          required: t("messages.fieldRequired"),
+        }}
       />
 
       <Controller
         control={control}
         name="phone"
         render={({ field: { onChange, value, name, ref } }) => (
-          <StyledInput
+          <Input
             aria-label={t("labels.phone")}
             hasError={errors.phone}
             label={t("labels.phone")}
@@ -174,14 +180,19 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             value={value}
           />
         )}
-        rules={{ pattern: PHONE_NUMBER_VALIDATION_REGEX }}
+        rules={{
+          pattern: {
+            message: t("messages.invalidPhone"),
+            value: PHONE_NUMBER_VALIDATION_REGEX,
+          },
+        }}
       />
 
       <Controller
         control={control}
         name="projectDetails"
         render={({ field: { onChange, value, name, ref } }) => (
-          <StyledTextArea
+          <TextArea
             aria-label={t("labels.projectDetails")}
             hasError={errors.projectDetails}
             label={t("labels.projectDetails")}

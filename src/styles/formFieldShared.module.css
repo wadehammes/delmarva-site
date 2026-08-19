@@ -1,0 +1,36 @@
+.fieldsetWrapper {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.controlWrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.25rem;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.label {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.25;
+  color: var(--color-text);
+  text-align: left;
+}
+
+.errorMessage {
+  width: 100%;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--colors-red);
+  text-align: left;
+}

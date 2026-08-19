@@ -10,10 +10,7 @@ A fully accessible language switcher component that allows users to change the w
 - **Status updates**: Provides feedback when language changes occur
 - **Descriptive text**: Includes helpful descriptions for each language option
 
-### Keyboard Navigation
-- **Full keyboard support**: Can be operated entirely with keyboard
-- **Focus management**: Clear focus indicators with proper outline styles
-- **Space/Enter support**: Standard select element behavior maintained
+Built on Base UI **`Select`** (`@base-ui/react/select`) for keyboard support and listbox semantics.
 
 ### Visual Accessibility
 - **High contrast support**: Enhanced focus styles for high contrast mode

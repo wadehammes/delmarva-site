@@ -42,12 +42,16 @@ For **nested modules** (entries inside another CMS block), use the same parser �
 
 ## Links and navigation
 
+**[LocaleSwitcherSelect](../../src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.component.tsx)** in the footer uses Base UI **`Select`** for locale changes (keyboard listbox, live announcements preserved).
+
 - Prefer **next-intl** navigation helpers from [src/i18n/routing.ts](../../src/i18n/routing.ts) (`Link`, `useRouter`, `usePathname`) so locale prefix behavior stays correct (`localePrefix: "as-needed"`).
 - External links: normal **`<a>`** with **`rel="noopener noreferrer"`** when **`target="_blank"`**.
 
 ## UI primitives
 
-**`src/ui/`** holds shared controls (Button, TextField, TextArea) consumed by feature components. Keep feature-specific copy and layout in **`src/components/`**.
+**`src/ui/`** holds shared controls (Button, Collapsible, Dialog, …) consumed by feature components. Keep feature-specific copy and layout in **`src/components/`**.
+
+New headless behavior should use **[Base UI](https://base-ui.com/react/overview/quick-start)** (`@base-ui/react`): import from the package subpath (e.g. `@base-ui/react/dialog`, `@base-ui/react/field`) — **no barrel re-exports**. Style with CSS Modules + design tokens. Add **`src/ui/<Name>/`** only when behavior or shared CSS is needed (e.g. **`Collapsible`**). See **[src/ui/README.md](../../src/ui/README.md)** for portal setup (**`.appRoot`** + `isolation: isolate` on the layout wrapper in [`layout.tsx`](../../src/app/[locale]/layout.tsx)). **React Aria is not used** — forms use **`src/components/Input`**, **`TextArea`**, **`Select`**, **`Checkbox`**, and **`FileInput`** with **`FieldErrorMessage`** (`Field.Error`) / **`Field.Description`** for validation copy; forms use **`noValidate`** + react-hook-form rules (see [patterns.md](patterns.md)). **[Modal](../../src/components/Modal/Modal.component.tsx)** and **[mobile nav](../../src/components/Navigation/MobileNavigation.component.tsx)** compose Base UI **`Dialog`**.
 
 ## Loading states
 
@@ -88,11 +92,11 @@ The **`contentAreasServicedMap`** Contentful type renders through **`src/compone
 **[Stat.component.tsx](../../src/components/Stat/Stat.component.tsx)** displays CMS stat blocks with a **CSS translateY ticker**—not GSAP. Digits roll via **`TickerNumber`** and module CSS when **`useOptimizedInView`** (or an explicit **`trigger`** prop from accordions) fires the animation.
 
 - Use **`Stat`** for standalone stat blocks and accordion grids (**≤3** stats).
-- Use **GSAP** only for accordion **panel reveal** motion ([GSAP expand animations](#gsap-expand-animations)), not for counting digits.
+- Use **GSAP** only for accordion **inner content** motion ([GSAP expand animations](#gsap-expand-animations)), not panel height (handled by **Collapsible**) or stat digit tickers.
 
 ## GSAP expand animations
 
-**[ServiceAccordion](../../src/components/ServiceAccordion/ServiceAccordion.component.tsx)** and **[MarketAccordion](../../src/components/MarketAccordion/MarketAccordion.component.tsx)** animate panel content on expand with **GSAP** timelines built in **`setupAnimation`** and played from **`handleAccordionToggle`**. When **`defaultOpen`** is true (e.g. the first item in **All Services List**), pass **`animateOpenOnMount`** on **[Accordion](../../src/components/Accordion/Accordion.component.tsx)** so the panel height and inner content timelines run on load—not only after a user click.
+**[Accordion](../../src/components/Accordion/Accordion.component.tsx)** uses **`src/ui/Collapsible`** for panel open/close (CSS height transition, keyboard, ARIA). **[ServiceAccordion](../../src/components/ServiceAccordion/ServiceAccordion.component.tsx)** and **[MarketAccordion](../../src/components/MarketAccordion/MarketAccordion.component.tsx)** animate panel **content** on expand with **GSAP** timelines built in **`setupAnimation`** and played from **`handleAccordionToggle`**. When **`defaultOpen`** is true (e.g. the first item in **All Services List**), pass **`animateOpenOnMount`** on **Accordion** so the Collapsible panel transition and inner content timelines run on load—not only after a user click.
 
 When adding similar accordion motion:
 
