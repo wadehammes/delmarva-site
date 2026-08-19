@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { MarketTemplate } from "src/components/MarketTemplate/MarketTemplate.component";
+import { JsonLdScript } from "src/components/Page/JsonLdScript.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
-import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import {
   fetchMarket,
@@ -26,8 +26,10 @@ import {
   NAVIGATION_ID,
 } from "src/utils/constants";
 import { createMarketMetadata } from "src/utils/metadata.helpers";
-import { validateAndSetLocale } from "src/utils/pageHelpers";
-import { generateMarketPageSchemaGraphSafe } from "src/utils/schema";
+import {
+  buildMarketPageSchemaGraphProp,
+  validateAndSetLocale,
+} from "src/utils/pageHelpers";
 
 export const revalidate = 2592000;
 
@@ -136,17 +138,20 @@ const Page = async ({ params }: PageProps) => {
         marketId: market.id,
         preview: draft.isEnabled,
       }),
-      generateMarketPageSchemaGraphSafe({
-        locale: validLocale,
-        market,
-        preview: draft.isEnabled,
-        slug: `${MARKETS_PAGE_SLUG}/${market.slug}`,
-      }),
+      buildMarketPageSchemaGraphProp(
+        {
+          locale: validLocale,
+          market,
+        },
+        draft.isEnabled,
+      ),
     ]);
 
     return (
       <PageLayout footer={footer} navigation={navigation}>
-        <SchemaScript schema={schemaGraph} />
+        {schemaGraph ? (
+          <JsonLdScript id="schema-structured-data" json={schemaGraph} />
+        ) : null}
         <MarketTemplate
           locale={validLocale}
           market={market}

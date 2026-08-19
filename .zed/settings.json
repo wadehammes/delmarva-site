@@ -6,15 +6,20 @@
   "lsp": {
     "biome": {
       "binary": {
-        "arguments": [
-          "lsp-proxy"
-        ],
-        "path": "node_modules/.bin/biome",
+        "arguments": ["lsp-proxy"],
+        "path": "node_modules/.bin/biome"
       },
       "settings": {
         "config_path": "biome.json",
-        "require_config_file": true,
-      },
-    },
+        "require_config_file": true
+      }
+    }
+  },
+  "context_servers": {
+    "contentful": {
+      "command": "/Users/wade/Repos/delmarva-site/scripts/run-contentful-mcp.sh",
+      "args": [],
+      "env": {}
+    }
   }
 }

@@ -12,7 +12,7 @@ Quick map of **`src/`** when you know the task (“add a schema helper”, “fi
 
 | Area | Examples |
 |------|----------|
-| **Pages / SEO** | [metadata.helpers.ts](../../src/utils/metadata.helpers.ts) (`createPageMetadata`, `buildDisplayTitle`, …), [pageHelpers.ts](../../src/utils/pageHelpers.ts) (`validateAndSetLocale`, schema wiring), [schema.ts](../../src/utils/schema.ts) |
+| **Pages / SEO** | [metadata.helpers.ts](../../src/utils/metadata.helpers.ts) (`createPageMetadata`, `buildDisplayTitle`, …), [pageHelpers.ts](../../src/utils/pageHelpers.ts) (`validateAndSetLocale`, `generatePageSchemaGraph`), [pageSchemaGraphProp.ts](../../src/lib/schema/pageSchemaGraphProp.ts) (service/market graph props), [src/lib/schema/](../../src/lib/schema/) (JSON-LD graph builders), [JsonLdScript.component.tsx](../../src/components/Page/JsonLdScript.component.tsx) |
 | **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`), [publicEnv.ts](../../src/utils/publicEnv.ts) (`NEXT_PUBLIC_*` for client) |
 | **Strings / React / Rich Text** | [string.helpers.ts](../../src/utils/string.helpers.ts), [react.helpers.ts](../../src/utils/react.helpers.ts), [richText.helpers.ts](../../src/utils/richText.helpers.ts) |
 | **Video URLs** | [videoUrl.helpers.ts](../../src/utils/videoUrl.helpers.ts) (embed detection, `isVideoUrl`, …) |

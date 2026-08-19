@@ -2,7 +2,13 @@
 
 import { gsap } from "gsap";
 import type { RefObject } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { Accordion } from "src/components/Accordion/Accordion.component";
 import { ButtonLink } from "src/components/Button/ButtonLink.component";
 import { ProjectCoverflowCarousel } from "src/components/ProjectCoverflowCarousel/ProjectCoverflowCarousel.component";
@@ -110,6 +116,51 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     }
   }, []);
 
+  const applyOpenAnimationStartState = useCallback(() => {
+    gsap.set(
+      [
+        richTextRef.current,
+        statsRef.current,
+        statsGridRef.current,
+        ctaRef.current,
+        carouselRef.current,
+      ].filter((el): el is HTMLDivElement | HTMLDListElement => el != null),
+      {
+        force3D: true,
+        opacity: 0,
+        y: 20,
+      },
+    );
+
+    if (statsRef.current) {
+      gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
+        force3D: true,
+        opacity: 0,
+        y: 15,
+      });
+    }
+
+    if (statsGridRef.current) {
+      gsap.set(statsGridRef.current.querySelectorAll('[class*="stat"]'), {
+        force3D: true,
+        opacity: 0,
+        y: 15,
+      });
+    }
+  }, []);
+
+  const playOpenAnimation = useCallback(() => {
+    if (!timelineRef.current || !isMounted()) return;
+
+    applyOpenAnimationStartState();
+
+    gsap.delayedCall(0.05, () => {
+      if (timelineRef.current && isMounted()) {
+        timelineRef.current.play();
+      }
+    });
+  }, [applyOpenAnimationStartState, isMounted]);
+
   const setupAnimation = useCallback(() => {
     const content = contentRef.current;
     if (!content || !isMounted()) return;
@@ -216,15 +267,31 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
     }
   }, [isMounted, cleanupGSAP]);
 
+  useLayoutEffect(() => {
+    if (!defaultOpen) return;
+    applyOpenAnimationStartState();
+  }, [applyOpenAnimationStartState, defaultOpen]);
+
   useEffect(() => {
     setupAnimation();
     addCleanup(cleanupGSAP);
+
+    if (defaultOpen) {
+      playOpenAnimation();
+    }
 
     return () => {
       removeCleanup(cleanupGSAP);
       cleanupGSAP();
     };
-  }, [setupAnimation, addCleanup, removeCleanup, cleanupGSAP]);
+  }, [
+    addCleanup,
+    cleanupGSAP,
+    defaultOpen,
+    playOpenAnimation,
+    removeCleanup,
+    setupAnimation,
+  ]);
 
   useEffect(() => {
     return () => {
@@ -239,51 +306,17 @@ export const ServiceAccordion = (props: ServiceAccordionProps) => {
       if (!timelineRef.current || !isMounted()) return;
 
       if (isOpen) {
-        gsap.set(
-          [
-            richTextRef.current,
-            statsRef.current,
-            statsGridRef.current,
-            ctaRef.current,
-            carouselRef.current,
-          ].filter((el): el is HTMLDivElement | HTMLDListElement => el != null),
-          {
-            force3D: true,
-            opacity: 0,
-            y: 20,
-          },
-        );
-
-        if (statsRef.current) {
-          gsap.set(statsRef.current.querySelectorAll(`.${styles.statItem}`), {
-            force3D: true,
-            opacity: 0,
-            y: 15,
-          });
-        }
-
-        if (statsGridRef.current) {
-          gsap.set(statsGridRef.current.querySelectorAll('[class*="stat"]'), {
-            force3D: true,
-            opacity: 0,
-            y: 15,
-          });
-        }
-
-        gsap.delayedCall(0.05, () => {
-          if (timelineRef.current && isMounted()) {
-            timelineRef.current.play();
-          }
-        });
-      } else if (timelineRef.current) {
+        playOpenAnimation();
+      } else {
         timelineRef.current.reverse();
       }
     },
-    [isMounted],
+    [isMounted, playOpenAnimation],
   );
 
   return (
     <Accordion
+      animateOpenOnMount={defaultOpen}
       defaultOpen={defaultOpen}
       headerElement="h3"
       onToggle={handleAccordionToggle}

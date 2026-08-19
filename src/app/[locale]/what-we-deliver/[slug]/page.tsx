@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { JsonLdScript } from "src/components/Page/JsonLdScript.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
-import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component";
 import { ServiceTemplate } from "src/components/ServiceTemplate/ServiceTemplate.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
@@ -26,8 +26,10 @@ import {
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
 import { createServiceMetadata } from "src/utils/metadata.helpers";
-import { validateAndSetLocale } from "src/utils/pageHelpers";
-import { generateServicePageSchemaGraphSafe } from "src/utils/schema";
+import {
+  buildServicePageSchemaGraphProp,
+  validateAndSetLocale,
+} from "src/utils/pageHelpers";
 
 export const revalidate = 2592000;
 
@@ -136,17 +138,20 @@ const Page = async ({ params }: PageProps) => {
         preview: draft.isEnabled,
         serviceSlug: service.slug,
       }),
-      generateServicePageSchemaGraphSafe({
-        locale: validLocale,
-        preview: draft.isEnabled,
-        service,
-        slug: `${SERVICES_PAGE_SLUG}/${service.slug}`,
-      }),
+      buildServicePageSchemaGraphProp(
+        {
+          locale: validLocale,
+          service,
+        },
+        draft.isEnabled,
+      ),
     ]);
 
     return (
       <PageLayout footer={footer} navigation={navigation}>
-        <SchemaScript schema={schemaGraph} />
+        {schemaGraph ? (
+          <JsonLdScript id="schema-structured-data" json={schemaGraph} />
+        ) : null}
         <ServiceTemplate
           locale={validLocale}
           projects={projects}

@@ -36,6 +36,8 @@ When **`ENVIRONMENT`** is **`local`** or **`staging`**, use **`RESEND_TEST_RECIP
 | [`generateSitemap.ts`](./generateSitemap.ts) | **`outputSitemap`**, route builders, **`getSitemapLastmod`** → `public/generated-sitemap-*.xml` and `public/sitemap-index.xml` |
 | [`trackEvent.ts`](./trackEvent.ts) | Client **`trackEvent`** helper → GA4 **`dataLayer`** via **`sendGAEvent`** |
 
+**JSON-LD:** graph builders under [`schema/`](./schema/) — see [patterns.md](../docs/handbook/patterns.md#json-ld--schema).
+
 RSS feeds under `public/` are committed directly (no generator in `src/lib/`).
 
 Handbook: [integrations.md](../../docs/handbook/integrations.md), [distribution.md](../../docs/handbook/distribution.md).

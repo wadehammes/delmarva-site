@@ -92,7 +92,7 @@ The **`contentAreasServicedMap`** Contentful type renders through **`src/compone
 
 ## GSAP expand animations
 
-**[ServiceAccordion](../../src/components/ServiceAccordion/ServiceAccordion.component.tsx)** and **[MarketAccordion](../../src/components/MarketAccordion/MarketAccordion.component.tsx)** animate panel content on expand with **GSAP** timelines built in **`setupAnimation`** and played from **`handleAccordionToggle`**.
+**[ServiceAccordion](../../src/components/ServiceAccordion/ServiceAccordion.component.tsx)** and **[MarketAccordion](../../src/components/MarketAccordion/MarketAccordion.component.tsx)** animate panel content on expand with **GSAP** timelines built in **`setupAnimation`** and played from **`handleAccordionToggle`**. When **`defaultOpen`** is true (e.g. the first item in **All Services List**), pass **`animateOpenOnMount`** on **[Accordion](../../src/components/Accordion/Accordion.component.tsx)** so the panel height and inner content timelines run on load—not only after a user click.
 
 When adding similar accordion motion:
 
