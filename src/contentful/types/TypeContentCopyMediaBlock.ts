@@ -21,6 +21,9 @@ export interface TypeContentCopyMediaBlockFields {
   mediaBackgroundStyle?: EntryFieldTypes.Symbol<
     "Black Background" | "Microdot Background" | "None"
   >;
+  mediaOrderMobile?: EntryFieldTypes.Symbol<
+    "Above Copy Block" | "Below Copy Block"
+  >;
 }
 
 export type TypeContentCopyMediaBlockSkeleton = EntrySkeletonType<

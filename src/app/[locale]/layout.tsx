@@ -75,7 +75,9 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
           </div>
         ) : null}
         <NextIntlClientProvider locale={locale}>
-          <Providers locale={locale as Locales}>{children}</Providers>
+          <Providers locale={locale as Locales}>
+            <div className="appRoot">{children}</div>
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

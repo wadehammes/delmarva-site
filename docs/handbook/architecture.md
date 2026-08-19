@@ -5,7 +5,7 @@ Map of the Delmarva site: technologies, where code lives, and how a request move
 ## Tech stack
 
 - **Framework**: Next.js 16 with the **App Router**. Routes live under `src/app/`; locale-aware pages under `src/app/[locale]/`.
-- **UI**: React 19, TypeScript.
+- **UI**: React 19, TypeScript. Headless primitives: **[Base UI](https://base-ui.com/react/overview/quick-start)** (`@base-ui/react`) in `src/ui/`; styled form fields in `src/components/Input`, `TextArea`, `Select`, `Checkbox`, `FileInput`, and `Button`.
 - **CMS**: Contentful. Generated types in `src/contentful/types/`; getters and parsers in `src/contentful/`.
 - **i18n**: **next-intl** with routing in [src/i18n/routing.ts](../../src/i18n/routing.ts), messages in [src/i18n/messages/](../../src/i18n/messages/), and server config in [src/i18n/request.ts](../../src/i18n/request.ts).
 - **Client data**: TanStack **React Query** in [src/app/providers.tsx](../../src/app/providers.tsx); form mutations in [src/hooks/mutations/](../../src/hooks/mutations/).
@@ -75,7 +75,7 @@ Page metadata ([metadata.helpers.ts](../../src/utils/metadata.helpers.ts), [page
 
 ### `src/ui/`
 
-Lower-level primitives (Button, TextField, TextArea) used by feature components.
+Lower-level headless primitives come from **`@base-ui/react/<module>`** subpaths (no barrel files). **`src/ui/`** holds wrappers with shared CSS or behavior (e.g. **`Collapsible`**). Styled form fields and **`Modal`** live in **`src/components/`**.
 
 ### `public/`
 

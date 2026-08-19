@@ -29,7 +29,6 @@ export const ContentCardModal = ({
       closeOnEscape={true}
       isOpen={isOpen}
       onClose={onClose}
-      showCloseButton={true}
       size="small"
     >
       <Modal.Body>

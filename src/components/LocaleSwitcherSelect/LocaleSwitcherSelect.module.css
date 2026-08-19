@@ -1,14 +1,15 @@
-.localeSwitcherSelect {
+.trigger {
   position: relative;
   z-index: 1;
   width: 100%;
   padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-family: inherit;
   font-size: 0.875rem;
   color: var(--color-text);
-  appearance: none;
+  text-align: left;
   cursor: pointer;
   background: transparent;
-  border: none;
+  border: 0;
   border-radius: 1000px;
   transition: all 0.2s ease-in-out;
 
@@ -24,7 +25,7 @@
     outline-offset: 2px;
   }
 
-  &:disabled {
+  &[data-disabled] {
     cursor: not-allowed;
     opacity: 0.6;
   }
@@ -44,7 +45,7 @@
     color: var(--color-bg);
     background-color: var(--color-text);
 
-    > .localeSwitcherSelect {
+    > .trigger {
       color: var(--color-bg);
     }
   }
@@ -65,4 +66,42 @@
   z-index: 2;
   color: inherit;
   pointer-events: none;
+}
+
+.positioner {
+  width: var(--anchor-width);
+  min-width: var(--anchor-width);
+}
+
+.popup {
+  z-index: 10;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  box-shadow: var(--shadow-dropdown, 0 4px 16px rgb(0 0 0 / 15%));
+}
+
+.list {
+  max-height: 16rem;
+  padding: 0.375rem;
+  overflow-y: auto;
+}
+
+.item {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: 8px;
+
+  &[data-highlighted] {
+    color: var(--color-bg);
+    background-color: var(--color-text);
+  }
+
+  &[data-selected]:not([data-highlighted]) {
+    font-weight: 500;
+  }
 }

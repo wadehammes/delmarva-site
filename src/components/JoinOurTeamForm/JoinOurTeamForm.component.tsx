@@ -1,21 +1,27 @@
 "use client";
 
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
-import clsx from "clsx";
 import { useLocale, useTranslations } from "next-intl";
-import { useId, useRef } from "react";
+import { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import {
+  Controller,
+  type SubmitHandler,
+  useForm,
+  useFormState,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
+import { Checkbox } from "src/components/Checkbox/Checkbox.component";
+import { FileInput } from "src/components/FileInput/FileInput.component";
+import { Input } from "src/components/Input/Input.component";
 import styles from "src/components/JoinOurTeamForm/JoinOurTeamForm.module.css";
 import { RichText } from "src/components/RichText/RichText.component";
-import { StyledInput } from "src/components/StyledInput/StyledInput.component";
-import { StyledTextArea } from "src/components/StyledInput/StyledTextArea.component";
+import { Select } from "src/components/Select/Select.component";
+import { TextArea } from "src/components/TextArea/TextArea.component";
 import type { FormJoinOurTeamType } from "src/contentful/parseFormJoinOurTeam";
 import { useSendJoinOurTeamFormMutation } from "src/hooks/mutations/useSendJoinOurTeamForm.mutation";
 import type { Locales } from "src/i18n/routing";
-import ChevronDown from "src/icons/Chevron.svg";
 import { US_STATES_MAP } from "src/utils/constants";
 import { getRecaptchaSiteKey } from "src/utils/publicEnv";
 import {
@@ -72,23 +78,12 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
   const reCaptcha = useRef<ReCAPTCHA>(null);
   const formStartedAt = useRef(Date.now());
 
-  const {
-    handleSubmit,
-    control,
-    clearErrors,
-    reset,
-    formState: { isSubmitting, errors },
-  } = useForm({
+  const { handleSubmit, control, clearErrors, reset } = useForm({
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
   });
-
-  const positionId = useId();
-  const stateId = useId();
-  const workEligibilityId = useId();
-  const resumeId = useId();
-  const coverLetterId = useId();
+  const { errors, isSubmitting } = useFormState({ control });
 
   const sendJoinOurTeamFormMutation = useSendJoinOurTeamFormMutation();
 
@@ -163,13 +158,17 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
     <div className={styles.container}>
       {description ? <RichText document={description} /> : null}
 
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className={styles.form}
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className={styles.topFieldsGrid}>
           <Controller
             control={control}
             name="name"
             render={({ field: { onChange, value, name, ref } }) => (
-              <StyledInput
+              <Input
                 hasError={errors.name}
                 label={`${t("labels.fullName")} *`}
                 name={name}
@@ -179,14 +178,14 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
                 value={value}
               />
             )}
-            rules={{ required: true }}
+            rules={{ required: t("messages.required") }}
           />
 
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, value, name, ref } }) => (
-              <StyledInput
+              <Input
                 hasError={errors.email}
                 label={`${t("labels.email")} *`}
                 name={name}
@@ -199,14 +198,20 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
                 value={value}
               />
             )}
-            rules={{ pattern: EMAIL_VALIDATION_REGEX, required: true }}
+            rules={{
+              pattern: {
+                message: t("messages.invalidEmail"),
+                value: EMAIL_VALIDATION_REGEX,
+              },
+              required: t("messages.required"),
+            }}
           />
 
           <Controller
             control={control}
             name="phone"
             render={({ field: { onChange, value, name, ref } }) => (
-              <StyledInput
+              <Input
                 hasError={errors.phone}
                 label={t("labels.phone")}
                 name={name}
@@ -216,56 +221,37 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
                 value={value}
               />
             )}
-            rules={{ pattern: PHONE_NUMBER_VALIDATION_REGEX }}
+            rules={{
+              pattern: {
+                message: t("messages.invalidPhone"),
+                value: PHONE_NUMBER_VALIDATION_REGEX,
+              },
+            }}
           />
 
           <Controller
             control={control}
             name="position"
-            render={({ field: { onChange, value, name, ref } }) => (
-              <div className={styles.fieldsetWrapper}>
-                <label className={styles.label} htmlFor={positionId}>
-                  {t("labels.position")} *
-                </label>
-                <div
-                  className={clsx(styles.selectWrapper, {
-                    [styles.selectHasError]: errors.position,
-                  })}
-                >
-                  <select
-                    className={styles.select}
-                    id={positionId}
-                    name={name}
-                    onChange={(e) => {
-                      console.log("Position changed:", e.target.value);
-                      onChange(e.target.value);
-                    }}
-                    ref={ref}
-                    value={value}
-                  >
-                    <option value="">{t("messages.selectPosition")}</option>
-                    {(fields.openJobs ?? []).map((job) => (
-                      <option key={job} value={job}>
-                        {job}
-                      </option>
-                    ))}
-                  </select>
-                  <span
-                    aria-hidden="true"
-                    className={styles.selectChevron}
-                    role="presentation"
-                  >
-                    <ChevronDown />
-                  </span>
-                  {errors.position && (
-                    <span className={styles.errorMessage}>
-                      {t("messages.positionRequired")}
-                    </span>
-                  )}
-                </div>
-              </div>
+            render={({ field: { onBlur, onChange, value, name, ref } }) => (
+              <Select
+                errorMessage={
+                  errors.position ? t("messages.positionRequired") : undefined
+                }
+                hasError={errors.position}
+                label={`${t("labels.position")} *`}
+                name={name}
+                onBlur={onBlur}
+                onChange={onChange}
+                options={(fields.openJobs ?? []).map((job) => ({
+                  label: job,
+                  value: job,
+                }))}
+                placeholder={t("messages.selectPosition")}
+                ref={ref}
+                value={value}
+              />
             )}
-            rules={{ required: true }}
+            rules={{ required: t("messages.positionRequired") }}
           />
         </div>
 
@@ -273,7 +259,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           control={control}
           name="address"
           render={({ field: { onChange, value, name, ref } }) => (
-            <StyledInput
+            <Input
               hasError={errors.address}
               label={t("labels.address")}
               name={name}
@@ -290,7 +276,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             control={control}
             name="city"
             render={({ field: { onChange, value, name, ref } }) => (
-              <StyledInput
+              <Input
                 hasError={errors.city}
                 label={t("labels.city")}
                 name={name}
@@ -305,43 +291,23 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           <Controller
             control={control}
             name="state"
-            render={({ field: { onChange, value, name, ref } }) => (
-              <div className={styles.fieldsetWrapper}>
-                <label className={styles.label} htmlFor={stateId}>
-                  {t("labels.state")}
-                </label>
-                <div
-                  className={clsx(styles.selectWrapper, {
-                    [styles.selectHasError]: errors.state,
-                  })}
-                >
-                  <select
-                    className={styles.select}
-                    id={stateId}
-                    name={name}
-                    onChange={(e) => {
-                      console.log("State changed:", e.target.value);
-                      onChange(e.target.value);
-                    }}
-                    ref={ref}
-                    value={value}
-                  >
-                    <option value="">{t("messages.selectState")}</option>
-                    {Object.entries(US_STATES_MAP).map(([code, name]) => (
-                      <option key={code} value={code}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
-                  <span
-                    aria-hidden="true"
-                    className={styles.selectChevron}
-                    role="presentation"
-                  >
-                    <ChevronDown />
-                  </span>
-                </div>
-              </div>
+            render={({ field: { onBlur, onChange, value, name, ref } }) => (
+              <Select
+                hasError={errors.state}
+                label={t("labels.state")}
+                name={name}
+                onBlur={onBlur}
+                onChange={onChange}
+                options={Object.entries(US_STATES_MAP).map(
+                  ([code, stateName]) => ({
+                    label: stateName,
+                    value: code,
+                  }),
+                )}
+                placeholder={t("messages.selectState")}
+                ref={ref}
+                value={value}
+              />
             )}
           />
 
@@ -349,7 +315,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             control={control}
             name="zipCode"
             render={({ field: { onChange, value, name, ref } }) => (
-              <StyledInput
+              <Input
                 hasError={errors.zipCode}
                 label={t("labels.zipCode")}
                 name={name}
@@ -366,7 +332,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           control={control}
           name="briefDescription"
           render={({ field: { onChange, value, name, ref } }) => (
-            <StyledTextArea
+            <TextArea
               hasError={errors.briefDescription}
               label={t("labels.briefDescription")}
               name={name}
@@ -381,96 +347,53 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
         <Controller
           control={control}
           name="resume"
-          render={({ field: { onChange, name, ref } }) => (
-            <div className={styles.fieldsetWrapper}>
-              <label className={styles.label} htmlFor={resumeId}>
-                {t("labels.resume")}
-              </label>
-              <p className={styles.fieldDescription} data-required="true">
-                {t("descriptions.resume")}
-              </p>
-              <div
-                className={clsx(styles.fileInputWrapper, {
-                  [styles.fileInputHasError]: errors.resume,
-                })}
-              >
-                <input
-                  accept=".pdf,.doc,.docx"
-                  className={styles.fileInput}
-                  id={resumeId}
-                  name={name}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] || null;
-                    onChange(file);
-                  }}
-                  ref={ref}
-                  type="file"
-                />
-                {errors.resume && (
-                  <span className={styles.errorMessage}>
-                    {t("messages.resumeRequired")}
-                  </span>
-                )}
-              </div>
-            </div>
+          render={({ field: { onBlur, onChange, name, ref } }) => (
+            <FileInput
+              accept=".pdf,.doc,.docx"
+              description={t("descriptions.resume")}
+              errorMessage={
+                errors.resume ? t("messages.resumeRequired") : undefined
+              }
+              hasError={errors.resume}
+              label={t("labels.resume")}
+              name={name}
+              onBlur={onBlur}
+              onChange={onChange}
+              ref={ref}
+            />
           )}
-          rules={{ required: true }}
+          rules={{ required: t("messages.resumeRequired") }}
         />
 
         <Controller
           control={control}
           name="coverLetter"
-          render={({ field: { onChange, name, ref } }) => (
-            <div className={styles.fieldsetWrapper}>
-              <label className={styles.label} htmlFor={coverLetterId}>
-                {t("labels.coverLetter")}
-              </label>
-              <p className={styles.fieldDescription} data-required="false">
-                {t("descriptions.coverLetter")}
-              </p>
-              <div
-                className={clsx(styles.fileInputWrapper, {
-                  [styles.fileInputHasError]: errors.coverLetter,
-                })}
-              >
-                <input
-                  accept=".pdf,.doc,.docx"
-                  className={styles.fileInput}
-                  id={coverLetterId}
-                  name={name}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] || null;
-                    onChange(file);
-                  }}
-                  ref={ref}
-                  type="file"
-                />
-              </div>
-            </div>
+          render={({ field: { onBlur, onChange, name, ref } }) => (
+            <FileInput
+              accept=".pdf,.doc,.docx"
+              description={t("descriptions.coverLetter")}
+              hasError={errors.coverLetter}
+              label={t("labels.coverLetter")}
+              name={name}
+              onBlur={onBlur}
+              onChange={onChange}
+              ref={ref}
+            />
           )}
         />
 
         <Controller
           control={control}
           name="workEligibility"
-          render={({ field: { onChange, value, name, ref } }) => (
-            <div className={styles.checkboxWrapper}>
-              <input
-                checked={value}
-                className={styles.checkbox}
-                id={workEligibilityId}
-                name={name}
-                onChange={(e) => onChange(e.target.checked)}
-                ref={ref}
-                type="checkbox"
-              />
-              <label
-                className={styles.checkboxLabel}
-                htmlFor={workEligibilityId}
-              >
-                {t("labels.workEligibility")}
-              </label>
-            </div>
+          render={({ field: { onBlur, onChange, value, name, ref } }) => (
+            <Checkbox
+              checked={value}
+              label={t("labels.workEligibility")}
+              name={name}
+              onBlur={onBlur}
+              onChange={onChange}
+              ref={ref}
+            />
           )}
         />
 

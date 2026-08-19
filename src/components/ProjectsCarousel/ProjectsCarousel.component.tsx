@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
+import { ProjectModalHost } from "src/components/ProjectModal/ProjectModalHost.component";
 import { SkeletonCardTrack } from "src/components/Skeleton/Skeleton.component";
 import type { ProjectType } from "src/contentful/getProjects";
 import type { Swiper as SwiperType } from "swiper";
@@ -47,66 +48,82 @@ export const ProjectsCarousel = ({
 
   if (!useCarousel) {
     return (
-      <div className={styles.grid}>
-        {projects.map((project) => (
-          <div className={styles.gridItem} key={project.id}>
-            <div className={styles.cardStretch}>
-              <ProjectCard
-                project={project}
-                projectSlugFromServer={projectSlugFromServer}
-                selectedServiceSlug={selectedServiceSlug}
-                syncUrlOnOpen={syncUrlOnOpen}
-              />
+      <>
+        <div className={styles.grid}>
+          {projects.map((project) => (
+            <div className={styles.gridItem} key={project.id}>
+              <div className={styles.cardStretch}>
+                <ProjectCard
+                  project={project}
+                  projectSlugFromServer={projectSlugFromServer}
+                  selectedServiceSlug={selectedServiceSlug}
+                  syncUrlOnOpen={syncUrlOnOpen}
+                />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+        {syncUrlOnOpen ? (
+          <ProjectModalHost
+            projectSlugFromServer={projectSlugFromServer}
+            projects={projects}
+          />
+        ) : null}
+      </>
     );
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div
-        aria-hidden
-        className={styles.skeleton}
-        data-ready={isReady}
-        role="presentation"
-      >
-        <SkeletonCardTrack cardCount={5} variant="projects" />
-      </div>
-      <Carousel
-        autoplay
-        autoplayDelay={5000}
-        breakpoints={{
-          0: { slidesPerView: 1, spaceBetween: 12 },
-          600: { slidesPerView: 2, spaceBetween: 12 },
-          900: { slidesPerView: 3, spaceBetween: 12 },
-          1200: { slidesPerView: 4, spaceBetween: 12 },
-          1500: { slidesPerView: 5, spaceBetween: 12 },
-        }}
-        className={styles.carousel}
-        controlsPlacement="Below Slides"
-        loop
-        onSwiper={handleSwiperReady}
-        showNavigation
-        showPagination
-        slideClassName={styles.slide}
-        spaceBetween={12}
-        trackingLabel={`projects-carousel-${selectedServiceSlug ?? "all"}`}
-      >
-        {projects.map((project) => (
-          <div className={styles.slideInner} key={project.id}>
-            <div className={styles.cardStretch}>
-              <ProjectCard
-                project={project}
-                projectSlugFromServer={projectSlugFromServer}
-                selectedServiceSlug={selectedServiceSlug}
-                syncUrlOnOpen={syncUrlOnOpen}
-              />
+    <>
+      <div className={styles.wrapper}>
+        <div
+          aria-hidden
+          className={styles.skeleton}
+          data-ready={isReady}
+          role="presentation"
+        >
+          <SkeletonCardTrack cardCount={5} variant="projects" />
+        </div>
+        <Carousel
+          autoplay
+          autoplayDelay={5000}
+          breakpoints={{
+            0: { slidesPerView: 1, spaceBetween: 12 },
+            600: { slidesPerView: 2, spaceBetween: 12 },
+            900: { slidesPerView: 3, spaceBetween: 12 },
+            1200: { slidesPerView: 4, spaceBetween: 12 },
+            1500: { slidesPerView: 5, spaceBetween: 12 },
+          }}
+          className={styles.carousel}
+          controlsPlacement="Below Slides"
+          loop
+          onSwiper={handleSwiperReady}
+          showNavigation
+          showPagination
+          slideClassName={styles.slide}
+          spaceBetween={12}
+          trackingLabel={`projects-carousel-${selectedServiceSlug ?? "all"}`}
+        >
+          {projects.map((project) => (
+            <div className={styles.slideInner} key={project.id}>
+              <div className={styles.cardStretch}>
+                <ProjectCard
+                  project={project}
+                  projectSlugFromServer={projectSlugFromServer}
+                  selectedServiceSlug={selectedServiceSlug}
+                  syncUrlOnOpen={syncUrlOnOpen}
+                />
+              </div>
             </div>
-          </div>
-        ))}
-      </Carousel>
-    </div>
+          ))}
+        </Carousel>
+      </div>
+      {syncUrlOnOpen ? (
+        <ProjectModalHost
+          projectSlugFromServer={projectSlugFromServer}
+          projects={projects}
+        />
+      ) : null}
+    </>
   );
 };

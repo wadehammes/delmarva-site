@@ -25,7 +25,7 @@ Import the specific module you need; there is no barrel **`utils/index.ts`**.
 
 | File | Role |
 |------|------|
-| [routing.ts](../../src/i18n/routing.ts) | Locales, **`localePrefix`**, navigation wrappers |
+| [routing.ts](../../src/i18n/routing.ts) | Locales, **`localePrefix`**, navigation wrappers, **`replacePageLocale`** |
 | [localeUtils.ts](../../src/i18n/localeUtils.ts) | **`buildLocalizedUrl`**, **`buildCanonicalUrl`**, **`buildHreflangAlternates`**, **`buildOpenGraphLocale`** |
 | [request.ts](../../src/i18n/request.ts) | Server message loading |
 | [messages/](../../src/i18n/messages/) | UI copy JSON per locale |
@@ -66,6 +66,7 @@ Custom React hooks and form mutations. Overview: [src/hooks/README.md](../../src
 | [useIsBrowser.ts](../../src/hooks/useIsBrowser.ts) | **`useIsBrowser`** — client-only gate; **`useDOMCleanup`** — mount tracking + cleanup registry (GSAP accordions) |
 | [useOptimizedInView.ts](../../src/hooks/useOptimizedInView.ts) | Intersection-based visibility for **Stat** ticker animation |
 | [useProjectModal.ts](../../src/hooks/useProjectModal.ts) | Jotai-backed project modal open/close |
+| [useStableFieldId.ts](../../src/hooks/useStableFieldId.ts) | Stable **`id`** for form controls (`id` prop → **`{prefix}-{name}`** → **`useId()`**) |
 | [useModal.ts](../../src/hooks/useModal.ts) | Local boolean modal state |
 | [useHash.ts](../../src/hooks/useHash.ts) | URL hash sync |
 | [useServerLocale.ts](../../src/hooks/useServerLocale.ts) | Read locale in client subtrees under localized layouts |

@@ -18,11 +18,16 @@ type MediaPlacementType = ExtractSymbolType<
   NonNullable<TypeContentCopyMediaBlockFields["mediaPlacement"]>
 >;
 
+type MediaOrderMobileType = ExtractSymbolType<
+  NonNullable<TypeContentCopyMediaBlockFields["mediaOrderMobile"]>
+>;
+
 export interface ContentCopyMediaBlock {
   copy?: CopyBlock | null;
   media?: (ContentEntries | null)[];
   mediaPlacement?: MediaPlacementType;
   mediaBackgroundStyle?: MediaBackgroundStyleType;
+  mediaOrderMobile?: MediaOrderMobileType;
   id: string;
 }
 
@@ -46,14 +51,20 @@ export const parseContentCopyMediaBlock = (
     return null;
   }
 
-  const { copy, media, mediaBackgroundStyle, mediaPlacement } =
-    contentCopyMediaBlock.fields;
+  const {
+    copy,
+    media,
+    mediaBackgroundStyle,
+    mediaPlacement,
+    mediaOrderMobile,
+  } = contentCopyMediaBlock.fields;
 
   return {
     copy: parseCopyBlock(copy),
     id: contentCopyMediaBlock.sys.id,
     media: media?.map((entry) => entry as ContentEntries) ?? [],
     mediaBackgroundStyle,
+    mediaOrderMobile,
     mediaPlacement,
   };
 };

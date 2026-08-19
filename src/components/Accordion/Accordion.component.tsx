@@ -1,12 +1,15 @@
 "use client";
 
+import { Collapsible } from "@base-ui/react/collapsible";
 import clsx from "clsx";
-import { gsap } from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "src/components/Accordion/Accordion.module.css";
-import { useOptimizedInView } from "src/hooks/useOptimizedInView";
 import PlusIcon from "src/icons/plus.svg";
 import { trackEvent } from "src/lib/trackEvent";
+import {
+  CollapsiblePanel,
+  CollapsibleRoot,
+} from "src/ui/Collapsible/Collapsible.component";
 
 interface AccordionProps {
   animateOpenOnMount?: boolean;
@@ -31,100 +34,64 @@ export const Accordion = ({
   trackingEvent,
   trackingLabel,
 }: AccordionProps) => {
-  const [userToggledOpen, setUserToggledOpen] = useState<boolean | null>(null);
-  const [mountOpen, setMountOpen] = useState(false);
   const shouldAnimateOpenOnMount = defaultOpen && animateOpenOnMount;
-  const isOpen =
-    userToggledOpen !== null
-      ? userToggledOpen
-      : shouldAnimateOpenOnMount
-        ? mountOpen
-        : defaultOpen;
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(
+    defaultOpen && !shouldAnimateOpenOnMount,
+  );
 
-  const accordionId = `accordion-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
-  const contentId = `accordion-content-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
+  const slug = title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase();
+  const accordionId = `accordion-${slug}`;
+  const contentId = `accordion-content-${slug}`;
 
-  const { ref: inViewRef } = useOptimizedInView();
-
-  const toggleAccordion = () => {
-    const newIsOpen = !isOpen;
-
+  const handleOpenChange = (nextOpen: boolean) => {
     if (trackingEvent) {
       trackEvent(trackingEvent, {
         ...(trackingLabel ? { label: trackingLabel } : {}),
-        is_open: newIsOpen,
+        is_open: nextOpen,
       });
     }
 
-    setUserToggledOpen(newIsOpen);
-    onToggle?.(newIsOpen);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      toggleAccordion();
-    }
+    setIsOpen(nextOpen);
+    onToggle?.(nextOpen);
   };
 
   useEffect(() => {
     if (shouldAnimateOpenOnMount) {
-      setMountOpen(true);
+      setIsOpen(true);
     }
   }, [shouldAnimateOpenOnMount]);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      gsap.to(contentRef.current, {
-        duration: 0.2,
-        ease: "power2.out",
-        force3D: true,
-        height: isOpen ? "auto" : 0,
-      });
-    }
-  }, [isOpen]);
 
   const HeaderComponent = headerElement;
 
   return (
-    <div
-      className={clsx(styles.accordion, className, {
+    <CollapsibleRoot
+      className={clsx(styles.accordion, styles.fadeIn, className, {
         [styles.active]: isOpen,
-        [styles.fadeIn]: true,
       })}
-      ref={inViewRef}
+      onOpenChange={handleOpenChange}
+      open={isOpen}
     >
       <HeaderComponent className={styles.accordionHeader}>
-        <button
-          aria-controls={contentId}
-          aria-expanded={isOpen}
+        <Collapsible.Trigger
           className={clsx(styles.accordionButton, {
             [styles.isOpen]: isOpen,
           })}
           id={accordionId}
-          onClick={toggleAccordion}
-          onKeyDown={handleKeyDown}
-          type="button"
         >
           <span className={styles.accordionTitle}>{title}</span>
           <span aria-hidden="true" className={styles.accordionIcon}>
             <PlusIcon className={styles.plusIcon} />
           </span>
-        </button>
+        </Collapsible.Trigger>
       </HeaderComponent>
 
-      <section
-        aria-labelledby={accordionId}
-        className={clsx(styles.accordionContent, {
-          [styles.isOpen]: isOpen,
-        })}
+      <CollapsiblePanel
+        className={styles.accordionContent}
         id={contentId}
-        ref={contentRef}
-        style={{ height: isOpen ? "auto" : 0, overflow: "hidden" }}
+        render={(panelProps) => <section {...panelProps} />}
       >
         <div className={styles.accordionInner}>{children}</div>
-      </section>
-    </div>
+      </CollapsiblePanel>
+    </CollapsibleRoot>
   );
 };

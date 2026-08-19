@@ -48,7 +48,10 @@
     "messages": {
       "submit": "Enviar",
       "submitting": "Enviando...",
-      "success": "¡Gracias! Hemos recibido tu solicitud y te contactaremos pronto."
+      "success": "¡Gracias! Hemos recibido tu solicitud y te contactaremos pronto.",
+      "fieldRequired": "Este campo es requerido",
+      "invalidEmail": "Ingresa un correo electrónico válido",
+      "invalidPhone": "Ingresa un número de teléfono válido"
     }
   },
   "GeneralInquiryForm": {
@@ -67,7 +70,10 @@
     "messages": {
       "submit": "Enviar",
       "submitting": "Enviando...",
-      "success": "¡Gracias! Hemos recibido tu consulta y te responderemos pronto."
+      "success": "¡Gracias! Hemos recibido tu consulta y te responderemos pronto.",
+      "fieldRequired": "Este campo es requerido",
+      "invalidEmail": "Ingresa un correo electrónico válido",
+      "invalidPhone": "Ingresa un número de teléfono válido"
     }
   },
   "JoinOurTeamForm": {
@@ -96,7 +102,10 @@
       "selectPosition": "Selecciona una posición",
       "selectState": "Selecciona un estado",
       "submit": "Enviar",
-      "submitting": "Enviando..."
+      "submitting": "Enviando...",
+      "required": "Este campo es requerido",
+      "invalidEmail": "Ingresa un correo electrónico válido",
+      "invalidPhone": "Ingresa un número de teléfono válido"
     },
     "placeholders": {
       "address": "123 Calle Principal",

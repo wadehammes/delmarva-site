@@ -1,5 +1,6 @@
 "use client";
 
+import { Button as UIButton } from "@base-ui/react/button";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import buttonStyles from "src/components/Button/Button.module.css";
@@ -13,7 +14,6 @@ import { FALLBACK_PROJECT_MEDIA_ID } from "src/contentful/constants";
 import type { ProjectType } from "src/contentful/getProjects";
 import ShareIcon from "src/icons/Share.svg";
 import { trackEvent } from "src/lib/trackEvent";
-import { Button as UIButton } from "src/ui/Button/Button.component";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectModal.module.css";
@@ -97,10 +97,9 @@ export const ProjectModal = ({
       closeOnEscape={true}
       isOpen={isOpen}
       onClose={onClose}
-      showCloseButton={true}
       size="small"
     >
-      <Modal.Header onClose={onClose}>
+      <Modal.Header>
         <h2 className={styles.projectTitle}>{projectName}</h2>
         {services.length > 0 && (
           <div className={styles.servicesList}>

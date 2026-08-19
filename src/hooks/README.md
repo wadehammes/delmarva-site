@@ -32,9 +32,13 @@ Local open/close/toggle state for simple modals.
 
 Syncs component state with the URL hash.
 
+### useStableFieldId
+
+Stable **`id`** for form controls: explicit **`id` prop**, else **`{prefix}-{name}`**, else React **`useId()`**. Used by Input, TextArea, Select, FileInput, and Checkbox.
+
 ### useProjectModal
 
-Jotai-backed project modal (open project by slug). See **`src/atoms/`**.
+Jotai-backed project modal (open project by slug). See **`src/atoms/`**. URL-synced lists render a single **`ProjectModalHost`** at the carousel/list level; cards with **`syncUrlOnOpen`** only open the shared modal via the atom.
 
 ### useServerLocale
 

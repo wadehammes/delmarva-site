@@ -10,7 +10,7 @@ House style for TypeScript, React, CSS, and tests. When in doubt, mirror a nearb
 - **No non-null assertion (`!`).** Prefer optional chaining, nullish coalescing (`??`), or explicit checks.
 - **No nullish coalescing assignment (`??=`).** Assign lazily with an `if` check instead (e.g. `if (!client) { client = createClient(); }`).
 - **Absolute imports (`src/…`).** Import app code from `src/` (e.g. `src/utils/urlHelpers`, `src/utils/env.helpers`). Exceptions: co-located **CSS Modules** and assets (`./MyComponent.module.css`).
-- **No barrel `index.ts` files** that only re-export other modules; import from the defining file. **Exception:** **`src/contentful/types/`** is generated (includes **`index.ts`**); do not hand-edit or “fix” its export style.
+- **No barrel files** — do not add modules whose only job is re-exporting other modules (`index.ts`, `base-ui.ts`, etc.). Import from the **defining path**: app code from `src/.../<Name>.component.tsx`, Base UI from `@base-ui/react/<module>`, shared wrappers from `src/ui/<Name>/<Name>.component.tsx`. **Exception:** **`src/contentful/types/`** is generated (includes **`index.ts`**); do not hand-edit or “fix” its export style.
 - **Contentful**: Use generated types under `src/contentful/types/` and **parsed** shapes from `src/contentful/parse*.ts` in components. Regenerate with `pnpm types:contentful`; do not hand-edit generated files.
 
 ## React / JSX
@@ -39,6 +39,7 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 ## CSS
 
 - **CSS Modules** next to components (`*.module.css`).
+- Shared form field layout/error styles live in **[`src/styles/formFieldShared.module.css`](../../src/styles/formFieldShared.module.css)** (`.fieldsetWrapper`, `.controlWrapper`, `.label`, `.errorMessage`); compose with component-specific modules (e.g. **`Input.module.css`** **`fieldRoot[data-invalid]`** error borders). Error copy sits in normal flow **`0.25rem`** below the control—avoid absolute positioning that floats errors into the next field’s gap. Put **`.fieldRoot[data-invalid]`** override blocks **after** base wrapper rules (`.inputWrapper`, `.selectWrapper`, …) in the same module so Stylelint **`no-descending-specificity`** passes.
 - **Mobile-first**: base styles for small screens; use `min-width` media queries for larger breakpoints.
 - **Nest** selectors and media queries inside their parent rule (`&:hover`, `@media (min-width: …)`) rather than repeating the selector at the top level. Keep nesting depth reasonable.
 - **Alphabetize** properties within a rule where practical.

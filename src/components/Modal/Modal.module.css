@@ -1,18 +1,26 @@
 .modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
   background-color: var(--overlay-backdrop);
   opacity: 0;
   backdrop-filter: blur(4px);
   transform: translateZ(0);
   will-change: opacity;
+
+  &:not([data-open]) {
+    pointer-events: none;
+  }
+}
+
+.modalViewport {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .modal {
@@ -23,9 +31,11 @@
   max-width: 90vw;
   max-height: calc(var(--vh, 1vh) * 90);
   overflow: hidden;
+  pointer-events: auto;
   background-color: var(--color-surface-bg);
   border-radius: 12px;
   box-shadow: var(--shadow-modal);
+  opacity: 0;
   transform: translateZ(0);
   will-change: transform, opacity;
 
