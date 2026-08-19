@@ -3,11 +3,10 @@ import type { Page } from "src/contentful/getPages";
 import type { SectionType } from "src/contentful/parseSections";
 import {
   buildCanonicalUrl,
-  buildLocalizedUrl,
+  buildMetadataAlternateLanguages,
   buildOpenGraphLocale,
 } from "src/i18n/localeUtils";
 import type { Locales } from "src/i18n/routing";
-import { routing } from "src/i18n/routing";
 import { SITE_NAME, SITE_NAME_LEGAL } from "src/utils/constants";
 import { envUrl } from "src/utils/env.helpers";
 import { createMediaUrl } from "src/utils/urlHelpers";
@@ -37,16 +36,7 @@ export const buildDisplayTitle = (title: string): string => {
 const buildAlternateLanguages = (
   path: string,
   baseUrl: string,
-): Record<string, string> => {
-  const route = path ? `/${path}` : "/";
-
-  return Object.fromEntries(
-    routing.locales.map((locale) => [
-      locale,
-      buildLocalizedUrl(route, locale, baseUrl),
-    ]),
-  );
-};
+): Record<string, string> => buildMetadataAlternateLanguages(path, baseUrl);
 
 const createMetadataImages = (
   metaImage: { src: string } | null | undefined,
@@ -74,7 +64,6 @@ interface CreateSiteMetadataOptions {
   enableIndexing: boolean;
   imageAlt?: string;
   imageSource: { src: string } | null | undefined;
-  keywords?: string;
   locale: Locales;
   path: string;
   title: string;
@@ -85,7 +74,6 @@ const createSiteMetadata = ({
   enableIndexing,
   imageAlt,
   imageSource,
-  keywords,
   locale,
   path,
   title,
@@ -101,7 +89,6 @@ const createSiteMetadata = ({
       languages: buildAlternateLanguages(path, baseUrl),
     },
     description,
-    keywords: keywords ?? "",
     openGraph: {
       ...buildOpenGraphLocale(locale),
       description,
@@ -139,7 +126,6 @@ export const createPageMetadata = (
     enableIndexing: page.enableIndexing,
     imageAlt: options?.imageAlt,
     imageSource: page.metaImage,
-    keywords: page.metaKeywords?.join(","),
     locale,
     path: options?.path ?? "",
     title: options?.title ?? page.metaTitle,

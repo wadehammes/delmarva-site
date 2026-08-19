@@ -9,6 +9,7 @@ import PlusIcon from "src/icons/plus.svg";
 import { trackEvent } from "src/lib/trackEvent";
 
 interface AccordionProps {
+  animateOpenOnMount?: boolean;
   children: React.ReactNode;
   className?: string;
   defaultOpen?: boolean;
@@ -19,11 +20,8 @@ interface AccordionProps {
   trackingLabel?: string;
 }
 
-/**
- * Accessible accordion component with GSAP animated content
- * Supports keyboard navigation and screen readers
- */
 export const Accordion = ({
+  animateOpenOnMount = false,
   children,
   className,
   defaultOpen = false,
@@ -34,14 +32,19 @@ export const Accordion = ({
   trackingLabel,
 }: AccordionProps) => {
   const [userToggledOpen, setUserToggledOpen] = useState<boolean | null>(null);
-  const isOpen = userToggledOpen !== null ? userToggledOpen : defaultOpen;
+  const [mountOpen, setMountOpen] = useState(false);
+  const shouldAnimateOpenOnMount = defaultOpen && animateOpenOnMount;
+  const isOpen =
+    userToggledOpen !== null
+      ? userToggledOpen
+      : shouldAnimateOpenOnMount
+        ? mountOpen
+        : defaultOpen;
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Generate stable IDs that work consistently across server and client
   const accordionId = `accordion-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
   const contentId = `accordion-content-${title.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
 
-  // Intersection observer for fade-in animation
   const { ref: inViewRef } = useOptimizedInView();
 
   const toggleAccordion = () => {
@@ -66,11 +69,17 @@ export const Accordion = ({
   };
 
   useEffect(() => {
+    if (shouldAnimateOpenOnMount) {
+      setMountOpen(true);
+    }
+  }, [shouldAnimateOpenOnMount]);
+
+  useEffect(() => {
     if (contentRef.current) {
       gsap.to(contentRef.current, {
         duration: 0.2,
         ease: "power2.out",
-        force3D: true, // Force hardware acceleration
+        force3D: true,
         height: isOpen ? "auto" : 0,
       });
     }

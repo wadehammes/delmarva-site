@@ -1,0 +1,9 @@
+{
+  "context_servers": {
+    "contentful": {
+      "command": "/ABSOLUTE/PATH/TO/delmarva-site/scripts/run-contentful-mcp.sh",
+      "args": [],
+      "env": {}
+    }
+  }
+}

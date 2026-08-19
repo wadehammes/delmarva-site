@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { JsonLdScript } from "src/components/Page/JsonLdScript.component";
 import { PageComponent } from "src/components/Page/Page.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
-import { SchemaScript } from "src/components/SchemaScript/SchemaScript.component";
 import { fetchFooter } from "src/contentful/getFooter";
 import { fetchNavigation } from "src/contentful/getNavigation";
 import { fetchPage } from "src/contentful/getPages";
@@ -95,7 +95,9 @@ const Home = async (props: HomeProps) => {
 
   return (
     <PageLayout footer={footer} navigation={navigation} page={page}>
-      <SchemaScript schema={schemaGraph} />
+      {schemaGraph ? (
+        <JsonLdScript id="schema-structured-data" json={schemaGraph} />
+      ) : null}
       <PageComponent fields={page} locale={validLocale} />
     </PageLayout>
   );

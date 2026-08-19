@@ -1,0 +1,42 @@
+---
+description: Never overwrite editor or tool config files — always read and merge
+alwaysApply: true
+---
+
+# Merge config files; never replace wholesale
+
+When adding or changing **existing** configuration files, **read the file first** and **merge** your changes into what is already there. Do not write a new file that only contains your addition.
+
+This applies especially to:
+
+- `.zed/settings.json` (e.g. Biome LSP, formatters, `context_servers`)
+- `.cursor/mcp.json`
+- `biome.json`, `package.json` scripts/deps, `knip.json`, CI YAML, etc.
+
+## Required workflow
+
+1. **Read** the current file (or `git show HEAD:path` if needed).
+2. **Identify** existing keys/blocks that must be preserved.
+3. **Add or update** only the intended keys; keep unrelated settings intact.
+4. **Diff mentally** — if your edit removes unrelated config, stop and fix it.
+
+## Example (bad → good)
+
+**Bad** — adding MCP removed Biome LSP:
+
+```json
+{
+  "context_servers": { "contentful": { ... } }
+}
+```
+
+**Good** — MCP added alongside existing settings:
+
+```json
+{
+  "lsp": { "biome": { ... } },
+  "context_servers": { "contentful": { ... } }
+}
+```
+
+If a config file does not exist yet, creating it from scratch is fine. The rule applies when **replacing** content in a file that already had configuration.

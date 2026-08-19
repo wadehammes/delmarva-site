@@ -28,6 +28,14 @@ const OPEN_GRAPH_LOCALE: Record<Locales, string> = {
   es: "es_ES",
 };
 
+const SCHEMA_LOCALE: Record<Locales, string> = {
+  en: "en-US",
+  es: "es-US",
+};
+
+export const toSchemaLocale = (locale: Locales): string =>
+  SCHEMA_LOCALE[locale];
+
 export const buildOpenGraphLocale = (locale: Locales) => ({
   alternateLocale: routing.locales
     .filter((entry) => entry !== locale)
@@ -56,6 +64,20 @@ export const buildHreflangAlternates = (
     hreflang: "x-default",
   },
 ];
+
+export const buildMetadataAlternateLanguages = (
+  path: string,
+  baseUrl: string,
+): Record<string, string> => {
+  const route = path ? `/${path}` : "/";
+
+  return Object.fromEntries(
+    buildHreflangAlternates(route, baseUrl).map(({ href, hreflang }) => [
+      hreflang,
+      href,
+    ]),
+  );
+};
 
 export const isValidLocale = (locale: string): locale is Locales =>
   routing.locales.includes(locale as Locales);

@@ -19,8 +19,9 @@ export const AllServicesList = ({
 }: AllServicesListProps) => {
   return (
     <>
-      {servicesWithProjects.map(({ service, projects }) => (
+      {servicesWithProjects.map(({ service, projects }, index) => (
         <ServiceAccordion
+          defaultOpen={index === 0}
           key={service.id}
           locale={locale}
           projects={projects}

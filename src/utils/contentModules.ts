@@ -2,12 +2,6 @@ import type { Page } from "src/contentful/getPages";
 import type { SectionType } from "src/contentful/parseSections";
 import { isTypeContentModules } from "src/contentful/types";
 
-/**
- * Checks if a page contains a specific ContentModule type
- * @param page - The page to check
- * @param moduleType - The module type to look for
- * @returns true if the page contains the specified module type
- */
 export function hasContentModule(
   page: Page,
   moduleType:
@@ -54,23 +48,6 @@ export function sectionContainsRecentNewsList(
   return false;
 }
 
-/**
- * Checks if a page has any service list module (All Services List or Featured Services List)
- * @param page - The page to check
- * @returns true if the page contains a service list module
- */
-export function hasServiceListModule(page: Page): boolean {
-  return (
-    hasContentModule(page, "All Services List") ||
-    hasContentModule(page, "Featured Services List")
-  );
-}
-
-/**
- * Checks if a page has the Areas Serviced List module
- * @param page - The page to check
- * @returns true if the page contains the Areas Serviced List module
- */
 export function hasAreasServicedListModule(page: Page): boolean {
   return hasContentModule(page, "Areas Serviced List");
 }

@@ -30,6 +30,11 @@ describe("metadata.helpers", () => {
     expect(metadata.alternates?.canonical?.toString()).toBe(
       "https://www.delmarvasite.com/es/contact-us",
     );
+    expect(metadata.alternates?.languages).toEqual({
+      en: "https://www.delmarvasite.com/contact-us",
+      es: "https://www.delmarvasite.com/es/contact-us",
+      "x-default": "https://www.delmarvasite.com/contact-us",
+    });
     expect(metadata.openGraph?.url).toBe(
       "https://www.delmarvasite.com/es/contact-us",
     );
