@@ -11,6 +11,25 @@ const DEPLOY_STATUS_PREFIX: Record<DeployMonitorStatus, string> = {
   unknown: "In progress",
 };
 
+const DEPLOY_STATUS_RANK: Record<DeployMonitorStatus, number> = {
+  building: 3,
+  canceled: 5,
+  error: 5,
+  pending: 0,
+  queued: 2,
+  ready: 4,
+  unknown: 1,
+};
+
+export const furthestDeployStatus = (
+  current: DeployMonitorStatus,
+  next: DeployMonitorStatus,
+): DeployMonitorStatus => {
+  return DEPLOY_STATUS_RANK[next] >= DEPLOY_STATUS_RANK[current]
+    ? next
+    : current;
+};
+
 export const DEPLOY_POLL_TIMEOUT_MS = 20 * 60 * 1_000;
 export const DEPLOY_ESTIMATED_MS = 2 * 60 * 1_000;
 
@@ -60,11 +79,9 @@ export const formatDeployElapsed = (elapsedMs: number): string => {
 
 export const formatDeployProgressLabel = (
   elapsedMs: number,
-  status?: DeployMonitorStatus,
+  status: DeployMonitorStatus,
 ): string => {
-  const prefix = status ? DEPLOY_STATUS_PREFIX[status] : "In progress";
-
-  return `${prefix} (${formatDeployElapsed(elapsedMs)})`;
+  return `${DEPLOY_STATUS_PREFIX[status]} (${formatDeployElapsed(elapsedMs)})`;
 };
 
 export const readDeployProgress = (

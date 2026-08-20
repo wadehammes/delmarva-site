@@ -33,7 +33,7 @@ Import the specific module you need; there is no barrel **`utils/index.ts`**.
 ## `src/lib/`
 
 - **Sitemap** — [generateSitemap.ts](../../src/lib/generateSitemap.ts)
-- **Refresh content** — [refreshContentAccess.ts](../../src/lib/refreshContentAccess.ts) (auth, hook metadata), [vercelDeploymentStatus.ts](../../src/lib/vercelDeploymentStatus.ts) (Vercel polling), [deployProgressStorage.ts](../../src/lib/deployProgressStorage.ts) (client `localStorage`)
+- **Refresh content** — [refreshContentAccess.ts](../../src/lib/refreshContentAccess.ts) (auth, hook metadata), [vercelDeploymentStatus.ts](../../src/lib/vercelDeploymentStatus.ts) (Vercel List Deployments matching/polling), [deployProgressStorage.ts](../../src/lib/deployProgressStorage.ts) (client `localStorage`, label formatting, **`furthestDeployStatus`**)
 - **Resend / email templates** — [src/lib/README.md](../../src/lib/README.md), components in [src/components/Email/README.md](../../src/components/Email/README.md)
 
 ## `src/contentful/`
@@ -72,8 +72,9 @@ Custom React hooks and form mutations. Overview: [src/hooks/README.md](../../src
 | [useHash.ts](../../src/hooks/useHash.ts) | URL hash sync |
 | [useServerLocale.ts](../../src/hooks/useServerLocale.ts) | Read locale in client subtrees under localized layouts |
 | [mutations/](../../src/hooks/mutations/) | Form **`useMutation`** hooks and **`useTriggerDeployMutation`** |
-| [queries/deployQueryKeys.ts](../../src/hooks/queries/deployQueryKeys.ts) | Typed React Query keys for deploy status/active polling |
-| [useDeployMonitor.ts](../../src/hooks/useDeployMonitor.ts) | Refresh-content deploy orchestration (mutation + polled queries + toasts) |
+| [queries/deployQueryKeys.ts](../../src/hooks/queries/deployQueryKeys.ts) | Typed React Query keys for deploy status/active/build-stats polling |
+| [queries/useDeployBuildStats.query.ts](../../src/hooks/queries/useDeployBuildStats.query.ts) | Average build time query for refresh-content buttons |
+| [useDeployMonitor.ts](../../src/hooks/useDeployMonitor.ts) | Refresh-content deploy orchestration (mutation + polled queries, monotonic **`displayStatus`**, toasts) |
 
 ## `src/interfaces/`
 

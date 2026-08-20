@@ -1,6 +1,8 @@
 import type {
   DeployActiveInput,
   DeployActiveResponse,
+  DeployBuildStatsInput,
+  DeployBuildStatsResponse,
   DeployStatusInput,
   DeployStatusResponse,
   DeployTriggerInput,
@@ -76,9 +78,17 @@ export const api = {
           fetchOptions({ cache: "no-store", method: FetchMethods.Get }),
         ),
       ),
+    buildStats: ({ token }: DeployBuildStatsInput) =>
+      fetchJsonResponse<DeployBuildStatsResponse>(
+        fetch(
+          `/api/refresh-content/deploy/build-stats?${buildDeploySearchParams({}, token)}`,
+          fetchOptions({ cache: "no-store", method: FetchMethods.Get }),
+        ),
+      ),
     status: ({
       createdAt,
       deployHookId,
+      jobCreatedAt,
       projectId,
       target,
       token,
@@ -91,6 +101,9 @@ export const api = {
               projectId,
               since: String(createdAt),
               target,
+              ...(jobCreatedAt !== undefined
+                ? { jobCreatedAt: String(jobCreatedAt) }
+                : {}),
             },
             token,
           )}`,

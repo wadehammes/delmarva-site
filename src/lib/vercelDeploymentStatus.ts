@@ -8,11 +8,16 @@ export type DeployMonitorStatus =
   | "unknown";
 
 interface VercelDeploymentSummary {
+  buildingAt?: number;
+  created?: number;
   createdAt?: number;
   meta?: {
     deployHookId?: string;
   };
+  ready?: number;
   readyState?: string;
+  source?: string;
+  state?: string;
   url?: string;
 }
 
@@ -26,10 +31,59 @@ const IN_PROGRESS_READY_STATES = new Set([
   "QUEUED",
 ]);
 
+const DEPLOY_HOOK_SOURCE = "git-deploy-hook";
+
+const MATCH_WINDOW_MS = 120_000;
+const DEFAULT_BUILD_STATS_SAMPLE_SIZE = 5;
+
+const deploymentCreatedAt = (
+  deployment: VercelDeploymentSummary,
+): number | null => {
+  const created = deployment.createdAt ?? deployment.created;
+
+  if (typeof created !== "number") {
+    return null;
+  }
+
+  return created;
+};
+
+const deploymentReadyState = (
+  deployment: VercelDeploymentSummary,
+): string | undefined => {
+  return deployment.readyState ?? deployment.state;
+};
+
+const pickNewestDeployment = (
+  deployments: VercelDeploymentSummary[],
+): VercelDeploymentSummary | null => {
+  return (
+    deployments.reduce<VercelDeploymentSummary | null>((newest, deployment) => {
+      const created = deploymentCreatedAt(deployment);
+
+      if (created === null) {
+        return newest;
+      }
+
+      if (!newest) {
+        return deployment;
+      }
+
+      const newestCreated = deploymentCreatedAt(newest);
+
+      if (newestCreated === null || created > newestCreated) {
+        return deployment;
+      }
+
+      return newest;
+    }, null) ?? null
+  );
+};
+
 const listProjectDeployments = async (
   projectId: string,
   token: string,
-): Promise<VercelDeploymentSummary[]> => {
+): Promise<VercelDeploymentSummary[] | null> => {
   const url = new URL("https://api.vercel.com/v6/deployments");
   url.searchParams.set("projectId", projectId);
   url.searchParams.set("limit", "20");
@@ -51,7 +105,7 @@ const listProjectDeployments = async (
   });
 
   if (!response.ok) {
-    return [];
+    return null;
   }
 
   const payload = (await response.json()) as VercelDeploymentsResponse;
@@ -88,22 +142,46 @@ export const findMatchingDeployment = (
   deployments: VercelDeploymentSummary[],
   deployHookId: string,
   since: number,
+  jobCreatedAt?: number,
 ): VercelDeploymentSummary | null => {
-  const sinceThreshold = since - 60_000;
+  const anchor = Math.min(since, jobCreatedAt ?? since);
+  const sinceThreshold = anchor - MATCH_WINDOW_MS;
 
-  return (
-    deployments.find((deployment) => {
-      if (deployment.meta?.deployHookId !== deployHookId) {
-        return false;
-      }
+  const hookMatches = deployments.filter((deployment) => {
+    if (deployment.meta?.deployHookId !== deployHookId) {
+      return false;
+    }
 
-      if (typeof deployment.createdAt !== "number") {
-        return false;
-      }
+    const created = deploymentCreatedAt(deployment);
 
-      return deployment.createdAt >= sinceThreshold;
-    }) ?? null
-  );
+    if (created === null) {
+      return false;
+    }
+
+    return created >= sinceThreshold;
+  });
+
+  const hookMatch = pickNewestDeployment(hookMatches);
+
+  if (hookMatch) {
+    return hookMatch;
+  }
+
+  const sourceMatches = deployments.filter((deployment) => {
+    if (deployment.source !== DEPLOY_HOOK_SOURCE) {
+      return false;
+    }
+
+    const created = deploymentCreatedAt(deployment);
+
+    if (created === null) {
+      return false;
+    }
+
+    return created >= sinceThreshold;
+  });
+
+  return pickNewestDeployment(sourceMatches);
 };
 
 export const findActiveDeployment = (
@@ -116,11 +194,13 @@ export const findActiveDeployment = (
         return false;
       }
 
-      if (!deployment.readyState) {
+      const readyState = deploymentReadyState(deployment);
+
+      if (!readyState) {
         return false;
       }
 
-      return IN_PROGRESS_READY_STATES.has(deployment.readyState);
+      return IN_PROGRESS_READY_STATES.has(readyState);
     }) ?? null
   );
 };
@@ -145,15 +225,21 @@ export const fetchActiveDeployProgress = async (options: {
   }
 
   const deployments = await listProjectDeployments(options.projectId, token);
-  const deployment = findActiveDeployment(deployments, options.deployHookId);
 
-  if (!deployment || typeof deployment.createdAt !== "number") {
+  if (!deployments) {
+    return { active: false };
+  }
+
+  const deployment = findActiveDeployment(deployments, options.deployHookId);
+  const created = deployment ? deploymentCreatedAt(deployment) : null;
+
+  if (!deployment || created === null) {
     return { active: false };
   }
 
   return {
     active: true,
-    createdAt: deployment.createdAt,
+    createdAt: created,
     deployHookId: options.deployHookId,
     projectId: options.projectId,
   };
@@ -161,6 +247,7 @@ export const fetchActiveDeployProgress = async (options: {
 
 export const fetchDeploymentStatus = async (options: {
   deployHookId: string;
+  jobCreatedAt?: number;
   projectId: string;
   since: number;
 }): Promise<{
@@ -174,20 +261,121 @@ export const fetchDeploymentStatus = async (options: {
   }
 
   const deployments = await listProjectDeployments(options.projectId, token);
+
+  if (!deployments) {
+    return { monitoring: false, status: "unknown" };
+  }
+
   const deployment = findMatchingDeployment(
     deployments,
     options.deployHookId,
     options.since,
+    options.jobCreatedAt,
   );
 
   if (!deployment) {
     return { monitoring: true, status: "pending" };
   }
 
-  const status = mapVercelReadyState(deployment.readyState);
+  const status = mapVercelReadyState(deploymentReadyState(deployment));
 
   return {
     monitoring: true,
     status,
+  };
+};
+
+export const deploymentBuildDurationMs = (
+  deployment: VercelDeploymentSummary,
+): number | null => {
+  if (deploymentReadyState(deployment) !== "READY") {
+    return null;
+  }
+
+  const ready = deployment.ready;
+  const buildStartedAt =
+    deployment.buildingAt ?? deploymentCreatedAt(deployment);
+
+  if (typeof ready !== "number" || typeof buildStartedAt !== "number") {
+    return null;
+  }
+
+  if (ready <= buildStartedAt) {
+    return null;
+  }
+
+  return ready - buildStartedAt;
+};
+
+export const calculateAverageBuildTimeMs = (
+  deployments: VercelDeploymentSummary[],
+  sampleSize = DEFAULT_BUILD_STATS_SAMPLE_SIZE,
+): { averageBuildMs: number; sampleSize: number } | null => {
+  const recentDeployments = [...deployments].sort(
+    (left, right) =>
+      (deploymentCreatedAt(right) ?? 0) - (deploymentCreatedAt(left) ?? 0),
+  );
+
+  const durations: number[] = [];
+
+  for (const deployment of recentDeployments) {
+    const duration = deploymentBuildDurationMs(deployment);
+
+    if (duration === null) {
+      continue;
+    }
+
+    durations.push(duration);
+
+    if (durations.length >= sampleSize) {
+      break;
+    }
+  }
+
+  if (durations.length === 0) {
+    return null;
+  }
+
+  const totalDuration = durations.reduce((sum, duration) => sum + duration, 0);
+
+  return {
+    averageBuildMs: Math.round(totalDuration / durations.length),
+    sampleSize: durations.length,
+  };
+};
+
+export type DeployBuildStatsResult =
+  | { available: false }
+  | { available: true; averageBuildMs: number; sampleSize: number };
+
+export const fetchAverageBuildTime = async (options: {
+  projectId: string;
+  sampleSize?: number;
+}): Promise<DeployBuildStatsResult> => {
+  const token = getVercelApiToken();
+
+  if (!token) {
+    return { available: false };
+  }
+
+  const deployments = await listProjectDeployments(options.projectId, token);
+
+  if (!deployments) {
+    return { available: false };
+  }
+
+  const averageBuild = calculateAverageBuildTimeMs(
+    deployments,
+    options.sampleSize,
+  );
+
+  if (!averageBuild) {
+    return { available: false };
+  }
+
+  return {
+    available: true,
+    averageBuildMs: averageBuild.averageBuildMs,
+    sampleSize: averageBuild.sampleSize,
   };
 };
