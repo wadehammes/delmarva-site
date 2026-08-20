@@ -23,10 +23,21 @@ describe("DeployButton", () => {
   });
 
   it("renders with initial state", async () => {
-    mockFetch.mockResolvedValue({
-      json: async () => ({ active: false }),
-      ok: true,
-    } as Response);
+    mockFetch.mockImplementation(async (input) => {
+      const url = String(input);
+
+      if (url.includes("/api/refresh-content/deploy/build-stats")) {
+        return {
+          json: async () => ({ available: false }),
+          ok: true,
+        } as Response;
+      }
+
+      return {
+        json: async () => ({ active: false }),
+        ok: true,
+      } as Response;
+    });
 
     po.setupApiMocks();
     po.render();
@@ -148,9 +159,11 @@ describe("DeployButton", () => {
       expect(JSON.parse(storedProgress ?? "{}").startedAt).toBe(startedAt);
     });
 
-    expect(
-      screen.getByRole("button", { name: /building \(0:03\)/i }),
-    ).toBeDisabled();
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: /building \(0:03\)/i }),
+      ).toBeDisabled();
+    });
 
     jest.setSystemTime(new Date());
   });

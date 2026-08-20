@@ -5,6 +5,8 @@ export const deployQueryKeys = {
   active: (target: DeployTarget, accessToken?: string) =>
     [...deployQueryKeys.all, "active", target, accessToken ?? ""] as const,
   all: ["deploy"] as const,
+  buildStats: (accessToken?: string) =>
+    [...deployQueryKeys.all, "build-stats", accessToken ?? ""] as const,
   status: (target: DeployTarget, progress: StoredDeployProgress | null) =>
     progress
       ? ([

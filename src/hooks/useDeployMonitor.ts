@@ -17,6 +17,7 @@ import {
   clearDeployProgress,
   DEPLOY_ESTIMATED_MS,
   formatDeployProgressLabel,
+  furthestDeployStatus,
   isDeployProgressExpired,
   readDeployProgress,
   type StoredDeployProgress,
@@ -66,12 +67,15 @@ export const useDeployMonitor = ({
   const pendingStartedAtRef = useRef<number | null>(null);
   const progressRef = useRef<StoredDeployProgress | null>(null);
   const [elapsedMs, setElapsedMs] = useState(0);
+  const [displayStatus, setDisplayStatus] =
+    useState<DeployMonitorStatus>("pending");
   const triggerDeployMutation = useTriggerDeployMutation();
 
   progressRef.current = progress;
 
   const clearProgress = useCallback(() => {
     setProgress(null);
+    setDisplayStatus("pending");
     pendingStartedAtRef.current = null;
     clearDeployProgress(target);
     queryClient.removeQueries({
@@ -122,6 +126,7 @@ export const useDeployMonitor = ({
       return api.deploy.status({
         createdAt: progress.startedAt,
         deployHookId: progress.deployHookId,
+        jobCreatedAt: progress.createdAt,
         projectId: progress.projectId,
         target,
         token: accessToken,
@@ -154,6 +159,16 @@ export const useDeployMonitor = ({
     refetchIntervalInBackground: true,
     staleTime: 0,
   });
+
+  useEffect(() => {
+    const polledStatus = deployStatusQuery.data?.status;
+
+    if (!progress || polledStatus === undefined) {
+      return;
+    }
+
+    setDisplayStatus((current) => furthestDeployStatus(current, polledStatus));
+  }, [deployStatusQuery.data?.status, progress]);
 
   useEffect(() => {
     if (!progress) {
@@ -252,6 +267,7 @@ export const useDeployMonitor = ({
     }
 
     pendingStartedAtRef.current = Date.now();
+    setDisplayStatus("pending");
 
     triggerDeployMutation.mutate(
       { target, token: accessToken },
@@ -277,14 +293,8 @@ export const useDeployMonitor = ({
     );
   }, [accessToken, progress, saveProgress, target, triggerDeployMutation]);
 
-  const deployStatus = progress ? deployStatusQuery.data?.status : undefined;
-  const inProgressStatus =
-    triggerDeployMutation.isPending && progress === null
-      ? "pending"
-      : deployStatus;
-
   return {
-    inProgressLabel: formatDeployProgressLabel(elapsedMs, inProgressStatus),
+    inProgressLabel: formatDeployProgressLabel(elapsedMs, displayStatus),
     isInProgress: progress !== null || triggerDeployMutation.isPending,
     triggerDeploy,
   };

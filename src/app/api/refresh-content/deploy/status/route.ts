@@ -23,12 +23,21 @@ const parseSince = (value: string | null): number | null => {
   return since;
 };
 
+const parseOptionalTimestamp = (value: string | null): number | undefined => {
+  const parsed = parseSince(value);
+
+  return parsed ?? undefined;
+};
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const token = searchParams.get("token") ?? undefined;
     const target = parseDeployTarget(searchParams.get("target"));
     const since = parseSince(searchParams.get("since"));
+    const jobCreatedAt = parseOptionalTimestamp(
+      searchParams.get("jobCreatedAt"),
+    );
     const deployHookId = searchParams.get("deployHookId")?.trim();
     const projectId = searchParams.get("projectId")?.trim();
 
@@ -64,6 +73,7 @@ export async function GET(request: NextRequest) {
 
     const result = await fetchDeploymentStatus({
       deployHookId: hookMetadata.deployHookId,
+      jobCreatedAt,
       projectId: hookMetadata.projectId,
       since,
     });

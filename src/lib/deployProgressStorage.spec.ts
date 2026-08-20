@@ -4,6 +4,7 @@ import {
   DEPLOY_POLL_TIMEOUT_MS,
   formatDeployElapsed,
   formatDeployProgressLabel,
+  furthestDeployStatus,
   readDeployProgress,
   writeDeployProgress,
 } from "src/lib/deployProgressStorage";
@@ -74,5 +75,12 @@ describe("deployProgressStorage", () => {
     expect(formatDeployProgressLabel(1_000, "unknown")).toBe(
       "In progress (0:01)",
     );
+  });
+
+  it("advances deploy status monotonically", () => {
+    expect(furthestDeployStatus("pending", "building")).toBe("building");
+    expect(furthestDeployStatus("building", "queued")).toBe("building");
+    expect(furthestDeployStatus("building", "unknown")).toBe("building");
+    expect(furthestDeployStatus("pending", "unknown")).toBe("unknown");
   });
 });

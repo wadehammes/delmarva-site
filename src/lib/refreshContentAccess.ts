@@ -56,3 +56,15 @@ export const resolveDeployHookMetadata = (
 
   return parseDeployHookUrl(hookUrl);
 };
+
+export const resolveDeployProjectId = (): string | null => {
+  for (const target of ["staging", "production"] as const) {
+    const metadata = resolveDeployHookMetadata(target);
+
+    if (metadata) {
+      return metadata.projectId;
+    }
+  }
+
+  return null;
+};

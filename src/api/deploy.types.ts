@@ -16,6 +16,7 @@ export interface DeployTriggerResponse {
 export interface DeployStatusInput {
   createdAt: number;
   deployHookId: string;
+  jobCreatedAt?: number;
   projectId: string;
   target: DeployTarget;
   token?: string;
@@ -39,3 +40,11 @@ export type DeployActiveResponse =
       deployHookId: string;
       projectId: string;
     };
+
+export interface DeployBuildStatsInput {
+  token?: string;
+}
+
+export type DeployBuildStatsResponse =
+  | { available: false }
+  | { available: true; averageBuildMs: number; sampleSize: number };

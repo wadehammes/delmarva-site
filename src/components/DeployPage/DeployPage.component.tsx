@@ -1,4 +1,5 @@
 import { DeployButton } from "src/components/DeployButton/DeployButton.component";
+import { DeployBuildStats } from "src/components/DeployPage/DeployBuildStats.component";
 import styles from "src/components/DeployPage/DeployPage.module.css";
 
 interface DeployPageProps {
@@ -15,17 +16,20 @@ export const DeployPage = ({ accessToken }: DeployPageProps) => {
           updates content—no code changes, so you can use without fear!
         </p>
       </header>
-      <div className={styles.buttonGroup}>
-        <DeployButton
-          accessToken={accessToken}
-          label="Refresh staging.delmarvasite.com"
-          target="staging"
-        />
-        <DeployButton
-          accessToken={accessToken}
-          label="Refresh delmarvasite.com"
-          target="production"
-        />
+      <div className={styles.deployActions}>
+        <div className={styles.buttonGroup}>
+          <DeployButton
+            accessToken={accessToken}
+            label="Refresh staging.delmarvasite.com"
+            target="staging"
+          />
+          <DeployButton
+            accessToken={accessToken}
+            label="Refresh delmarvasite.com"
+            target="production"
+          />
+        </div>
+        <DeployBuildStats accessToken={accessToken} />
       </div>
     </div>
   );

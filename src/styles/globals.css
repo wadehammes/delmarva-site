@@ -567,7 +567,6 @@ input[type="checkbox"] {
 
 .toast {
   --toast-bg: var(--color-toast-default-bg);
-  --toast-border: var(--color-toast-default-border);
   --toast-text: var(--color-toast-default-text);
 
   position: relative;
@@ -582,26 +581,22 @@ input[type="checkbox"] {
   line-height: 1.4;
   color: var(--toast-text);
   background-color: var(--toast-bg);
-  border: 1px solid var(--toast-border);
   border-radius: 8px;
   box-shadow: 0 4px 16px var(--color-toast-shadow);
 }
 
 .toast[data-type="success"] {
   --toast-bg: var(--color-toast-success-bg);
-  --toast-border: var(--color-toast-success-border);
   --toast-text: var(--color-toast-success-text);
 }
 
 .toast[data-type="error"] {
   --toast-bg: var(--color-toast-error-bg);
-  --toast-border: var(--color-toast-error-border);
   --toast-text: var(--color-toast-error-text);
 }
 
 .toast[data-type="warning"] {
   --toast-bg: var(--color-toast-warning-bg);
-  --toast-border: var(--color-toast-warning-border);
   --toast-text: var(--color-toast-warning-text);
 }
 
