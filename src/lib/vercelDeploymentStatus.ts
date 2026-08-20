@@ -80,21 +80,21 @@ const pickNewestDeployment = (
   );
 };
 
-const listProjectDeployments = async (
+const fetchProjectDeployments = async (
   projectId: string,
   token: string,
+  team: { teamId?: string; slug?: string },
 ): Promise<VercelDeploymentSummary[] | null> => {
-  const url = new URL("https://api.vercel.com/v6/deployments");
+  const url = new URL("https://api.vercel.com/v7/deployments");
   url.searchParams.set("projectId", projectId);
   url.searchParams.set("limit", "20");
 
-  const teamId = process.env.VERCEL_TEAM_ID?.trim();
-  const teamSlug = process.env.VERCEL_TEAM_SLUG?.trim();
-
-  if (teamId) {
-    url.searchParams.set("teamId", teamId);
-  } else if (teamSlug) {
-    url.searchParams.set("slug", teamSlug);
+  if (team.teamId) {
+    url.searchParams.set("teamId", team.teamId);
+  } else if (team.slug) {
+    url.searchParams.set("slug", team.slug);
+  } else {
+    return null;
   }
 
   const response = await fetch(url, {
@@ -111,6 +111,33 @@ const listProjectDeployments = async (
   const payload = (await response.json()) as VercelDeploymentsResponse;
 
   return payload.deployments ?? [];
+};
+
+const listProjectDeployments = async (
+  projectId: string,
+  token: string,
+): Promise<VercelDeploymentSummary[] | null> => {
+  const teamId = process.env.VERCEL_TEAM_ID?.trim();
+  const teamSlug = process.env.VERCEL_TEAM_SLUG?.trim();
+  const teamAttempts: Array<{ teamId?: string; slug?: string }> = [];
+
+  if (teamId) {
+    teamAttempts.push({ teamId });
+  }
+
+  if (teamSlug) {
+    teamAttempts.push({ slug: teamSlug });
+  }
+
+  for (const team of teamAttempts) {
+    const deployments = await fetchProjectDeployments(projectId, token, team);
+
+    if (deployments) {
+      return deployments;
+    }
+  }
+
+  return null;
 };
 
 const getVercelApiToken = (): string | null =>

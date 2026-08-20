@@ -65,6 +65,7 @@ export const useDeployMonitor = ({
   );
   const terminalNotificationRef = useRef<string | null>(null);
   const pendingStartedAtRef = useRef<number | null>(null);
+  const unmonitoredStartedAtRef = useRef<number | null>(null);
   const progressRef = useRef<StoredDeployProgress | null>(null);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [displayStatus, setDisplayStatus] =
@@ -82,6 +83,23 @@ export const useDeployMonitor = ({
       queryKey: deployQueryKeys.status(target, null),
     });
   }, [queryClient, target]);
+
+  const releaseUnmonitoredDeploy = useCallback(
+    (startedAt: number) => {
+      unmonitoredStartedAtRef.current = startedAt;
+      clearProgress();
+
+      if (terminalNotificationRef.current !== "unmonitored") {
+        terminalNotificationRef.current = "unmonitored";
+        showDeployToast(
+          target,
+          "Deploy triggered — live status unavailable. Check the Vercel dashboard.",
+          "warning",
+        );
+      }
+    },
+    [clearProgress, target],
+  );
 
   const saveProgress = useCallback((nextProgress: StoredDeployProgress) => {
     setProgress(nextProgress);
@@ -193,6 +211,16 @@ export const useDeployMonitor = ({
 
     if (
       deployStatusQuery.isSuccess &&
+      statusPayload?.monitoring === false &&
+      terminalNotificationRef.current !== "unmonitored" &&
+      terminalNotificationRef.current !== "estimated"
+    ) {
+      releaseUnmonitoredDeploy(progress.startedAt);
+      return;
+    }
+
+    if (
+      deployStatusQuery.isSuccess &&
       statusPayload?.status === "ready" &&
       terminalNotificationRef.current !== "ready"
     ) {
@@ -221,9 +249,9 @@ export const useDeployMonitor = ({
 
     if (
       elapsedMs >= DEPLOY_ESTIMATED_MS &&
-      (!deployStatusQuery.isSuccess ||
-        !statusPayload?.monitoring ||
-        statusPayload.status === "unknown") &&
+      deployStatusQuery.isSuccess &&
+      statusPayload?.monitoring &&
+      statusPayload.status === "pending" &&
       terminalNotificationRef.current !== "estimated"
     ) {
       terminalNotificationRef.current = "estimated";
@@ -237,10 +265,15 @@ export const useDeployMonitor = ({
     deployStatusQuery.isSuccess,
     elapsedMs,
     progress,
+    releaseUnmonitoredDeploy,
     target,
   ]);
 
-  const startedAt = progress?.startedAt ?? pendingStartedAtRef.current ?? null;
+  const startedAt =
+    progress?.startedAt ??
+    pendingStartedAtRef.current ??
+    unmonitoredStartedAtRef.current ??
+    null;
 
   useEffect(() => {
     if (startedAt === null) {
@@ -261,12 +294,29 @@ export const useDeployMonitor = ({
     };
   }, [startedAt]);
 
+  useEffect(() => {
+    if (unmonitoredStartedAtRef.current === null) {
+      return;
+    }
+
+    if (
+      elapsedMs >= DEPLOY_ESTIMATED_MS &&
+      terminalNotificationRef.current === "unmonitored"
+    ) {
+      terminalNotificationRef.current = "estimated";
+      unmonitoredStartedAtRef.current = null;
+      showDeployToast(target, "Refresh may be complete", "success");
+    }
+  }, [elapsedMs, target]);
+
   const triggerDeploy = useCallback(() => {
     if (progress || triggerDeployMutation.isPending) {
       return;
     }
 
     pendingStartedAtRef.current = Date.now();
+    unmonitoredStartedAtRef.current = null;
+    terminalNotificationRef.current = null;
     setDisplayStatus("pending");
 
     triggerDeployMutation.mutate(

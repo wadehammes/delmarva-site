@@ -8,7 +8,7 @@ const DEPLOY_STATUS_PREFIX: Record<DeployMonitorStatus, string> = {
   pending: "Starting",
   queued: "Queued",
   ready: "Complete",
-  unknown: "In progress",
+  unknown: "Deploy triggered",
 };
 
 const DEPLOY_STATUS_RANK: Record<DeployMonitorStatus, number> = {
