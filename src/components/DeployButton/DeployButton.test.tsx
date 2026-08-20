@@ -215,7 +215,7 @@ describe("DeployButton", () => {
     });
   });
 
-  it("keeps in-progress state when monitoring is unavailable", async () => {
+  it("re-enables the button when monitoring is unavailable", async () => {
     mockFetch.mockImplementation(async (input) => {
       const url = String(input);
 
@@ -255,15 +255,13 @@ describe("DeployButton", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: /in progress/i }),
-      ).toBeDisabled();
+        screen.getByRole("button", { name: /deploy test/i }),
+      ).toBeEnabled();
     });
 
-    await act(async () => {
-      jest.advanceTimersByTime(5_000);
-    });
-
-    expect(screen.getByRole("button", { name: /in progress/i })).toBeDisabled();
+    expect(
+      window.localStorage.getItem("refresh-content-deploy:staging"),
+    ).toBeNull();
   });
 
   it("clears in-progress state when deployment becomes ready", async () => {
@@ -319,14 +317,28 @@ describe("DeployButton", () => {
   });
 
   it("handles deployment failure", async () => {
-    mockFetch.mockResolvedValueOnce({
-      json: async () => ({ active: false }),
-      ok: true,
-    } as Response);
-    mockFetch.mockResolvedValueOnce({
-      json: async () => ({ error: "Failed to refresh" }),
-      ok: false,
-    } as Response);
+    mockFetch.mockImplementation(async (input) => {
+      const url = String(input);
+
+      if (url.includes("/api/refresh-content/deploy/active")) {
+        return {
+          json: async () => ({ active: false }),
+          ok: true,
+        } as Response;
+      }
+
+      if (url.includes("/api/refresh-content/deploy")) {
+        return {
+          json: async () => ({ error: "Failed to refresh" }),
+          ok: false,
+        } as Response;
+      }
+
+      return {
+        json: async () => ({ available: false }),
+        ok: true,
+      } as Response;
+    });
 
     po.setupApiMocks();
     po.render();

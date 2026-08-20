@@ -73,7 +73,7 @@ describe("deployProgressStorage", () => {
     );
     expect(formatDeployProgressLabel(0, "pending")).toBe("Starting (0:00)");
     expect(formatDeployProgressLabel(1_000, "unknown")).toBe(
-      "In progress (0:01)",
+      "Deploy triggered (0:01)",
     );
   });
 
