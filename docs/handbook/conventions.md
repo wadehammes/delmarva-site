@@ -50,7 +50,7 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
   - `--color-text` / `--color-bg` — default page text and background
   - `--color-surface-bg` / `--color-surface-text` — light surfaces (modals, cards, form fields)
   - `--card-bg`, `--divider`, `--divider-on-surface` — elevated surfaces and borders
-  - `--overlay-*`, `--shadow-*`, `--color-input-*`, `--color-skeleton-*`, `--color-success-*` — overlays, shadows, form states, skeletons, and toasts
+  - `--overlay-*`, `--shadow-*`, `--color-input-*`, `--color-skeleton-*`, `--color-toast-*`, `--toast-width`, `--toast-offset` — overlays, shadows, form states, skeletons, and Sonner toasts
   - Palette tokens (`--colors-red`, `--colors-gray`, etc.) — brand accents and CMS section backgrounds only
 
 ## Testing

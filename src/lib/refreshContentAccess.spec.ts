@@ -2,6 +2,9 @@ import { afterAll, beforeEach, describe, expect, it } from "@jest/globals";
 import {
   getDeployHookUrl,
   isRefreshContentAuthorized,
+  parseDeployHookUrl,
+  parseDeployTarget,
+  resolveDeployHookMetadata,
 } from "src/lib/refreshContentAccess";
 
 describe("refreshContentAccess", () => {
@@ -42,6 +45,39 @@ describe("refreshContentAccess", () => {
       expect(getDeployHookUrl("production")).toBe(
         "https://example.com/production",
       );
+    });
+  });
+
+  describe("parseDeployTarget", () => {
+    it("accepts staging and production targets", () => {
+      expect(parseDeployTarget("staging")).toBe("staging");
+      expect(parseDeployTarget("production")).toBe("production");
+      expect(parseDeployTarget("preview")).toBeNull();
+    });
+  });
+
+  describe("parseDeployHookUrl", () => {
+    it("extracts project and hook ids from deploy hook urls", () => {
+      expect(
+        parseDeployHookUrl(
+          "https://api.vercel.com/v1/integrations/deploy/prj_test/KMXxoK51Xj",
+        ),
+      ).toEqual({
+        deployHookId: "KMXxoK51Xj",
+        projectId: "prj_test",
+      });
+    });
+  });
+
+  describe("resolveDeployHookMetadata", () => {
+    it("combines hook url lookup and parsing", () => {
+      process.env.VERCEL_DEPLOY_HOOK_STAGING =
+        "https://api.vercel.com/v1/integrations/deploy/prj_test/hook123";
+
+      expect(resolveDeployHookMetadata("staging")).toEqual({
+        deployHookId: "hook123",
+        projectId: "prj_test",
+      });
     });
   });
 });

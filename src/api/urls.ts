@@ -1,4 +1,17 @@
-import { FetchMethods, fetchOptions, fetchResponse } from "src/api/helpers";
+import type {
+  DeployActiveInput,
+  DeployActiveResponse,
+  DeployStatusInput,
+  DeployStatusResponse,
+  DeployTriggerInput,
+  DeployTriggerResponse,
+} from "src/api/deploy.types";
+import {
+  FetchMethods,
+  fetchJsonResponse,
+  fetchOptions,
+  fetchResponse,
+} from "src/api/helpers";
 import type { GeneralInquiryInputs } from "src/components/GeneralInquiryForm/GeneralInquiryForm.component";
 import type { JoinOurTeamInputs } from "src/components/JoinOurTeamForm/JoinOurTeamForm.component";
 import type { RequestAProposalInputs } from "src/components/RequestAProposalForm/RequestAProposalForm.component";
@@ -41,7 +54,60 @@ function buildJoinOurTeamFormData(data: JoinOurTeamInputs): FormData {
   return form;
 }
 
+function buildDeploySearchParams(
+  base: Record<string, string>,
+  token?: string,
+): string {
+  const params = new URLSearchParams(base);
+
+  if (token) {
+    params.set("token", token);
+  }
+
+  return params.toString();
+}
+
 export const api = {
+  deploy: {
+    active: ({ target, token }: DeployActiveInput) =>
+      fetchJsonResponse<DeployActiveResponse>(
+        fetch(
+          `/api/refresh-content/deploy/active?${buildDeploySearchParams({ target }, token)}`,
+          fetchOptions({ cache: "no-store", method: FetchMethods.Get }),
+        ),
+      ),
+    status: ({
+      createdAt,
+      deployHookId,
+      projectId,
+      target,
+      token,
+    }: DeployStatusInput) =>
+      fetchJsonResponse<DeployStatusResponse>(
+        fetch(
+          `/api/refresh-content/deploy/status?${buildDeploySearchParams(
+            {
+              deployHookId,
+              projectId,
+              since: String(createdAt),
+              target,
+            },
+            token,
+          )}`,
+          fetchOptions({ cache: "no-store", method: FetchMethods.Get }),
+        ),
+      ),
+    trigger: ({ target, token }: DeployTriggerInput) =>
+      fetchJsonResponse<DeployTriggerResponse>(
+        fetch(
+          "/api/refresh-content/deploy",
+          fetchOptions({
+            body: JSON.stringify({ target, token }),
+            method: FetchMethods.Post,
+          }),
+        ),
+      ),
+  },
   generalInquiry: ({
     email,
     formId,

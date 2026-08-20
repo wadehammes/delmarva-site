@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
+import { useDeployMonitor } from "src/hooks/useDeployMonitor";
 import type { DeployTarget } from "src/lib/refreshContentAccess";
 
 interface DeployButtonProps {
@@ -13,38 +12,19 @@ interface DeployButtonProps {
 
 export const DeployButton = (props: DeployButtonProps) => {
   const { accessToken, label, target } = props;
-  const [clicked, setClicked] = useState(false);
-
-  const handleDeploy = async () => {
-    try {
-      const response = await fetch("/api/refresh-content/deploy", {
-        body: JSON.stringify({ target, token: accessToken }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      });
-      if (response.ok) {
-        setClicked(true);
-        toast.success("Refresh successfully triggered");
-      } else {
-        toast.error("Failed to refresh");
-      }
-    } catch {
-      toast.error("Failed to refresh");
-    }
-  };
+  const { inProgressLabel, isInProgress, triggerDeploy } = useDeployMonitor({
+    accessToken,
+    target,
+  });
 
   return (
     <Button
-      disabled={clicked}
-      label={clicked ? "Refreshing (wait ~2min)" : label}
-      onClick={() => {
-        void handleDeploy();
-      }}
+      disabled={isInProgress}
+      label={isInProgress ? inProgressLabel : label}
+      onClick={triggerDeploy}
       trackingEvent="Clicked Refresh Content Button"
       trackingLabel="Refresh"
-      variant={clicked ? "primary" : "secondary"}
+      variant={isInProgress ? "primary" : "secondary"}
     />
   );
 };

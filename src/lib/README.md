@@ -9,7 +9,9 @@ Server-side helpers for API routes, sitemap output, and transactional email.
 | [`emailRenderer.tsx`](./emailRenderer.tsx) | `render()` → `{ html, text, subject? }` per template |
 | [`emailTranslations.ts`](./emailTranslations.ts) | Join Our Team confirmation copy (`en` / `es`) |
 | [`formNotificationRecipients.ts`](./formNotificationRecipients.ts) | Resolve Resend **`to`** / **`bcc`** from Contentful by **`formId`** |
-| [`refreshContentAccess.ts`](./refreshContentAccess.ts) | Token gate and deploy-hook lookup for refresh-content |
+| [`refreshContentAccess.ts`](./refreshContentAccess.ts) | Token gate, deploy-target parsing, deploy-hook URL lookup/parsing (`parseDeployHookUrl`, `resolveDeployHookMetadata`) for refresh-content routes |
+| [`deployProgressStorage.ts`](./deployProgressStorage.ts) | Persist refresh-content deploy progress in `localStorage` per target |
+| [`vercelDeploymentStatus.ts`](./vercelDeploymentStatus.ts) | Poll Vercel deployment status after a deploy-hook trigger (`cache: 'no-store'` on API fetches) |
 
 **Templates:** [`src/components/Email/`](../components/Email/) — see [`src/components/Email/README.md`](../components/Email/README.md).
 

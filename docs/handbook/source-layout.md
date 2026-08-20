@@ -5,7 +5,7 @@ Quick map of **`src/`** when you know the task (“add a schema helper”, “fi
 ## State: Jotai vs React Query
 
 - **Jotai** — Client UI state in **`src/atoms/`** (e.g. project modal). Consumed via hooks like **`useProjectModal`**. Tests can wrap with **Jotai Provider** via [testUtils.tsx](../../src/tests/testUtils.tsx).
-- **React Query** — **`QueryClient`** and **mutations** only today; **`QueryClient`** in [providers.tsx](../../src/app/providers.tsx).
+- **React Query** — **`QueryClient`** in [providers.tsx](../../src/app/providers.tsx); **mutations** for form sends and deploy trigger; **polled queries** for refresh-content deploy monitoring ([useDeployMonitor.ts](../../src/hooks/useDeployMonitor.ts)).
 - **next-intl** — Locale and translated **messages**; not a state container for arbitrary UI.
 
 ## `src/utils/` (selected)
@@ -33,6 +33,7 @@ Import the specific module you need; there is no barrel **`utils/index.ts`**.
 ## `src/lib/`
 
 - **Sitemap** — [generateSitemap.ts](../../src/lib/generateSitemap.ts)
+- **Refresh content** — [refreshContentAccess.ts](../../src/lib/refreshContentAccess.ts) (auth, hook metadata), [vercelDeploymentStatus.ts](../../src/lib/vercelDeploymentStatus.ts) (Vercel polling), [deployProgressStorage.ts](../../src/lib/deployProgressStorage.ts) (client `localStorage`)
 - **Resend / email templates** — [src/lib/README.md](../../src/lib/README.md), components in [src/components/Email/README.md](../../src/components/Email/README.md)
 
 ## `src/contentful/`
@@ -70,7 +71,9 @@ Custom React hooks and form mutations. Overview: [src/hooks/README.md](../../src
 | [useModal.ts](../../src/hooks/useModal.ts) | Local boolean modal state |
 | [useHash.ts](../../src/hooks/useHash.ts) | URL hash sync |
 | [useServerLocale.ts](../../src/hooks/useServerLocale.ts) | Read locale in client subtrees under localized layouts |
-| [mutations/](../../src/hooks/mutations/) | **`useSendGeneralInquiryFormMutation`**, **`useSendRequestAProposalFormMutation`**, **`useSendJoinOurTeamFormMutation`** |
+| [mutations/](../../src/hooks/mutations/) | Form **`useMutation`** hooks and **`useTriggerDeployMutation`** |
+| [queries/deployQueryKeys.ts](../../src/hooks/queries/deployQueryKeys.ts) | Typed React Query keys for deploy status/active polling |
+| [useDeployMonitor.ts](../../src/hooks/useDeployMonitor.ts) | Refresh-content deploy orchestration (mutation + polled queries + toasts) |
 
 ## `src/interfaces/`
 

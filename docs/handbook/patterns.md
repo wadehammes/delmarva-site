@@ -14,7 +14,7 @@ Localized routes live under **`src/app/[locale]/`**. Typical page flow:
 
 Use **`export const revalidate = …`** on routes to control ISR-style static caching where set (values vary by page).
 
-**Refresh content**: [refresh-content/page.tsx](../../src/app/[locale]/refresh-content/page.tsx) is **`force-dynamic`** and **`noindex`**. Access is gated by **`REFRESH_CONTENT_ACCESS_TOKEN`** on every environment where that env var is set — see [platform.md](platform.md). [DeployPage.component.tsx](../../src/components/DeployPage/DeployPage.component.tsx) triggers deploys through **`POST /api/refresh-content/deploy`** (redeploy) to pick up new CMS content—not in-app `revalidatePath`/`revalidateTag`.
+**Refresh content**: [refresh-content/page.tsx](../../src/app/[locale]/refresh-content/page.tsx) is **`force-dynamic`** and **`noindex`**. Access is gated by **`REFRESH_CONTENT_ACCESS_TOKEN`** on every environment where that env var is set — see [platform.md](platform.md). [DeployPage.component.tsx](../../src/components/DeployPage/DeployPage.component.tsx) triggers deploys through **`POST /api/refresh-content/deploy`** (redeploy) to pick up new CMS content—not in-app `revalidatePath`/`revalidateTag`. [DeployButton.component.tsx](../../src/components/DeployButton/DeployButton.component.tsx) uses [useDeployMonitor.ts](../../src/hooks/useDeployMonitor.ts) (**React Query** mutation + polled status query) until Vercel reports the deployment is ready.
 
 ## generateStaticParams and generateMetadata
 
@@ -43,9 +43,10 @@ Structured data is assembled on the server as a pre-serialized JSON string and r
 ## React Query
 
 - **QueryClient** is created in [providers.tsx](../../src/app/providers.tsx) with default **`staleTime`** / **`gcTime`**.
-- Today the app uses **`useMutation` only** (no **`useQuery`** in `src/`). **Mutation** hooks live under **`src/hooks/mutations/`** and call **`api.*`** from [urls.ts](../../src/api/urls.ts).
+- **Mutation** hooks live under **`src/hooks/mutations/`** and call **`api.*`** from [urls.ts](../../src/api/urls.ts).
+- **Query** hooks live under **`src/hooks/queries/`** (or orchestration hooks like [useDeployMonitor.ts](../../src/hooks/useDeployMonitor.ts)) with typed **`queryKey`** helpers and thin **`queryFn`** wrappers around **`api.*`**.
 
-If you add client-side **`useQuery`**, put it in a dedicated hook file under **`src/hooks/queries/`** (or similar) and keep **`queryFn`** thin and typed.
+Keep side effects (toasts, navigation) at the call site or in orchestration hooks when they belong to a multi-step client flow.
 
 ## API layer (client → Route Handler)
 
