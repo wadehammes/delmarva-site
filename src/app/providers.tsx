@@ -101,14 +101,18 @@ function ProvidersContent({ children, locale }: ProvidersProps) {
         <Toaster
           className="toaster"
           closeButton
+          expand
+          gap={12}
           position="top-center"
           toastOptions={{
             classNames: {
               closeButton: "toast-close",
               toast: "toast",
             },
+            duration: 5_000,
             unstyled: true,
           }}
+          visibleToasts={3}
         />
       </QueryClientProvider>
     </ErrorBoundary>

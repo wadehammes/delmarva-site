@@ -53,5 +53,8 @@ Thin **`useMutation`** wrappers in **`src/hooks/mutations/`**—each calls **`ap
 | [useSendGeneralInquiryForm.mutation.ts](./mutations/useSendGeneralInquiryForm.mutation.ts) | General Inquiry |
 | [useSendRequestAProposalForm.mutation.ts](./mutations/useSendRequestAProposalForm.mutation.ts) | Request a Proposal |
 | [useSendJoinOurTeamForm.mutation.ts](./mutations/useSendJoinOurTeamForm.mutation.ts) | Join Our Team |
+| [useTriggerDeploy.mutation.ts](./mutations/useTriggerDeploy.mutation.ts) | Refresh-content deploy trigger |
 
-Keep side effects (toasts, navigation) at the call site when possible. See [docs/handbook/patterns.md](../../docs/handbook/patterns.md).
+### Deploy monitoring
+
+[useDeployMonitor.ts](./useDeployMonitor.ts) orchestrates refresh-content deploy UX: **`useTriggerDeployMutation`** → **`api.deploy.trigger`**, **`useQuery`** for active/status polling via **`deployQueryKeys`**, and **`localStorage`** persistence per target (**`startedAt`** from the click is kept through trigger success). Status polling uses **`staleTime: 0`**, stops when Vercel reports a terminal state or **`monitoring: false`**, and uses **`refetchIntervalInBackground: true`**. Terminal Sonner toasts re-evaluate on the 1s elapsed timer (**`elapsedMs`**) as well as on status poll updates so **Refresh complete** / **Refresh may be complete** fire without a page refresh. [DeployButton.component.tsx](../components/DeployButton/DeployButton.component.tsx) is a thin wrapper around this hook.

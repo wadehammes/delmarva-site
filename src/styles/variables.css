@@ -51,14 +51,21 @@
   --color-skeleton-border: rgb(255 255 255 / 8%);
 
   /* Status / feedback */
-  --color-success-border: #2d6a4f;
-  --color-success-accent: #1b4332;
-  --color-success-bg: color-mix(
-    in sRGB,
-    var(--color-bg) 92%,
-    var(--color-surface-bg)
-  );
-  --color-success-shadow: rgb(27 67 50 / 20%);
+  --color-toast-success-bg: #1b4332;
+  --color-toast-success-border: #40916c;
+  --color-toast-success-text: var(--colors-white);
+  --color-toast-error-bg: #4a1218;
+  --color-toast-error-border: var(--colors-red);
+  --color-toast-error-text: var(--colors-white);
+  --color-toast-warning-bg: #4a2f0a;
+  --color-toast-warning-border: var(--colors-orange);
+  --color-toast-warning-text: var(--colors-white);
+  --color-toast-default-bg: #2a2828;
+  --color-toast-default-border: rgb(255 255 255 / 20%);
+  --color-toast-default-text: var(--colors-white);
+  --color-toast-shadow: rgb(0 0 0 / 35%);
+  --toast-width: min(28rem, calc(100vw - 2rem));
+  --toast-offset: 1rem;
 
   /* Form field states */
   --color-input-hover-bg: color-mix(
