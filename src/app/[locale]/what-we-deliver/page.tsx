@@ -14,10 +14,7 @@ import {
   SERVICES_PAGE_SLUG,
 } from "src/utils/constants";
 import { createPageMetadata } from "src/utils/metadata.helpers";
-import {
-  generatePageSchemaGraph,
-  validateAndSetLocale,
-} from "src/utils/pageHelpers";
+import { generatePageSchemaGraph, validateLocale } from "src/utils/pageHelpers";
 
 export const revalidate = 2592000;
 
@@ -38,7 +35,7 @@ export const generateMetadata = async (
 ): Promise<Metadata> => {
   const { locale } = await props.params;
 
-  const validLocale = await validateAndSetLocale(locale);
+  const validLocale = validateLocale(locale);
   if (!validLocale) {
     return notFound();
   }
@@ -64,7 +61,7 @@ const WhatWeDeliverPage = async (props: WhatWeDeliverProps) => {
   try {
     const { locale } = await props.params;
 
-    const validLocale = await validateAndSetLocale(locale);
+    const validLocale = validateLocale(locale);
 
     if (!validLocale) {
       return notFound();

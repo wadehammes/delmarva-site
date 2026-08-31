@@ -4,13 +4,9 @@ import { Select } from "@base-ui/react/select";
 import { useParams } from "next/navigation";
 import { useCallback, useRef, useState, useTransition } from "react";
 import styles from "src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.module.css";
+import { replacePageLocale, usePathname, useRouter } from "src/i18n/navigation";
 import type { Locales } from "src/i18n/routing";
-import {
-  replacePageLocale,
-  routing,
-  usePathname,
-  useRouter,
-} from "src/i18n/routing";
+import { routing } from "src/i18n/routing";
 import ChevronDown from "src/icons/Chevron.svg";
 import { trackEvent } from "src/lib/trackEvent";
 

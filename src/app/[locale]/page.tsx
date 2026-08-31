@@ -10,10 +10,7 @@ import { fetchPage } from "src/contentful/getPages";
 import { routing } from "src/i18n/routing";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 import { createPageMetadata } from "src/utils/metadata.helpers";
-import {
-  generatePageSchemaGraph,
-  validateAndSetLocale,
-} from "src/utils/pageHelpers";
+import { generatePageSchemaGraph, validateLocale } from "src/utils/pageHelpers";
 
 export const revalidate = 2592000;
 
@@ -32,7 +29,7 @@ interface HomeProps {
 export const generateMetadata = async (props: HomeProps): Promise<Metadata> => {
   const { locale } = await props.params;
 
-  const validLocale = await validateAndSetLocale(locale);
+  const validLocale = validateLocale(locale);
 
   if (!validLocale) {
     return notFound();
@@ -56,7 +53,7 @@ export const generateMetadata = async (props: HomeProps): Promise<Metadata> => {
 const Home = async (props: HomeProps) => {
   const { locale } = await props.params;
 
-  const validLocale = await validateAndSetLocale(locale);
+  const validLocale = validateLocale(locale);
 
   if (!validLocale) {
     return notFound();

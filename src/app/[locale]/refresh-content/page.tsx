@@ -7,7 +7,7 @@ import { fetchNavigation } from "src/contentful/getNavigation";
 import { isRefreshContentAuthorized } from "src/lib/refreshContentAccess";
 import { FOOTER_ID, NAVIGATION_ID } from "src/utils/constants";
 import { createUtilityPageMetadata } from "src/utils/metadata.helpers";
-import { validateAndSetLocale } from "src/utils/pageHelpers";
+import { validateLocale } from "src/utils/pageHelpers";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -25,7 +25,7 @@ export const generateMetadata = async ({
   params,
 }: Pick<RefreshContentProps, "params">): Promise<Metadata> => {
   const { locale } = await params;
-  const validLocale = await validateAndSetLocale(locale);
+  const validLocale = validateLocale(locale);
 
   if (!validLocale) {
     return { robots: "noindex, nofollow" };
@@ -43,7 +43,7 @@ const Deployments = async ({ params, searchParams }: RefreshContentProps) => {
     searchParams ?? Promise.resolve({ token: undefined }),
   ]);
 
-  const validLocale = await validateAndSetLocale(locale);
+  const validLocale = validateLocale(locale);
 
   if (!validLocale) {
     return notFound();

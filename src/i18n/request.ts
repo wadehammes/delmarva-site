@@ -1,8 +1,7 @@
+import * as rootParams from "next/root-params";
 import { getRequestConfig } from "next-intl/server";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
-
-// Import messages statically to avoid dynamic import issues
 import enMessages from "./messages/en.json";
 import esMessages from "./messages/es.json";
 
@@ -11,11 +10,13 @@ const messages = {
   es: esMessages,
 };
 
-export default getRequestConfig(async ({ requestLocale }) => {
-  // This typically corresponds to the `[locale]` segment
-  let locale = await requestLocale;
+export default getRequestConfig(async ({ locale: localeOverride }) => {
+  let locale = localeOverride;
 
-  // Ensure that a valid locale is used
+  if (!locale) {
+    locale = await rootParams.locale();
+  }
+
   if (!locale || !routing.locales.includes(locale as Locales)) {
     locale = routing.defaultLocale;
   }

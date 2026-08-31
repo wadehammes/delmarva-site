@@ -11,7 +11,7 @@ import type { ProjectType } from "src/contentful/getProjects";
 import type { ContentStatBlock } from "src/contentful/parseContentStatBlock";
 import { useModal } from "src/hooks/useModal";
 import { useProjectModal } from "src/hooks/useProjectModal";
-import { usePathname, useRouter } from "src/i18n/routing";
+import { usePathname, useRouter } from "src/i18n/navigation";
 import { trackEvent } from "src/lib/trackEvent";
 import { isValidProjectLocation } from "src/utils/mapUtils";
 import styles from "./ProjectCard.module.css";

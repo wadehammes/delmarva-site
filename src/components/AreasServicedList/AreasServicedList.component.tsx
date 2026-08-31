@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "src/i18n/routing";
+import { Link } from "src/i18n/navigation";
 import { SERVICES_PAGE_SLUG } from "src/utils/constants";
 import { hexToRgba } from "src/utils/mapUtils";
 import type { ServiceArea } from "src/utils/serviceAreaUtils";

@@ -7,7 +7,7 @@ Cross-cutting patterns for App Router pages, metadata, caching, client state, i1
 Localized routes live under **`src/app/[locale]/`**. Typical page flow:
 
 1. **`await props.params`** for `{ locale }`.
-2. **`validateAndSetLocale(locale)`** from [pageHelpers.ts](../../src/utils/pageHelpers.ts) (returns `null` → **`notFound()`**).
+2. **`validateLocale(locale)`** from [pageHelpers.ts](../../src/utils/pageHelpers.ts) (returns `null` → **`notFound()`**).
 3. **`draftMode()`** from **`next/headers`** when preview matters.
 4. **Parallel fetches** with Contentful getters (`fetchPage`, `fetchNavigation`, `fetchFooter`, route-specific data).
 5. Render **PageLayout** and **PageComponent** (which contains **SectionRenderer**) with parsed data.
@@ -57,9 +57,10 @@ Keep side effects (toasts, navigation) at the call site or in orchestration hook
 ## Internationalization (next-intl)
 
 - **Locales**: **`en`** and **`es`** in [routing.ts](../../src/i18n/routing.ts); **`localePrefix: "as-needed"`** so the default locale omits the prefix in URLs.
+- **Navigation**: Import **`Link`**, **`useRouter`**, and **`usePathname`** from [navigation.ts](../../src/i18n/navigation.ts), not **`routing.ts`** — middleware imports **`routing`** only.
 - **Localized URLs & metadata** — [localeUtils.ts](../../src/i18n/localeUtils.ts): **`buildLocalizedUrl`**, **`buildCanonicalUrl`**, **`buildHreflangAlternates`**, **`buildOpenGraphLocale`**. Shared by page metadata, sitemaps, and JSON-LD; keep new SEO URL logic here rather than duplicating prefix rules.
 - **Messages**: JSON files under **`src/i18n/messages/`**, loaded in [request.ts](../../src/i18n/request.ts).
-- **Server**: `getRequestConfig` ensures a valid locale and supplies messages.
+- **Server**: `getRequestConfig` in [request.ts](../../src/i18n/request.ts) reads the locale from **`next/root-params`** (replacing the legacy **`setRequestLocale`** API) and supplies messages.
 - **Client**: **`useTranslations`** and **`NextIntlClientProvider`** (from layout) for UI strings not coming from Contentful.
 
 ## Forms

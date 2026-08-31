@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { RichText } from "src/components/RichText/RichText.component";
 import type { FooterType } from "src/contentful/getFooter";
-import { Link } from "src/i18n/routing";
+import { Link } from "src/i18n/navigation";
 import LinkedInIcon from "src/icons/linkedin.svg";
 import { trackEvent } from "src/lib/trackEvent";
 import DelmarvaBadge from "src/logos/delmarva-white-outlined-badge-full-color-rgb.svg";
