@@ -1,4 +1,4 @@
-import { getLocale, setRequestLocale } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 import { NotFoundPage } from "src/components/NotFoundPage/NotFoundPage.component";
 import { PageLayout } from "src/components/PageLayout/PageLayout.component";
 import { fetchFooter } from "src/contentful/getFooter";
@@ -24,8 +24,6 @@ export default async function NotFound({
   } catch (error) {
     console.warn("Could not resolve locale from params, using default:", error);
   }
-
-  setRequestLocale(locale);
 
   const navigation = await fetchNavigation({
     locale,

@@ -12,7 +12,7 @@ Quick map of **`src/`** when you know the task (“add a schema helper”, “fi
 
 | Area | Examples |
 |------|----------|
-| **Pages / SEO** | [metadata.helpers.ts](../../src/utils/metadata.helpers.ts) (`createPageMetadata`, `buildDisplayTitle`, …), [pageHelpers.ts](../../src/utils/pageHelpers.ts) (`validateAndSetLocale`, `generatePageSchemaGraph`), [pageSchemaGraphProp.ts](../../src/lib/schema/pageSchemaGraphProp.ts) (service/market graph props), [src/lib/schema/](../../src/lib/schema/) (JSON-LD graph builders), [JsonLdScript.component.tsx](../../src/components/Page/JsonLdScript.component.tsx) |
+| **Pages / SEO** | [metadata.helpers.ts](../../src/utils/metadata.helpers.ts) (`createPageMetadata`, `buildDisplayTitle`, …), [pageHelpers.ts](../../src/utils/pageHelpers.ts) (`validateLocale`, `generatePageSchemaGraph`), [pageSchemaGraphProp.ts](../../src/lib/schema/pageSchemaGraphProp.ts) (service/market graph props), [src/lib/schema/](../../src/lib/schema/) (JSON-LD graph builders), [JsonLdScript.component.tsx](../../src/components/Page/JsonLdScript.component.tsx) |
 | **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`), [publicEnv.ts](../../src/utils/publicEnv.ts) (`NEXT_PUBLIC_*` for client) |
 | **Strings / React / Rich Text** | [string.helpers.ts](../../src/utils/string.helpers.ts), [react.helpers.ts](../../src/utils/react.helpers.ts), [richText.helpers.ts](../../src/utils/richText.helpers.ts) |
 | **Video URLs** | [videoUrl.helpers.ts](../../src/utils/videoUrl.helpers.ts) (embed detection, `isVideoUrl`, …) |
@@ -25,7 +25,8 @@ Import the specific module you need; there is no barrel **`utils/index.ts`**.
 
 | File | Role |
 |------|------|
-| [routing.ts](../../src/i18n/routing.ts) | Locales, **`localePrefix`**, navigation wrappers, **`replacePageLocale`** |
+| [routing.ts](../../src/i18n/routing.ts) | Locales, **`localePrefix`**, **`defineRouting`** config |
+| [navigation.ts](../../src/i18n/navigation.ts) | **`Link`**, **`useRouter`**, **`usePathname`**, **`replacePageLocale`** (keep separate from **`routing.ts`** so middleware does not pull in **`next/root-params`**) |
 | [localeUtils.ts](../../src/i18n/localeUtils.ts) | **`buildLocalizedUrl`**, **`buildCanonicalUrl`**, **`buildHreflangAlternates`**, **`buildOpenGraphLocale`** |
 | [request.ts](../../src/i18n/request.ts) | Server message loading |
 | [messages/](../../src/i18n/messages/) | UI copy JSON per locale |

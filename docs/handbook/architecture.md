@@ -84,7 +84,7 @@ Static assets, **`sitemap-index.xml`** (generated at build from `public/generate
 ## Data flow
 
 1. **Request** hits a **Server Component** page under `src/app/[locale]/…`.
-2. **Locale** is validated and fixed for next-intl (`validateAndSetLocale`, `setRequestLocale`).
+2. **Locale** is validated in pages (`validateLocale`) and resolved for next-intl via **`next/root-params`** in [request.ts](../../src/i18n/request.ts).
 3. **Draft mode** is read from `next/headers` when editors preview unpublished content.
 4. **Getters** load page, navigation, footer (and route-specific data) from Contentful.
 5. **PageLayout** wraps **PageComponent** (and other children); **PageComponent** renders **SectionRenderer** with parsed **sections** and their **content** entries.

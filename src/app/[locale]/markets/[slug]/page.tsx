@@ -28,7 +28,7 @@ import {
 import { createMarketMetadata } from "src/utils/metadata.helpers";
 import {
   buildMarketPageSchemaGraphProp,
-  validateAndSetLocale,
+  validateLocale,
 } from "src/utils/pageHelpers";
 
 export const revalidate = 2592000;
@@ -71,7 +71,7 @@ export const generateMetadata = async ({
 }: PageProps): Promise<Metadata> => {
   const { slug, locale } = await params;
 
-  const validLocale = await validateAndSetLocale(locale);
+  const validLocale = validateLocale(locale);
   if (!validLocale) {
     return notFound();
   }
@@ -97,7 +97,7 @@ const Page = async ({ params }: PageProps) => {
   try {
     const { slug, locale } = await params;
 
-    const validLocale = await validateAndSetLocale(locale);
+    const validLocale = validateLocale(locale);
 
     if (!validLocale) {
       return notFound();

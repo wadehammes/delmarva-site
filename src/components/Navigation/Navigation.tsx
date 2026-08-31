@@ -11,7 +11,7 @@ import type { NavigationType } from "src/contentful/getNavigation";
 import type { Page } from "src/contentful/getPages";
 import { isTypeContentHero } from "src/contentful/types";
 import { useDOMCleanup, useIsBrowser } from "src/hooks/useIsBrowser";
-import { Link, usePathname } from "src/i18n/routing";
+import { Link, usePathname } from "src/i18n/navigation";
 import Menu from "src/icons/Menu.svg";
 import { trackEvent } from "src/lib/trackEvent";
 import DelmarvaLogo from "src/logos/delmarva-white-full-cutout-full-color-rgb.svg";

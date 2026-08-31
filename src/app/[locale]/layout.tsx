@@ -6,7 +6,6 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import type { Locales } from "src/i18n/routing";
 import { routing } from "src/i18n/routing";
@@ -35,8 +34,6 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
   if (!routing.locales.includes(locale as Locales)) {
     return notFound();
   }
-
-  setRequestLocale(locale);
 
   const draft = await draftMode();
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId();
