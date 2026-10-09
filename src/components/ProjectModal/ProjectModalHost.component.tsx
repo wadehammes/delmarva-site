@@ -2,7 +2,13 @@
 
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { usePathname } from "next/navigation";
-import { useCallback, useLayoutEffect, useMemo } from "react";
+import {
+  Activity,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   projectModalClosedPathAtom,
   projectModalOpenSlugAtom,
@@ -25,6 +31,7 @@ export const ProjectModalHost = ({
   );
   const closedPathname = useAtomValue(projectModalClosedPathAtom);
   const setClosedPathname = useSetAtom(projectModalClosedPathAtom);
+  const [cachedProject, setCachedProject] = useState<ProjectType | null>(null);
 
   const isClosedOnThisPath = closedPathname === pathname;
   const effectiveSlug = isClosedOnThisPath ? null : openProjectSlug;
@@ -36,6 +43,12 @@ export const ProjectModalHost = ({
         : null,
     [effectiveSlug, projects],
   );
+
+  useLayoutEffect(() => {
+    if (activeProject) {
+      setCachedProject(activeProject);
+    }
+  }, [activeProject]);
 
   useLayoutEffect(() => {
     if (!isClosedOnThisPath && projectSlugFromServer && !openProjectSlug) {
@@ -58,9 +71,16 @@ export const ProjectModalHost = ({
     }
   }, [pathname, setClosedPathname, setOpenProjectSlug]);
 
-  if (!activeProject) {
+  if (!cachedProject) {
     return null;
   }
 
-  return <ProjectModal isOpen onClose={close} project={activeProject} />;
+  const isOpen = activeProject !== null;
+  const project = activeProject ?? cachedProject;
+
+  return (
+    <Activity mode={isOpen ? "visible" : "hidden"} name="ProjectModal">
+      <ProjectModal isOpen={isOpen} onClose={close} project={project} />
+    </Activity>
+  );
 };

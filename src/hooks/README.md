@@ -38,7 +38,7 @@ Stable **`id`** for form controls: explicit **`id` prop**, else **`{prefix}-{nam
 
 ### useProjectModal
 
-Jotai-backed project modal (open project by slug). See **`src/atoms/`**. URL-synced lists render a single **`ProjectModalHost`** at the carousel/list level; cards with **`syncUrlOnOpen`** only open the shared modal via the atom.
+Jotai-backed project modal (open project by slug). See **`src/atoms/`**. URL-synced lists render a single **`ProjectModalHost`** at the carousel/list level; cards with **`syncUrlOnOpen`** only open the shared modal via the atom. **`ProjectModalHost`** wraps the modal in **`<Activity>`** so closing hides the tree ( **`isOpen={false}`** on **`ProjectModal`**) while preserving carousel state for the next open.
 
 ### useServerLocale
 
@@ -57,4 +57,4 @@ Thin **`useMutation`** wrappers in **`src/hooks/mutations/`**—each calls **`ap
 
 ### Deploy monitoring
 
-[useDeployMonitor.ts](./useDeployMonitor.ts) orchestrates refresh-content deploy UX: **`useTriggerDeployMutation`** → **`api.deploy.trigger`**, **`useQuery`** for active/status polling via **`deployQueryKeys`**, and **`localStorage`** persistence per target (**`startedAt`** from the click is kept through trigger success). Status polling uses **`staleTime: 0`**, stops when Vercel reports a terminal state or **`monitoring: false`**, and uses **`refetchIntervalInBackground: true`**. Terminal Sonner toasts re-evaluate on the 1s elapsed timer (**`elapsedMs`**) as well as on status poll updates so **Refresh complete** / **Refresh may be complete** fire without a page refresh. [DeployButton.component.tsx](../components/DeployButton/DeployButton.component.tsx) is a thin wrapper around this hook.
+[useDeployMonitor.ts](./useDeployMonitor.ts) orchestrates refresh-content deploy UX: **`useTriggerDeployMutation`** → **`api.deploy.trigger`**, **`useQuery`** for active/status polling via **`deployQueryKeys`**, and **`localStorage`** persistence per target (**`startedAt`** from the click is kept through trigger success). Status polling uses **`staleTime: 0`**, stops when Vercel reports a terminal state or **`monitoring: false`**, and uses **`refetchIntervalInBackground: true`**. Terminal **`appToast`** toasts re-evaluate on the 1s elapsed timer (**`elapsedMs`**) as well as on status poll updates so **Refresh complete** / **Refresh may be complete** fire without a page refresh; status side effects use **`useEffectEvent`** so timers and poll updates always see the latest progress without stale closures. [DeployButton.component.tsx](../components/DeployButton/DeployButton.component.tsx) is a thin wrapper around this hook.

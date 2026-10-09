@@ -1,4 +1,3 @@
-import type * as React from "react";
 import { Link, Section, Text } from "react-email";
 import { getEmailBaseUrl, SITE_NAME } from "src/lib/emailConstants";
 import { emailClasses } from "./emailClasses";
@@ -7,9 +6,9 @@ interface EmailFooterProps {
   baseUrl?: string;
 }
 
-export const EmailFooter: React.FC<EmailFooterProps> = ({
+export const EmailFooter = ({
   baseUrl = getEmailBaseUrl(),
-}) => (
+}: EmailFooterProps) => (
   <Section className={emailClasses.footerWrapper}>
     <Text className={emailClasses.footerText}>
       <Link className={emailClasses.link} href={baseUrl}>

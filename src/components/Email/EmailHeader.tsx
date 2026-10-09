@@ -1,4 +1,3 @@
-import type * as React from "react";
 import { Img, Link, Section } from "react-email";
 import {
   EMAIL_LOGO_PATH,
@@ -11,9 +10,9 @@ interface EmailHeaderProps {
   baseUrl?: string;
 }
 
-export const EmailHeader: React.FC<EmailHeaderProps> = ({
+export const EmailHeader = ({
   baseUrl = getEmailBaseUrl(),
-}) => {
+}: EmailHeaderProps) => {
   const assetBaseUrl = getEmailAssetBaseUrl();
   const logoUrl = `${assetBaseUrl}${EMAIL_LOGO_PATH}`;
   return (

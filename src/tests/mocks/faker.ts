@@ -1,4 +1,4 @@
-const sequence = { email: 0, uuid: 0 };
+const sequence = { email: 0, lorem: 0, uuid: 0 };
 
 export const faker = {
   helpers: {
@@ -8,6 +8,16 @@ export const faker = {
     email: () => {
       sequence.email += 1;
       return `test-user-${sequence.email}@example.com`;
+    },
+  },
+  lorem: {
+    paragraph: () => {
+      sequence.lorem += 1;
+      return `Test paragraph ${sequence.lorem}.`;
+    },
+    sentence: () => {
+      sequence.lorem += 1;
+      return `Test sentence ${sequence.lorem}.`;
     },
   },
   string: {

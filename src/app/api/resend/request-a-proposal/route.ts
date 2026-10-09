@@ -1,7 +1,7 @@
 import { Resend } from "resend";
-import type { RequestAProposalInputs } from "src/components/RequestAProposalForm/RequestAProposalForm.component";
 import { renderRequestAProposalNotificationEmail } from "src/lib/emailRenderer";
 import { resolveFormNotificationRecipients } from "src/lib/formNotificationRecipients";
+import { requestAProposalApiSchema } from "src/lib/forms/requestAProposalForm.schema";
 import {
   checkFormSubmissionSpam,
   createSpamBlockedResponse,
@@ -14,8 +14,14 @@ const fallbackNotificationTo = "w@dehammes.com";
 const formName = "Request A Proposal form";
 
 export async function POST(request: Request) {
-  const res: RequestAProposalInputs = await request.json();
+  const json: unknown = await request.json();
+  const parsed = requestAProposalApiSchema.safeParse(json);
 
+  if (!parsed.success) {
+    return Response.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const res = parsed.data;
   const email = res.email;
   const name = res.name;
   const phone = res.phone || "No phone number provided.";
@@ -39,12 +45,6 @@ export async function POST(request: Request) {
   if (!spamCheck.allowed) {
     logBlockedFormSubmission(formName, spamCheck, { email, name });
     return createSpamBlockedResponse();
-  }
-
-  if (!email) {
-    return new Response("no to: email provided", {
-      status: 404,
-    });
   }
 
   const { to, bcc } = await resolveFormNotificationRecipients({
@@ -72,11 +72,12 @@ export async function POST(request: Request) {
     });
 
     if (data.error) {
-      return Response.json({ error: data.error });
+      return Response.json({ error: data.error }, { status: 502 });
     }
 
     return Response.json(data);
   } catch (error) {
-    return Response.json({ error });
+    console.error(`[${formName}] Resend send failed:`, error);
+    return Response.json({ error: "Failed to send email" }, { status: 500 });
   }
 }

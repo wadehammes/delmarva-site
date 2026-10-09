@@ -29,7 +29,7 @@ Preview data: [`emailPreviewProps.ts`](../components/Email/emailPreviewProps.ts)
 
 ### Local / staging test recipients
 
-When **`ENVIRONMENT`** is **`local`** or **`staging`**, use **`RESEND_TEST_RECIPIENTS`** (see [`emailHelpers.ts`](../utils/emailHelpers.ts) and [integrations.md](../../docs/handbook/integrations.md)). Production uses CMS addresses.
+When **`ENVIRONMENT`** is **`local`**, **`RESEND_DEV_TO_EMAIL`** rewrites notification **`to`**; on **`staging`**, **`RESEND_TEST_RECIPIENTS`** does. In both cases CMS **`bcc`** is omitted (see [`getNotificationBcc`](../utils/emailHelpers.ts)). Production uses CMS **`to`** and **`bcc`** as configured.
 
 ## Other modules
 

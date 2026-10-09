@@ -49,6 +49,7 @@
       "submit": "Enviar",
       "submitting": "Enviando...",
       "success": "¡Gracias! Hemos recibido tu solicitud y te contactaremos pronto.",
+      "submitError": "No pudimos enviar tu solicitud. Inténtalo de nuevo.",
       "fieldRequired": "Este campo es requerido",
       "invalidEmail": "Ingresa un correo electrónico válido",
       "invalidPhone": "Ingresa un número de teléfono válido"
@@ -71,6 +72,7 @@
       "submit": "Enviar",
       "submitting": "Enviando...",
       "success": "¡Gracias! Hemos recibido tu consulta y te responderemos pronto.",
+      "submitError": "No pudimos enviar tu consulta. Inténtalo de nuevo.",
       "fieldRequired": "Este campo es requerido",
       "invalidEmail": "Ingresa un correo electrónico válido",
       "invalidPhone": "Ingresa un número de teléfono válido"
@@ -103,7 +105,10 @@
       "selectState": "Selecciona un estado",
       "submit": "Enviar",
       "submitting": "Enviando...",
+      "submitError": "No pudimos enviar tu solicitud. Inténtalo de nuevo.",
+      "fieldRequired": "Este campo es requerido",
       "required": "Este campo es requerido",
+      "workEligibilityRequired": "Confirma que eres elegible para trabajar en los Estados Unidos",
       "invalidEmail": "Ingresa un correo electrónico válido",
       "invalidPhone": "Ingresa un número de teléfono válido"
     },

@@ -2,8 +2,8 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Component, type ReactNode } from "react";
-import { Toaster } from "sonner";
 import { LocaleProvider } from "src/components/LocaleProvider/LocaleProvider.component";
+import { ToastHost } from "src/components/Toast/ToastHost.component";
 import type { Locales } from "src/i18n/routing";
 
 interface ErrorBoundaryState {
@@ -97,23 +97,9 @@ function ProvidersContent({ children, locale }: ProvidersProps) {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <LocaleProvider locale={locale}>{children}</LocaleProvider>
-        <Toaster
-          className="toaster"
-          closeButton
-          expand
-          gap={12}
-          position="top-center"
-          toastOptions={{
-            classNames: {
-              closeButton: "toast-close",
-              toast: "toast",
-            },
-            duration: 5_000,
-            unstyled: true,
-          }}
-          visibleToasts={3}
-        />
+        <ToastHost>
+          <LocaleProvider locale={locale}>{children}</LocaleProvider>
+        </ToastHost>
       </QueryClientProvider>
     </ErrorBoundary>
   );

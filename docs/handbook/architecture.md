@@ -48,7 +48,7 @@ Details: [contentful.md](contentful.md).
 
 ### `src/app/providers.tsx`
 
-Client **QueryClientProvider**, **LocaleProvider**, **Sonner** toaster, and a class **ErrorBoundary** around the tree.
+Client **QueryClientProvider**, **LocaleProvider**, **Base UI** **`ToastHost`** ([appToast.ts](../../src/lib/toast/appToast.ts)), and a class **ErrorBoundary** around the tree.
 
 ### `src/atoms/`
 

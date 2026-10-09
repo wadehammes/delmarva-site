@@ -16,6 +16,9 @@ House style for TypeScript, React, CSS, and tests. When in doubt, mirror a nearb
 ## React / JSX
 
 - **Typed props** on plain function components; return type usually inferred.
+- **Refs (React 19+)**: Pass **`ref`** as a normal prop on custom components (`ref?: Ref<HTMLElement>` on the props type). Do not wrap components in **`forwardRef`** unless a library requires it.
+- **`useEffectEvent`**: For logic inside **`useEffect`** / **`useLayoutEffect`** that must read latest props/state without widening the effect dependency list (deploy polling, subscriptions). Call the event only from effects, never during render.
+- **`<Activity>`**: Hide heavy client UI with **`mode="hidden"`** while preserving in-tree state (e.g. project modal carousel). Pair with real open/close props on dialogs (**`isOpen`**) for focus and a11y; do not use Activity as a substitute for modal semantics.
 - **Conditional UI**: Prefer an explicit ternary (`condition ? <A /> : null`) over `condition && <A />` so falsy values never render accidentally.
 - **Class names**: Use **`clsx`** with object notation for conditionals, e.g. `clsx(styles.root, { [styles.active]: isActive })`.
 - **Images**: Use **`next/image`** for content images with a meaningful **`alt`** (or `alt=""` when decorative). New remote hostnames belong in **`images.remotePatterns`** in [next.config.ts](../../next.config.ts).
@@ -39,7 +42,8 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 ## CSS
 
 - **CSS Modules** next to components (`*.module.css`).
-- Shared form field layout/error styles live in **[`src/styles/formFieldShared.module.css`](../../src/styles/formFieldShared.module.css)** (`.fieldsetWrapper`, `.controlWrapper`, `.label`, `.errorMessage`); compose with component-specific modules (e.g. **`Input.module.css`** **`fieldRoot[data-invalid]`** error borders). Error copy sits in normal flow **`0.25rem`** below the control—avoid absolute positioning that floats errors into the next field’s gap. Put **`.fieldRoot[data-invalid]`** override blocks **after** base wrapper rules (`.inputWrapper`, `.selectWrapper`, …) in the same module so Stylelint **`no-descending-specificity`** passes.
+- Shared form field layout/error styles live in **[`src/styles/formFieldShared.module.css`](../../src/styles/formFieldShared.module.css)** (`.fieldsetWrapper`, `.controlWrapper`, `.label`, `.errorMessage`); compose with component-specific modules (e.g. **`Input.module.css`**, **`Select.module.css`** **`fieldRoot[data-invalid]`** error borders). Error copy sits in normal flow **`0.25rem`** below the control—avoid absolute positioning that floats errors into the next field’s gap. Put **`.fieldRoot[data-invalid]`** override blocks **after** base wrapper rules (`.inputWrapper`, `.selectWrapper`, …) in the same module so Stylelint **`no-descending-specificity`** passes.
+- **Form control focus on light surfaces** (**`Input`**, **`Select`**): focused trigger/wrapper uses **`--color-input-focus-accent-bg`** and a **`--colors-orange`** border (see **`Input.module.css`**, **`Select.module.css`**). **Select** popup options use the same accent background plus an inset **`--colors-orange`** ring for **`[data-highlighted]`** and **`:focus-visible`**—not browser default list focus colors.
 - **Mobile-first**: base styles for small screens; use `min-width` media queries for larger breakpoints.
 - **Nest** selectors and media queries inside their parent rule (`&:hover`, `@media (min-width: …)`) rather than repeating the selector at the top level. Keep nesting depth reasonable.
 - **Alphabetize** properties within a rule where practical.
@@ -50,7 +54,7 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
   - `--color-text` / `--color-bg` — default page text and background
   - `--color-surface-bg` / `--color-surface-text` — light surfaces (modals, cards, form fields)
   - `--card-bg`, `--divider`, `--divider-on-surface` — elevated surfaces and borders
-  - `--overlay-*`, `--shadow-*`, `--color-input-*`, `--color-skeleton-*`, `--color-toast-*`, `--toast-width`, `--toast-offset` — overlays, shadows, form states, skeletons, and Sonner toasts
+  - `--overlay-*`, `--shadow-*`, `--color-input-*`, `--color-skeleton-*`, `--color-toast-*`, `--toast-width`, `--toast-offset` — overlays, shadows, form states, skeletons, and Base UI toasts ([ToastHost.component.tsx](../../src/components/Toast/ToastHost.component.tsx))
   - Palette tokens (`--colors-red`, `--colors-gray`, etc.) — brand accents and CMS section backgrounds only
 
 ## Testing
@@ -58,15 +62,16 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 - **Jest** with **Testing Library**; import **`describe`**, **`it`**, **`expect`**, and lifecycle hooks from **`@jest/globals`** in every spec—do not rely on other undeclared globals. Use the shared **`jest`** object for **`jest.mock`**, **`jest.fn()`**, and **`jest.mocked()`** (hoisted mock factories must use the same instance). Matchers: **`@testing-library/jest-dom/jest-globals`** in [`.jest/setupTests.ts`](../../.jest/setupTests.ts) (extends **`expect`** from **`@jest/globals`**). Shared render helpers in [src/tests/testUtils.tsx](../../src/tests/testUtils.tsx) (includes **Jotai** provider where needed).
 - **Write tests for expected behavior first.** Assert what users or callers should see (accessible labels, API payloads, error handling, security boundaries)—not implementation details. When a new or updated test fails, **fix the production code** if the expectation matches product intent; only change the test when the requirement was wrong or the assertion was brittle.
 - **[basePageObject.po.ts](../../src/tests/basePageObject.po.ts)** — lightweight base class shared with energy-texas; extend per feature for page-object style tests.
-- **Per-component page object** (when useful): `<Name>.po.tsx` extends **`BasePageObject`**, holds **test data and setup/render helpers only**—not wrappers around every `screen.getBy*`. POs do not assert; specs drive interactions and assertions with **`screen`** and **`userEvent`**.
+- **Per-component page object** (when useful): `<Name>.po.tsx` extends **`BasePageObject`**, holds **test data and setup/render helpers only**—not wrappers around every `screen.getBy*`. POs do not assert; specs drive interactions and assertions with **`screen`** and **`userEvent`**. Stub network via **`jest.spyOn(api, …)`** in **`setupMocks`**, not **`jest.mock`** on React Query hook modules.
 - Tests use **`.test.tsx`** for components and **`.spec.ts`** for utilities (e.g. [recaptcha.spec.ts](../../src/utils/recaptcha.spec.ts), [localeUtils.spec.ts](../../src/i18n/localeUtils.spec.ts)); follow the naming pattern already used next to the code under test.
 - Prefer **queries** that reflect accessible roles/labels; add stable selectors only when necessary.
-- **`jest.mock` factories** — keep them free of `require()`; use ESM imports in dedicated mock modules under [`src/tests/mocks/`](../../src/tests/mocks/) or automock + `jest.mocked()` in the spec when a factory needs `jest.fn()`. **`next/dynamic`** is stubbed in Jest ([`nextDynamic.mock.ts`](../../src/tests/mocks/nextDynamic.mock.ts)) so lazy chunks do not resolve asynchronously during unrelated tests; import the underlying component directly when you need to assert on it.
+- **`jest.mock` factories** — keep them free of `require()`; use ESM imports in dedicated mock modules under [`src/tests/mocks/`](../../src/tests/mocks/) or automock + `jest.mocked()` in the spec when a factory needs `jest.fn()`. Shared mocks (**[`svgMock.tsx`](../../src/tests/mocks/svgMock.tsx)**, **[`reactGoogleRecaptcha.mock.ts`](../../src/tests/mocks/reactGoogleRecaptcha.mock.ts)**, etc.) follow the same React 19 **`ref`**-as-prop pattern as production components where refs are forwarded. **`next/dynamic`** is stubbed in Jest ([`nextDynamic.mock.ts`](../../src/tests/mocks/nextDynamic.mock.ts)) so lazy chunks do not resolve asynchronously during unrelated tests; import the underlying component directly when you need to assert on it.
+- **Handbook test rules** — [handbookTestRules.ts](../../src/tests/utils/handbookTestRules.ts) and [handbookTestRules.spec.ts](../../src/tests/utils/handbookTestRules.spec.ts) encode the **Do not test React Query** checks below; Cursor [`.cursor/hooks/block-query-hook-mocks.sh`](../../.cursor/hooks/block-query-hook-mocks.sh) blocks new violations on edit.
 - **`mapbox-gl` mocks** — When testing map components, mock **`NavigationControl`** and **`addControl`** on the **`Map`** instance (in addition to **`on('load', …)`**) so the **`load`** handler completes and loading overlays dismiss. Assert loading UI with **`getByRole('status')`**. See [AreasServicedMap.test.tsx](../../src/components/AreasServicedMap/AreasServicedMap.test.tsx).
 
 ### Jest configuration
 
-- **[jest.config.ts](../../jest.config.ts)** — **`next/jest`**, jsdom, **`testTimeout: 20000`**, CSS mapped to **`identity-obj-proxy`**.
+- **[jest.config.ts](../../jest.config.ts)** — **`next/jest`**, jsdom, **`testTimeout: 20000`**, CSS mapped to **`identity-obj-proxy`**. **`moduleNameMapper`** spreads **`...jestConfig.moduleNameMapper`** first (Next maps **`*.svg`** to **`fileMock.js`**), then project overrides—**`^.+\\.(svg)$` must stay in that second block** so [`svgMock.tsx`](../../src/tests/mocks/svgMock.tsx) wins and Base UI **Select** chevrons render in jsdom. **`transformIgnorePatterns`** is patched after merge to allow ESM in **`jotai`**, **`next-intl`**, and **`@faker-js/faker`**.
 - **[`.jest/setEnvVars.ts`](../../.jest/setEnvVars.ts)** — sets **`ENVIRONMENT=staging`** before tests run.
 - **[`.jest/setupTests.ts`](../../.jest/setupTests.ts)** — global mocks and lifecycle:
   - **`jest`** and hooks from **`@jest/globals`**; **`@testing-library/jest-dom/jest-globals`** for DOM matchers
@@ -79,22 +84,26 @@ Run **`pnpm tsc:ci`** for strict TypeScript checks (same as CI).
 
 | Module | Mock |
 |--------|------|
+| **`*.svg`** | [svgMock.tsx](../../src/tests/mocks/svgMock.tsx) (overrides Next **`fileMock`**) |
 | **`@faker-js/faker`** | [faker.ts](../../src/tests/mocks/faker.ts) |
 | **`next-intl/navigation`** | [nextIntlNavigation.mock.ts](../../src/tests/mocks/nextIntlNavigation.mock.ts) |
 | **`next/dynamic`** | [nextDynamic.mock.ts](../../src/tests/mocks/nextDynamic.mock.ts) |
 | **`react-google-recaptcha`** | [reactGoogleRecaptcha.mock.ts](../../src/tests/mocks/reactGoogleRecaptcha.mock.ts) |
+| **`resend`** | [resend.mock.ts](../../src/tests/mocks/resend.mock.ts) |
+| **`src/lib/toast/appToast`** | [appToast.mock.ts](../../src/tests/mocks/appToast.mock.ts) |
 
 There is no **`pnpm test`** script; run **`pnpm test:ci`** locally (or **`pnpm exec jest --testPathPatterns=<pattern>`** for a subset).
 
 ### Test data and factories
 
-- Factories use **@faker-js/faker** and extend [`BaseFactory`](../../src/tests/factories/BaseFactory.ts). Each factory exposes **`.build(attributes?)`** / **`.buildList(n, attributes?)`**—pass partial **`attributes`** to pin specific fields while the rest get fresh fake values.
-- **Adding a factory**: create **`src/tests/factories/<Name>.factory.ts`**, build the instance with **`satisfies <TargetType>`**, and gate it with a **`KeysMatch<TargetType, typeof instance>`** line ([KeysMatch.ts](../../src/types/KeysMatch.ts)) so TypeScript fails when the target type grows a field the factory does not cover. Example: [`Form.factory.ts`](../../src/tests/factories/Form.factory.ts).
+- Factories use **@faker-js/faker** and extend [`BaseFactory`](../../src/tests/factories/BaseFactory.ts). Each factory exposes **`.build(attributes?)`** / **`.buildList(n, attributes?)`**—pass partial **`attributes`** to pin specific fields while the rest get fresh fake values. **Default field values must come from faker** (e.g. **`faker.internet.email()`**, **`faker.lorem.*`**, **`faker.helpers.arrayElement`** over a local const list for CMS enums)—not hardcoded production copy. Jest maps **`@faker-js/faker`** to [faker.ts](../../src/tests/mocks/faker.ts); extend that mock when factories need new faker APIs.
+- **Adding a factory**: create **`src/tests/factories/<Name>.factory.ts`**, build the instance with **`satisfies <TargetType>`**, and gate it with a **`KeysMatch<TargetType, typeof instance>`** line ([KeysMatch.ts](../../src/types/KeysMatch.ts)) so TypeScript fails when the target type grows a field the factory does not cover. **`KeysMatch`** compares full **`keyof`** sets—include every property on the target type in **`instance`**, including optional parser/CMS fields (use **`undefined`**, **`[]`**, or a minimal stub document when the field is optional). Examples: [`Form.factory.ts`](../../src/tests/factories/Form.factory.ts) (symbol form types); [`FormJoinOurTeam.factory.ts`](../../src/tests/factories/FormJoinOurTeam.factory.ts) (Contentful rich-text **`Document`** via **`@contentful/rich-text-types`**).
 
 **Page object examples** (PO holds data + render/mocks; spec asserts):
 
 - [GeneralInquiryForm.po.tsx](../../src/components/GeneralInquiryForm/GeneralInquiryForm.po.tsx) + [GeneralInquiryForm.test.tsx](../../src/components/GeneralInquiryForm/GeneralInquiryForm.test.tsx)
 - [RequestAProposalForm.po.tsx](../../src/components/RequestAProposalForm/RequestAProposalForm.po.tsx) + [RequestAProposalForm.test.tsx](../../src/components/RequestAProposalForm/RequestAProposalForm.test.tsx)
+- [JoinOurTeamForm.po.tsx](../../src/components/JoinOurTeamForm/JoinOurTeamForm.po.tsx) + [JoinOurTeamForm.test.tsx](../../src/components/JoinOurTeamForm/JoinOurTeamForm.test.tsx) — **`api.joinOurTeam`** spy; **`aria-label`** queries (same as other CMS forms); Base UI **Select** / **FileInput** / work-eligibility checkbox; schema specs under [src/lib/forms/](../../src/lib/forms/).
 
 ## Accessibility
 
@@ -117,4 +126,10 @@ Add comments only for non-obvious behavior, workarounds, or domain rules. Prefer
 ## React Query
 
 - Keep **`useMutation`** in dedicated files under **`src/hooks/mutations/`** rather than inlined in large components. **Mutation hooks** should stay thin: wire **`useMutation`** to **`api`** methods from [src/api/urls.ts](../../src/api/urls.ts). Handle side effects (toasts, navigation) at the call site when possible.
-- There are no **`useQuery`** hooks in the repo yet; add a **`src/hooks/queries/`** (or similar) convention if you introduce client-side queries.
+- Client **`useQuery`** hooks live under **`src/hooks/queries/`** (see deploy monitoring on refresh-content). Keep them thin the same way — fetch via **`api.*`**, not inline `fetch` in components.
+
+### Do not test React Query
+
+- Do **not** add **`*.test.tsx`**, **`*.spec.ts`**, or **`*.po.tsx`** under **`src/hooks/mutations/`** or **`src/hooks/queries/`**.
+- In component and integration tests, mock **`src/api/urls`** (or **`global.fetch`**) and let real query/mutation hooks run inside **`TestProviders`**. Do **not** **`jest.mock`** or **`jest.mocked`** on hooks imported from **`src/hooks/queries/`** or **`src/hooks/mutations/`** in **`.test.tsx`** / **`.spec.ts`** files.
+- **Page objects** (**`*.po.tsx`**) should stub **`api.*`** (e.g. **`jest.spyOn(api, "generalInquiry")`**) in **`setupMocks`**, not mutation hooks. Rules are enforced in [handbookTestRules.ts](../../src/tests/utils/handbookTestRules.ts) and Cursor [`.cursor/hooks/block-query-hook-mocks.sh`](../../.cursor/hooks/block-query-hook-mocks.sh).

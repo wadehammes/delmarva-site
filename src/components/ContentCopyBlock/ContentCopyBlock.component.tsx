@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { forwardRef, type Ref } from "react";
+import type { Ref } from "react";
 import styles from "src/components/ContentCopyBlock/ContentCopyBlock.module.css";
 import { CTA } from "src/components/CTA/CTA.component";
 import { RichText } from "src/components/RichText/RichText.component";
@@ -12,13 +12,11 @@ import { isValidProjectLocation } from "src/utils/mapUtils";
 
 interface ContentCopyBlockProps {
   fields: CopyBlock | null;
+  ref?: Ref<HTMLDivElement>;
 }
 
-export const ContentCopyBlock = forwardRef<
-  HTMLDivElement,
-  ContentCopyBlockProps
->((props, ref: Ref<HTMLDivElement>) => {
-  const { fields } = props;
+export const ContentCopyBlock = (props: ContentCopyBlockProps) => {
+  const { fields, ref } = props;
 
   if (!fields) {
     return null;
@@ -76,4 +74,4 @@ export const ContentCopyBlock = forwardRef<
       ) : null}
     </div>
   );
-});
+};

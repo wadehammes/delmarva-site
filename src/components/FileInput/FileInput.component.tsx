@@ -2,7 +2,7 @@
 
 import { Field } from "@base-ui/react/field";
 import clsx from "clsx";
-import { forwardRef, type ReactNode, type Ref } from "react";
+import type { ReactNode, Ref } from "react";
 import type { FieldError } from "react-hook-form";
 import styles from "src/components/FileInput/FileInput.module.css";
 import { useStableFieldId } from "src/hooks/useStableFieldId";
@@ -19,82 +19,80 @@ interface FileInputProps {
   name?: string;
   onBlur?: () => void;
   onChange?: (file: File | null) => void;
+  ref?: Ref<HTMLInputElement>;
   required?: boolean;
 }
 
-export const FileInput = forwardRef(
-  (props: FileInputProps, ref: Ref<HTMLInputElement>) => {
-    const {
-      accept,
-      description,
-      errorMessage,
-      hasError,
-      id: idProp,
-      label,
-      name,
-      onBlur,
-      onChange,
-      required,
-    } = props;
+export const FileInput = (props: FileInputProps) => {
+  const {
+    accept,
+    description,
+    errorMessage,
+    hasError,
+    id: idProp,
+    label,
+    name,
+    onBlur,
+    onChange,
+    ref,
+    required,
+  } = props;
 
-    const stableId = useStableFieldId("file", idProp, name);
+  const stableId = useStableFieldId("file", idProp, name);
 
-    return (
-      <Field.Root
-        className={clsx(fieldStyles.fieldsetWrapper, styles.fieldRoot)}
-        invalid={Boolean(hasError)}
-        name={name}
-      >
-        {label ? (
-          <Field.Label
-            className={clsx(fieldStyles.label, styles.fileLabel)}
-            htmlFor={stableId}
-          >
-            {label}
-          </Field.Label>
-        ) : null}
-        {description ? (
-          <Field.Description
-            className={styles.fieldDescription}
-            data-required={required ? "true" : "false"}
-          >
-            {description}
-          </Field.Description>
-        ) : null}
-        <div className={fieldStyles.controlWrapper}>
-          <div
-            className={clsx(styles.fileInputWrapper, {
-              [styles.fileInputHasError]: Boolean(hasError),
-            })}
-          >
-            <Field.Control
-              name={name}
-              onBlur={onBlur}
-              ref={ref}
-              render={(controlProps) => (
-                <input
-                  {...controlProps}
-                  accept={accept}
-                  className={clsx(styles.fileInput, controlProps.className)}
-                  id={stableId}
-                  onChange={(event) => {
-                    onChange?.(event.target.files?.[0] ?? null);
-                  }}
-                  required={required}
-                  type="file"
-                />
-              )}
-            />
-          </div>
-          <FieldErrorMessage
-            className={fieldStyles.errorMessage}
-            errorMessage={errorMessage}
-            hasError={hasError}
+  return (
+    <Field.Root
+      className={clsx(fieldStyles.fieldsetWrapper, styles.fieldRoot)}
+      invalid={Boolean(hasError)}
+      name={name}
+    >
+      {label ? (
+        <Field.Label
+          className={clsx(fieldStyles.label, styles.fileLabel)}
+          htmlFor={stableId}
+        >
+          {label}
+        </Field.Label>
+      ) : null}
+      {description ? (
+        <Field.Description
+          className={styles.fieldDescription}
+          data-required={required ? "true" : "false"}
+        >
+          {description}
+        </Field.Description>
+      ) : null}
+      <div className={fieldStyles.controlWrapper}>
+        <div
+          className={clsx(styles.fileInputWrapper, {
+            [styles.fileInputHasError]: Boolean(hasError),
+          })}
+        >
+          <Field.Control
+            name={name}
+            onBlur={onBlur}
+            ref={ref}
+            render={(controlProps) => (
+              <input
+                {...controlProps}
+                accept={accept}
+                className={clsx(styles.fileInput, controlProps.className)}
+                id={stableId}
+                onChange={(event) => {
+                  onChange?.(event.target.files?.[0] ?? null);
+                }}
+                required={required}
+                type="file"
+              />
+            )}
           />
         </div>
-      </Field.Root>
-    );
-  },
-);
-
-FileInput.displayName = "FileInput";
+        <FieldErrorMessage
+          className={fieldStyles.errorMessage}
+          errorMessage={errorMessage}
+          hasError={hasError}
+        />
+      </div>
+    </Field.Root>
+  );
+};

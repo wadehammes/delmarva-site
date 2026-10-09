@@ -84,10 +84,11 @@ There is **no** `pnpm scaffold` script. Copy an existing component folder under 
 
 Then update the repo and local setup:
 
-1. **[`next.config.ts`](./next.config.ts)** — add the key to the `env` block when it should be exposed to the client or match existing patterns.
-2. **`.env.local`** — local values (not committed). After dashboard changes, run **`vercel env pull`** to refresh.
+1. **Client-safe names** — use the **`NEXT_PUBLIC_`** prefix and read them from [src/utils/publicEnv.ts](./src/utils/publicEnv.ts) or `process.env.NEXT_PUBLIC_*` in Client Components. Do **not** add an **`env`** block in [`next.config.ts`](./next.config.ts); that inlines values into client bundles (see [docs/handbook/platform.md](./docs/handbook/platform.md)).
+2. **Server-only secrets** — set in Vercel without a public prefix; use `process.env.*` in Server Components, Route Handlers, and scripts only.
+3. **`.env.local`** — local values (not committed). After dashboard changes, run **`vercel env pull`** to refresh.
 
-If the team maintains a sample env file elsewhere, keep it in sync; this repo does not ship a committed `.env.sample` today.
+Variable tables and draft-mode keys: [docs/handbook/platform.md](./docs/handbook/platform.md). This repo does not ship a committed `.env.sample` today.
 
 ### Managing package updates
 
@@ -99,6 +100,10 @@ If the team maintains a sample env file elsewhere, keep it in sync; this repo do
 ### Testing
 
 Tests use Jest with shared helpers in [`src/tests/testUtils.tsx`](./src/tests/testUtils.tsx). Prefer the same patterns as nearby specs when adding coverage.
+
+### Git commits (Cursor agents)
+
+Cursor hooks block raw **`git commit`** in agent sessions. Use [`scripts/git-commit.sh`](./scripts/git-commit.sh) or **`git -c core.hooksPath=.githooks commit`** so [`.githooks/commit-msg`](./.githooks/commit-msg) can reject `Co-authored-by` trailers. Details: [`.cursor/hooks/README.md`](./.cursor/hooks/README.md).
 
 ## Linting and formatting
 
@@ -113,7 +118,7 @@ This project uses [Biome](https://biomejs.dev/) for linting and formatting.
 - Apply safe fixes and format:
 
   ```sh
-  pnpm lint:write
+  pnpm lint:fix
   ```
 
 ## Delmarva Site handbook
@@ -122,7 +127,7 @@ The handbook under [`docs/handbook/`](./docs/handbook/) is the canonical place f
 
 **Entry point:** [`docs/handbook/README.md`](./docs/handbook/README.md)
 
-**Agents / AI tools:** [AGENTS.md](./AGENTS.md). In Cursor, project rules may live under [`.cursor/rules/`](./.cursor/rules/). For other tools, use the task map in [`docs/handbook/llms.md`](./docs/handbook/llms.md).
+**Agents / AI tools:** [AGENTS.md](./AGENTS.md). In Cursor, project rules live under [`.cursor/rules/`](./.cursor/rules/); agent hooks under [`.cursor/hooks/`](./.cursor/hooks/). For other tools, use the task map in [`docs/handbook/llms.md`](./docs/handbook/llms.md).
 
 ### Suggested reading order
 
@@ -196,6 +201,8 @@ This README focuses on **machine setup**, **release tagging**, env keys, package
 - [VideoPlayer Component](src/components/VideoPlayer/README.md)
 - [Hooks](src/hooks/README.md)
 - [Resend Email Templates](src/lib/README.md)
+- [Checkbox](src/components/Checkbox/Checkbox.component.tsx)
+- [FileInput](src/components/FileInput/FileInput.component.tsx)
+- [Select](src/components/Select/Select.component.tsx)
+- [TextArea Component](src/components/TextArea/README.md)
 - [UI primitives (`src/ui/`)](src/ui/README.md)
-- [UI TextArea Component](src/ui/TextArea/README.md)
-- [UI TextField Component](src/ui/TextField/README.md)

@@ -1,4 +1,4 @@
-import React from "react";
+import { createElement, type ReactNode, type Ref } from "react";
 
 const mockRouter = () => ({
   back: jest.fn(),
@@ -9,13 +9,17 @@ const mockRouter = () => ({
   replace: jest.fn(),
 });
 
+const Link = ({
+  children,
+  ref: _ref,
+  ...props
+}: {
+  children: ReactNode;
+  ref?: Ref<HTMLAnchorElement>;
+}) => createElement("a", props, children);
+
 export const createNavigation = () => ({
-  Link: React.forwardRef(
-    (
-      { children, ...props }: { children: React.ReactNode },
-      _ref: React.Ref<HTMLAnchorElement>,
-    ) => React.createElement("a", props, children),
-  ),
+  Link,
   redirect: jest.fn(),
   usePathname: () => "/",
   useRouter: mockRouter,

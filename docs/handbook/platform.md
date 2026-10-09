@@ -33,9 +33,9 @@ Run the same commands locally before pushing when possible.
 | `pnpm build:analyze` | Production build with bundle analyzer |
 | `pnpm tsc:ci` | Strict TypeScript |
 | `pnpm lint` / `pnpm lint:fix` | Biome check / fix |
-| `pnpm lint:check` | Biome on files changed since **`origin/main`** |
+| `pnpm lint:check` | Biome on files changed since **`origin/staging`** |
 | `pnpm lint:css` / `pnpm lint:css:fix` | Stylelint on `**/*.css` |
-| `pnpm lint:all` | **`lint:check`** + **`lint:css:fix`** |
+| `pnpm lint:all` | **`lint:check`** + **`lint:css:fix`** + **`tsc:ci`** + **`knip:ci`** |
 | `pnpm test:ci` | Jest in band (use locally; no separate **`pnpm test`**) |
 | `pnpm knip` / `pnpm knip:ci` | Dead-code / unused export analysis ([knip.json](../../knip.json)) |
 | `pnpm types:contentful` | Regenerate `src/contentful/types` |

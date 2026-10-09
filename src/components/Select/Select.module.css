@@ -21,8 +21,8 @@
   &:focus-within:not(.selectHasError) {
     color: var(--color-surface-text);
     outline: 0;
-    background-color: var(--color-input-focus-bg);
-    border-color: var(--colors-gray);
+    background-color: var(--color-input-focus-accent-bg);
+    border-color: var(--colors-orange);
   }
 
   &.selectHasError {
@@ -103,10 +103,17 @@
   font-size: 16px;
   color: var(--color-surface-text);
   cursor: pointer;
+  outline: 0;
   border-radius: 6px;
 
   &[data-highlighted] {
-    background-color: var(--color-input-focus-bg);
+    background-color: var(--color-input-focus-accent-bg);
+    box-shadow: inset 0 0 0 2px var(--colors-orange);
+  }
+
+  &:focus-visible {
+    background-color: var(--color-input-focus-accent-bg);
+    box-shadow: inset 0 0 0 2px var(--colors-orange);
   }
 
   &[data-selected]:not([data-highlighted]) {

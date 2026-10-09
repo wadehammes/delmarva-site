@@ -35,7 +35,8 @@ describe("RequestAProposalForm", () => {
     await user.click(screen.getByRole("button", { name: "messages.submit" }));
 
     await waitFor(() => {
-      expect(po.mockMutateAsync).toHaveBeenCalledWith(
+      expect(po.mockRequestAProposal).toHaveBeenCalledTimes(1);
+      expect(po.mockRequestAProposal.mock.calls[0]?.[0]).toEqual(
         expect.objectContaining({
           companyName: "Acme Corp",
           email: "john@acme.com",

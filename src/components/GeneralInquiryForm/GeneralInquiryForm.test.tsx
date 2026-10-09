@@ -35,7 +35,8 @@ describe("GeneralInquiryForm", () => {
     await user.click(screen.getByRole("button", { name: "messages.submit" }));
 
     await waitFor(() => {
-      expect(po.mockMutateAsync).toHaveBeenCalledWith(
+      expect(po.mockGeneralInquiry).toHaveBeenCalledTimes(1);
+      expect(po.mockGeneralInquiry.mock.calls[0]?.[0]).toEqual(
         expect.objectContaining({
           email: "jane@example.com",
           formId,
