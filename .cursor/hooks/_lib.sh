@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Shared helpers for Cursor hooks (adapted from rhythm-marketing .claude hooks).
 
 hook_input() {
   INPUT="$(cat)"
@@ -54,4 +53,72 @@ deny_tool() {
 advise_context() {
   local ctx="$1"
   jq -n --arg c "$ctx" '{ additional_context: $c }'
+}
+
+run_pnpm() {
+  if [ -x "${HOME}/.local/bin/mise" ]; then
+    "${HOME}/.local/bin/mise" exec -- pnpm "$@"
+  elif command -v mise >/dev/null 2>&1; then
+    mise exec -- pnpm "$@"
+  elif command -v pnpm >/dev/null 2>&1; then
+    command pnpm "$@"
+  else
+    return 127
+  fi
+}
+
+handbook_chapters_for_path() {
+  local file="$1"
+  local chapters=()
+
+  case "$file" in
+    docs/handbook/*)
+      return 0
+      ;;
+    .jest/*)
+      chapters+=("conventions.md" "platform.md")
+      ;;
+    jest.config.ts | jest.config.js | jest.config.mjs)
+      chapters+=("platform.md" "conventions.md")
+      ;;
+    next.config.ts | next.config.js | next.config.mjs)
+      chapters+=("platform.md")
+      ;;
+    src/tests/factories/*)
+      chapters+=("conventions.md")
+      ;;
+    *.spec.ts | *.spec.tsx | *.test.ts | *.test.tsx)
+      chapters+=("conventions.md")
+      ;;
+    *.module.css)
+      chapters+=("conventions.md")
+      ;;
+    src/contentful/*)
+      chapters+=("contentful.md")
+      ;;
+    src/app/api/*)
+      chapters+=("platform.md" "integrations.md")
+      ;;
+    src/app/*)
+      chapters+=("patterns.md")
+      ;;
+    src/components/*)
+      chapters+=("components.md")
+      ;;
+    src/hooks/* | src/atoms/*)
+      chapters+=("patterns.md" "source-layout.md")
+      ;;
+    src/i18n/*)
+      chapters+=("patterns.md")
+      ;;
+    src/lib/*)
+      chapters+=("integrations.md" "distribution.md" "platform.md")
+      ;;
+  esac
+
+  if [ "${#chapters[@]}" -eq 0 ]; then
+    chapters+=("conventions.md")
+  fi
+
+  printf '%s\n' "${chapters[@]}" | awk '!seen[$0]++' | tr '\n' ' '
 }

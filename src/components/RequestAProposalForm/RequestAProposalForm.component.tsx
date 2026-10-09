@@ -1,7 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import {
   Controller,
@@ -9,36 +10,25 @@ import {
   useForm,
   useFormState,
 } from "react-hook-form";
-import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
+import { FormWebsiteHoneypot } from "src/components/forms/FormWebsiteHoneypot.component";
 import { Input } from "src/components/Input/Input.component";
 import { TextArea } from "src/components/TextArea/TextArea.component";
 import type { FormType } from "src/contentful/parseForm";
 import { useSendRequestAProposalFormMutation } from "src/hooks/mutations/useSendRequestAProposalForm.mutation";
-import { getRecaptchaSiteKey } from "src/utils/publicEnv";
 import {
-  EMAIL_VALIDATION_REGEX,
-  PHONE_NUMBER_VALIDATION_REGEX,
-} from "src/utils/regex";
-import styles from "./RequestAProposalForm.module.css";
+  createRequestAProposalFormSchema,
+  type RequestAProposalFormValues,
+} from "src/lib/forms/requestAProposalForm.schema";
+import { appToast } from "src/lib/toast/appToast";
+import layoutStyles from "src/styles/formLayoutShared.module.css";
+import { getRecaptchaSiteKey } from "src/utils/publicEnv";
 
 interface RequestAProposalFormProps {
   fields: FormType;
 }
 
-export interface RequestAProposalInputs {
-  companyName: string;
-  name: string;
-  email: string;
-  phone: string;
-  projectDetails: string;
-  recaptchaToken: string;
-  formStartedAt?: number;
-  formId?: string;
-  website?: string;
-}
-
-const defaultValues: RequestAProposalInputs = {
+const defaultValues: RequestAProposalFormValues = {
   companyName: "",
   email: "",
   name: "",
@@ -55,21 +45,31 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
 
   const t = useTranslations("RequestAProposalForm");
 
+  const schema = useMemo(
+    () =>
+      createRequestAProposalFormSchema({
+        fieldRequired: t("messages.fieldRequired"),
+        invalidEmail: t("messages.invalidEmail"),
+        invalidPhone: t("messages.invalidPhone"),
+      }),
+    [t],
+  );
+
   const reCaptcha = useRef<ReCAPTCHA>(null);
   const formStartedAt = useRef(Date.now());
 
-  const { handleSubmit, control, clearErrors, reset } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     defaultValues,
     mode: "onChange",
+    resolver: zodResolver(schema),
     reValidateMode: "onChange",
   });
   const { errors, isSubmitting } = useFormState({ control });
 
   const sendMutation = useSendRequestAProposalFormMutation();
+  const isBusy = isSubmitting || sendMutation.isPending;
 
-  const onSubmit: SubmitHandler<RequestAProposalInputs> = async (data) => {
-    clearErrors("email");
-
+  const onSubmit: SubmitHandler<RequestAProposalFormValues> = async (data) => {
     if (reCaptcha?.current) {
       const captcha = await reCaptcha.current.executeAsync();
 
@@ -77,8 +77,8 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         const { companyName, email, name, phone, projectDetails, website } =
           data;
 
-        try {
-          await sendMutation.mutateAsync({
+        sendMutation.mutate(
+          {
             companyName,
             email,
             formId,
@@ -88,20 +88,29 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             projectDetails,
             recaptchaToken: captcha,
             website,
-          });
-          toast.success(t("messages.success"));
-          reset(defaultValues);
-          formStartedAt.current = Date.now();
-          reCaptcha.current?.reset();
-        } catch (_e) {
-          throw new Error("Failed to submit request. Please try again.");
-        }
+          },
+          {
+            onError: () => {
+              appToast.error(t("messages.submitError"));
+            },
+            onSuccess: () => {
+              appToast.success(t("messages.success"));
+              reset(defaultValues);
+              formStartedAt.current = Date.now();
+              reCaptcha.current?.reset();
+            },
+          },
+        );
       }
     }
   };
 
   return (
-    <form className={styles.form} noValidate onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={layoutStyles.form}
+      noValidate
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Controller
         control={control}
         name="companyName"
@@ -117,7 +126,6 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             value={value}
           />
         )}
-        rules={{ required: t("messages.fieldRequired") }}
       />
 
       <Controller
@@ -135,7 +143,6 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             value={value}
           />
         )}
-        rules={{ required: t("messages.fieldRequired") }}
       />
 
       <Controller
@@ -147,22 +154,12 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             hasError={errors.email}
             label={`${t("labels.email")} *`}
             name={name}
-            onChange={(e) => {
-              clearErrors("email");
-              onChange(e);
-            }}
+            onChange={onChange}
             placeholder={t("placeholders.email")}
             ref={ref}
             value={value}
           />
         )}
-        rules={{
-          pattern: {
-            message: t("messages.invalidEmail"),
-            value: EMAIL_VALIDATION_REGEX,
-          },
-          required: t("messages.fieldRequired"),
-        }}
       />
 
       <Controller
@@ -180,12 +177,6 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
             value={value}
           />
         )}
-        rules={{
-          pattern: {
-            message: t("messages.invalidPhone"),
-            value: PHONE_NUMBER_VALIDATION_REGEX,
-          },
-        }}
       />
 
       <Controller
@@ -205,39 +196,24 @@ export const RequestAProposalForm = (props: RequestAProposalFormProps) => {
         )}
       />
 
-      <div className={styles.formSubmitContainer}>
+      <div className={layoutStyles.formSubmitContainer}>
         <div />
         <div>
           <Button
-            isDisabled={isSubmitting}
+            isDisabled={isBusy}
             label={t("messages.submit")}
             trackingEvent="request-a-proposal-form-submit"
             type="submit"
           >
-            {isSubmitting ? t("messages.submitting") : t("messages.submit")}
+            {isBusy ? t("messages.submitting") : t("messages.submit")}
           </Button>
         </div>
       </div>
 
-      <div aria-hidden="true" className={styles.honeypot}>
-        <label htmlFor="website">Website</label>
-        <Controller
-          control={control}
-          name="website"
-          render={({ field: { onChange, value, name, ref } }) => (
-            <input
-              autoComplete="off"
-              id="website"
-              name={name}
-              onChange={onChange}
-              ref={ref}
-              tabIndex={-1}
-              type="text"
-              value={value}
-            />
-          )}
-        />
-      </div>
+      <FormWebsiteHoneypot
+        className={layoutStyles.honeypot}
+        control={control}
+      />
 
       <ReCAPTCHA
         ref={reCaptcha}

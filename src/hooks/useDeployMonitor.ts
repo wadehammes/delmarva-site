@@ -4,11 +4,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useCallback,
   useEffect,
+  useEffectEvent,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import { toast } from "sonner";
 import { ApiError } from "src/api/helpers";
 import { api } from "src/api/urls";
 import { useTriggerDeployMutation } from "src/hooks/mutations/useTriggerDeploy.mutation";
@@ -24,6 +24,7 @@ import {
   writeDeployProgress,
 } from "src/lib/deployProgressStorage";
 import type { DeployTarget } from "src/lib/refreshContentAccess";
+import { appToast } from "src/lib/toast/appToast";
 import type { DeployMonitorStatus } from "src/lib/vercelDeploymentStatus";
 
 const POLL_INTERVAL_MS = 5_000;
@@ -41,18 +42,12 @@ interface UseDeployMonitorOptions {
 
 const deployToastId = (target: DeployTarget): string => `deploy-${target}`;
 
-const deployToastHandlers = {
-  error: toast.error,
-  success: toast.success,
-  warning: toast.warning,
-} as const;
-
 const showDeployToast = (
   target: DeployTarget,
   message: string,
-  type: keyof typeof deployToastHandlers,
+  type: "error" | "success" | "warning",
 ) => {
-  deployToastHandlers[type](message, { id: deployToastId(target) });
+  appToast[type](message, { id: deployToastId(target) });
 };
 
 export const useDeployMonitor = ({
@@ -118,22 +113,6 @@ export const useDeployMonitor = ({
     staleTime: 0,
   });
 
-  useEffect(() => {
-    const activeDeploy = activeDeployQuery.data;
-
-    if (!activeDeploy?.active || progress) {
-      return;
-    }
-
-    saveProgress({
-      createdAt: activeDeploy.createdAt,
-      deployHookId: activeDeploy.deployHookId,
-      projectId: activeDeploy.projectId,
-      startedAt: activeDeploy.createdAt,
-      target,
-    });
-  }, [activeDeployQuery.data, progress, saveProgress, target]);
-
   const deployStatusQuery = useQuery({
     enabled: progress !== null,
     queryFn: () => {
@@ -174,11 +153,31 @@ export const useDeployMonitor = ({
 
       return POLL_INTERVAL_MS;
     },
-    refetchIntervalInBackground: true,
+    refetchIntervalInBackground: false,
     staleTime: 0,
   });
 
+  const syncActiveDeployProgress = useEffectEvent(() => {
+    const activeDeploy = activeDeployQuery.data;
+
+    if (!activeDeploy?.active || progress) {
+      return;
+    }
+
+    saveProgress({
+      createdAt: activeDeploy.createdAt,
+      deployHookId: activeDeploy.deployHookId,
+      projectId: activeDeploy.projectId,
+      startedAt: activeDeploy.createdAt,
+      target,
+    });
+  });
+
   useEffect(() => {
+    syncActiveDeployProgress();
+  }, [activeDeployQuery.data, progress]);
+
+  const updateDisplayStatusFromPoll = useEffectEvent(() => {
     const polledStatus = deployStatusQuery.data?.status;
 
     if (!progress || polledStatus === undefined) {
@@ -186,9 +185,13 @@ export const useDeployMonitor = ({
     }
 
     setDisplayStatus((current) => furthestDeployStatus(current, polledStatus));
-  }, [deployStatusQuery.data?.status, progress]);
+  });
 
   useEffect(() => {
+    updateDisplayStatusFromPoll();
+  }, [deployStatusQuery.data?.status, progress]);
+
+  const evaluateTerminalDeployStatus = useEffectEvent(() => {
     if (!progress) {
       return;
     }
@@ -258,15 +261,16 @@ export const useDeployMonitor = ({
       clearProgress();
       showDeployToast(target, "Refresh may be complete", "success");
     }
+  });
+
+  useEffect(() => {
+    evaluateTerminalDeployStatus();
   }, [
-    clearProgress,
     deployStatusQuery.data,
     deployStatusQuery.dataUpdatedAt,
     deployStatusQuery.isSuccess,
     elapsedMs,
     progress,
-    releaseUnmonitoredDeploy,
-    target,
   ]);
 
   const startedAt =
@@ -294,7 +298,7 @@ export const useDeployMonitor = ({
     };
   }, [startedAt]);
 
-  useEffect(() => {
+  const evaluateUnmonitoredElapsed = useEffectEvent(() => {
     if (unmonitoredStartedAtRef.current === null) {
       return;
     }
@@ -307,7 +311,11 @@ export const useDeployMonitor = ({
       unmonitoredStartedAtRef.current = null;
       showDeployToast(target, "Refresh may be complete", "success");
     }
-  }, [elapsedMs, target]);
+  });
+
+  useEffect(() => {
+    evaluateUnmonitoredElapsed();
+  }, [elapsedMs]);
 
   const triggerDeploy = useCallback(() => {
     if (progress || triggerDeployMutation.isPending) {

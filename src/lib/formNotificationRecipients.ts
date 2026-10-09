@@ -1,5 +1,5 @@
 import { fetchFormRecipients } from "src/contentful/getFormEntry";
-import { getNotificationTo } from "src/utils/emailHelpers";
+import { getNotificationBcc, getNotificationTo } from "src/utils/emailHelpers";
 import { EMAIL_VALIDATION_REGEX } from "src/utils/regex";
 
 const sanitizeEmails = (emails: string[] | undefined): string[] => {
@@ -39,7 +39,7 @@ export const resolveFormNotificationRecipients = async ({
   }
 
   return {
-    bcc: bccAddresses,
+    bcc: getNotificationBcc(bccAddresses),
     to: getNotificationTo(toAddresses),
   };
 };

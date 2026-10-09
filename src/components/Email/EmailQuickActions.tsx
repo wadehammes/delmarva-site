@@ -1,4 +1,3 @@
-import type * as React from "react";
 import { Button, Column, Row, Section } from "react-email";
 import { emailClasses } from "./emailClasses";
 import { getPhoneDigits, hasPhone } from "./emailHelpers";
@@ -16,11 +15,11 @@ const buttonStyle = {
   width: "100%",
 };
 
-export const EmailQuickActions: React.FC<EmailQuickActionsProps> = ({
+export const EmailQuickActions = ({
   email,
   phone,
   replySubject,
-}) => {
+}: EmailQuickActionsProps) => {
   const mailtoHref = replySubject
     ? `mailto:${email}?subject=${encodeURIComponent(replySubject)}`
     : `mailto:${email}`;

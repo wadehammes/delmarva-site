@@ -16,7 +16,7 @@ Quick map of **`src/`** when you know the task (“add a schema helper”, “fi
 | **URLs / site base** | [urlHelpers.ts](../../src/utils/urlHelpers.ts) (`createMediaUrl`, internal links, CTA URLs), [env.helpers.ts](../../src/utils/env.helpers.ts) (`envUrl`), [publicEnv.ts](../../src/utils/publicEnv.ts) (`NEXT_PUBLIC_*` for client) |
 | **Strings / React / Rich Text** | [string.helpers.ts](../../src/utils/string.helpers.ts), [react.helpers.ts](../../src/utils/react.helpers.ts), [richText.helpers.ts](../../src/utils/richText.helpers.ts) |
 | **Video URLs** | [videoUrl.helpers.ts](../../src/utils/videoUrl.helpers.ts) (embed detection, `isVideoUrl`, …) |
-| **Other** | [browser.helpers.ts](../../src/utils/browser.helpers.ts), [value.helpers.ts](../../src/utils/value.helpers.ts) (`isNonNullable`), [contentModules.ts](../../src/utils/contentModules.ts) (**`isTypeContentModules`**), [areasServed.ts](../../src/utils/areasServed.ts) |
+| **Other** | [browser.helpers.ts](../../src/utils/browser.helpers.ts), [contentModules.ts](../../src/utils/contentModules.ts) (**`isTypeContentModules`**), [areasServed.ts](../../src/utils/areasServed.ts) |
 | **Maps / counties** | [countyUtils.ts](../../src/utils/countyUtils.ts), [countyBoundaryLimits.ts](../../src/utils/countyBoundaryLimits.ts), [mapLayerUtils.ts](../../src/utils/mapLayerUtils.ts), [mapUtils.ts](../../src/utils/mapUtils.ts), [serviceAreaUtils.ts](../../src/utils/serviceAreaUtils.ts) |
 
 Import the specific module you need; there is no barrel **`utils/index.ts`**.

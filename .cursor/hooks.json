@@ -7,6 +7,20 @@
         "timeout": 10
       }
     ],
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/block-co-authored-by-commit.sh",
+        "matcher": "git commit",
+        "timeout": 5,
+        "failClosed": true
+      },
+      {
+        "command": ".cursor/hooks/block-destructive-git.sh",
+        "matcher": "git push|git reset|git clean",
+        "timeout": 5,
+        "failClosed": true
+      }
+    ],
     "preToolUse": [
       {
         "command": ".cursor/hooks/block-added-comments.sh",
@@ -42,14 +56,19 @@
         "command": ".cursor/hooks/block-barrel-files.sh",
         "matcher": "Write",
         "timeout": 10
+      },
+      {
+        "command": ".cursor/hooks/enforce-factory-location.sh",
+        "matcher": "Write",
+        "timeout": 10
+      },
+      {
+        "command": ".cursor/hooks/block-query-hook-mocks.sh",
+        "matcher": "Write|StrReplace",
+        "timeout": 10
       }
     ],
     "postToolUse": [
-      {
-        "command": ".cursor/hooks/handbook-sync-nudge.sh",
-        "matcher": "Write|StrReplace",
-        "timeout": 10
-      },
       {
         "command": ".cursor/hooks/check-css-nesting.sh",
         "matcher": "Write|StrReplace",
@@ -60,6 +79,16 @@
       {
         "command": ".cursor/hooks/handbook-drift-check.sh",
         "timeout": 15,
+        "loop_limit": 1
+      },
+      {
+        "command": ".cursor/hooks/handbook-test-drift-check.sh",
+        "timeout": 30,
+        "loop_limit": 1
+      },
+      {
+        "command": ".cursor/hooks/lint-all-check.sh",
+        "timeout": 180,
         "loop_limit": 1
       }
     ]

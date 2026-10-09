@@ -1,8 +1,9 @@
 "use client";
 
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import {
   Controller,
@@ -10,10 +11,10 @@ import {
   useForm,
   useFormState,
 } from "react-hook-form";
-import { toast } from "sonner";
 import { Button } from "src/components/Button/Button.component";
 import { Checkbox } from "src/components/Checkbox/Checkbox.component";
 import { FileInput } from "src/components/FileInput/FileInput.component";
+import { FormWebsiteHoneypot } from "src/components/forms/FormWebsiteHoneypot.component";
 import { Input } from "src/components/Input/Input.component";
 import styles from "src/components/JoinOurTeamForm/JoinOurTeamForm.module.css";
 import { RichText } from "src/components/RichText/RichText.component";
@@ -22,38 +23,30 @@ import { TextArea } from "src/components/TextArea/TextArea.component";
 import type { FormJoinOurTeamType } from "src/contentful/parseFormJoinOurTeam";
 import { useSendJoinOurTeamFormMutation } from "src/hooks/mutations/useSendJoinOurTeamForm.mutation";
 import type { Locales } from "src/i18n/routing";
+import {
+  createJoinOurTeamFormSchema,
+  type JoinOurTeamFormInput,
+  type JoinOurTeamFormValues,
+} from "src/lib/forms/joinOurTeamForm.schema";
+import { appToast } from "src/lib/toast/appToast";
+import fieldStyles from "src/styles/formFieldShared.module.css";
+import layoutStyles from "src/styles/formLayoutShared.module.css";
 import { US_STATES_MAP } from "src/utils/constants";
 import { getRecaptchaSiteKey } from "src/utils/publicEnv";
-import {
-  EMAIL_VALIDATION_REGEX,
-  PHONE_NUMBER_VALIDATION_REGEX,
-} from "src/utils/regex";
 
 interface JoinOurTeamFormProps {
   fields: FormJoinOurTeamType;
 }
 
-export interface JoinOurTeamInputs {
-  address: string;
-  briefDescription: string;
-  city: string;
-  coverLetter: File | null;
-  email: string;
-  formId?: string;
-  locale?: Locales;
-  name: string;
-  phone: string;
-  position: string;
-  recaptchaToken: string;
-  formStartedAt?: number;
-  resume: File | null;
-  state: string;
-  website?: string; // Honeypot field
-  workEligibility: boolean;
-  zipCode: string;
-}
+const JOIN_OUR_TEAM_BLOCKING_FIELDS = [
+  "name",
+  "email",
+  "position",
+  "resume",
+  "workEligibility",
+] as const;
 
-const defaultValues: JoinOurTeamInputs = {
+const defaultValues: JoinOurTeamFormInput = {
   address: "",
   briefDescription: "",
   city: "",
@@ -75,22 +68,38 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
   const locale = useLocale() as Locales;
   const t = useTranslations("JoinOurTeamForm");
 
+  const schema = useMemo(
+    () =>
+      createJoinOurTeamFormSchema({
+        fieldRequired: t("messages.fieldRequired"),
+        invalidEmail: t("messages.invalidEmail"),
+        invalidPhone: t("messages.invalidPhone"),
+        positionRequired: t("messages.positionRequired"),
+        resumeRequired: t("messages.resumeRequired"),
+        workEligibilityRequired: t("messages.workEligibilityRequired"),
+      }),
+    [t],
+  );
+
   const reCaptcha = useRef<ReCAPTCHA>(null);
   const formStartedAt = useRef(Date.now());
 
-  const { handleSubmit, control, clearErrors, reset } = useForm({
+  const { handleSubmit, control, reset } = useForm<
+    JoinOurTeamFormInput,
+    unknown,
+    JoinOurTeamFormValues
+  >({
     defaultValues,
     mode: "onChange",
+    resolver: zodResolver(schema),
     reValidateMode: "onChange",
   });
   const { errors, isSubmitting } = useFormState({ control });
 
   const sendJoinOurTeamFormMutation = useSendJoinOurTeamFormMutation();
+  const isBusy = isSubmitting || sendJoinOurTeamFormMutation.isPending;
 
-  const onSubmit: SubmitHandler<JoinOurTeamInputs> = async (data) => {
-    clearErrors("email");
-    clearErrors("position");
-
+  const onSubmit: SubmitHandler<JoinOurTeamFormValues> = async (data) => {
     if (reCaptcha?.current) {
       const captcha = await reCaptcha.current.executeAsync();
 
@@ -111,8 +120,8 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           website,
         } = data;
 
-        try {
-          await sendJoinOurTeamFormMutation.mutateAsync({
+        sendJoinOurTeamFormMutation.mutate(
+          {
             address,
             briefDescription,
             city,
@@ -130,27 +139,29 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             website,
             workEligibility,
             zipCode,
-          });
-          const message =
-            documentToPlainTextString(formSubmitSuccessMessage).trim() ||
-            "Application received. We'll be in touch soon.";
-          toast.success(message);
-          reset(defaultValues);
-          formStartedAt.current = Date.now();
-          reCaptcha.current?.reset();
-        } catch (_e) {
-          throw new Error("Failed to submit application. Please try again.");
-        }
+          },
+          {
+            onError: () => {
+              appToast.error(t("messages.submitError"));
+            },
+            onSuccess: () => {
+              const message =
+                documentToPlainTextString(formSubmitSuccessMessage).trim() ||
+                "Application received. We'll be in touch soon.";
+              appToast.success(message);
+              reset(defaultValues);
+              formStartedAt.current = Date.now();
+              reCaptcha.current?.reset();
+            },
+          },
+        );
       }
     }
   };
 
-  const hasMissingFields =
-    errors.name ||
-    errors.email ||
-    errors.position ||
-    errors.resume ||
-    errors.workEligibility;
+  const hasMissingFields = JOIN_OUR_TEAM_BLOCKING_FIELDS.some(
+    (fieldName) => errors[fieldName],
+  );
 
   const { description, formSubmitSuccessMessage } = fields;
 
@@ -159,7 +170,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
       {description ? <RichText document={description} /> : null}
 
       <form
-        className={styles.form}
+        className={layoutStyles.form}
         noValidate
         onSubmit={handleSubmit(onSubmit)}
       >
@@ -169,6 +180,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             name="name"
             render={({ field: { onChange, value, name, ref } }) => (
               <Input
+                aria-label={t("labels.fullName")}
                 hasError={errors.name}
                 label={`${t("labels.fullName")} *`}
                 name={name}
@@ -178,7 +190,6 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
                 value={value}
               />
             )}
-            rules={{ required: t("messages.required") }}
           />
 
           <Controller
@@ -186,25 +197,16 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             name="email"
             render={({ field: { onChange, value, name, ref } }) => (
               <Input
+                aria-label={t("labels.email")}
                 hasError={errors.email}
                 label={`${t("labels.email")} *`}
                 name={name}
-                onChange={(e) => {
-                  clearErrors("email");
-                  onChange(e);
-                }}
+                onChange={onChange}
                 placeholder={t("placeholders.email")}
                 ref={ref}
                 value={value}
               />
             )}
-            rules={{
-              pattern: {
-                message: t("messages.invalidEmail"),
-                value: EMAIL_VALIDATION_REGEX,
-              },
-              required: t("messages.required"),
-            }}
           />
 
           <Controller
@@ -221,12 +223,6 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
                 value={value}
               />
             )}
-            rules={{
-              pattern: {
-                message: t("messages.invalidPhone"),
-                value: PHONE_NUMBER_VALIDATION_REGEX,
-              },
-            }}
           />
 
           <Controller
@@ -234,9 +230,8 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             name="position"
             render={({ field: { onBlur, onChange, value, name, ref } }) => (
               <Select
-                errorMessage={
-                  errors.position ? t("messages.positionRequired") : undefined
-                }
+                aria-label={t("labels.position")}
+                errorMessage={errors.position?.message}
                 hasError={errors.position}
                 label={`${t("labels.position")} *`}
                 name={name}
@@ -251,7 +246,6 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
                 value={value}
               />
             )}
-            rules={{ required: t("messages.positionRequired") }}
           />
         </div>
 
@@ -351,9 +345,7 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
             <FileInput
               accept=".pdf,.doc,.docx"
               description={t("descriptions.resume")}
-              errorMessage={
-                errors.resume ? t("messages.resumeRequired") : undefined
-              }
+              errorMessage={errors.resume?.message}
               hasError={errors.resume}
               label={t("labels.resume")}
               name={name}
@@ -362,7 +354,6 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
               ref={ref}
             />
           )}
-          rules={{ required: t("messages.resumeRequired") }}
         />
 
         <Controller
@@ -386,52 +377,44 @@ export const JoinOurTeam = (props: JoinOurTeamFormProps) => {
           control={control}
           name="workEligibility"
           render={({ field: { onBlur, onChange, value, name, ref } }) => (
-            <Checkbox
-              checked={value}
-              label={t("labels.workEligibility")}
-              name={name}
-              onBlur={onBlur}
-              onChange={onChange}
-              ref={ref}
-            />
+            <div>
+              <Checkbox
+                checked={value}
+                label={t("labels.workEligibility")}
+                name={name}
+                onBlur={onBlur}
+                onChange={onChange}
+                ref={ref}
+              />
+              {errors.workEligibility?.message ? (
+                <p className={fieldStyles.errorMessage}>
+                  {errors.workEligibility.message}
+                </p>
+              ) : null}
+            </div>
           )}
         />
 
-        <div className={styles.formSubmitContainer}>
+        <div className={layoutStyles.formSubmitContainer}>
           <div>
             {hasMissingFields ? <p>{t("messages.missingFields")}</p> : null}
           </div>
           <div>
             <Button
-              isDisabled={isSubmitting}
+              isDisabled={isBusy}
               label={t("messages.submit")}
               trackingEvent="join-our-team-form-submit"
               type="submit"
             >
-              {isSubmitting ? t("messages.submitting") : t("messages.submit")}
+              {isBusy ? t("messages.submitting") : t("messages.submit")}
             </Button>
           </div>
         </div>
 
-        <div aria-hidden="true" className={styles.honeypot}>
-          <label htmlFor="website">Website</label>
-          <Controller
-            control={control}
-            name="website"
-            render={({ field: { onChange, value, name, ref } }) => (
-              <input
-                autoComplete="off"
-                id="website"
-                name={name}
-                onChange={onChange}
-                ref={ref}
-                tabIndex={-1}
-                type="text"
-                value={value}
-              />
-            )}
-          />
-        </div>
+        <FormWebsiteHoneypot
+          className={layoutStyles.honeypot}
+          control={control}
+        />
 
         <ReCAPTCHA
           ref={reCaptcha}

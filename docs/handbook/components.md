@@ -51,7 +51,7 @@ For **nested modules** (entries inside another CMS block), use the same parser �
 
 **`src/ui/`** holds shared controls (Button, Collapsible, Dialog, …) consumed by feature components. Keep feature-specific copy and layout in **`src/components/`**.
 
-New headless behavior should use **[Base UI](https://base-ui.com/react/overview/quick-start)** (`@base-ui/react`): import from the package subpath (e.g. `@base-ui/react/dialog`, `@base-ui/react/field`) — **no barrel re-exports**. Style with CSS Modules + design tokens. Add **`src/ui/<Name>/`** only when behavior or shared CSS is needed (e.g. **`Collapsible`**). See **[src/ui/README.md](../../src/ui/README.md)** for portal setup (**`.appRoot`** + `isolation: isolate` on the layout wrapper in [`layout.tsx`](../../src/app/[locale]/layout.tsx)). **React Aria is not used** — forms use **`src/components/Input`**, **`TextArea`**, **`Select`**, **`Checkbox`**, and **`FileInput`** with **`FieldErrorMessage`** (`Field.Error`) / **`Field.Description`** for validation copy; forms use **`noValidate`** + react-hook-form rules (see [patterns.md](patterns.md)). **[Modal](../../src/components/Modal/Modal.component.tsx)** and **[mobile nav](../../src/components/Navigation/MobileNavigation.component.tsx)** compose Base UI **`Dialog`**.
+New headless behavior should use **[Base UI](https://base-ui.com/react/overview/quick-start)** (`@base-ui/react`): import from the package subpath (e.g. `@base-ui/react/dialog`, `@base-ui/react/field`) — **no barrel re-exports**. Style with CSS Modules + design tokens. Add **`src/ui/<Name>/`** only when behavior or shared CSS is needed (e.g. **`Collapsible`**). See **[src/ui/README.md](../../src/ui/README.md)** for portal setup (**`.appRoot`** + `isolation: isolate` on the layout wrapper in [`layout.tsx`](../../src/app/[locale]/layout.tsx)). **React Aria is not used** — forms use **`src/components/Input`**, **`TextArea`**, **`Select`**, **`Checkbox`**, and **`FileInput`** with **`FieldErrorMessage`** (`Field.Error`) / **`Field.Description`** for validation copy; forms use **`noValidate`** + react-hook-form rules (see [patterns.md](patterns.md)). Those field wrappers accept **`ref`** as a normal prop (React 19; no **`forwardRef`**) so react-hook-form **`Controller`** can attach to the underlying control. **[Modal](../../src/components/Modal/Modal.component.tsx)** and **[mobile nav](../../src/components/Navigation/MobileNavigation.component.tsx)** compose Base UI **`Dialog`**.
 
 ## Loading states
 
@@ -104,3 +104,11 @@ When adding similar accordion motion:
 - **Guard targets** before **`gsap.to`** / **`gsap.set`**: stats render as a grid (**≤3** stats) or a list (**>3**), so only one of **`statsRef`** / **`statsGridRef`** is mounted—never animate empty arrays or null refs (GSAP logs "target not found").
 - Filter null refs out of batch **`gsap.set`** with **`.filter((el): el is HTMLElement => el != null)`**.
 - Chain stagger steps only when **`querySelectorAll`** returns nodes (**`length > 0`**).
+
+## Project modal host
+
+**[ProjectModalHost.component.tsx](../../src/components/ProjectModal/ProjectModalHost.component.tsx)** mounts once per project list/carousel host (e.g. **[ProjectsCarousel](../../src/components/ProjectsCarousel/ProjectsCarousel.component.tsx)**). Jotai atoms ([`useProjectModal`](../../src/hooks/useProjectModal.ts)) choose which project slug is open; the host resolves **`ProjectType`** from the **`projects`** prop.
+
+- **`ProjectModal`** always receives a resolved **`project`**; **`isOpen`** follows whether a slug is active on the current path (respecting **`projectModalClosedPathAtom`**).
+- When closed, the tree stays mounted inside **`<Activity mode="hidden">`** so carousel slide state survives reopen; **`isOpen={false}`** still drives Base UI **`Dialog`** focus and escape behavior (see [conventions.md](conventions.md) React / JSX and [patterns.md](patterns.md) Jotai).
+- **`ContentCopyBlock`** accepts an optional **`ref`** prop the same way (React 19) when a parent needs a DOM anchor on the copy root.

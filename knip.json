@@ -3,8 +3,7 @@
   "tags": ["-lintignore"],
   "entry": ["jest.config.ts"],
   "ignore": ["src/contentful/types/**", "scripts/**"],
-  "ignoreFiles": ["src/tests/mocks/svgMock.tsx"],
-  "ignoreDependencies": ["@svgr/webpack", "jest-mock"],
+  "ignoreDependencies": ["jest-mock"],
   "ignoreIssues": {
     "src/api/helpers.ts": ["types", "enumMembers"]
   },

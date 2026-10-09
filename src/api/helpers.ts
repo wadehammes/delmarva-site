@@ -45,14 +45,6 @@ export const fetchOptions = ({
   };
 };
 
-export const fetchResponse = async <T>(
-  endpoint: Promise<Response>,
-): Promise<T> => {
-  const res = await endpoint;
-
-  return res.json() as Promise<T>;
-};
-
 export class ApiError extends Error {
   constructor(message: string) {
     super(message);

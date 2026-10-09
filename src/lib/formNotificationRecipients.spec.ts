@@ -8,6 +8,7 @@ jest.mock("src/contentful/getFormEntry", () => ({
 }));
 
 jest.mock("src/utils/emailHelpers", () => ({
+  getNotificationBcc: jest.fn((bcc: string[] | undefined) => bcc),
   getNotificationTo: jest.fn((to: string | string[]) => to),
 }));
 

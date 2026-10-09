@@ -17,6 +17,20 @@ export function getMimeType(extension: string): string {
   return mimeTypes[extension] || "application/octet-stream";
 }
 
+export const isNotificationRecipientOverrideActive = (): boolean => {
+  const devTo = process.env.RESEND_DEV_TO_EMAIL?.trim();
+  if (process.env.ENVIRONMENT === "local" && devTo) {
+    return true;
+  }
+
+  const testRecipients = process.env.RESEND_TEST_RECIPIENTS?.trim();
+  if (process.env.ENVIRONMENT === "staging" && testRecipients) {
+    return true;
+  }
+
+  return false;
+};
+
 export function getNotificationTo(
   productionTo: string | string[],
 ): string | string[] {
@@ -34,4 +48,18 @@ export function getNotificationTo(
   }
 
   return productionTo;
+}
+
+export function getNotificationBcc(
+  productionBcc: string[] | undefined,
+): string[] | undefined {
+  if (!productionBcc?.length) {
+    return undefined;
+  }
+
+  if (isNotificationRecipientOverrideActive()) {
+    return undefined;
+  }
+
+  return productionBcc;
 }
