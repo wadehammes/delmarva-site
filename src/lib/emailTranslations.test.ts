@@ -47,6 +47,7 @@ describe("emailTranslations", () => {
       expect(copy.subject).toBe("Application Received for Project Manager");
       expect(copy.heading).toBe("Application Received");
       expect(copy.sectionLabel).toBe("What happens next?");
+      expect(copy.paragraphOutro).toMatch(/^ role\./);
     });
 
     it("interpolates Spanish copy", () => {
@@ -58,6 +59,7 @@ describe("emailTranslations", () => {
       expect(copy.heading).toBe("Solicitud recibida");
       expect(copy.sectionLabel).toBe("¿Qué sigue?");
       expect(copy.signoff).toBe("— El equipo de Delmarva");
+      expect(copy.paragraphOutro).toMatch(/^\./);
     });
   });
 });

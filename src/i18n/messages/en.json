@@ -135,7 +135,7 @@
     "heading": "Application Received",
     "greeting": "Hi {name},",
     "paragraphIntro": "Thanks for applying for the",
-    "paragraphOutro": "role. We've received your application and will be in touch after our team reviews it.",
+    "paragraphOutro": " role. We've received your application and will be in touch after our team reviews it.",
     "sectionLabel": "What happens next?",
     "bullet1": "• We'll review your application and materials",
     "bullet2": "• If you're a good fit, we'll reach out to schedule an interview",

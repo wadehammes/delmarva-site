@@ -5,7 +5,8 @@
   "ignore": ["src/contentful/types/**", "scripts/**"],
   "ignoreDependencies": ["jest-mock"],
   "ignoreIssues": {
-    "src/api/helpers.ts": ["types", "enumMembers"]
+    "src/api/helpers.ts": ["types", "enumMembers"],
+    "src/tests/mocks/reactEmail.mock.tsx": ["exports"]
   },
   "rules": {
     "duplicates": "off"
