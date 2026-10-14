@@ -22,18 +22,6 @@ const hasVideoEmbedDomain = (lowerUrl: string): boolean =>
 const hasVideoFileExtension = (lowerUrl: string): boolean =>
   VIDEO_FILE_EXTENSION_SUBSTRINGS.some((ext) => lowerUrl.includes(ext));
 
-export const getVimeoEmbedUrl = (url: string): string | null => {
-  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  return match ? `https://player.vimeo.com/video/${match[1]}` : null;
-};
-
-export const getYouTubeEmbedUrl = (url: string): string | null => {
-  const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
-  );
-  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
-};
-
 export const isDirectVideoFile = (url: string): boolean => {
   if (!url) return false;
   const lower = url.toLowerCase();

@@ -41,7 +41,16 @@ export function parseContentfulAsset(
     return null;
   }
 
-  const url = createMediaUrl(asset.fields.file?.url ?? "");
+  const rawUrl = asset.fields.file?.url;
+  if (!rawUrl) {
+    return null;
+  }
+
+  const url = createMediaUrl(rawUrl);
+  if (!url) {
+    return null;
+  }
+
   const webpUrl = withContentfulWebp(url);
 
   return {

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { VideoPlayer } from "src/components/VideoPlayer/VideoPlayer.component";
 import type { ContentfulAsset } from "src/contentful/parseContentfulAsset";
+import { isUrl } from "src/utils/urlHelpers";
 import { isVideoUrl } from "src/utils/videoUrl.helpers";
 
 const MAX_IMAGE_DIMENSION = 1920;
@@ -15,11 +16,11 @@ interface ContentfulAssetRendererProps {
   width?: number;
 }
 
-function capDimensions(
+const capDimensions = (
   width: number,
   height: number,
   max: number,
-): { width: number; height: number } {
+): { width: number; height: number } => {
   if (width <= max && height <= max) {
     return { height, width };
   }
@@ -28,7 +29,7 @@ function capDimensions(
     height: Math.round(height * scale),
     width: Math.round(width * scale),
   };
-}
+};
 
 export const ContentfulAssetRenderer = (
   props: ContentfulAssetRendererProps,
@@ -41,6 +42,10 @@ export const ContentfulAssetRenderer = (
 
   if (isVideoUrl(asset.src)) {
     return <VideoPlayer autoPlay={false} controls={true} src={asset.src} />;
+  }
+
+  if (!asset.src.trim() || !isUrl(asset.src)) {
+    return null;
   }
 
   const callerProvidedSize = props.width != null && props.height != null;

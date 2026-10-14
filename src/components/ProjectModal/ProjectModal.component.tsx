@@ -2,7 +2,7 @@
 
 import { Button as UIButton } from "@base-ui/react/button";
 import { useLocale, useTranslations } from "next-intl";
-import { useCallback, useState } from "react";
+import { type ReactElement, useCallback, useState } from "react";
 import buttonStyles from "src/components/Button/Button.module.css";
 import { Carousel } from "src/components/Carousel/Carousel.component";
 import { ContentfulAssetRenderer } from "src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component";
@@ -10,6 +10,7 @@ import { Modal } from "src/components/Modal/Modal.component";
 import { ProjectStaticMap } from "src/components/ProjectStaticMap/ProjectStaticMap.component";
 import { ProjectStatsList } from "src/components/ProjectStatsList/ProjectStatsList.component";
 import { RichText } from "src/components/RichText/RichText.component";
+import { VideoPlayer } from "src/components/VideoPlayer/VideoPlayer.component";
 import { FALLBACK_PROJECT_MEDIA_ID } from "src/contentful/constants";
 import type { ProjectType } from "src/contentful/getProjects";
 import ShareIcon from "src/icons/Share.svg";
@@ -64,6 +65,7 @@ export const ProjectModal = ({
     projectLocation,
     projectStats,
     services,
+    youTubeVideoUrl,
   } = project;
 
   const allMedia = media ?? [];
@@ -73,7 +75,7 @@ export const ProjectModal = ({
   const isOnlyFallbackMedia =
     allMedia.length === 1 && allMedia[0]?.id === FALLBACK_PROJECT_MEDIA_ID;
   const mediaToShow = isOnlyFallbackMedia && showMap ? [] : allMedia;
-  const showCarousel = mediaToShow.length > 0 || !!showMap;
+  const youTubeUrl = youTubeVideoUrl?.trim();
 
   const carouselSlides = [
     ...(showMap
@@ -86,10 +88,22 @@ export const ProjectModal = ({
           />,
         ]
       : []),
+    ...(youTubeUrl
+      ? [
+          <VideoPlayer
+            controls={true}
+            key="project-youtube-video"
+            src={youTubeUrl}
+            title={projectName}
+          />,
+        ]
+      : []),
     ...mediaToShow.map((item) =>
-      item ? <ContentfulAssetRenderer asset={item} key={item.id} /> : null,
+      item?.src?.trim() ? (
+        <ContentfulAssetRenderer asset={item} key={item.id} />
+      ) : null,
     ),
-  ].filter(Boolean);
+  ].filter((slide): slide is ReactElement => slide != null);
 
   return (
     <Modal
@@ -101,7 +115,7 @@ export const ProjectModal = ({
     >
       <Modal.Header>
         <h2 className={styles.projectTitle}>{projectName}</h2>
-        {services.length > 0 && (
+        {services.length > 0 ? (
           <div className={styles.servicesList}>
             {services.map((service) => {
               if (!service) {
@@ -115,12 +129,12 @@ export const ProjectModal = ({
               );
             })}
           </div>
-        )}
+        ) : null}
       </Modal.Header>
 
       <Modal.Body>
         <div className={styles.mediaSection}>
-          {showCarousel && (
+          {carouselSlides.length > 0 ? (
             <Carousel
               animation="fade"
               controlsSize="Small"
@@ -129,7 +143,7 @@ export const ProjectModal = ({
             >
               {carouselSlides}
             </Carousel>
-          )}
+          ) : null}
         </div>
 
         <div className={styles.contentSection}>

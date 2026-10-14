@@ -51,7 +51,9 @@ Run the dev server:
 pnpm dev
 ```
 
-The app serves at **http://localhost:5656** (see [`package.json`](./package.json)). Draft / preview content uses Next.js **draft mode** and Contentful preview keys—see [docs/handbook/platform.md](./docs/handbook/platform.md).
+The app serves at **http://localhost:5656** (see [`package.json`](./package.json)).
+
+To work with unpublished Contentful entries locally, use **`pnpm dev:preview`**: same dev server, then opens **`/api/draft`** once when **`CONTENTFUL_PREVIEW_SECRET`** is in **`.env.local`** (after **`vercel env pull`**). Set **`OPEN_PREVIEW_LOCAL=0`** to skip the browser step. Draft mode, preview API keys, and env tables: [docs/handbook/platform.md](./docs/handbook/platform.md).
 
 ## Development and deployment
 

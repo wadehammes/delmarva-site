@@ -42,6 +42,7 @@ export interface ProjectType {
   projectName: string;
   slug: string;
   description: Document;
+  youTubeVideoUrl?: string;
   markets?: (MarketType | null)[];
   media?: (ContentfulAsset | null)[];
   projectStats?: (ContentStatBlock | null)[];
@@ -74,6 +75,7 @@ export function parseContentfulProject(
     projectStats: fields.projectStats?.map(parseContentStatBlock),
     services: fields.services.map(parseContentfulService),
     slug: fields.slug,
+    youTubeVideoUrl: fields.youTubeVideoUrl,
   };
 }
 

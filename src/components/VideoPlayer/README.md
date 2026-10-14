@@ -1,33 +1,32 @@
 # VideoPlayer Component
 
-A React component that renders videos using `youtube-video-element`, `vimeo-video-element`, and native `<video>`. Supports YouTube, Vimeo, and local video files.
+A React component that renders videos with [react-player](https://github.com/cookpete/react-player). Supports YouTube, Vimeo, direct files, and Contentful asset URLs.
 
 ## Features
 
-- **Multiple video sources**: YouTube, Vimeo, and local video files
-- **Responsive design**: Always responsive with 16:9 aspect ratio
-- **Autoplay support**: Optional autoplay with viewport detection
+- **Multiple video sources**: YouTube, Vimeo, and local / CDN video files
+- **Responsive design**: 16:9 aspect ratio by default; optional fill mode for hero backgrounds
+- **Autoplay support**: Optional autoplay with viewport-driven `playInView`
 - **Rounded corners**: Optional rounded styling
-- **SSR safe**: Uses `useIsBrowser` hook for client-side rendering
-- **Debounced play**: Prevents rapid play/pause toggles
+- **SSR safe**: Loads react-player on the client via `next/dynamic`
 
 ## Usage
 
 ```tsx
-import { VideoPlayer } from '@/components/VideoPlayer/VideoPlayer.component';
+import { VideoPlayer } from "src/components/VideoPlayer/VideoPlayer.component";
 
 // Basic usage with YouTube video
 <VideoPlayer src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
 
 // Autoplay video with controls
-<VideoPlayer 
+<VideoPlayer
   src="https://vimeo.com/123456789"
   autoPlay={true}
   controls={true}
 />
 
 // Rounded video player
-<VideoPlayer 
+<VideoPlayer
   src="/videos/presentation.mp4"
   rounded={true}
   controls={true}
@@ -38,74 +37,29 @@ import { VideoPlayer } from '@/components/VideoPlayer/VideoPlayer.component';
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `src` | `string` | **required** | URL of the video (YouTube, Vimeo, or local file) |
+| `src` | `string` | **required** | URL of the video (YouTube, Vimeo, or file) |
 | `autoPlay` | `boolean` | `false` | Whether the video should play automatically |
 | `controls` | `boolean` | `false` | Whether to show player controls |
-| `playInView` | `boolean` | `false` | Whether to play when in view (with 200ms debounce) |
+| `playInView` | `boolean` | `false` | Play while true (debounced 200ms); pause when false |
+| `fill` | `boolean` | `false` | Fill the parent height with cover-style video (hero backgrounds) |
+| `loop` | `boolean` | file URLs loop; embeds do not | Whether the video should loop |
 | `rounded` | `boolean` | `false` | Whether to apply rounded corners |
+| `title` | `string` | `"Video player"` | Accessible title for the player |
 
 ## Examples
 
-### Basic Video Player
-```tsx
-<VideoPlayer src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
-```
-
 ### Video with Controls
+
 ```tsx
-<VideoPlayer 
-  src="https://vimeo.com/123456789"
-  controls={true}
-/>
+<VideoPlayer src="https://vimeo.com/123456789" controls={true} />
 ```
 
-### Autoplay Video
-```tsx
-<VideoPlayer 
-  src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-  autoPlay={true}
-/>
-```
+### Hero background (play when in view)
 
-### Rounded Video Player
 ```tsx
-<VideoPlayer 
-  src="/videos/presentation.mp4"
-  rounded={true}
-  controls={true}
-/>
-```
-
-### Autoplay with Play in View
-```tsx
-<VideoPlayer 
-  src="https://vimeo.com/123456789"
-  autoPlay={true}
-  playInView={true}
-  controls={true}
-/>
+<VideoPlayer fill playInView={inView} src={mediaUrl} />
 ```
 
 ## Styling
 
-The component uses CSS modules and follows mobile-first responsive design principles. The video player is always responsive with a 16:9 aspect ratio.
-
-### CSS Classes
-
-- `.videoPlayer`: Main container wrapper with 16:9 aspect ratio
-- `.rounded`: Applies border-radius and overflow hidden for rounded corners
-
-## Browser Support
-
-The component uses:
-- Modern browsers (Chrome, Firefox, Safari, Edge)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-- Internet Explorer 11+ (with polyfills)
-
-## Performance Considerations
-
-- Videos are muted by default for better autoplay compatibility
-- Uses debounced play detection to prevent rapid toggles
-- SSR-safe with client-side only rendering
-- YouTube and Vimeo videos are loaded asynchronously
-- The 16:9 aspect ratio is maintained across all screen sizes 
+The component uses CSS modules. Default layout keeps a 16:9 aspect ratio; `fill` removes the aspect ratio and uses `object-fit: cover` on the underlying video element.

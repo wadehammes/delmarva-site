@@ -165,14 +165,12 @@ export const ContentRenderer = (props: ContentRendererProps) => {
     }
 
     return (
-      <MapErrorBoundary>
-        <ContentModules
-          contentLayout={contentLayout}
-          fields={parsedModule}
-          locale={locale}
-          searchParams={searchParams}
-        />
-      </MapErrorBoundary>
+      <ContentModules
+        contentLayout={contentLayout}
+        fields={parsedModule}
+        locale={locale}
+        searchParams={searchParams}
+      />
     );
   }
 

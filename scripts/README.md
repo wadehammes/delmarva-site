@@ -2,6 +2,10 @@
 
 This directory contains utility scripts for the Delmarva site project.
 
+## Local draft preview (`dev:preview`)
+
+**`pnpm dev:preview`** runs [dev-with-preview.js](./dev-with-preview.js): starts **`next dev`** on port **5656**, then—when **`CONTENTFUL_PREVIEW_SECRET`** is in env—opens **`/api/draft`** in your browser so Contentful draft mode is enabled. Helpers live in [lib/preview-local.js](./lib/preview-local.js). Optional env: **`PREVIEW_LOCAL_ORIGIN`** (default **`http://localhost:5656`**), **`OPEN_PREVIEW_LOCAL=0`** to skip opening the browser.
+
 ## README Update Script
 
 ### Overview

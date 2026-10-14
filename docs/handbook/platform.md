@@ -28,6 +28,7 @@ Run the same commands locally before pushing when possible.
 | Script | Purpose |
 |--------|---------|
 | `pnpm dev` | Next dev server (port **5656**, Turbopack) |
+| `pnpm dev:preview` | Same as **`dev`**, then opens **`/api/draft`** in the browser when **`CONTENTFUL_PREVIEW_SECRET`** is set (see [Draft mode](#draft-mode)) |
 | `pnpm dev:debug` | Dev server with Node inspector |
 | `pnpm build` / `pnpm start` | Production build and serve |
 | `pnpm build:analyze` | Production build with bundle analyzer |
@@ -94,10 +95,19 @@ Next.js 16 uses **[src/proxy.ts](../../src/proxy.ts)** (not root **`middleware.t
 - **Enable**: [src/app/api/draft/route.ts](../../src/app/api/draft/route.ts) — validates **`previewSecret`** against **`CONTENTFUL_PREVIEW_SECRET`**, enables draft mode, redirects to **`redirect`** query param (or `/`).
 - **Disable**: [src/app/api/disable-draft/route.ts](../../src/app/api/disable-draft/route.ts).
 - **UI**: [layout.tsx](../../src/app/[locale]/layout.tsx) shows a draft banner and **ExitDraftModeLink** when draft mode is on.
+- **Local shortcut**: **`pnpm dev:preview`** ([scripts/dev-with-preview.js](../../scripts/dev-with-preview.js)) starts the dev server, waits for **`http://localhost:5656`** (override with **`PREVIEW_LOCAL_ORIGIN`**), then opens the draft URL once. Set **`OPEN_PREVIEW_LOCAL=0`** to start the server without opening a browser.
 
 Never commit preview secrets; configure them only in env stores and internal docs as needed.
 
 Draft **`redirect`** params are sanitized with **`getSafeRedirectPath`** in [redirectHelpers.ts](../../src/utils/redirectHelpers.ts) so only relative in-app paths are allowed.
+
+**Contentful preview URLs** (services example, English default locale):
+
+```text
+{ORIGIN}/api/draft?previewSecret={CONTENTFUL_PREVIEW_SECRET}&redirect=/what-we-deliver/{slug}
+```
+
+Listing page: **`redirect=/what-we-deliver`**. Spanish: prefix the path (**`redirect=/es/what-we-deliver/...`**). Never put the site origin inside **`redirect`**—only the path after draft mode is enabled.
 
 ## Refresh content
 
