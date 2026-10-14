@@ -26,7 +26,13 @@ Parsers in **`src/contentful/parse*.ts`** turn raw entries into shapes the UI ca
 - **Input**: Raw entry types from generated `Type*` modules (often `*WithoutUnresolvableLinksResponse` or similar).
 - **Output**: Plain objects with stable field names and nested parsed data where needed.
 - **Type checks**: [src/contentful/helpers.ts](../../src/contentful/helpers.ts) exports **`ExtractSymbolType`**, **`ContentfulTypeCheck`**, and related helpers—use them to keep parsed types aligned with Contentful fields.
-- **Assets**: [parseContentfulAsset.ts](../../src/contentful/parseContentfulAsset.ts) normalizes media.
+- **Assets**: [parseContentfulAsset.ts](../../src/contentful/parseContentfulAsset.ts) normalizes media. Returns **`null`** when the link is unresolved or **`file.url`** is missing (common in draft preview)—UI should tolerate **`null`** entries in media arrays; [ContentfulAssetRenderer](../../src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component.tsx) also skips invalid **`src`** before **`next/image`**.
+
+### Project entries (`getProjects.ts`)
+
+The **`project`** content type is normalized in **[getProjects.ts](../../src/contentful/getProjects.ts)** (not a separate **`parseProject.ts`**): **`parseContentfulProject`** returns **`ProjectType`** for lists, carousels, and **`ProjectModal`**. After schema changes (e.g. new fields), run **`pnpm types:contentful`**, then extend **`ProjectType`** and **`parseContentfulProject`** so **`ContentfulTypeCheck`** stays aligned.
+
+Notable fields on **`ProjectType`**: **`youTubeVideoUrl`** (optional symbol)—when set, **`ProjectModal`** adds a YouTube slide in the media carousel via **`VideoPlayer`** (see [components.md](components.md) **Video playback** and **Project modal host**). List fetches still apply **`mediaWithFallback`** using **`FALLBACK_PROJECT_MEDIA_ID`** from [constants.ts](../../src/contentful/constants.ts).
 
 ## Sections and content entries
 

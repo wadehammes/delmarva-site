@@ -2,6 +2,7 @@ import "server-only";
 
 import { Suspense } from "react";
 import { AllProjectsListServer } from "src/components/AllProjectsList/AllProjectsListServer.component";
+import { MapErrorBoundary } from "src/components/ContentAreasServicedMap/MapErrorBoundary.component";
 import {
   AllMarketsListServer,
   AllServicesListServer,
@@ -35,7 +36,12 @@ export const ContentModules = (props: ContentModulesProps) => {
     }
     case "Areas Serviced Map": {
       return (
-        <AreasServicedMapServer contentLayout={contentLayout} locale={locale} />
+        <MapErrorBoundary>
+          <AreasServicedMapServer
+            contentLayout={contentLayout}
+            locale={locale}
+          />
+        </MapErrorBoundary>
       );
     }
     case "Areas Serviced List": {
@@ -53,10 +59,12 @@ export const ContentModules = (props: ContentModulesProps) => {
     }
     case "Areas Serviced Map - Turnkey Only": {
       return (
-        <AreasServicedMapTurnkeyServer
-          contentLayout={contentLayout}
-          locale={locale}
-        />
+        <MapErrorBoundary>
+          <AreasServicedMapTurnkeyServer
+            contentLayout={contentLayout}
+            locale={locale}
+          />
+        </MapErrorBoundary>
       );
     }
     default: {

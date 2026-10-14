@@ -16,6 +16,7 @@ export interface TypeProjectFields {
   projectCompletionDate?: EntryFieldTypes.Date;
   projectLocation?: EntryFieldTypes.Location;
   description: EntryFieldTypes.RichText;
+  youTubeVideoUrl?: EntryFieldTypes.Symbol;
   media?: EntryFieldTypes.Array<EntryFieldTypes.AssetLink>;
   projectStats?: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeContentStatBlockSkeleton>

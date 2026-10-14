@@ -1,31 +1,38 @@
 "use client";
 
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import styles from "src/components/VideoPlayer/VideoPlayer.module.css";
 import {
-  getVimeoEmbedUrl,
-  getYouTubeEmbedUrl,
   isDirectVideoFile,
   isVimeoUrl,
   isYouTubeUrl,
 } from "src/utils/videoUrl.helpers";
 
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+
 interface VideoPlayerProps {
   autoPlay?: boolean;
   controls?: boolean;
+  fill?: boolean;
+  loop?: boolean;
   playInView?: boolean;
   rounded?: boolean;
   src: string;
+  title?: string;
 }
 
 export const VideoPlayer = (props: VideoPlayerProps) => {
   const {
     autoPlay = false,
     controls = false,
+    fill = false,
+    loop,
     playInView = false,
     rounded = false,
     src,
+    title = "Video player",
   } = props;
   const [mounted, setMounted] = useState(false);
   const [debouncedPlayInView, setDebouncedPlayInView] = useState(playInView);
@@ -55,91 +62,49 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     return null;
   }
 
-  const useNativeVideo = isDirectVideoFile(src);
-  const useYouTube = isYouTubeUrl(src);
-  const useVimeo = isVimeoUrl(src);
-
-  if (!mounted) {
-    return (
-      <div className={clsx(styles.container)} data-video-player>
-        <div className={clsx(styles.player, { [styles.rounded]: rounded })} />
-      </div>
-    );
-  }
-
+  const isEmbed = isYouTubeUrl(src) || isVimeoUrl(src);
+  const shouldLoop = loop ?? (isDirectVideoFile(src) || !isEmbed);
   const shouldMute = autoPlay || debouncedPlayInView;
   const shouldPlay = autoPlay || debouncedPlayInView;
 
-  if (useNativeVideo) {
+  if (!mounted) {
     return (
-      <div className={clsx(styles.container)} data-video-player>
-        <div className={styles.player}>
-          <video
-            autoPlay={shouldPlay}
-            controls={controls}
-            loop
-            muted={shouldMute}
-            playsInline
-            src={src}
-            style={{
-              height: "100%",
-              objectFit: "contain",
-              width: "100%",
-            }}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  const youtubeEmbedUrl = useYouTube ? getYouTubeEmbedUrl(src) : null;
-  const vimeoEmbedUrl = useVimeo ? getVimeoEmbedUrl(src) : null;
-  const embedUrl = youtubeEmbedUrl || vimeoEmbedUrl;
-
-  if (embedUrl) {
-    const params = new URLSearchParams();
-    if (shouldPlay) params.set("autoplay", "1");
-    if (shouldMute) params.set("muted", "1");
-    if (youtubeEmbedUrl) {
-      params.set("rel", "0");
-      if (controls) params.set("controls", "1");
-    }
-    const separator = embedUrl.includes("?") ? "&" : "?";
-    const finalUrl = `${embedUrl}${separator}${params.toString()}`;
-
-    return (
-      <div className={clsx(styles.container)} data-video-player>
-        <div className={styles.player}>
-          <iframe
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            src={finalUrl}
-            style={{
-              border: "none",
-              height: "100%",
-              width: "100%",
-            }}
-            title="Video player"
-          />
-        </div>
+      <div
+        className={clsx(styles.container, { [styles.fill]: fill })}
+        data-video-player
+      >
+        <div
+          className={clsx(styles.player, {
+            [styles.cover]: fill,
+            [styles.rounded]: rounded,
+          })}
+        />
       </div>
     );
   }
 
   return (
-    <div className={clsx(styles.container)} data-video-player>
-      <div className={styles.player}>
-        <video
+    <div
+      className={clsx(styles.container, { [styles.fill]: fill })}
+      data-video-player
+    >
+      <div
+        className={clsx(styles.player, {
+          [styles.cover]: fill,
+          [styles.rounded]: rounded,
+        })}
+      >
+        <ReactPlayer
+          config={isYouTubeUrl(src) ? { youtube: { rel: 0 } } : undefined}
           controls={controls}
-          loop
+          height="100%"
+          loop={shouldLoop}
           muted={shouldMute}
+          playing={shouldPlay}
           playsInline
           src={src}
-          style={{
-            height: "100%",
-            objectFit: "contain",
-            width: "100%",
-          }}
+          title={title}
+          width="100%"
         />
       </div>
     </div>

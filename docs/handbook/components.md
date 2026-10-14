@@ -40,6 +40,19 @@ For **nested modules** (entries inside another CMS block), use the same parser �
 - Use **`next/dynamic`** in the **registry** for large or rarely used blocks.
 - Use **`{ ssr: false }`** only when the component or a dependency requires browser-only APIs on first paint.
 
+## Video playback
+
+Site video renders through **[VideoPlayer.component.tsx](../../src/components/VideoPlayer/VideoPlayer.component.tsx)**, which wraps **[react-player](https://github.com/cookpete/react-player)** with **`next/dynamic`** and **`{ ssr: false }`**. Do not add one-off **`<video>`** tags or manual YouTube/Vimeo iframes in feature components—route URLs through **`VideoPlayer`** (or **`ContentVideoBlock`** / **`ContentfulAssetRenderer`**, which already do).
+
+| Consumer | Role |
+|----------|------|
+| **[ContentVideoBlock](../../src/components/ContentVideoBlock/ContentVideoBlock.component.tsx)** | CMS **`contentVideoBlock`** (`videoUrl` / upload) with controls |
+| **[ContentfulAssetRenderer](../../src/components/ContentfulAssetRenderer/ContentfulAssetRenderer.component.tsx)** | Project/media assets when **`isVideoUrl`** ([videoUrl.helpers.ts](../../src/utils/videoUrl.helpers.ts)); returns **`null`** for missing or non-URL **`src`** (see [parseContentfulAsset.ts](../../src/contentful/parseContentfulAsset.ts)) |
+| **[HeroVideo](../../src/components/ContentHero/HeroVideo.component.tsx)** | Hero background: **`fill`** + **`playInView`** ( **`useOptimizedInView`** ) |
+| **[ProjectModal](../../src/components/ProjectModal/ProjectModal.component.tsx)** | Optional YouTube slide in the modal media carousel |
+
+**Props (common):** **`src`**, **`controls`**, **`autoPlay`**, **`playInView`** (debounced play/pause), **`rounded`**, **`fill`** (cover-fit hero), optional **`title`** for accessibility. File URLs loop by default; YouTube/Vimeo do not unless **`loop`** is set. YouTube uses **`config.youtube.rel: 0`**.
+
 ## Links and navigation
 
 **[LocaleSwitcherSelect](../../src/components/LocaleSwitcherSelect/LocaleSwitcherSelect.component.tsx)** in the footer uses Base UI **`Select`** for locale changes (keyboard listbox, live announcements preserved).
@@ -85,7 +98,7 @@ The **`contentAreasServicedMap`** Contentful type renders through **`src/compone
 | **`ContentAreasServicedMapClient.component.tsx`** | Thin **`dynamic`** entry used from **ContentRenderer** |
 | **`MapErrorBoundary.component.tsx`** | Catches Mapbox/runtime errors so one broken map does not crash the page |
 
-**Wiring:** [parseContentAreasServicedMap.ts](../../src/contentful/parseContentAreasServicedMap.ts) → **`ContentRenderer`** **`case`** (wrapped in **`MapErrorBoundary`**) → **`ContentAreasServicedMapClient`**. Standalone pages use **`AreasServicedMapServer`** / **`AreasServicedMapTurnkeyServer`** from **ContentModules** instead.
+**Wiring:** [parseContentAreasServicedMap.ts](../../src/contentful/parseContentAreasServicedMap.ts) → **`ContentRenderer`** **`case`** (wrapped in **`MapErrorBoundary`**) → **`ContentAreasServicedMapClient`**. **ContentModules** map variants (**`Areas Serviced Map`**, **`Areas Serviced Map - Turnkey Only`**) wrap **`AreasServicedMapServer`** / **`AreasServicedMapTurnkeyServer`** in **`MapErrorBoundary`** only—do not wrap the whole **ContentModules** switch (featured services and project lists are not maps).
 
 ## Stat (CSS ticker animation)
 
@@ -111,4 +124,5 @@ When adding similar accordion motion:
 
 - **`ProjectModal`** always receives a resolved **`project`**; **`isOpen`** follows whether a slug is active on the current path (respecting **`projectModalClosedPathAtom`**).
 - When closed, the tree stays mounted inside **`<Activity mode="hidden">`** so carousel slide state survives reopen; **`isOpen={false}`** still drives Base UI **`Dialog`** focus and escape behavior (see [conventions.md](conventions.md) React / JSX and [patterns.md](patterns.md) Jotai).
+- **`ProjectModal`** media carousel ( **[Carousel](../../src/components/Carousel/Carousel.component.tsx)**, fade): **map** (when location is valid) → **YouTube** via **`VideoPlayer`** when **`project.youTubeVideoUrl`** is set → remaining **project media** ( **`ContentfulAssetRenderer`** ). Fallback-only media may be omitted when the map is shown—see modal logic in **[ProjectModal.component.tsx](../../src/components/ProjectModal/ProjectModal.component.tsx)**.
 - **`ContentCopyBlock`** accepts an optional **`ref`** prop the same way (React 19) when a parent needs a DOM anchor on the copy root.

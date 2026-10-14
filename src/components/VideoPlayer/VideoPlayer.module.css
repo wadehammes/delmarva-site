@@ -4,6 +4,11 @@
   width: 100%;
   aspect-ratio: 16 / 9;
 
+  &.fill {
+    height: 100%;
+    aspect-ratio: unset;
+  }
+
   .player {
     position: absolute;
     top: 0;
@@ -13,9 +18,17 @@
     height: 100%;
     aspect-ratio: 16 / 9;
 
+    &.cover {
+      aspect-ratio: unset;
+    }
+
     &.rounded {
       overflow: hidden;
       border-radius: 8px;
+    }
+
+    &.cover :global(video) {
+      object-fit: cover;
     }
   }
 }
