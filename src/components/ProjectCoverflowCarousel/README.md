@@ -38,6 +38,8 @@ The component uses CSS custom properties for responsive sizing:
 
 These properties are automatically adjusted based on screen size breakpoints.
 
+Each slide wraps **`ProjectCard`** in **`cardFill`** with class **`swiper-slide-transform`** so Swiper coverflow applies **`transform`** to the inner wrapper, not the slide node. Use **opacity/filter** on **`cardFill`** for peek slides—not **`transform`** on **`.swiper-slide`**. See **`docs/handbook/components.md`** (Project cards and carousels).
+
 ## Dependencies
 
 - Swiper library with EffectCoverflow module

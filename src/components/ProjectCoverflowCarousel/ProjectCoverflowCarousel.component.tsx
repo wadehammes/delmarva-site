@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef } from "react";
 import { ProjectCard } from "src/components/ProjectCard/ProjectCard.component";
@@ -143,10 +144,12 @@ export const ProjectCoverflowCarousel = (
       >
         {projects.map((project) => (
           <SwiperSlide className={styles.slide} key={project.id}>
-            <ProjectCard
-              project={project}
-              selectedServiceSlug={selectedServiceSlug}
-            />
+            <div className={clsx(styles.cardFill, "swiper-slide-transform")}>
+              <ProjectCard
+                project={project}
+                selectedServiceSlug={selectedServiceSlug}
+              />
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
