@@ -118,6 +118,19 @@ When adding similar accordion motion:
 - Filter null refs out of batch **`gsap.set`** with **`.filter((el): el is HTMLElement => el != null)`**.
 - Chain stagger steps only when **`querySelectorAll`** returns nodes (**`length > 0`**).
 
+## Project cards and carousels
+
+**[ProjectCard.component.tsx](../../src/components/ProjectCard/ProjectCard.component.tsx)** is the shared card for project lists and carousels. Layout inside the card: **`projectCardMedia`** stays fixed (**`flex: 0 0 auto`**); **`projectCardContent`** grows (**`flex: 1 1 auto`**). **`statsList`** uses **`flex: 1 0 auto`** and **`justify-content: flex-end`** so stats sit at the bottom when the card is stretched, but the stats block does not shrink below its content (which would clip rows under the card’s **`overflow: hidden`**).
+
+Two carousels wrap **`ProjectCard`** with different stretch and slide sizing—do not unify them without checking both hosts:
+
+| Component | Used in | Stretch wrapper | Slide height |
+|-----------|---------|-----------------|--------------|
+| **[ProjectsCarousel](../../src/components/ProjectsCarousel/ProjectsCarousel.component.tsx)** | All-projects list (**ContentModules**) | **`cardStretch`** (+ **`slideInner`** in shared **[Carousel](../../src/components/Carousel/Carousel.component.tsx)**) | **`height: auto`**; **`align-items: stretch`** on **`.swiper-wrapper`** for equal-height slides |
+| **[ProjectCoverflowCarousel](../../src/components/ProjectCoverflowCarousel/ProjectCoverflowCarousel.component.tsx)** | **[ServiceAccordion](../../src/components/ServiceAccordion/ServiceAccordion.component.tsx)**, **[MarketAccordion](../../src/components/MarketAccordion/MarketAccordion.component.tsx)** | **`cardFill`** + global **`swiper-slide-transform`**—stretch flex on the wrapper, not the card **`<button>`**; coverflow **`transform`** targets that inner node | Fixed **`height`** on **`.slide`**; fixed **`width`** (**`100%`** mobile, **`350px`** / **`390px`** from **`768px`**) so **`centeredSlides`** / **`slidesSizesGrid`** stay stable; peek styling uses **opacity/filter** on **`cardFill`**, not **`transform`** on **`.swiper-slide`** (conflicts with Swiper) |
+
+Avoid **`.slide > * { flex: 1 }`** on coverflow slides: it applies column flex directly to the interactive **`ProjectCard`** and duplicates layout with the card module, which regresses accordion carousel sizing.
+
 ## Project modal host
 
 **[ProjectModalHost.component.tsx](../../src/components/ProjectModal/ProjectModalHost.component.tsx)** mounts once per project list/carousel host (e.g. **[ProjectsCarousel](../../src/components/ProjectsCarousel/ProjectsCarousel.component.tsx)**). Jotai atoms ([`useProjectModal`](../../src/hooks/useProjectModal.ts)) choose which project slug is open; the host resolves **`ProjectType`** from the **`projects`** prop.
