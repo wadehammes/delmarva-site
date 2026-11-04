@@ -9,13 +9,14 @@ export default function dynamic(
   _loader: () => Promise<unknown>,
   options?: DynamicOptions,
 ) {
-  const LoadableComponent = () => {
-    if (options?.loading) {
-      return options.loading();
+  const loading = options?.loading;
+  const loadable = () => {
+    if (loading) {
+      return loading();
     }
     return null;
   };
 
-  LoadableComponent.displayName = "LoadableComponent";
-  return LoadableComponent;
+  loadable.displayName = "LoadableComponent";
+  return loadable;
 }

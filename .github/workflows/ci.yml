@@ -24,8 +24,9 @@ jobs:
       - name: Read Node.js version from .tool-versions
         id: get_node_version
         run: |
-          echo "$(awk '/nodejs/ {print $2}' .tool-versions)"
-          echo "node_version=$(awk '/nodejs/ {print $2}' .tool-versions)" >> $GITHUB_OUTPUT
+          node_version="$(awk '/nodejs/ {print $2}' .tool-versions)"
+          echo "${node_version}"
+          echo "node_version=${node_version}" >> $GITHUB_OUTPUT
         shell: bash
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0

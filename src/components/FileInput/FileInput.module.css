@@ -72,21 +72,21 @@
       border-radius: 5px;
       box-shadow: var(--shadow-sm);
       transition: all 0.2s ease-in-out;
+    }
 
-      &:active {
-        box-shadow: var(--shadow-sm);
-        transform: translateY(0);
-      }
+    &::file-selector-button:active {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(0);
+    }
 
-      &:hover {
-        background-color: color-mix(
-          in sRGB,
-          var(--colors-red) 80%,
-          var(--color-bg)
-        );
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
-      }
+    &::file-selector-button:hover {
+      background-color: color-mix(
+        in sRGB,
+        var(--colors-red) 80%,
+        var(--color-bg)
+      );
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
     }
 
     &::-webkit-file-upload-button {
@@ -102,21 +102,21 @@
       border-radius: 5px;
       box-shadow: var(--shadow-sm);
       transition: all 0.2s ease-in-out;
+    }
 
-      &:active {
-        box-shadow: var(--shadow-sm);
-        transform: translateY(0);
-      }
+    &::-webkit-file-upload-button:active {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(0);
+    }
 
-      &:hover {
-        background-color: color-mix(
-          in sRGB,
-          var(--colors-red) 80%,
-          var(--color-bg)
-        );
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
-      }
+    &::-webkit-file-upload-button:hover {
+      background-color: color-mix(
+        in sRGB,
+        var(--colors-red) 80%,
+        var(--color-bg)
+      );
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
     }
   }
 

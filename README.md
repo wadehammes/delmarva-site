@@ -9,12 +9,13 @@ Marketing site powered by Next.js, TypeScript, and CSS Modules, using Contentful
 
 ## Development setup
 
-- Install [asdf](https://asdf-vm.com/guide/getting-started.html) (see [`.tool-versions`](./.tool-versions) for plugins and versions).
+- Install [mise](https://mise.jdx.dev/getting-started.html) (Node and pnpm versions live in [`.tool-versions`](./.tool-versions)).
 
-Run asdf:
+Install tools and trust the config:
 
 ```bash
-asdf install
+mise trust
+mise install
 ```
 
 Install dependencies:
