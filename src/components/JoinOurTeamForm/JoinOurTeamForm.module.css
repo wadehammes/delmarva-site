@@ -194,11 +194,6 @@
       0 1px 0 var(--colors-red);
   }
 
-  &.fileInputHasError .fileInput::file-selector-button {
-    background-color: var(--colors-red);
-    border: 1px solid var(--colors-red);
-  }
-
   .fileInput {
     width: 100%;
     font-family: inherit;
@@ -225,21 +220,21 @@
       border-radius: 5px;
       box-shadow: var(--shadow-sm);
       transition: all 0.2s ease-in-out;
+    }
 
-      &:active {
-        box-shadow: var(--shadow-sm);
-        transform: translateY(0);
-      }
+    &::file-selector-button:active {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(0);
+    }
 
-      &:hover {
-        background-color: color-mix(
-          in sRGB,
-          var(--colors-red) 80%,
-          var(--color-bg)
-        );
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
-      }
+    &::file-selector-button:hover {
+      background-color: color-mix(
+        in sRGB,
+        var(--colors-red) 80%,
+        var(--color-bg)
+      );
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
     }
 
     &::-webkit-file-upload-button {
@@ -255,22 +250,28 @@
       border-radius: 5px;
       box-shadow: var(--shadow-sm);
       transition: all 0.2s ease-in-out;
-
-      &:active {
-        box-shadow: var(--shadow-sm);
-        transform: translateY(0);
-      }
-
-      &:hover {
-        background-color: color-mix(
-          in sRGB,
-          var(--colors-red) 80%,
-          var(--color-bg)
-        );
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
-      }
     }
+
+    &::-webkit-file-upload-button:active {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(0);
+    }
+
+    &::-webkit-file-upload-button:hover {
+      background-color: color-mix(
+        in sRGB,
+        var(--colors-red) 80%,
+        var(--color-bg)
+      );
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+  }
+
+  &.fileInputHasError .fileInput::file-selector-button,
+  &.fileInputHasError .fileInput::-webkit-file-upload-button {
+    background-color: var(--colors-red);
+    border: 1px solid var(--colors-red);
   }
 
   .errorMessage {

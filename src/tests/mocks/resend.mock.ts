@@ -4,6 +4,4 @@ export class Resend {
       .fn()
       .mockResolvedValue({ data: { id: "email-id" }, error: null }),
   };
-
-  constructor(_apiKey?: string) {}
 }

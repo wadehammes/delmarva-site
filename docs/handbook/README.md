@@ -37,6 +37,6 @@ Recommended onboarding order:
 
 ## Development setup
 
-Local setup (Node via asdf, pnpm, Vercel env pull, first `pnpm dev`) lives in the root **[README.md](../../README.md)**.
+Local setup (Node and pnpm via mise, Vercel env pull, first `pnpm dev`) lives in the root **[README.md](../../README.md)**.
 
 **Agents / AI tools:** defaults and "keep docs in sync" expectations are in the repo root **[AGENTS.md](../../AGENTS.md)**. **Cursor** may load **[`.cursor/rules/delmarva-site-handbook.mdc`](../../.cursor/rules/delmarva-site-handbook.mdc)** as a project rule when present.

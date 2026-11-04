@@ -44,9 +44,16 @@ export const Link = ({ children, className, href }: EmailElementProps) => (
 
 export const Img = ({
   alt = "",
-  ...rest
+  className,
+  src,
 }: EmailElementProps & { alt?: string; src?: string }) => (
-  <img alt={alt} {...rest} />
+  <div
+    aria-label={alt || undefined}
+    className={className}
+    data-src={src}
+    data-testid="email-img"
+    role="img"
+  />
 );
 
 export const Button = ({ children, className, href }: EmailElementProps) => (

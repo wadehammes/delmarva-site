@@ -1,4 +1,8 @@
 export function setupMockMatchMedia() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
   Object.defineProperty(window, "matchMedia", {
     value: jest.fn().mockImplementation((query) => ({
       addEventListener: jest.fn(),

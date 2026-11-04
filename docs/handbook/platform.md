@@ -19,6 +19,8 @@ PRs against **`staging`** run [`.github/workflows/ci.yml`](../../.github/workflo
 
 Run the same commands locally before pushing when possible.
 
+**Local toolchain**: Node and pnpm versions are pinned in **[`.tool-versions`](../../.tool-versions)** (read by [mise](https://mise.jdx.dev/) and CI). Install mise, then **`mise trust`** and **`mise install`** (see root **[README.md](../../README.md)**). Keep **`package.json`** **`packageManager`** aligned with the **`pnpm`** line in **`.tool-versions`**.
+
 **Releases**: From branch **`staging`**, **`make release tag=vX.Y.Z`** (tag must start with **`v`**) creates and pushes a git tag—see [Makefile](../../Makefile). Pushing a **`v*`** tag triggers [`.github/workflows/release.yml`](../../.github/workflows/release.yml): reset **`main`** to the tag, generate a changelog, and publish a GitHub Release.
 
 **PR labels**: [`.github/workflows/labeler.yml`](../../.github/workflows/labeler.yml) applies path-based labels from [`.github/labeler.yml`](../../.github/labeler.yml) on pull requests.
