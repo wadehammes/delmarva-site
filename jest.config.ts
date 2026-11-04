@@ -7,7 +7,11 @@ const customJestConfig: Config.InitialOptions = {
   setupFiles: ["<rootDir>/.jest/setEnvVars.ts"],
   setupFilesAfterEnv: ["<rootDir>/.jest/setupTests.ts"],
   testEnvironment: "jest-environment-jsdom",
-  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+  testPathIgnorePatterns: [
+    "<rootDir>/.next/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/scripts/",
+  ],
   transformIgnorePatterns: [
     "<rootDir>/node_modules/(?!(isbot|jest-dom|jotai|next-intl|@faker-js)/)",
   ],
