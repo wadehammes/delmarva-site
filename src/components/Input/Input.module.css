@@ -47,8 +47,8 @@
 }
 
 .textarea {
-  field-sizing: content;
   min-height: 6lh;
+  field-sizing: content;
 }
 
 .fieldRoot[data-invalid] .inputWrapper {

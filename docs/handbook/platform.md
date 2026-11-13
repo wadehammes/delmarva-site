@@ -21,7 +21,7 @@ Run the same commands locally before pushing when possible.
 
 **Local toolchain**: Node and pnpm versions are pinned in **[`.tool-versions`](../../.tool-versions)** (read by [mise](https://mise.jdx.dev/) and CI). Install mise, then **`mise trust`** and **`mise install`** (see root **[README.md](../../README.md)**). Keep **`package.json`** **`packageManager`** aligned with the **`pnpm`** line in **`.tool-versions`**.
 
-**Releases**: From branch **`staging`**, **`make release tag=vX.Y.Z`** (tag must start with **`v`**) creates and pushes a git tag—see [Makefile](../../Makefile). Pushing a **`v*`** tag triggers [`.github/workflows/release.yml`](../../.github/workflows/release.yml): reset **`main`** to the tag, generate a changelog, and publish a GitHub Release.
+**Releases**: From branch **`staging`**, **`make release tag=vX.Y.Z`** (tag must start with **`v`**)—see [Makefile](../../Makefile). **`verify-vercel-team`** runs first via [`scripts/verify-vercel-for-release.sh`](../../scripts/verify-vercel-for-release.sh): requires **Member** or **Owner** on Vercel team **`worldwadeweb`** (override with **`VERCEL_TEAM_ID`**) using **`vercel login`** or **`VERCEL_TOKEN`**. The target is then tagged and pushed; [`scripts/watch-release.sh`](../../scripts/watch-release.sh) polls **`create-release`** and runs **`gh run watch`** when the GitHub CLI is installed (without **`gh`**, the tag still releases and the script prints the Actions URL). Pushing a **`v*`** tag triggers [`.github/workflows/release.yml`](../../.github/workflows/release.yml): reset **`main`** to the tag, generate a changelog, and publish a GitHub Release. **`pnpm test:scripts`** runs [`scripts/verify-vercel-release.test.mjs`](../../scripts/verify-vercel-release.test.mjs).
 
 **PR labels**: [`.github/workflows/labeler.yml`](../../.github/workflows/labeler.yml) applies path-based labels from [`.github/labeler.yml`](../../.github/labeler.yml) on pull requests.
 
@@ -39,7 +39,8 @@ Run the same commands locally before pushing when possible.
 | `pnpm lint:check` | Biome on files changed since **`origin/staging`** |
 | `pnpm lint:css` / `pnpm lint:css:fix` | Stylelint on `**/*.css` |
 | `pnpm lint:all` | **`lint:check`** + **`lint:css:fix`** + **`tsc:ci`** + **`knip:ci`** |
-| `pnpm test:ci` | Jest in band (use locally; no separate **`pnpm test`**) |
+| `pnpm test:ci` | Jest in band (PR CI step 8; use locally; no separate **`pnpm test`**)—excludes **`scripts/`** |
+| `pnpm test:scripts` | Node **`node:test`** runner for release helper scripts under **`scripts/`** (not part of **`test:ci`**) |
 | `pnpm knip` / `pnpm knip:ci` | Dead-code / unused export analysis ([knip.json](../../knip.json)) |
 | `pnpm types:contentful` | Regenerate `src/contentful/types` |
 | `pnpm email:dev` / `pnpm email:export` / `pnpm email:resend:setup` | React Email preview, CI export, Resend preview setup |

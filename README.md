@@ -64,18 +64,18 @@ Deployments are handled on **Vercel**. Pull requests typically get preview deplo
 
 Develop on feature / chore / bug branches from **`staging`**. Merge PRs into **`staging`** for integration; use tags for production releases as below.
 
-To cut a production release, create a **semver** tag after the latest (tags look like **`vX.Y.Z`**—check [Releases](https://github.com/wadehammes/delmarva-site/releases) or run `git tag`). That should trigger automation in [Actions](https://github.com/wadehammes/delmarva-site/actions) according to your workflow.
+Production releases are **semver tags** (**`vX.Y.Z`**—see [Releases](https://github.com/wadehammes/delmarva-site/releases)). Cut them from **`staging`** with the [Makefile](./Makefile); pushing a **`v*`** tag runs [create-release](https://github.com/wadehammes/delmarva-site/actions/workflows/release.yml) (reset **`main`**, changelog, GitHub Release).
 
 Steps:
 
 1. Check out **`staging`** and pull the latest changes.
-2. From **`staging`**, run:
+2. From **`staging`**, run (tag must start with **`v`**):
 
 ```bash
 make release tag=vX.Y.Z
 ```
 
-(`tag` must start with **`v`**; the [Makefile](./Makefile) enforces this.)
+Before tagging, the Makefile checks your **Vercel** team role on **`worldwadeweb`** (**Member** or **Owner** required)—use **`vercel login`** or set **`VERCEL_TOKEN`** locally ([`scripts/verify-vercel-for-release.sh`](./scripts/verify-vercel-for-release.sh)). With the [GitHub CLI](https://cli.github.com/) installed, it also watches **`create-release`** until it finishes; without **`gh`**, the tag still releases and the Makefile prints the Actions URL. Full flow: [docs/handbook/platform.md](./docs/handbook/platform.md).
 
 ### New UI components
 
@@ -103,6 +103,8 @@ Variable tables and draft-mode keys: [docs/handbook/platform.md](./docs/handbook
 ### Testing
 
 Tests use Jest with shared helpers in [`src/tests/testUtils.tsx`](./src/tests/testUtils.tsx). Prefer the same patterns as nearby specs when adding coverage.
+
+Release helper scripts under **`scripts/`** have Node tests: **`pnpm test:scripts`** (see [platform.md](./docs/handbook/platform.md)).
 
 ### Git commits (Cursor agents)
 
