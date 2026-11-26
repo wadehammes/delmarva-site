@@ -16,7 +16,7 @@ Map of the Delmarva site: technologies, where code lives, and how a request move
 
 ### `src/app/`
 
-- **`[locale]/layout.tsx`** — Root layout for localized routes: `html` `lang`, optional **Google Analytics (GA4)** ([`GoogleAnalytics`](https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries#google-analytics)), draft-mode banner, **NextIntlClientProvider**, and **Providers** (React Query, locale, toaster). Preconnects for Mapbox (when configured), Contentful images, YouTube.
+- **`[locale]/layout.tsx`** — Root layout for localized routes: `html` `lang`, optional **Google Analytics (GA4)** ([`GoogleAnalytics`](https://nextjs.org/docs/app/building-your-application/optimizing/third-party-libraries#google-analytics)), **Vercel Web Analytics** and **Speed Insights**, draft-mode banner, **NextIntlClientProvider**, and **Providers** (React Query, locale, toaster). Preconnects for Mapbox (when configured), Contentful images, YouTube.
 - **`[locale]/page.tsx`** — Home: fetches page, navigation, footer from Contentful, renders **PageLayout** with **PageComponent** (and **JsonLdScript** for JSON-LD where used).
 - **`[locale]/[slug]/page.tsx`**, **`[locale]/what-we-deliver/`**, **`[locale]/markets/[slug]/page.tsx`** — Other static routes; each follows the same general pattern (validate locale, `draftMode()`, fetch Contentful, render).
 - **`[locale]/refresh-content/page.tsx`** — On-demand revalidation flow (protected by env token).

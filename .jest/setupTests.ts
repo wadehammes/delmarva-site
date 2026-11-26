@@ -35,6 +35,14 @@ jest.mock("@next/third-parties/google", () => ({
   sendGAEvent: jest.fn(),
 }));
 
+jest.mock("@vercel/analytics/react", () => ({
+  Analytics: () => null,
+}));
+
+jest.mock("@vercel/speed-insights/next", () => ({
+  SpeedInsights: () => null,
+}));
+
 global.fetch = jest.fn<typeof fetch>();
 
 beforeAll(() => {

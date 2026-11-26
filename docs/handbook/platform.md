@@ -98,6 +98,7 @@ Next.js 16 uses **[src/proxy.ts](../../src/proxy.ts)** (not root **`middleware.t
 - **Enable**: [src/app/api/draft/route.ts](../../src/app/api/draft/route.ts) — validates **`previewSecret`** against **`CONTENTFUL_PREVIEW_SECRET`**, enables draft mode, redirects to **`redirect`** query param (or `/`).
 - **Disable**: [src/app/api/disable-draft/route.ts](../../src/app/api/disable-draft/route.ts).
 - **UI**: [layout.tsx](../../src/app/[locale]/layout.tsx) shows a draft banner and **ExitDraftModeLink** when draft mode is on.
+- **Analytics**: While draft mode is on, the layout omits **GA4**, **Vercel Web Analytics**, and **Speed Insights** so editors and local **`pnpm dev:preview`** sessions do not count toward site metrics ([integrations.md](integrations.md)).
 - **Local shortcut**: **`pnpm dev:preview`** ([scripts/dev-with-preview.js](../../scripts/dev-with-preview.js)) starts the dev server, waits for **`http://localhost:5656`** (override with **`PREVIEW_LOCAL_ORIGIN`**), then opens the draft URL once. Set **`OPEN_PREVIEW_LOCAL=0`** to start the server without opening a browser.
 
 Never commit preview secrets; configure them only in env stores and internal docs as needed.
