@@ -3,6 +3,8 @@ import Providers from "src/app/providers";
 import { ExitDraftModeLink } from "src/components/ExitDraftModeLink/ExitDraftModeLink.component";
 import "src/styles/globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
@@ -37,10 +39,11 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
 
   const draft = await draftMode();
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId();
+  const trackSiteAnalytics = !draft.isEnabled;
 
   return (
     <html data-scroll-behavior="smooth" data-theme="dark" lang={locale}>
-      {googleAnalyticsMeasurementId ? (
+      {trackSiteAnalytics && googleAnalyticsMeasurementId ? (
         <GoogleAnalytics gaId={googleAnalyticsMeasurementId} />
       ) : null}
       <head>
@@ -76,6 +79,8 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
             <div className="appRoot">{children}</div>
           </Providers>
         </NextIntlClientProvider>
+        {trackSiteAnalytics ? <Analytics /> : null}
+        {trackSiteAnalytics ? <SpeedInsights /> : null}
       </body>
     </html>
   );

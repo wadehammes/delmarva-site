@@ -2,9 +2,15 @@
 
 Where marketing tags and lightweight analytics hooks connect to the app.
 
+## Vercel Web Analytics and Speed Insights
+
+- **[src/app/[locale]/layout.tsx](../../src/app/[locale]/layout.tsx)** renders **`Analytics`** (`@vercel/analytics/react`) and **`SpeedInsights`** (`@vercel/speed-insights/next`) at the end of `<body>` when **draft mode is off** (same gate as GA4—see [platform.md](platform.md#draft-mode)). No env vars are required; scripts send data only on Vercel **Preview** and **Production** deployments.
+- Enable each product in the Vercel project dashboard (**Analytics** and **Speed Insights**). GA4 and Vercel Analytics are complementary—GA4 owns marketing conversions and custom events; Vercel covers privacy-friendly traffic and Core Web Vitals without extra configuration in this repo.
+- CSP in [next.config.ts](../../next.config.ts) already allows `*.vercel-insights.com` and `*.vercel-scripts.com` in **`script-src`**.
+
 ## Google Analytics (GA4)
 
-- **[src/app/[locale]/layout.tsx](../../src/app/[locale]/layout.tsx)** renders **`GoogleAnalytics`** from **`@next/third-parties/google`** when **`NEXT_PUBLIC_GA_MEASUREMENT_ID`** is set (via [publicEnv.ts](../../src/utils/publicEnv.ts)).
+- **[src/app/[locale]/layout.tsx](../../src/app/[locale]/layout.tsx)** renders **`GoogleAnalytics`** from **`@next/third-parties/google`** when **`NEXT_PUBLIC_GA_MEASUREMENT_ID`** is set (via [publicEnv.ts](../../src/utils/publicEnv.ts)) and **draft mode is off**, so Contentful preview sessions do not pollute production analytics.
 - This site does **not** use Google Tag Manager. Page views and enhanced measurement are configured in the **GA4** property UI.
 - For custom events from React code, use **`trackEvent`** from **[trackEvent.ts](../../src/lib/trackEvent.ts)**. It wraps **`sendGAEvent`** from **`@next/third-parties/google`** and pushes to the same gtag **`dataLayer`** the layout initializes.
 - **Do not** track internal link clicks—GA4 **`page_view`** (and Enhanced Measurement for outbound links) covers navigation. Use **`trackEvent`** only when the interaction does **not** produce a useful page view or needs a named conversion.
